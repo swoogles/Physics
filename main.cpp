@@ -82,6 +82,9 @@ bool writtenImage = false;
 
 //void vecFileRead(ifstream & curFile, sgVec4 retVec);
 
+int numStep = 0;
+float totalMass = 0;
+
 
 
 void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
@@ -261,6 +264,9 @@ void idle() {
 	sgVec4 curPos;
 
 	if (! WorldSettings::isPaused() ) {
+    numStep++;
+
+
 		calcForcesAll(WorldSettings::getDT());
 		WorldSettings::updateTimeElapsed();
 		main_window_UI::update();
@@ -269,15 +275,61 @@ void idle() {
 		if (WorldSettings::isAutoScaling())
 			WorldSettings::resetXYMinsAndMaxes();
 
+    //Largest Objects
+    // boost::numeric::ublas::vector<MyShape *> largest(10);
+    // for (unsigned int j = largest.size() -1 ; j > 0 ; j-- ) {
+      // largest(j) = NULL;
+    // }
+
+    MyShape * largest[10];
+    for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+      largest[j] = NULL;
+    }
+
 		for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
 		{
+      if ( numStep == 1 ) {
+        totalMass += MyShape::shapes(i)->getMass();
+      }
+
 			//MyShape::shapes(i)->adjustMomentum(gravity);
 			MyShape::shapes(i)->update(WorldSettings::getDT());
 			MyShape::shapes(i)->getPos(curPos);
 
 			if (WorldSettings::isAutoScaling())
 				WorldSettings::updateXYMinsAndMaxes(curPos);
+
+        //Largest Objects
+      if ( numStep % 50 == 0 ) {
+        cout << endl << endl;
+        for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+          if ( largest[j] != NULL ) {
+          // if ( largest(j) != NULL ) {
+            
+            if ( MyShape::shapes(i)->getMass() > largest[j]->getMass() ) {
+              if ( j < 10 -1 ) {
+                largest[j+1] = largest[j];
+              }
+              largest[j] = MyShape::shapes(i);
+            }
+          }
+          else {
+              largest[j+1] = largest[j];
+              largest[j] = MyShape::shapes(i);
+          }
+        }
+
+      }
+
 		}
+    for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+      if ( largest[j] != NULL ) {
+        cout << "largest[" << j << "]: " << largest[j]->getMass() << "( "  <<largest[j]->getMass() / totalMass * 100 << "% oof the total mass" << endl;
+      }
+    }
+      if ( numStep % 50 == 0 ) {
+        cout << endl << endl;
+      }
 
 		calcCollisionsAll();
 	}
