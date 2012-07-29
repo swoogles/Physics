@@ -214,7 +214,7 @@ void init(char * simulation) {
 	  bodyFormation();
   }
   if ( simulation[0] == '2' ) {
-	  simpleOrbit();
+	  disruption();
   }
   if ( simulation[0] == '3' ) {
 	  simpleCollision();

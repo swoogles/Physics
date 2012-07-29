@@ -1,0 +1,37 @@
+/*
+ * Circle.h
+ *
+ *  Created on: Jul 10, 2011
+ *      Author: brasure
+ */
+
+#ifndef CIRCLE_H_
+#define CIRCLE_H_
+
+#include "RoundShape.h"
+
+class Circle: public RoundShape {
+private:
+	GLdouble radius;
+public:
+	Circle();
+	virtual ~Circle();
+
+	matrix<double> getPts();
+
+	float getMarkerSize();
+	void scaleMembers(float);
+
+	void setRadius(float);
+
+	void drawScale();
+	void drawUnit();
+
+	float getRadius();
+	float getMomentOfInertia();
+
+	int getType();
+
+};
+
+#endif /* CIRCLE_H_ */
