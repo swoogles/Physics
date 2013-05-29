@@ -426,7 +426,7 @@ void simpleCollision() {
 }
 
 void disruption() {
-  bodyFormation();
+  bodyFormation( 650 );
   MyShape::shapes.resize(MyShape::shapes.size()+1);
   int size = MyShape::shapes.size();
   int cur = size - 1;

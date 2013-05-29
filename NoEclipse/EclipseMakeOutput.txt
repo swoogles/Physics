@@ -1,0 +1,159 @@
+
+**** Build of configuration Release for project ShapesLibrary ****
+
+make all 
+Building file: ../src/CameraFunctions.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/CameraFunctions.d" -MT"src/CameraFunctions.d" -o"src/CameraFunctions.o" "../src/CameraFunctions.cpp"
+../src/CameraFunctions.cpp: In function ‘float calcMinPullback(float, float, float, float, float)’:
+../src/CameraFunctions.cpp:91: warning: unused variable ‘absTotal’
+Finished building: ../src/CameraFunctions.cpp
+
+Building file: ../src/MaybeUseful.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/MaybeUseful.d" -MT"src/MaybeUseful.d" -o"src/MaybeUseful.o" "../src/MaybeUseful.cpp"
+Finished building: ../src/MaybeUseful.cpp
+
+Building file: ../src/fileInteraction.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/fileInteraction.d" -MT"src/fileInteraction.d" -o"src/fileInteraction.o" "../src/fileInteraction.cpp"
+../src/fileInteraction.cpp: In function ‘void openShapes(char*)’:
+../src/fileInteraction.cpp:58: warning: unused variable ‘curString’
+Finished building: ../src/fileInteraction.cpp
+
+Building file: ../src/inputFunctions.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/inputFunctions.d" -MT"src/inputFunctions.d" -o"src/inputFunctions.o" "../src/inputFunctions.cpp"
+../src/inputFunctions.cpp: In function ‘void myMouse(int, int, int, int)’:
+../src/inputFunctions.cpp:13: warning: unused variable ‘z’
+Finished building: ../src/inputFunctions.cpp
+
+Building file: ../src/main.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/main.d" -MT"src/main.d" -o"src/main.o" "../src/main.cpp"
+../src/main.cpp: In function ‘void init()’:
+../src/main.cpp:245: warning: unknown escape sequence: '\040'
+../src/main.cpp:245: warning: deprecated conversion from string constant to ‘char*’
+../src/main.cpp: At global scope:
+../src/main.cpp:73: warning: ‘main_menu_bar’ defined but not used
+../src/main.cpp:74: warning: ‘observer_one’ defined but not used
+../src/main.cpp:76: warning: ‘observer_two’ defined but not used
+Finished building: ../src/main.cpp
+
+Building file: ../src/menus.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/menus.d" -MT"src/menus.d" -o"src/menus.o" "../src/menus.cpp"
+Finished building: ../src/menus.cpp
+
+Building file: ../src/Windows/control_center.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Windows/control_center.d" -MT"src/Windows/control_center.d" -o"src/Windows/control_center.o" "../src/Windows/control_center.cpp"
+../src/Windows/control_center.cpp: In static member function ‘static void control_center::init()’:
+../src/Windows/control_center.cpp:143: warning: deprecated conversion from string constant to ‘char*’
+../src/Windows/control_center.cpp:143: warning: deprecated conversion from string constant to ‘char*’
+../src/Windows/control_center.cpp:143: warning: deprecated conversion from string constant to ‘char*’
+../src/Windows/control_center.cpp:143: warning: deprecated conversion from string constant to ‘char*’
+../src/Windows/control_center.cpp:137: warning: unused variable ‘objectList’
+../src/Windows/control_center.cpp:145: warning: unused variable ‘winWidth’
+Finished building: ../src/Windows/control_center.cpp
+
+Building file: ../src/Windows/main_display.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Windows/main_display.d" -MT"src/Windows/main_display.d" -o"src/Windows/main_display.o" "../src/Windows/main_display.cpp"
+../src/Windows/main_display.cpp: In static member function ‘static void main_window_UI::init()’:
+../src/Windows/main_display.cpp:62: warning: deprecated conversion from string constant to ‘char*’
+../src/Windows/main_display.cpp:62: warning: deprecated conversion from string constant to ‘char*’
+../src/Windows/main_display.cpp:62: warning: deprecated conversion from string constant to ‘char*’
+../src/Windows/main_display.cpp:62: warning: deprecated conversion from string constant to ‘char*’
+../src/Windows/main_display.cpp:59: warning: unused variable ‘winHeight’
+../src/Windows/main_display.cpp: In static member function ‘static void main_window_UI::open_cb(puObject*)’:
+../src/Windows/main_display.cpp:178: warning: unknown escape sequence: '\040'
+../src/Windows/main_display.cpp: In static member function ‘static void main_window_UI::openFile_cb(puObject*)’:
+../src/Windows/main_display.cpp:186: warning: unused variable ‘dialogText’
+../src/Windows/main_display.cpp: In static member function ‘static void main_window_UI::save_cb(puObject*)’:
+../src/Windows/main_display.cpp:219: warning: unknown escape sequence: '\040'
+Finished building: ../src/Windows/main_display.cpp
+
+Building file: ../src/ShapeFiles/Box.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/ShapeFiles/Box.d" -MT"src/ShapeFiles/Box.d" -o"src/ShapeFiles/Box.o" "../src/ShapeFiles/Box.cpp"
+Finished building: ../src/ShapeFiles/Box.cpp
+
+Building file: ../src/ShapeFiles/Circle.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/ShapeFiles/Circle.d" -MT"src/ShapeFiles/Circle.d" -o"src/ShapeFiles/Circle.o" "../src/ShapeFiles/Circle.cpp"
+Finished building: ../src/ShapeFiles/Circle.cpp
+
+Building file: ../src/ShapeFiles/MyEllipse.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/ShapeFiles/MyEllipse.d" -MT"src/ShapeFiles/MyEllipse.d" -o"src/ShapeFiles/MyEllipse.o" "../src/ShapeFiles/MyEllipse.cpp"
+Finished building: ../src/ShapeFiles/MyEllipse.cpp
+
+Building file: ../src/ShapeFiles/MyShape.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/ShapeFiles/MyShape.d" -MT"src/ShapeFiles/MyShape.d" -o"src/ShapeFiles/MyShape.o" "../src/ShapeFiles/MyShape.cpp"
+../src/ShapeFiles/MyShape.cpp: In member function ‘virtual int MyShape::getType()’:
+../src/ShapeFiles/MyShape.cpp:484: warning: no return statement in function returning non-void
+Finished building: ../src/ShapeFiles/MyShape.cpp
+
+Building file: ../src/ShapeFiles/RoundShape.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/ShapeFiles/RoundShape.d" -MT"src/ShapeFiles/RoundShape.d" -o"src/ShapeFiles/RoundShape.o" "../src/ShapeFiles/RoundShape.cpp"
+Finished building: ../src/ShapeFiles/RoundShape.cpp
+
+Building file: ../src/ShapeFiles/StraightShape.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/ShapeFiles/StraightShape.d" -MT"src/ShapeFiles/StraightShape.d" -o"src/ShapeFiles/StraightShape.o" "../src/ShapeFiles/StraightShape.cpp"
+Finished building: ../src/ShapeFiles/StraightShape.cpp
+
+Building file: ../src/Physics/Interactions.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Physics/Interactions.d" -MT"src/Physics/Interactions.d" -o"src/Physics/Interactions.o" "../src/Physics/Interactions.cpp"
+../src/Physics/Interactions.cpp: In function ‘bool contact(MyShape*, MyShape*)’:
+../src/Physics/Interactions.cpp:74: warning: unused variable ‘sepVecUnit’
+../src/Physics/Interactions.cpp: In function ‘void calcForcesAll(float)’:
+../src/Physics/Interactions.cpp:124: warning: 3rd expression in for has no effect
+../src/Physics/Interactions.cpp: In function ‘bool isConflict(int)’:
+../src/Physics/Interactions.cpp:175: warning: comparison between signed and unsigned integer expressions
+../src/Physics/Interactions.cpp: In function ‘void calcCollisionsAll()’:
+../src/Physics/Interactions.cpp:215: warning: 3rd expression in for has no effect
+../src/Physics/Interactions.cpp:194: warning: unused variable ‘unitVec’
+../src/Physics/Interactions.cpp:195: warning: unused variable ‘gravVec’
+../src/Physics/Interactions.cpp:197: warning: unused variable ‘fGrav’
+../src/Physics/Interactions.cpp: In function ‘void mergeObjects(MyShape*, MyShape*)’:
+../src/Physics/Interactions.cpp:428: warning: unused variable ‘newColor’
+/usr/include/plib/sg.h: In function ‘void calcMergedAngMomentum(MyShape*, MyShape*, float*)’:
+/usr/include/plib/sg.h:339: warning: array subscript is above array bounds
+/usr/include/plib/sg.h:448: warning: array subscript is above array bounds
+Finished building: ../src/Physics/Interactions.cpp
+
+Building file: ../src/Physics/Simulations.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Physics/Simulations.d" -MT"src/Physics/Simulations.d" -o"src/Physics/Simulations.o" "../src/Physics/Simulations.cpp"
+../src/Physics/Simulations.cpp: In function ‘void billiards()’:
+../src/Physics/Simulations.cpp:168: warning: comparison between signed and unsigned integer expressions
+../src/Physics/Simulations.cpp:165: warning: unused variable ‘cueRadius’
+Finished building: ../src/Physics/Simulations.cpp
+
+Building file: ../src/Physics/WorldSettings.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Physics/WorldSettings.d" -MT"src/Physics/WorldSettings.d" -o"src/Physics/WorldSettings.o" "../src/Physics/WorldSettings.cpp"
+Finished building: ../src/Physics/WorldSettings.cpp
+
+Building file: ../src/Observation/Observer.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Observation/Observer.d" -MT"src/Observation/Observer.d" -o"src/Observation/Observer.o" "../src/Observation/Observer.cpp"
+Finished building: ../src/Observation/Observer.cpp
+
+Building file: ../src/Observation/Recording.cpp
+Invoking: GCC C++ Compiler
+g++ -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Observation/Recording.d" -MT"src/Observation/Recording.d" -o"src/Observation/Recording.o" "../src/Observation/Recording.cpp"
+../src/Observation/Recording.cpp: In function ‘void intToAsc(int, char*)’:
+../src/Observation/Recording.cpp:158: warning: unused variable ‘spot’
+../src/Observation/Recording.cpp:161: warning: unused variable ‘temp’
+Finished building: ../src/Observation/Recording.cpp
+
+Building target: ShapesLibrary
+Invoking: GCC C++ Linker
+g++  -o"ShapesLibrary"  ./src/CameraFunctions.o ./src/MaybeUseful.o ./src/fileInteraction.o ./src/inputFunctions.o ./src/main.o ./src/menus.o  ./src/Windows/control_center.o ./src/Windows/main_display.o  ./src/ShapeFiles/Box.o ./src/ShapeFiles/Circle.o ./src/ShapeFiles/MyEllipse.o ./src/ShapeFiles/MyShape.o ./src/ShapeFiles/RoundShape.o ./src/ShapeFiles/StraightShape.o  ./src/Physics/Interactions.o ./src/Physics/Simulations.o ./src/Physics/WorldSettings.o  ./src/Observation/Observer.o ./src/Observation/Recording.o   -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg
+Finished building target: ShapesLibrary
