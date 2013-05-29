@@ -74,7 +74,6 @@ void largeGridAlternating();
 
 void disruption();
 
-void bodyFormation();
 void bodyFormation( unsigned int numPieces );
 
 void billiards(int);
