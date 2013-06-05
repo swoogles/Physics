@@ -424,13 +424,13 @@ void MyShape::getColor(sgVec3 retVec) {
 }
 
 void MyShape::calcColor() {
-	float massSun = 598910000;
+  float totalMass=WorldSettings::totalMass;
 
-	float redAmount = 0.25 + mass / (massSun/3.0);
+	float redAmount = 0.25 + mass / (totalMass/3.0);
 	if (redAmount > 1.0)
 		redAmount = 1.0;
 
-	float greenAmount = mass / (0.8 *massSun);
+	float greenAmount = mass / (0.8 *totalMass);
 	if (greenAmount > 1.0) {
 		greenAmount = 1.0;
 	}
