@@ -394,6 +394,18 @@ void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMo
 }
 
 void mergeObjects(MyShape * object1, MyShape * object2) {
+	sgVec3 color;
+
+  object1->getColor( color );
+  cout << "\n\nCOLLISION:\n";
+	cout << "Object 1 Color r:" << color[0] <<
+                        "\tg:"    << color[1] <<
+                        "\tb:"    << color[2] << endl;
+  object2->getColor( color );
+	cout << "Object 2 Color r:" << color[0] <<
+                        "\tg:"    << color[1] <<
+                        "\tb:"    << color[2] << endl;
+
 	float newMass = object1->getMass() + object2->getMass();
 	float density = object1->getDensity();
 
@@ -441,6 +453,15 @@ void mergeObjects(MyShape * object1, MyShape * object2) {
 	object1->calcColor();
 
 	object1->setPos(COM);
+
+  object1->getColor( color );
+  cout << "Post Collision:";
+	cout << "Object 1 Color r:" << color[0] <<
+                        "\tg:"    << color[1] <<
+                        "\tb:"    << color[2];
+	cout << "Object 1 Color r:" << color[0] <<
+                        "\tg:"    << color[1] <<
+                        "\tb:"    << color[2];
 
 	//TODO Do AngMomentum calculations
 

@@ -48,7 +48,8 @@ all: ShapesLibrary
 ShapesLibrary: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -g  -o"ShapesLibrary" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -o"ShapesLibrary" $(OBJS) $(USER_OBJS) $(LIBS)
+	# g++ -g  -o"ShapesLibrary" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

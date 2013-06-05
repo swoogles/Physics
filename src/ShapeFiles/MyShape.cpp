@@ -6,6 +6,7 @@
  */
 
 #include "MyShape.h"
+#include "../Physics/WorldSettings.h"
 
 #include <iostream>
 
@@ -424,7 +425,7 @@ void MyShape::getColor(sgVec3 retVec) {
 }
 
 void MyShape::calcColor() {
-  float totalMass=WorldSettings::totalMass;
+  float totalMass=WorldSettings::getTotalMass();
 
 	float redAmount = 0.25 + mass / (totalMass/3.0);
 	if (redAmount > 1.0)
