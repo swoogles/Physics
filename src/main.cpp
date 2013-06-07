@@ -150,10 +150,10 @@ void display(void)
 
 	//Recording section
 
-  if ( Recorder::shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
-    Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-  }
-  Recorder::incCurFrame();
+  // if ( Recorder::shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
+    // Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+  // }
+  // Recorder::incCurFrame();
 
 
 	puDisplay();
@@ -211,7 +211,7 @@ void init(char * simulation) {
 	  largeGridAlternating();
   }
   if ( simulation[0] == '1' ) {
-	  bodyFormation( 650 );
+	  bodyFormation( 500 );
   }
   if ( simulation[0] == '2' ) {
 	  disruption();
