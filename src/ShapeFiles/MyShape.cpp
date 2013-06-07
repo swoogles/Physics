@@ -426,6 +426,7 @@ void MyShape::getColor(sgVec3 retVec) {
 
 void MyShape::calcColor() {
   float totalMass=WorldSettings::getTotalMass();
+  // cout << "totalMass:" << totalMass << endl;
 
 	float redAmount = 0.25 + mass / (totalMass/3.0);
 	if (redAmount > 1.0)

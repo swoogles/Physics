@@ -150,10 +150,10 @@ void display(void)
 
 	//Recording section
 
-	//if ( Recorder::shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
-//		Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-//	}
-//	Recorder::incCurFrame();
+  if ( Recorder::shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
+    Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+  }
+  Recorder::incCurFrame();
 
 
 	puDisplay();
@@ -250,7 +250,7 @@ void init(char * simulation) {
 	Observer::observers(0)->setPos(0, 0, -pullBack*2);
 
 	Recorder::init();
-	Recorder::setPath("/media/Media\ Hog/VideoOutput/outFrame");
+	Recorder::setPath("/media/bfrasure/Media\ Hog/VideoOutput/outFrame");
 	Recorder::setSkipFrames(1);
 
 	//clearShapes();
@@ -322,9 +322,13 @@ void idle() {
       }
 
 		}
+    sgVec3 color;
     for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
       if ( largest[j] != NULL ) {
-        cout << "largest[" << j << "]: " << largest[j]->getMass() << "( "  <<largest[j]->getMass() / totalMass * 100 << "% oof the total mass" << endl;
+        largest[j]->getColor( color );
+        cout << "largest[" << j << "]: " << largest[j]->getMass() 
+          << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
+          << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
       }
     }
       if ( numStep % 50 == 0 ) {
