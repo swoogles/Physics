@@ -114,6 +114,8 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
 	}
 }
 
+// You want to avoid passing argument to this method, because it would slow down every single
+// call.
 void display(void)
 {
 	glutSetWindow(main_window);
@@ -150,10 +152,12 @@ void display(void)
 
 	//Recording section
 
-  // if ( Recorder::shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
-    // Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-  // }
-  // Recorder::incCurFrame();
+  // TODO A different version of this function should be called if I want to record, rather 
+  // than a branch here.
+  if ( Recorder::getRecording() && Recorder::shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
+    Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+  }
+  Recorder::incCurFrame();
 
 
 	puDisplay();
@@ -178,7 +182,7 @@ void controlDisplay(void) {
 }
 
 
-void init(char * simulation) {
+void init(char simulation) {
 	cout << "Initializing!" << endl;
   cout << "simulation: " << simulation << endl;
 	cout.flush();
@@ -206,23 +210,23 @@ void init(char * simulation) {
 	//Observer::observers(0)->setAngVel(0, 0.2, 0);
 
 	//******CURRENT SIMULATION*****
-  if ( simulation[0] == '0' ) {
+  if ( simulation == '0' ) {
   //if ( strcmp(simulation, "simulation") ) {
 	  largeGridAlternating();
   }
-  if ( simulation[0] == '1' ) {
-	  bodyFormation( 500 );
+  if ( simulation == '1' ) {
+	  bodyFormation( 650 );
   }
-  if ( simulation[0] == '2' ) {
+  if ( simulation == '2' ) {
 	  disruption();
   }
-  if ( simulation[0] == '3' ) {
+  if ( simulation == '3' ) {
 	  simpleCollision();
   }
-  if ( simulation[0] == '4' ) {
+  if ( simulation == '4' ) {
 	  billiards(4);
   }
-  if ( simulation[0] == '5' ) {
+  if ( simulation == '5' ) {
 	  billiards2(10);
   }
 	//billiards3(7);
@@ -368,7 +372,7 @@ int main(int argcp, char **argv) {
 
   int mainWinPosX = 100;
   int mainWinPosY = 50;
-  int mainWinHeight = 700;
+  int mainWinHeight = 1100;
   int mainWinWidth = mainWinHeight * 1.3;
 
   int controlWinPosX = mainWinPosX;
@@ -392,7 +396,16 @@ int main(int argcp, char **argv) {
   glutTimerFunc(100, myTimer, FPS);
 
   puInit();
-  init( argv[1]);
+  //std::string record = argv[1][0];
+  char record = argv[1][0];
+  char simulation = argv[2][0];
+  init( simulation );
+  cout << "argv[1]: " << simulation << endl;
+
+  if ( record == 'r' ){
+    Recorder::setRecording(true);
+  }
+
 
   //Creates main menu bar
   main_window_UI::init();

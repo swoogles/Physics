@@ -14,6 +14,7 @@ char * Recorder::outFile;
 int Recorder::curFrame;
 int Recorder::skipFrames;
 int Recorder::curImage;
+bool Recorder::recording;
 
 
 void Recorder::init() {
@@ -26,6 +27,8 @@ void Recorder::init() {
 	curFrame = 0;
 	skipFrames = 10;
 	curImage = 1;
+
+  recording = false;
 }
 
 void Recorder::setPath(char * outFile) {
@@ -50,6 +53,14 @@ void Recorder::setSkipFrames(int inSkipFrames) {
 
 int Recorder::getSkipFrames() {
 	return skipFrames;
+}
+
+bool Recorder::getRecording() {
+	return recording;
+}
+
+void Recorder::setRecording(bool inRecording) {
+	recording = inRecording;
 }
 
 bool Recorder::shouldCaptureThisFrame() {

@@ -40,6 +40,7 @@ private:
 	static int skipFrames;
 	static int curImage;
 
+	static bool recording;
 
 public:
 	//! Sets up default values for completely static class
@@ -61,6 +62,11 @@ public:
 	static int getSkipFrames();
 	//! Set the number of discarded frames between saved frames
 	static void setSkipFrames(int );
+
+  //! Determine if display frames are being output as images.
+  static bool getRecording();
+  //! Decide if display frames should be output as images.
+  static void setRecording(bool recording);
 
 	/*! \brief Return true if appropriate number of have been skipped
 	 *

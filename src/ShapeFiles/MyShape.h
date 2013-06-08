@@ -65,6 +65,7 @@ protected:
 	sgVec4 prevMomentum;
 	float mass;
 	float density;
+  float kineticEnergy;
 
 	sgVec3 color;
 
@@ -218,6 +219,11 @@ public:
 	void setDensity(float newDensity);
 	//! Returns density of object
 	float getDensity();
+
+	//! Sets kineticEnergy of object to newDensity
+	bool setKineticEnergy(float newKineticEnergy);
+	//! Returns kineticEnergy of object
+	float getKineticEnergy();
 
 	//! Sets color of object to <newColor>
 	void setColor(sgVec3 newColor);
