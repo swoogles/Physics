@@ -113,7 +113,7 @@ void calcForcesAll(float dt) {
 		for (unsigned int i = 0; i < MyShape::shapes.size()-1; i++)
 		{
 			if (killed) {
-				cout << "curI: " << i << endl;
+				// cout << "curI: " << i << endl;
 			}
 			object1 = MyShape::shapes(i);
 
@@ -204,7 +204,7 @@ void calcCollisionsAll() {
 	for (unsigned int i = 0; i < MyShape::shapes.size()-1; i++)
 	{
 		if (killed) {
-			cout << "curI: " << i << endl;
+			// cout << "curI: " << i << endl;
 		}
 		object1 = MyShape::shapes(i);
 
@@ -394,10 +394,29 @@ void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMo
 }
 
 void mergeObjects(MyShape * object1, MyShape * object2) {
+	sgVec3 color;
+
+  object1->getColor( color );
+  // cout << "\n\nCOLLISION:\n";
+	// cout << "Object 1 Color r:" << color[0] <<
+                        // "\tg:"    << color[1] <<
+                        // "\tb:"    << color[2] << endl;
+  object2->getColor( color );
+	// cout << "Object 2 Color r:" << color <<
+	// cout << "Object 2 Color r:" << color[0] <<
+                        // "\tg:"    << color[1] <<
+                        // "\tb:"    << color[2] << endl;
+
+	// cout << "Object 1 radius:" << object1->getRadius() << endl;
+	// cout << "Object 2 radius:" << object1->getRadius() << endl;
+
 	float newMass = object1->getMass() + object2->getMass();
 	float density = object1->getDensity();
 
 	float newRadius = calcMergedRadius(newMass, density);
+
+  // object1->getRadius();
+	cout << "Merged Object radius:" << object1->getRadius() << endl;
 
 	sgVec4 totalAngMom;
 
@@ -439,8 +458,21 @@ void mergeObjects(MyShape * object1, MyShape * object2) {
 	object1->setAngMomentum(totalAngMom);
 
 	object1->calcColor();
+  // newColor[0]=1.0;
+  // newColor[1]=1.0;
+  // newColor[2]=1.0;
+	// object1->setColor( newColor );
 
 	object1->setPos(COM);
+
+  object1->getColor( color );
+  // cout << "Post Collision:";
+	// cout << "Object 1 Color r:" << color[0] <<
+                        // "\tg:"    << color[1] <<
+                        // "\tb:"    << color[2];
+	// cout << "Object 1 Color r:" << color[0] <<
+                        // "\tg:"    << color[1] <<
+                        // "\tb:"    << color[2];
 
 	//TODO Do AngMomentum calculations
 

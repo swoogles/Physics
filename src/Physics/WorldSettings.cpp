@@ -69,16 +69,16 @@ bool WorldSettings::isPaused() {
 	return paused;
 }
 
-void WorldSettings::setTotalMass(float inMass) {
-	totalMass = inMass;
-}
-
 void WorldSettings::adjustTotalMass(float dMass) {
 	totalMass += dMass;
 }
 
 float WorldSettings::getTotalMass() {
 	return totalMass;
+}
+
+void WorldSettings::setTotalMass(float newMass) {
+	totalMass=newMass;
 }
 
 bool WorldSettings::isAllElastic() {

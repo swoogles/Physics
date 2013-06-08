@@ -426,7 +426,7 @@ void simpleCollision() {
 }
 
 void disruption() {
-  bodyFormation( 650 );
+  bodyFormation( 1000 );
   MyShape::shapes.resize(MyShape::shapes.size()+1);
   int size = MyShape::shapes.size();
   int cur = size - 1;
@@ -456,6 +456,7 @@ void bodyFormation(unsigned int numPieces) {
 	WorldSettings::setConstGravField(false);
 	WorldSettings::setAutoScaling(true);
 	WorldSettings::setTimeElapsed(0);
+	WorldSettings::setTotalMass(0);
 
 	float objectDensity = DENSITY_SUN;
 	float bodyVolume = (MASS_SUN)/(objectDensity);
@@ -502,6 +503,8 @@ void bodyFormation(unsigned int numPieces) {
 
 		totalMass += MyShape::shapes(i)->getMass();
 	}
+  
+  WorldSettings::adjustTotalMass( totalMass );
 
 
 

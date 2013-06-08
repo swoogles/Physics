@@ -58,8 +58,6 @@ public:
 	static bool isPaused();
 
 	//TODO set up relavent mass functions and color-coding
-	//! Sets the total mass of all objects in the system
-	static void setTotalMass(float inMass);
 	/*! \brief Alters the total mass in the system
 	 *
 	 * Normally used when adding/deleting objects
@@ -67,6 +65,8 @@ public:
 	static void adjustTotalMass(float dMass);
 	//! Returns total amount of mass in current system
 	static float getTotalMass();
+	//! sets total amount of mass in current system
+	static void setTotalMass(float newMass);
 
 	//! Returns true if every collision is treated as completely elastic
 	static bool isAllElastic();
