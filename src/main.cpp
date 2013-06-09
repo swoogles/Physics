@@ -229,6 +229,21 @@ void init(char simulation) {
   if ( simulation == '5' ) {
 	  billiards2(10);
   }
+
+  if ( simulation == '6' ) {
+    sgVec4 target;
+    target[0]=-10000;
+    target[1]=0;
+    target[2]=0;
+    target[3]=1;
+	  bodyFormationGeneric( 650, target );
+    cout << "xpos: " << target[0] << endl;
+    cout << "NumShapes: " << MyShape::shapes.size() << endl;
+    target[0]=-target[0];
+    cout << "xpos: " << target[0] << endl;
+	  bodyFormationGeneric( 650, target );
+    cout << "NumShapes: " << MyShape::shapes.size() << endl;
+  }
 	//billiards3(7);
 
 	char saveFileName[150] = "/media/Media\ Hog/ProjectOutput/TheReturn/";

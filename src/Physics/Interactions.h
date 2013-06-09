@@ -133,7 +133,7 @@ float getSplitBodyRadius(float volume, int numPieces );
  *  \param startPos Random starting position is returned here
  *  \param pieceRadius Determines size of bounding box
  */
-void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius);
+void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target);
 
 
 /*! \relates MyShape

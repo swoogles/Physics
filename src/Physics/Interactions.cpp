@@ -71,7 +71,6 @@ void elasticCollision(MyShape * object1, MyShape * object2) {
 
 bool contact(MyShape * object1, MyShape * object2) {
 	sgVec4 sepVec;
-	sgVec4 sepVecUnit;
 	float minSep;
 
 	SGfloat distance, distanceSquared;
@@ -96,7 +95,9 @@ void calcForcesAll(float dt) {
 		sgVec4 gravVec;
 		MyShape * object1, * object2;
 		float fGrav;
-		SGfloat distanceSquared, distance, minSep;
+    float minSep;
+		SGfloat distanceSquared;
+		SGfloat distance;
 
 		sgVec4 gravField;
 
@@ -123,7 +124,6 @@ void calcForcesAll(float dt) {
 
 			for (unsigned int j = i + 1; j < MyShape::shapes.size(); NULL)
 			{
-				//cout << "Stuck in inner loop " << endl;
 				object2 = MyShape::shapes(j);
 
 
@@ -191,10 +191,7 @@ bool isConflict(int newShape) {
 
 void calcCollisionsAll() {
 	sgVec4 sepVec;
-	sgVec4 unitVec;
-	sgVec4 gravVec;
 	MyShape * object1, * object2;
-	float fGrav;
 	SGfloat distanceSquared, distance, minSep;
 
 	bool killed = false;
@@ -295,28 +292,22 @@ float calcMergedRadius(float massBoth, float density) {
 
 void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMomentum)
 {
-	//sgVec4 sepVec;
 	sgVec4 sepVecUnit;
 
 	sgVec4 aPos, bPos;
 	sgVec4 aMomentum, bMomentum;
-	//sgVec4 aVel, bVel;
 	sgVec4 tempVec, tempVec2;
 	sgVec4 hitPt;
+	sgVec3 totalAngMom;
 	sgVec3 totalAngMom3;
-	sgVec4 totalAngMom;
 
 	sgVec3 r, aMom3, bMom3, COM;
 	sgVec3 crossed;
-
-
 
 	object1->getPos(aPos);
 	object2->getPos(bPos);
 	sgScaleVec4(tempVec, sepVecUnit, object1->getRadius());
 	sgAddVec4(hitPt, aPos, tempVec);
-
-	//cout << "HitPt: " << hitPt << endl;
 
 	for (int i = 0; i < 3; i++) {
 		totalAngMom[i] = 0;
@@ -335,16 +326,12 @@ void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMo
 	sgScaleVec4(COM, 1/(object1->getMass() + object2->getMass()) );
 	// COM Calc End
 
-	//cout << "COM: " << COM << endl;
-
 	object1->getMomentum(aMomentum);
 	object2->getMomentum(bMomentum);
-
 
 	r[0] = aPos[0] - hitPt[0];
 	r[1] = aPos[1] - hitPt[1];
 	r[2] = aPos[2] - hitPt[2];
-
 
 	aMom3[0] = aMomentum[0];
 	aMom3[1] = aMomentum[1];
@@ -448,8 +435,6 @@ void mergeObjects(MyShape * object1, MyShape * object2) {
 
 	object2->getAngMomentum(object2AngMom);
 
-	//cout << "Object2AngMom: " << object2AngMom << endl;
-
 	object1->setMass(newMass);
 	object1->setRadius(newRadius);
 	object1->adjustMomentum( (*object2momentum) );
@@ -490,8 +475,9 @@ float getSplitBodyRadius(float volume, int numPieces ) {
 }
 
 //TODO make it defined within a certain area, not based on piece size
-void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius) {
+void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target) {
 	 int randMult;
+   float largestDistance = 0;
 
 	 for (int i = 0; i < 3; i++)
 	 {
@@ -501,9 +487,24 @@ void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius) {
 			 randMult *= -1;
 		 }
 		 startPos[i] = randMult * pieceRadius;
+     if ( startPos[i] > largestDistance )
+     {
+       largestDistance = startPos[i];
+     }
 	 }
-	 //startPos[2] = 0;
+
 	 startPos[3] = 1;
+
+   sgVec4 translatedPos;
+   // cout << "Initial startPos: " << startPos << endl;
+   sgAddVec4( translatedPos, startPos, target );
+   startPos[0] = translatedPos[0];
+   startPos[1] = translatedPos[1];
+   startPos[2] = translatedPos[2];
+   // cout << "Translated startPos: " << startPos << endl;
+   //startPos = startPos + target;
+
+   // cout << "Largest Distance: " << largestDistance << endl;
 
 }
 

@@ -460,31 +460,31 @@ void bodyFormation(unsigned int numPieces) {
 
 	float objectDensity = DENSITY_SUN;
 	float bodyVolume = (MASS_SUN)/(objectDensity);
-	//float bodyVolume = (MASS_EARTH*MASS_VAR)/(DENSITY_EARTH*CONVERSION_CONST);
-	//bodyVolume *= VOLUME_VAR;
 	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	sgVec4 startPlacement, startMomentum;
+	sgVec4 startPlacement, startMomentum, target;
+
+  target[0]=-1000;
+  target[1]=0;
+  target[2]=0;
+  target[3]=1;
 
 	float pieceMass = pow(pieceRadius, 3.0);
 	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
 
 	float totalMass = 0.0;
 
-	 srand ( time(NULL) );
+	srand ( time(NULL) );
 
 	for (unsigned int i = 0; i < numPieces; i++) {
 		MyShape::shapes.resize(MyShape::shapes.size()+1);
 
-
 		if (i % 2 == 0) {
 			randomSplitBodyMomentum(startMomentum, pieceMass);
-			randomSplitBodyPlacement(startPlacement, pieceRadius);
-
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
 		}
 		else {
 			sgNegateVec4(startMomentum);
 			sgNegateVec4(startPlacement);
-
 		}
 
 		MyShape::shapes(i) = new Circle;
@@ -496,16 +496,62 @@ void bodyFormation(unsigned int numPieces) {
 
 		//Check if being placed on previously created object
 		while ( isConflict(i) ) {
-			randomSplitBodyPlacement(startPlacement, pieceRadius);
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
 			MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		}
-
-
 		totalMass += MyShape::shapes(i)->getMass();
 	}
-  
   WorldSettings::adjustTotalMass( totalMass );
+}
 
+void bodyFormationGeneric(unsigned int numPieces, sgVec4 target) {
+	WorldSettings::setDT(1000);
+	WorldSettings::makeAllInelastic();
+	WorldSettings::setGravBetweenObjects(true);
+	WorldSettings::setConstGravField(false);
+	WorldSettings::setAutoScaling(true);
+	WorldSettings::setTimeElapsed(0);
+	WorldSettings::setTotalMass(0);
 
+	float objectDensity = DENSITY_SUN;
+	float bodyVolume = (MASS_SUN)/(objectDensity);
+	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+	sgVec4 startPlacement, startMomentum;
 
+	float pieceMass = pow(pieceRadius, 3.0);
+	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
+
+	float totalMass = 0.0;
+
+	srand ( time(NULL) );
+
+  int targetSize = MyShape::shapes.size() + numPieces;
+	for (unsigned int i = MyShape::shapes.size(); i < targetSize; i++) {
+		MyShape::shapes.resize(MyShape::shapes.size()+1);
+
+		if (i % 2 == 0) {
+			randomSplitBodyMomentum(startMomentum, pieceMass);
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+		}
+		else {
+			sgNegateVec4(startMomentum);
+			sgNegateVec4(startPlacement);
+		}
+
+		MyShape::shapes(i) = new Circle;
+    cout << "StartPos: " << startPlacement[0] << endl;
+		MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+		MyShape::shapes(i)->setMass(pieceMass);
+		MyShape::shapes(i)->setRadius(pieceRadius);
+		MyShape::shapes(i)->setMomentum(startMomentum);
+		MyShape::shapes(i)->setDensity(objectDensity);
+
+		//Check if being placed on previously created object
+		while ( isConflict(i) ) {
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+			MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+		}
+		totalMass += MyShape::shapes(i)->getMass();
+	}
+  WorldSettings::adjustTotalMass( totalMass );
 }
