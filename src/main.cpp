@@ -234,24 +234,24 @@ void init(char simulation) {
 
   if ( simulation == '6' ) {
     sgVec4 groupMomentum;
-    groupMomentum[0]=7500;
-    groupMomentum[1]=2500;
+    groupMomentum[0]=0;
+    groupMomentum[1]=2800;
     groupMomentum[2]=0;
     groupMomentum[3]=1;
     sgVec4 target;
-    target[0]=-10000;
+    target[0]=-2000;
     target[1]=0;
     target[2]=0;
     target[3]=1;
 	  bodyFormationGeneric( 650, target, groupMomentum );
     cout << "xpos: " << target[0] << endl;
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
-    target[0]=-target[0];
 
+    target[0]=-target[0];
     groupMomentum[0]=0;
-    groupMomentum[1]=0;
+    groupMomentum[1]=-2800;
     groupMomentum[2]=0;
-    groupMomentum[3]=1;
+
     cout << "xpos: " << target[0] << endl;
 	  bodyFormationGeneric( 650, target, groupMomentum );
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
