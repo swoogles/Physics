@@ -504,7 +504,7 @@ void bodyFormation(unsigned int numPieces) {
   WorldSettings::adjustTotalMass( totalMass );
 }
 
-void bodyFormationGeneric(unsigned int numPieces, sgVec4 target) {
+void bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();
 	WorldSettings::setGravBetweenObjects(true);
@@ -537,6 +537,9 @@ void bodyFormationGeneric(unsigned int numPieces, sgVec4 target) {
 			sgNegateVec4(startMomentum);
 			sgNegateVec4(startPlacement);
 		}
+
+    // Apply general group momentum to individual pieces momentum
+    sgAddVec4( startMomentum, groupMomentum );
 
 		MyShape::shapes(i) = new Circle;
     cout << "StartPos: " << startPlacement[0] << endl;

@@ -75,7 +75,7 @@ void largeGridAlternating();
 void disruption();
 
 void bodyFormation( unsigned int numPieces );
-void bodyFormationGeneric( unsigned int numPieces, sgVec4 target );
+void bodyFormationGeneric( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
 void billiards(int);
 

@@ -11,6 +11,8 @@
 #include <GL/glu.h>
 #include <cmath>
 
+#include "octree.h"
+
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
@@ -231,17 +233,27 @@ void init(char simulation) {
   }
 
   if ( simulation == '6' ) {
+    sgVec4 groupMomentum;
+    groupMomentum[0]=7500;
+    groupMomentum[1]=2500;
+    groupMomentum[2]=0;
+    groupMomentum[3]=1;
     sgVec4 target;
     target[0]=-10000;
     target[1]=0;
     target[2]=0;
     target[3]=1;
-	  bodyFormationGeneric( 650, target );
+	  bodyFormationGeneric( 650, target, groupMomentum );
     cout << "xpos: " << target[0] << endl;
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
     target[0]=-target[0];
+
+    groupMomentum[0]=0;
+    groupMomentum[1]=0;
+    groupMomentum[2]=0;
+    groupMomentum[3]=1;
     cout << "xpos: " << target[0] << endl;
-	  bodyFormationGeneric( 650, target );
+	  bodyFormationGeneric( 650, target, groupMomentum );
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
 	//billiards3(7);
