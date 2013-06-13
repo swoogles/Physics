@@ -256,6 +256,29 @@ void init(char simulation) {
 	  bodyFormationGeneric( 650, target, groupMomentum );
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
+  if ( simulation == '7' ) {
+	  billiards2(10);
+    Octree<double> octree(4); /* Create 4096x4096x4096 octree containing doubles. */
+    octree(1,2,3) = 3.1416;      /* Put pi in (1,2,3). */
+    octree.erase(1,2,3);         /* Erase that node. */
+
+    int sideSize = 4;
+    //Octree< Octree<double> > recursiveOctree(sideSize); /* Create 4096x4096x4096 octree containing doubles. */
+    Octree< * > recursiveOctree(sideSize); /* Create 4096x4096x4096 octree containing doubles. */
+    for (int i = 0; i < sideSize; i++)
+    {
+      for (int j = 0; j < sideSize; j++)
+      {
+        for (int k = 0; k < sideSize; k++)
+        {
+          // Octree
+          // recursiveOctree.set(i,j,k, new Octree<double>(4) );
+        }
+      }
+    }
+                 
+  }
+  
 	//billiards3(7);
 
 	char saveFileName[150] = "/media/Media\ Hog/ProjectOutput/TheReturn/";
