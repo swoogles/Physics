@@ -17,6 +17,7 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
+#include "Parallelization/Quadrant.h"
 
 #include "ShapeFiles/Box.h"
 #include "ShapeFiles/Circle.h"
@@ -65,6 +66,7 @@
 
 using namespace std;
 using namespace boost::numeric::ublas;
+using boost::numeric::ublas::vector;
 //using namespace mathglpp;
 
 float globalPullback;
@@ -257,26 +259,17 @@ void init(char simulation) {
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
   if ( simulation == '7' ) {
-	  billiards2(10);
-    Octree<double> octree(4); /* Create 4096x4096x4096 octree containing doubles. */
-    octree(1,2,3) = 3.1416;      /* Put pi in (1,2,3). */
-    octree.erase(1,2,3);         /* Erase that node. */
+    billiards2(10);
 
-    int sideSize = 4;
-    //Octree< Octree<double> > recursiveOctree(sideSize); /* Create 4096x4096x4096 octree containing doubles. */
-    Octree * recursiveOctree; /* Create 4096x4096x4096 octree containing doubles. */
-    for (int i = 0; i < sideSize; i++)
-    {
-      for (int j = 0; j < sideSize; j++)
-      {
-        for (int k = 0; k < sideSize; k++)
-        {
-          // Octree
-          // recursiveOctree.set(i,j,k, new Octree<double>(4) );
-        }
-      }
-    }
-                 
+    Quadrant mainQuadrant(4, 1);
+    mainQuadrant.subdivide(1,1,1, 8);
+    Quadrant * targetQuadrant = mainQuadrant.quadOctree->at(1,1,1);
+    cout << "Level: " << targetQuadrant->level << endl;
+    targetQuadrant->subdivide(4,4,4, 2);
+    targetQuadrant = targetQuadrant->quadOctree->at(4,4,4);
+    cout << "Level: " << targetQuadrant->level << endl;
+
+
   }
   
 	//billiards3(7);

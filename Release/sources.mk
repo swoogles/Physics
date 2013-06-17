@@ -28,4 +28,5 @@ src/Windows \
 src/ShapeFiles \
 src/Physics \
 src/Observation \
+src/Parallelization \
 

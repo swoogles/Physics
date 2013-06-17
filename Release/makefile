@@ -12,6 +12,7 @@ RM := rm -rf
 -include src/subdir.mk
 -include src/Windows/subdir.mk
 -include src/ShapeFiles/subdir.mk
+-include src/Parallelization/subdir.mk
 -include src/Physics/subdir.mk
 -include src/Observation/subdir.mk
 -include objects.mk
