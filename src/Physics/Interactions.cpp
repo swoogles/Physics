@@ -466,6 +466,8 @@ void mergeObjects(MyShape * object1, MyShape * object2) {
 
 }
 
+// TODO JUST PASS IN THE RADIUS YOU IDIOT
+// Why in the world would you go through all this trouble?
 float getSplitBodyRadius(float volume, int numPieces ) {
 	float pieceVol = volume/numPieces;
 	float pieceRadius = pieceVol/(M_PI * 4.0/3.0);
