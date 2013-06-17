@@ -264,7 +264,7 @@ void init(char simulation) {
 
     int sideSize = 4;
     //Octree< Octree<double> > recursiveOctree(sideSize); /* Create 4096x4096x4096 octree containing doubles. */
-    Octree< * > recursiveOctree(sideSize); /* Create 4096x4096x4096 octree containing doubles. */
+    Octree * recursiveOctree; /* Create 4096x4096x4096 octree containing doubles. */
     for (int i = 0; i < sideSize; i++)
     {
       for (int j = 0; j < sideSize; j++)
