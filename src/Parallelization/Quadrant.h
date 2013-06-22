@@ -9,6 +9,9 @@
 #include "octree.h"
 #include <iostream>
 #include <string>
+#include <plib/sg.h>
+
+#include "../ShapeFiles/Box.h"
 
 //using namespace std;
 
@@ -24,9 +27,15 @@ class Quadrant
     int level;
     Octree<Quadrant *> * quadOctree; /* Create 4096x4096x4096 octree containing doubles. */
     Octree<int> * intOctree; /* Create 4096x4096x4096 octree containing doubles. */
-    Quadrant(int numCells, int level);
+    Quadrant(int numCells, int level, sgVec4 pos, sgVec3 dimensions );
     void subdivide( int x, int y, int z, int numCells );
     Quadrant * getQuadrantFromCell( int x, int y, int z );
+
+    Box * thisShape;
+    
+    sgVec3 dimensions;
+
+    sgVec4 pos;
 
 };
 

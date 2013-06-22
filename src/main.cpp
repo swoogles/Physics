@@ -259,17 +259,7 @@ void init(char simulation) {
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
   if ( simulation == '7' ) {
-    billiards2(10);
-
-    Quadrant mainQuadrant(4, 1);
-    mainQuadrant.subdivide(1,1,1, 8);
-    Quadrant * targetQuadrant = mainQuadrant.quadOctree->at(1,1,1);
-    cout << "Level: " << targetQuadrant->level << endl;
-    targetQuadrant->subdivide(4,4,4, 2);
-    targetQuadrant = targetQuadrant->quadOctree->at(4,4,4);
-    cout << "Level: " << targetQuadrant->level << endl;
-
-
+    octreeDemonstration(10);
   }
   
 	//billiards3(7);
@@ -313,6 +303,7 @@ void idle() {
 	if (! WorldSettings::isPaused() ) {
     numStep++;
 
+    cout << "Poop" << endl;
 
 		calcForcesAll(WorldSettings::getDT());
 		WorldSettings::updateTimeElapsed();

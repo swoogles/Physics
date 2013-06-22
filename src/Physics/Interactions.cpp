@@ -111,6 +111,8 @@ void calcForcesAll(float dt) {
 		}
 
 		//sgVec4 * ob1mom;
+    unsigned int j = 0; 
+    cout << "Comparison: " << j < MyShape::shapes.size()-1 << endl;
 		for (unsigned int i = 0; i < MyShape::shapes.size()-1; i++)
 		{
 			if (killed) {

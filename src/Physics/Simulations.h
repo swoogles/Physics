@@ -8,6 +8,8 @@
 #ifndef SIMULATIONS_H_
 #define SIMULATIONS_H_
 
+#include "../Parallelization/Quadrant.h"
+#include "octree.h"
 #include <iostream>
 #include <boost/numeric/ublas/vector.hpp>
 #include <plib/sg.h>
@@ -82,6 +84,8 @@ void billiards(int);
 void billiards2(int);
 
 void billiards3(int);
+
+void octreeDemonstration(int);
 
 void simpleCollision();
 
