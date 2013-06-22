@@ -29,6 +29,7 @@ class Quadrant
     Octree<int> * intOctree; /* Create 4096x4096x4096 octree containing doubles. */
     Quadrant(int numCells, int level, sgVec4 pos, sgVec3 dimensions );
     void subdivide( int x, int y, int z, int numCells );
+    void subdivideAll( int levels, int numCells );
     Quadrant * getQuadrantFromCell( int x, int y, int z );
 
     Box * thisShape;

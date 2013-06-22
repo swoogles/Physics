@@ -375,97 +375,96 @@ void billiards3(int numRows) {
 
 }
 
-void octreeDemonstration(int numRows) {
-	WorldSettings::setDT(.003);
-	WorldSettings::makeAllElastic();
-	//WorldSettings::makeAllInelastic();
-	WorldSettings::setGravBetweenObjects(false);
-	WorldSettings::setConstGravField(false);
-	WorldSettings::setTimeElapsed(0);
+Quadrant * octreeDemonstration(int numRows) {
+  WorldSettings::setDT(.003);
+  WorldSettings::makeAllElastic();
+  //WorldSettings::makeAllInelastic();
+  WorldSettings::setGravBetweenObjects(false);
+  WorldSettings::setConstGravField(false);
+  WorldSettings::setTimeElapsed(0);
 
-	sgVec4 gField;
-	gField[0] = -.2; gField[1] = 0; gField[2] = 0;
+  sgVec4 gField;
+  gField[0] = -.2; gField[1] = 0; gField[2] = 0;
 
-	WorldSettings::setConstGravFieldVal(gField);
+  WorldSettings::setConstGravFieldVal(gField);
 
-	//TODO setup to accept number of rows, rather than balls
-	//unsigned int numRows = 31; //500 Ball Craziness
-	//unsigned int numRows = 5; //Standard 15 balls
-	//unsigned int numRows = 9;
-	unsigned int numPieces = 0;
+  //TODO setup to accept number of rows, rather than balls
+  //unsigned int numRows = 31; //500 Ball Craziness
+  //unsigned int numRows = 5; //Standard 15 balls
+  //unsigned int numRows = 9;
+  unsigned int numPieces = 0;
 
-	float cueMass = 100.0;
-	//float cueMass = 0.156;
-	float ballMass = 0.156;
+  float cueMass = 100.0;
+  //float cueMass = 0.156;
+  float ballMass = 0.156;
 
-	//float ballRadius = 0.057;
-	float cueRadius = 2;
-	float ballRadius = .95;
+  //float ballRadius = 0.057;
+  float cueRadius = 2;
+  float ballRadius = .95;
 
-	//numPieces= numRows*numRows;
+  //numPieces= numRows*numRows;
 
-  cout << "Goddamnit" << endl;
-	//MyShape::shapes.resize(MyShape::shapes.size() + numPieces + 1);
+  //MyShape::shapes.resize(MyShape::shapes.size() + numPieces + 1);
 
-	sgVec4 cueVelocity;
-	cueVelocity[0] = 30;
-	//cueVelocity[1] = -15.05;
-	cueVelocity[1] = -75;
-	cueVelocity[2] = 0;
+  sgVec4 cueVelocity;
+  cueVelocity[0] = 30;
+  //cueVelocity[1] = -15.05;
+  cueVelocity[1] = -75;
+  cueVelocity[2] = 0;
 
-	sgVec3 newColor;
-	newColor[0] = 1;
-	newColor[1] = 1;
-	newColor[2] = 1;
+  sgVec3 newColor;
+  newColor[0] = 1;
+  newColor[1] = 1;
+  newColor[2] = 1;
 
-	//MyShape::shapes(0) = new Circle;
-	//MyShape::shapes(0)->setPos(numRows, numRows*3, 0);
-	//MyShape::shapes(0)->setMass(cueMass);
-	//MyShape::shapes(0)->setRadius(cueRadius);
-	//MyShape::shapes(0)->setRadius(ballRadius);
-	//MyShape::shapes(0)->setVelocity(cueVelocity);
-	//MyShape::shapes(0)->setColor(newColor);
+  //unsigned int curShape = 1;
+  //for (unsigned int i = 0; i < numRows; i++) {
+  //for (unsigned int j = 0; j < numRows; j++) {
+  //MyShape::shapes(curShape) = new Box;
+  //MyShape::shapes(curShape)->setPos(j*3, i*3, 0);
+  //MyShape::shapes(curShape)->setPos(j*1.1, i*2.0, 0);
+  //MyShape::shapes(curShape)->setMass(ballMass);
+  //MyShape::shapes(curShape)->resize(ballRadius, ballRadius, ballRadius);
+  //newColor[1] = -( ( -.5 + (j/float(numRows)) ) * ( -.5 + (j/float(numRows)) ) )+ 1.0;
+  //MyShape::shapes(curShape)->setColor(newColor);
+  //cout << j << " ";
+  ////curShape++;
+  //}
+  //cout << endl;
+  //}
 
-	//unsigned int curShape = 1;
-	//for (unsigned int i = 0; i < numRows; i++) {
-		//for (unsigned int j = 0; j < numRows; j++) {
-			//MyShape::shapes(curShape) = new Box;
-			//MyShape::shapes(curShape)->setPos(j*3, i*3, 0);
-			//MyShape::shapes(curShape)->setPos(j*1.1, i*2.0, 0);
-			//MyShape::shapes(curShape)->setMass(ballMass);
-			//MyShape::shapes(curShape)->resize(ballRadius, ballRadius, ballRadius);
-      //newColor[1] = -( ( -.5 + (j/float(numRows)) ) * ( -.5 + (j/float(numRows)) ) )+ 1.0;
-     //MyShape::shapes(curShape)->setColor(newColor);
-			//cout << j << " ";
-			////curShape++;
-		//}
-		//cout << endl;
-	//}
+  float width = 10;
+  float height = 10;
+  float depth = 10;
 
-    float width = 10;
-    float height = 10;
-    float depth = 10;
-
-    sgVec4 pos;
-    sgVec3 dimensions;
-    dimensions[0] = width;
-    dimensions[1] = height;
-    dimensions[2] = depth;
+  sgVec4 pos;
+  sgVec3 dimensions;
+  dimensions[0] = width;
+  dimensions[1] = height;
+  dimensions[2] = depth;
 
 
-    Quadrant mainQuadrant(4, 1, pos, dimensions);
-    mainQuadrant.subdivide(1,1,1, 8);
-    Quadrant * targetQuadrant = mainQuadrant.quadOctree->at(1,1,1);
-    cout << "Level: " << targetQuadrant->level << endl;
-    targetQuadrant->thisShape->draw();
-    targetQuadrant->subdivide(4,4,4, 8);
-    targetQuadrant = targetQuadrant->quadOctree->at(4,4,4);
-    targetQuadrant->thisShape->draw();
-    cout << "Level: " << targetQuadrant->level << endl;
+  Quadrant * mainQuadrant = new Quadrant(4, 1, pos, dimensions);
+  //mainQuadrant->subdivide(1,1,1, 4);
+  //Quadrant * targetQuadrant;
+  //for ( int i = 0; i < 2; i++ )
+  //{
+    //for ( int j = 0; j < 2; j++ )
+    //{
+      //for ( int k = 0; k < 2; k++ )
+      //{
+        //mainQuadrant->subdivide(i,j,k,4);
+        //targetQuadrant = mainQuadrant->quadOctree->at(i,j,k);
+        //targetQuadrant->subdivide(i,j,k, 4);
 
+      //}
+    //}
+  //}
 
-    cout << "NumPieces: " << numPieces << endl;
-    //cout << "Type: " << MyShape::shapes(0)->getType() << endl;
+  mainQuadrant->subdivideAll(3,4);
+  
+
+  return mainQuadrant;
 
 }
 

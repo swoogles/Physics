@@ -90,6 +90,7 @@ int numStep = 0;
 float totalMass = 0;
 
 
+Quadrant * globalQuadrant;
 
 void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
 						float &minX, float &minY, float &maxX, float &maxY) {
@@ -148,6 +149,7 @@ void display(void)
 	for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
 		MyShape::shapes(i)->draw();
 	}
+  //globalQuadrant->thisShape->draw();
 
 
 	glMatrixMode(GL_PROJECTION);
@@ -259,7 +261,7 @@ void init(char simulation) {
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
   if ( simulation == '7' ) {
-    octreeDemonstration(10);
+    globalQuadrant = octreeDemonstration(10);
   }
   
 	//billiards3(7);
@@ -274,12 +276,10 @@ void init(char simulation) {
 	float minX, minY, maxX, maxY;
 	calcXYMinsAndMaxes(MyShape::shapes, minX, minY, maxX, maxY);
 
-	/*
 	cout << "minX: " << minX << endl;
 	cout << "minY: " << minY << endl;
 	cout << "maxX: " << maxX << endl;
 	cout << "maxX: " << maxY << endl;
-	*/
 
 
 	float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
@@ -303,15 +303,15 @@ void idle() {
 	if (! WorldSettings::isPaused() ) {
     numStep++;
 
-    cout << "Poop" << endl;
-
 		calcForcesAll(WorldSettings::getDT());
 		WorldSettings::updateTimeElapsed();
 		main_window_UI::update();
 		//calcDrag(WorldSettings::getDT());
 
 		if (WorldSettings::isAutoScaling())
+    {
 			WorldSettings::resetXYMinsAndMaxes();
+    }
 
     //Largest Objects
     // boost::numeric::ublas::vector<MyShape *> largest(10);
@@ -324,79 +324,83 @@ void idle() {
       largest[j] = NULL;
     }
 
-		for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
-		{
-      if ( numStep == 1 ) {
-        totalMass += MyShape::shapes(i)->getMass();
-      }
-
-			//MyShape::shapes(i)->adjustMomentum(gravity);
-			MyShape::shapes(i)->update(WorldSettings::getDT());
-			MyShape::shapes(i)->getPos(curPos);
-
-			if (WorldSettings::isAutoScaling())
-				WorldSettings::updateXYMinsAndMaxes(curPos);
-
-        //Largest Objects
-      if ( numStep % 50 == 0 ) {
-        cout << endl << endl;
-        for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-          if ( largest[j] != NULL ) {
-          // if ( largest(j) != NULL ) {
-            
-            if ( MyShape::shapes(i)->getMass() > largest[j]->getMass() ) {
-              if ( j < 10 -1 ) {
-                largest[j+1] = largest[j];
-              }
-              largest[j] = MyShape::shapes(i);
-            }
-          }
-          else {
-              largest[j+1] = largest[j];
-              largest[j] = MyShape::shapes(i);
-          }
+    if ( MyShape::shapes.size() > 0 )
+    {
+      for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
+      {
+        if ( numStep == 1 ) {
+          totalMass += MyShape::shapes(i)->getMass();
         }
 
-      }
+        //MyShape::shapes(i)->adjustMomentum(gravity);
+        MyShape::shapes(i)->update(WorldSettings::getDT());
+        MyShape::shapes(i)->getPos(curPos);
 
-		}
-    sgVec3 color;
-    for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-      if ( largest[j] != NULL ) {
-        largest[j]->getColor( color );
-        cout << "largest[" << j << "]: " << largest[j]->getMass() 
-          << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
-          << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
+        if (WorldSettings::isAutoScaling())
+          WorldSettings::updateXYMinsAndMaxes(curPos);
+
+        //Largest Objects
+        if ( numStep % 50 == 0 ) {
+          cout << endl << endl;
+          for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+            if ( largest[j] != NULL ) {
+              // if ( largest(j) != NULL ) {
+
+              if ( MyShape::shapes(i)->getMass() > largest[j]->getMass() ) {
+                if ( j < 10 -1 ) {
+                  largest[j+1] = largest[j];
+                }
+                largest[j] = MyShape::shapes(i);
+              }
+            }
+              else {
+                largest[j+1] = largest[j];
+                largest[j] = MyShape::shapes(i);
+              }
+            }
+
+          }
+
+        }
+        sgVec3 color;
+        for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+          if ( largest[j] != NULL ) {
+            largest[j]->getColor( color );
+            cout << "largest[" << j << "]: " << largest[j]->getMass() 
+              << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
+              << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
+          }
+        }
+        if ( numStep % 50 == 0 ) {
+          cout << endl << endl;
+        }
+
+        calcCollisionsAll();
       }
     }
-      if ( numStep % 50 == 0 ) {
-        cout << endl << endl;
-      }
 
-		calcCollisionsAll();
-	}
-	int curObserver = Observer::getCurObserver();
+    int curObserver = Observer::getCurObserver();
 
-	Observer::observers(curObserver)->update(WorldSettings::getDT());
+    Observer::observers(curObserver)->update(WorldSettings::getDT());
 
-	/*
-	 float minX, minY, maxX, maxY;
-	 calcXYMinsAndMaxes(MyShape::shapes, minX, minY, maxX, maxY);
-	 */
+    /*
+       float minX, minY, maxX, maxY;
+       calcXYMinsAndMaxes(MyShape::shapes, minX, minY, maxX, maxY);
+       */
 
-	if (WorldSettings::isAutoScaling()) {
+    if (WorldSettings::isAutoScaling()) {
 
-		float minX = WorldSettings::getMinX();
-		float minY = WorldSettings::getMinY();
-		float maxX = WorldSettings::getMaxX();
-		float maxY = WorldSettings::getMaxY();
+      float minX = WorldSettings::getMinX();
+      float minY = WorldSettings::getMinY();
+      float maxX = WorldSettings::getMaxX();
+      float maxY = WorldSettings::getMaxY();
 
-		float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
+      float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
-		Observer::observers(curObserver)->setPos(0, 0, -pullBack * 2);
-	}
+      Observer::observers(curObserver)->setPos(0, 0, -pullBack * 2);
+    }
 
-}
+  }
 
 void dummyCallback(puObject * thisGuy) {
 	cout << "I do something! Really!";

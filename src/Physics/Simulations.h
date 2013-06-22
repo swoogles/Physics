@@ -85,7 +85,7 @@ void billiards2(int);
 
 void billiards3(int);
 
-void octreeDemonstration(int);
+Quadrant * octreeDemonstration(int);
 
 void simpleCollision();
 
