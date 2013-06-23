@@ -19,6 +19,9 @@ GLubyte * Box::topIndices = new GLubyte[4];
 GLubyte * Box::bottomIndices = new GLubyte[4];
 
 Box::Box() {
+  width = 1;
+  height = 1;
+  depth = 1;
 
 }
 
@@ -147,6 +150,49 @@ matrix<double> Box::getPts() {
 }
 
 void Box::drawUnit() {
+  glutWireCube( width );
+}
+
+void Box::drawScale() {
+	glScalef(width, height, depth);
+}
+
+float Box::getSideLength() {
+	return sideLength;
+}
+
+void Box::setSideLength(float inSideLength) {
+	width = inSideLength;
+	height = inSideLength;
+	depth = inSideLength;
+}
+
+float Box::getWidth() {
+	return width;
+}
+
+void Box::setWidth(float inWidth) {
+	width = inWidth;
+}
+
+float Box::getHeight() {
+	return height;
+}
+
+void Box::setHeight(float inHeight) {
+	height = inHeight;
+}
+
+float Box::getDepth() {
+	return depth;
+}
+
+void Box::setDepth(float inDepth) {
+	depth = inDepth;
+}
+
+/*
+void Box::drawUnit() {
 	  glEnableClientState( GL_VERTEX_ARRAY ) ;
 	  glEnableClientState( GL_COLOR_ARRAY ) ;
 
@@ -163,3 +209,4 @@ void Box::drawUnit() {
 	  glDisableClientState( GL_VERTEX_ARRAY);
 	  glDisableClientState( GL_COLOR_ARRAY);
 }
+*/

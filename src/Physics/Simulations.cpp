@@ -417,25 +417,9 @@ Quadrant * octreeDemonstration(int numRows) {
   newColor[1] = 1;
   newColor[2] = 1;
 
-  //unsigned int curShape = 1;
-  //for (unsigned int i = 0; i < numRows; i++) {
-  //for (unsigned int j = 0; j < numRows; j++) {
-  //MyShape::shapes(curShape) = new Box;
-  //MyShape::shapes(curShape)->setPos(j*3, i*3, 0);
-  //MyShape::shapes(curShape)->setPos(j*1.1, i*2.0, 0);
-  //MyShape::shapes(curShape)->setMass(ballMass);
-  //MyShape::shapes(curShape)->resize(ballRadius, ballRadius, ballRadius);
-  //newColor[1] = -( ( -.5 + (j/float(numRows)) ) * ( -.5 + (j/float(numRows)) ) )+ 1.0;
-  //MyShape::shapes(curShape)->setColor(newColor);
-  //cout << j << " ";
-  ////curShape++;
-  //}
-  //cout << endl;
-  //}
-
-  float width = 10;
-  float height = 10;
-  float depth = 10;
+  float width = 50;
+  float height = 50;
+  float depth = 50;
 
   sgVec4 pos;
   sgVec3 dimensions;

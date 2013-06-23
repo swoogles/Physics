@@ -50,10 +50,6 @@ matrix<double> Circle::getPts() {
 	return pts;
 }
 
-void Circle::setRadius(float inRadius) {
-	radius = inRadius;
-}
-
 void Circle::drawScale() {
 	glScalef(radius, radius, radius);
 	//glScalef(1,1,1);
@@ -67,6 +63,11 @@ void Circle::drawUnit() {
 float Circle::getRadius() {
 	return radius;
 }
+
+void Circle::setRadius(float inRadius) {
+	radius = inRadius;
+}
+
 
 int Circle::getType() {
 	return 1;

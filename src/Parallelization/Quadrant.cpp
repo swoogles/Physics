@@ -91,9 +91,9 @@ void Quadrant::subdivideAll( int levels, int numCells )
         else {
           zFactor =-1;
         }
-        newPos[0]=pos[0]+(xFactor*newDimensions[0]);
-        newPos[1]=pos[1]+(yFactor*newDimensions[1]);
-        newPos[2]=pos[2]+(zFactor*newDimensions[2]);
+        newPos[0]=pos[0]+(xFactor*newDimensions[0]/2);
+        newPos[1]=pos[1]+(yFactor*newDimensions[1]/2);
+        newPos[2]=pos[2]+(zFactor*newDimensions[2]/2);
 
         //targentQuadrant 
         //quadOctree->subdivide(i,j,k,4);
@@ -127,6 +127,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec3 dimensions)
   thisShape->setPos(pos);
 
   int numShapes = MyShape::shapes.size();
+  thisShape->setSideLength( dimensions[0] );
 
   MyShape::shapes.resize(numShapes + 1);
 	MyShape::shapes(numShapes) = thisShape;

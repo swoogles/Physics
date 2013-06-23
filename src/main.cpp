@@ -263,6 +263,13 @@ void init(char simulation) {
   if ( simulation == '7' ) {
     globalQuadrant = octreeDemonstration(10);
   }
+
+  if ( simulation == '8' ) {
+    int numShapes = MyShape::shapes.size();
+    MyShape::shapes.resize(numShapes + 1);
+    MyShape::shapes(numShapes) = new Box();
+    
+  }
   
 	//billiards3(7);
 
