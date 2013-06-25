@@ -87,14 +87,14 @@ void Quadrant::subdivideAll( int levels, int numCells )
           else {
             zFactor =-1;
           }
-          newPos[0]=pos[0]+(xFactor*dimensions[0]);
-          newPos[1]=pos[1]+(yFactor*dimensions[1]);
-          newPos[2]=pos[2]+(zFactor*dimensions[2]);
+
+          newPos[0]=pos[0]+(xFactor*dimensions[0]/4);
+          newPos[1]=pos[1]+(yFactor*dimensions[1]/4);
+          newPos[2]=pos[2]+(zFactor*dimensions[2]/4);
 
           newDimensions[0] = dimensions[0]/2;
           newDimensions[1] = dimensions[1]/2;
           newDimensions[2] = dimensions[2]/2;
-
 
           //targentQuadrant 
           //quadOctree->subdivide(i,j,k,4);
