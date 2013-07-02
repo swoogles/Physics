@@ -88,9 +88,10 @@ void Quadrant::subdivideAll( int levels, int numCells )
             zFactor =-1;
           }
 
-          newPos[0]=pos[0]+(xFactor*dimensions[0]/4);
-          newPos[1]=pos[1]+(yFactor*dimensions[1]/4);
-          newPos[2]=pos[2]+(zFactor*dimensions[2]/4);
+          newPos[0]=pos[0]+(xFactor*dimensions[0]/2);
+          newPos[1]=pos[1]+(yFactor*dimensions[1]/2);
+          newPos[2]=pos[2]+(zFactor*dimensions[2]/2);
+          newPos[3]=1;
 
           newDimensions[0] = dimensions[0]/2;
           newDimensions[1] = dimensions[1]/2;
@@ -116,9 +117,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec3 dimensions)
   quadOctree = new Octree<Quadrant * >(numCells);
   intOctree = new Octree<int>(numCells);
 
-  sgVec3 offset;
-
-  sgCopyVec3( this->pos, pos );
+  sgCopyVec4( this->pos, pos );
   sgCopyVec3( this->dimensions, dimensions );
   // this->dimensions[0] = dimensions[0];
   // this->dimensions[1] = dimensions[1];
