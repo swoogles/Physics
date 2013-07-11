@@ -27,14 +27,16 @@ class Quadrant
     int level;
     Octree<Quadrant *> * quadOctree; /* Create 4096x4096x4096 octree containing doubles. */
     Octree<int> * intOctree; /* Create 4096x4096x4096 octree containing doubles. */
-    Quadrant(int numCells, int level, sgVec4 pos, sgVec3 dimensions );
+    Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions );
     void subdivide( int x, int y, int z, int numCells );
     void subdivideAll( int levels, int numCells );
     Quadrant * getQuadrantFromCell( int x, int y, int z );
 
+    void printCorners();
+
     Box * thisShape;
     
-    sgVec3 dimensions;
+    sgVec4 dimensions;
 
     sgVec4 pos;
 
