@@ -2,9 +2,15 @@
 
 using namespace std;
 
+ostream& operator<<(ostream& os, sgVec4 outputVec) {
+	cout << "<" << outputVec[0] << ", " << outputVec[1] << ", " << outputVec[2] << ">";
+	return os;
+}
+
 void Quadrant::printCorners()
 {
   // pos
+    sgVec4 curCenter;
     sgVec4 curCorner;
   sgVec4 newDimensions;
  //sgAddVec4( curCorner, pos4, 
@@ -38,16 +44,21 @@ void Quadrant::printCorners()
             zFactor =-1;
           }
 
-          curCorner[0]=pos[0]+(xFactor*dimensions[0]/2);
-          curCorner[1]=pos[1]+(yFactor*dimensions[1]/2);
-          curCorner[2]=pos[2]+(zFactor*dimensions[2]/2);
-          curCorner[3]=1;
+          curCenter[0]=pos[0]+(xFactor*dimensions[0]/2.0);
+          curCenter[1]=pos[1]+(yFactor*dimensions[1]/2.0);
+          curCenter[2]=pos[2]+(zFactor*dimensions[2]/2.0);
+          curCenter[3]=1;
 
-          cout << "curCorner: " << curCorner << endl;
+          cout << "curCenter: <" << curCenter[0] << ", " << curCenter[1]
+            << ", " << curCenter[2] << "> " << endl;
+          //cout << "curCorner[2]: " << curCorner[2] << endl << endl;;
 
           newDimensions[0] = dimensions[0]/2;
           newDimensions[1] = dimensions[1]/2;
           newDimensions[2] = dimensions[2]/2;
+
+          cout << "newDimensions: <" << newDimensions[0] << ", " << newDimensions[1]
+            << ", " << newDimensions[2] << "> " << endl;
         }
       }
     }
@@ -140,9 +151,11 @@ void Quadrant::subdivideAll( int levels, int numCells )
             zFactor =-1;
           }
 
-          newPos[0]=pos[0]+(xFactor*dimensions[0]/4);
-          newPos[1]=pos[1]+(yFactor*dimensions[1]/4);
-          newPos[2]=pos[2]+(zFactor*dimensions[2]/4);
+          //sgVec4 offset;
+          //sgScaleVec4( pos
+          newPos[0]=pos[0]+(xFactor*dimensions[0]/2.0);
+          newPos[1]=pos[1]+(yFactor*dimensions[1]/2.0);
+          newPos[2]=pos[2]+(zFactor*dimensions[2]/2.0);
           newPos[3]=1;
 
           newDimensions[0] = dimensions[0]/2;
@@ -179,7 +192,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   thisShape->setPos(pos);
 
   int numShapes = MyShape::shapes.size();
-  thisShape->setSideLength( dimensions[0]/2 );
+  thisShape->setSideLength( dimensions[0] );
 
   MyShape::shapes.resize(numShapes + 1);
 	MyShape::shapes(numShapes) = thisShape;

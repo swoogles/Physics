@@ -17,12 +17,6 @@ ostream& operator<<(ostream& os, sgVec3 outputVec) {
 }
 */
 
-ostream& operator<<(ostream& os, sgVec4 outputVec) {
-	cout << "<" << outputVec[0] << ", " << outputVec[1] << ", " << outputVec[2] << ">";
-	return os;
-}
-
-
 void elasticCollision(MyShape * object1, MyShape * object2) {
 	sgVec4 sepVec;
 	sgVec4 sepVecUnit;
