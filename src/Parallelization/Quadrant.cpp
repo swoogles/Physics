@@ -9,12 +9,9 @@ ostream& operator<<(ostream& os, sgVec4 outputVec) {
 
 void Quadrant::printCorners()
 {
-  // pos
-    sgVec4 curCenter;
-    sgVec4 curCorner;
+  sgVec4 curCenter;
+  sgVec4 curCorner;
   sgVec4 newDimensions;
- //sgAddVec4( curCorner, pos4, 
-  //thisShape->setSideLength( dimensions[0] );
   int xFactor;
   int yFactor;
   int zFactor;
@@ -51,7 +48,6 @@ void Quadrant::printCorners()
 
           cout << "curCenter: <" << curCenter[0] << ", " << curCenter[1]
             << ", " << curCenter[2] << "> " << endl;
-          //cout << "curCorner[2]: " << curCorner[2] << endl << endl;;
 
           newDimensions[0] = dimensions[0]/2;
           newDimensions[1] = dimensions[1]/2;
@@ -70,7 +66,7 @@ Quadrant * Quadrant::getQuadrantFromCell( int x, int y, int z )
   return quadOctree->at( x, y, z );
 }
 
-void Quadrant::subdivide( int x, int y, int z, int numCells )
+void Quadrant::subDivide( int x, int y, int z, int numCells )
 {
   sgVec4 newPos;
   sgVec4 newDimensions;
@@ -110,7 +106,7 @@ void Quadrant::subdivide( int x, int y, int z, int numCells )
   quadOctree->set( x, y, z, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
 }
 
-void Quadrant::subdivideAll( int levels, int numCells )
+void Quadrant::subDivideAll( int levels, int numCells )
 {
   sgVec4 newPos;
   sgVec4 newDimensions;
@@ -120,7 +116,6 @@ void Quadrant::subdivideAll( int levels, int numCells )
   int zFactor;
 
   // Quadrant
-  //TODO Calculate new position
   Quadrant * targetQuadrant;
 
   if ( this->level < levels )
@@ -162,11 +157,9 @@ void Quadrant::subdivideAll( int levels, int numCells )
           newDimensions[1] = dimensions[1]/2;
           newDimensions[2] = dimensions[2]/2;
 
-          //targentQuadrant 
-          //quadOctree->subdivide(i,j,k,4);
           quadOctree->set( x, y, z, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
           targetQuadrant = quadOctree->at(x,y,z);
-          targetQuadrant->subdivideAll(levels, 4);
+          targetQuadrant->subDivideAll(levels, 4);
 
         }
       }
@@ -184,27 +177,30 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
   sgCopyVec4( this->pos, pos );
   sgCopyVec4( this->dimensions, dimensions );
-  // this->dimensions[0] = dimensions[0];
-  // this->dimensions[1] = dimensions[1];
-  // this->dimensions[2] = dimensions[2];
 
-  thisShape = new Box();
-  thisShape->setPos(pos);
+  borders = new Box();
+  borders->setPos(pos);
 
   int numShapes = MyShape::shapes.size();
-  thisShape->setSideLength( dimensions[0] );
+  borders->setSideLength( dimensions[0] );
 
   MyShape::shapes.resize(numShapes + 1);
-	MyShape::shapes(numShapes) = thisShape;
+	MyShape::shapes(numShapes) = borders;
 
-  // for ( int i = 0; i < length; i ++ )
-  // {
-  //   for ( int j = 0; j < length; j ++ )
-  //   {
-  //     for ( int k = 0; k < length; k ++ )
-  //     {
+}
 
-  //     }
-  //   }
-  // }
+void Quadrant::insertShape( MyShape * insertedShape )
+{
+  if ( shapeInQuadrant == NULL )
+  {
+    cout << "Empty quadrant, assigning shape" << endl;
+    shapeInQuadrant = insertedShape;
+  }
+  else
+  {
+    cout << "Need to divide before inserting shape" << endl;
+    int levels = 2;
+    this->subDivideAll( levels, 4 );
+  }
+
 }

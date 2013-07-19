@@ -388,23 +388,10 @@ Quadrant * octreeDemonstration(int numRows) {
 
   WorldSettings::setConstGravFieldVal(gField);
 
-  //TODO setup to accept number of rows, rather than balls
-  //unsigned int numRows = 31; //500 Ball Craziness
-  //unsigned int numRows = 5; //Standard 15 balls
-  //unsigned int numRows = 9;
   unsigned int numPieces = 0;
 
-  float cueMass = 100.0;
   //float cueMass = 0.156;
   float ballMass = 0.156;
-
-  //float ballRadius = 0.057;
-  float cueRadius = 2;
-  float ballRadius = .95;
-
-  //numPieces= numRows*numRows;
-
-  //MyShape::shapes.resize(MyShape::shapes.size() + numPieces + 1);
 
   sgVec4 cueVelocity;
   cueVelocity[0] = 30;
@@ -429,28 +416,35 @@ Quadrant * octreeDemonstration(int numRows) {
 
 
   Quadrant * mainQuadrant = new Quadrant(4, 1, pos, dimensions);
-  //mainQuadrant->subdivide(1,1,1, 4);
-  //Quadrant * targetQuadrant;
-  //for ( int i = 0; i < 2; i++ )
-  //{
-    //for ( int j = 0; j < 2; j++ )
-    //{
-      //for ( int k = 0; k < 2; k++ )
-      //{
-        //mainQuadrant->subdivide(i,j,k,4);
-        //targetQuadrant = mainQuadrant->quadOctree->at(i,j,k);
-        //targetQuadrant->subdivide(i,j,k, 4);
 
-      //}
-    //}
-  //}
+  int levels = 1;
+  mainQuadrant->subDivideAll(levels,4);
+  //mainQuadrant->printCorners();
 
-  int levels = 5;
-  mainQuadrant->subdivideAll(levels,4);
-  mainQuadrant->printCorners();
+	sgVec4 startPlacement, startMomentum, target;
+  startPlacement[0] = 2;
+  startPlacement[1] = 5;
+  startPlacement[0] = 2;
 
+  int curShape = MyShape::shapes.size();
+  MyShape::shapes.resize( curShape+1);
+  MyShape::shapes(curShape) = new Circle;
+  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  MyShape::shapes(curShape)->setMass(1);
+  MyShape::shapes(curShape)->setRadius(.5);
+  mainQuadrant->insertShape( MyShape::shapes(curShape) );
 
-  
+  startPlacement[0] = 2;
+  startPlacement[1] = -5;
+  startPlacement[0] = 2;
+
+  curShape = MyShape::shapes.size();
+  MyShape::shapes.resize( curShape+1);
+  MyShape::shapes(curShape) = new Circle;
+  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  MyShape::shapes(curShape)->setMass(1);
+  MyShape::shapes(curShape)->setRadius(.5);
+  mainQuadrant->insertShape( MyShape::shapes(curShape) );
 
   return mainQuadrant;
 
