@@ -9,6 +9,9 @@
 #define BOX_H_
 
 #include "StraightShape.h"
+#include <iostream>
+
+using namespace std;
 
 class Box: public StraightShape {
 private:
@@ -22,6 +25,11 @@ private:
 
 	static GLubyte * topIndices;
 	static GLubyte * bottomIndices;
+
+  float sideLength;
+  float length;
+  float width;
+  float height;
 public:
 	Box();
 	virtual ~Box();
@@ -30,6 +38,17 @@ public:
 
 	matrix<double> getPts();
 	void drawUnit();
+  void drawScale();
+
+  float getSideLength();
+  void setSideLength(float);
+  float getWidth();
+  void setWidth(float inWidth);
+  float getHeight();
+  void setHeight(float inHeight);
+  float getDepth();
+  void setDepth(float inDepth);
+
 };
 
 #endif /* BOX_H_ */

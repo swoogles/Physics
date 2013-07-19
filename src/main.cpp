@@ -11,10 +11,13 @@
 #include <GL/glu.h>
 #include <cmath>
 
+#include "octree.h"
+
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
+#include "Parallelization/Quadrant.h"
 
 #include "ShapeFiles/Box.h"
 #include "ShapeFiles/Circle.h"
@@ -63,6 +66,7 @@
 
 using namespace std;
 using namespace boost::numeric::ublas;
+using boost::numeric::ublas::vector;
 //using namespace mathglpp;
 
 float globalPullback;
@@ -86,6 +90,7 @@ int numStep = 0;
 float totalMass = 0;
 
 
+Quadrant * globalQuadrant;
 
 void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
 						float &minX, float &minY, float &maxX, float &maxY) {
@@ -114,6 +119,8 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
 	}
 }
 
+// You want to avoid passing argument to this method, because it would slow down every single
+// call.
 void display(void)
 {
 	glutSetWindow(main_window);
@@ -142,6 +149,7 @@ void display(void)
 	for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
 		MyShape::shapes(i)->draw();
 	}
+  //globalQuadrant->thisShape->draw();
 
 
 	glMatrixMode(GL_PROJECTION);
@@ -150,7 +158,9 @@ void display(void)
 
 	//Recording section
 
-  if ( Recorder::shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
+  // TODO A different version of this function should be called if I want to record, rather 
+  // than a branch here.
+  if ( Recorder::getRecording() && Recorder::shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
     Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
   }
   Recorder::incCurFrame();
@@ -178,7 +188,7 @@ void controlDisplay(void) {
 }
 
 
-void init(char * simulation) {
+void init(char simulation) {
 	cout << "Initializing!" << endl;
   cout << "simulation: " << simulation << endl;
 	cout.flush();
@@ -206,25 +216,61 @@ void init(char * simulation) {
 	//Observer::observers(0)->setAngVel(0, 0.2, 0);
 
 	//******CURRENT SIMULATION*****
-  if ( simulation[0] == '0' ) {
+  if ( simulation == '0' ) {
   //if ( strcmp(simulation, "simulation") ) {
 	  largeGridAlternating();
   }
-  if ( simulation[0] == '1' ) {
+  if ( simulation == '1' ) {
 	  bodyFormation( 650 );
   }
-  if ( simulation[0] == '2' ) {
+  if ( simulation == '2' ) {
 	  disruption();
   }
-  if ( simulation[0] == '3' ) {
+  if ( simulation == '3' ) {
 	  simpleCollision();
   }
-  if ( simulation[0] == '4' ) {
-	  billiards(4);
+  if ( simulation == '4' ) {
+	  billiards(10);
   }
-  if ( simulation[0] == '5' ) {
+  if ( simulation == '5' ) {
 	  billiards2(10);
   }
+
+  if ( simulation == '6' ) {
+    sgVec4 groupMomentum;
+    groupMomentum[0]=0;
+    groupMomentum[1]=2800;
+    groupMomentum[2]=0;
+    groupMomentum[3]=1;
+    sgVec4 target;
+    target[0]=-2000;
+    target[1]=0;
+    target[2]=0;
+    target[3]=1;
+	  bodyFormationGeneric( 650, target, groupMomentum );
+    cout << "xpos: " << target[0] << endl;
+    cout << "NumShapes: " << MyShape::shapes.size() << endl;
+
+    target[0]=-target[0];
+    groupMomentum[0]=0;
+    groupMomentum[1]=-2800;
+    groupMomentum[2]=0;
+
+    cout << "xpos: " << target[0] << endl;
+	  bodyFormationGeneric( 650, target, groupMomentum );
+    cout << "NumShapes: " << MyShape::shapes.size() << endl;
+  }
+  if ( simulation == '7' ) {
+    globalQuadrant = octreeDemonstration(10);
+  }
+
+  if ( simulation == '8' ) {
+    int numShapes = MyShape::shapes.size();
+    MyShape::shapes.resize(numShapes + 1);
+    MyShape::shapes(numShapes) = new Box();
+    
+  }
+  
 	//billiards3(7);
 
 	char saveFileName[150] = "/media/Media\ Hog/ProjectOutput/TheReturn/";
@@ -237,12 +283,10 @@ void init(char * simulation) {
 	float minX, minY, maxX, maxY;
 	calcXYMinsAndMaxes(MyShape::shapes, minX, minY, maxX, maxY);
 
-	/*
 	cout << "minX: " << minX << endl;
 	cout << "minY: " << minY << endl;
 	cout << "maxX: " << maxX << endl;
 	cout << "maxX: " << maxY << endl;
-	*/
 
 
 	float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
@@ -266,14 +310,15 @@ void idle() {
 	if (! WorldSettings::isPaused() ) {
     numStep++;
 
-
 		calcForcesAll(WorldSettings::getDT());
 		WorldSettings::updateTimeElapsed();
 		main_window_UI::update();
 		//calcDrag(WorldSettings::getDT());
 
 		if (WorldSettings::isAutoScaling())
+    {
 			WorldSettings::resetXYMinsAndMaxes();
+    }
 
     //Largest Objects
     // boost::numeric::ublas::vector<MyShape *> largest(10);
@@ -286,79 +331,83 @@ void idle() {
       largest[j] = NULL;
     }
 
-		for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
-		{
-      if ( numStep == 1 ) {
-        totalMass += MyShape::shapes(i)->getMass();
-      }
-
-			//MyShape::shapes(i)->adjustMomentum(gravity);
-			MyShape::shapes(i)->update(WorldSettings::getDT());
-			MyShape::shapes(i)->getPos(curPos);
-
-			if (WorldSettings::isAutoScaling())
-				WorldSettings::updateXYMinsAndMaxes(curPos);
-
-        //Largest Objects
-      if ( numStep % 50 == 0 ) {
-        cout << endl << endl;
-        for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-          if ( largest[j] != NULL ) {
-          // if ( largest(j) != NULL ) {
-            
-            if ( MyShape::shapes(i)->getMass() > largest[j]->getMass() ) {
-              if ( j < 10 -1 ) {
-                largest[j+1] = largest[j];
-              }
-              largest[j] = MyShape::shapes(i);
-            }
-          }
-          else {
-              largest[j+1] = largest[j];
-              largest[j] = MyShape::shapes(i);
-          }
+    if ( MyShape::shapes.size() > 0 )
+    {
+      for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
+      {
+        if ( numStep == 1 ) {
+          totalMass += MyShape::shapes(i)->getMass();
         }
 
-      }
+        //MyShape::shapes(i)->adjustMomentum(gravity);
+        MyShape::shapes(i)->update(WorldSettings::getDT());
+        MyShape::shapes(i)->getPos(curPos);
 
-		}
-    sgVec3 color;
-    for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-      if ( largest[j] != NULL ) {
-        largest[j]->getColor( color );
-        cout << "largest[" << j << "]: " << largest[j]->getMass() 
-          << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
-          << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
+        if (WorldSettings::isAutoScaling())
+          WorldSettings::updateXYMinsAndMaxes(curPos);
+
+        //Largest Objects
+        if ( numStep % 50 == 0 ) {
+          cout << endl << endl;
+          for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+            if ( largest[j] != NULL ) {
+              // if ( largest(j) != NULL ) {
+
+              if ( MyShape::shapes(i)->getMass() > largest[j]->getMass() ) {
+                if ( j < 10 -1 ) {
+                  largest[j+1] = largest[j];
+                }
+                largest[j] = MyShape::shapes(i);
+              }
+            }
+              else {
+                largest[j+1] = largest[j];
+                largest[j] = MyShape::shapes(i);
+              }
+            }
+
+          }
+
+        }
+        sgVec3 color;
+        for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+          if ( largest[j] != NULL ) {
+            largest[j]->getColor( color );
+            cout << "largest[" << j << "]: " << largest[j]->getMass() 
+              << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
+              << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
+          }
+        }
+        if ( numStep % 50 == 0 ) {
+          cout << endl << endl;
+        }
+
+        calcCollisionsAll();
       }
     }
-      if ( numStep % 50 == 0 ) {
-        cout << endl << endl;
-      }
 
-		calcCollisionsAll();
-	}
-	int curObserver = Observer::getCurObserver();
+    int curObserver = Observer::getCurObserver();
 
-	Observer::observers(curObserver)->update(WorldSettings::getDT());
+    Observer::observers(curObserver)->update(WorldSettings::getDT());
 
-	/*
-	 float minX, minY, maxX, maxY;
-	 calcXYMinsAndMaxes(MyShape::shapes, minX, minY, maxX, maxY);
-	 */
+    /*
+       float minX, minY, maxX, maxY;
+       calcXYMinsAndMaxes(MyShape::shapes, minX, minY, maxX, maxY);
+       */
 
-	if (WorldSettings::isAutoScaling()) {
+    if (WorldSettings::isAutoScaling()) {
 
-		float minX = WorldSettings::getMinX();
-		float minY = WorldSettings::getMinY();
-		float maxX = WorldSettings::getMaxX();
-		float maxY = WorldSettings::getMaxY();
+      float minX = WorldSettings::getMinX();
+      float minY = WorldSettings::getMinY();
+      float maxX = WorldSettings::getMaxX();
+      float maxY = WorldSettings::getMaxY();
 
-		float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
+      float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
-		Observer::observers(curObserver)->setPos(0, 0, -pullBack * 2);
-	}
+      Observer::observers(curObserver)->setPos(0, 0, -pullBack * 2);
+    }
 
-}
+  }
 
 void dummyCallback(puObject * thisGuy) {
 	cout << "I do something! Really!";
@@ -368,7 +417,7 @@ int main(int argcp, char **argv) {
 
   int mainWinPosX = 100;
   int mainWinPosY = 50;
-  int mainWinHeight = 700;
+  int mainWinHeight = 1100;
   int mainWinWidth = mainWinHeight * 1.3;
 
   int controlWinPosX = mainWinPosX;
@@ -392,7 +441,16 @@ int main(int argcp, char **argv) {
   glutTimerFunc(100, myTimer, FPS);
 
   puInit();
-  init( argv[1]);
+  //std::string record = argv[1][0];
+  char record = argv[1][0];
+  char simulation = argv[2][0];
+  init( simulation );
+  cout << "argv[1]: " << simulation << endl;
+
+  if ( record == 'r' ){
+    Recorder::setRecording(true);
+  }
+
 
   //Creates main menu bar
   main_window_UI::init();

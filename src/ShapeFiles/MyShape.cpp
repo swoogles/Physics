@@ -415,6 +415,35 @@ float MyShape::getDensity() {
 	return density;
 }
 
+bool MyShape::setKineticEnergy(float newKineticEnergy)
+{
+  bool moving;
+  sgVec4 * curVelocity = getVelocity();
+  if ( sgLengthVec4( *curVelocity ) == 0 )
+  {
+    moving = false;
+  }
+  else
+  {
+    sgVec4 newVelocity;
+    sgNormaliseVec4(newVelocity, *curVelocity );
+
+
+    float totalVelocity = sqrt( newKineticEnergy ) / mass * 2;
+    sgScaleVec4( newVelocity, totalVelocity );
+    setVelocity( newVelocity );
+    moving = true;
+  }
+
+  return moving;
+}
+
+
+//! Returns kineticEnergy of object
+float MyShape::getKineticEnergy()
+{
+  return kineticEnergy;
+}
 
 void MyShape::setColor(sgVec3 newColor) {
 	sgCopyVec3(color, newColor);

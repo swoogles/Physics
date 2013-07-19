@@ -375,6 +375,86 @@ void billiards3(int numRows) {
 
 }
 
+Quadrant * octreeDemonstration(int numRows) {
+  WorldSettings::setDT(.003);
+  WorldSettings::makeAllElastic();
+  //WorldSettings::makeAllInelastic();
+  WorldSettings::setGravBetweenObjects(false);
+  WorldSettings::setConstGravField(false);
+  WorldSettings::setTimeElapsed(0);
+
+  sgVec4 gField;
+  gField[0] = -.2; gField[1] = 0; gField[2] = 0;
+
+  WorldSettings::setConstGravFieldVal(gField);
+
+  //TODO setup to accept number of rows, rather than balls
+  //unsigned int numRows = 31; //500 Ball Craziness
+  //unsigned int numRows = 5; //Standard 15 balls
+  //unsigned int numRows = 9;
+  unsigned int numPieces = 0;
+
+  float cueMass = 100.0;
+  //float cueMass = 0.156;
+  float ballMass = 0.156;
+
+  //float ballRadius = 0.057;
+  float cueRadius = 2;
+  float ballRadius = .95;
+
+  //numPieces= numRows*numRows;
+
+  //MyShape::shapes.resize(MyShape::shapes.size() + numPieces + 1);
+
+  sgVec4 cueVelocity;
+  cueVelocity[0] = 30;
+  //cueVelocity[1] = -15.05;
+  cueVelocity[1] = -75;
+  cueVelocity[2] = 0;
+
+  sgVec3 newColor;
+  newColor[0] = 1;
+  newColor[1] = 1;
+  newColor[2] = 1;
+
+  float width = 50;
+  float height = 50;
+  float depth = 50;
+
+  sgVec4 pos;
+  sgVec3 dimensions;
+  dimensions[0] = width;
+  dimensions[1] = height;
+  dimensions[2] = depth;
+
+
+  Quadrant * mainQuadrant = new Quadrant(4, 1, pos, dimensions);
+  //mainQuadrant->subdivide(1,1,1, 4);
+  //Quadrant * targetQuadrant;
+  //for ( int i = 0; i < 2; i++ )
+  //{
+    //for ( int j = 0; j < 2; j++ )
+    //{
+      //for ( int k = 0; k < 2; k++ )
+      //{
+        //mainQuadrant->subdivide(i,j,k,4);
+        //targetQuadrant = mainQuadrant->quadOctree->at(i,j,k);
+        //targetQuadrant->subdivide(i,j,k, 4);
+
+      //}
+    //}
+  //}
+
+  int levels = 5;
+  mainQuadrant->subdivideAll(levels,4);
+  mainQuadrant->printCorners();
+
+
+  
+
+  return mainQuadrant;
+
+}
 
 
 void simpleCollision() {
@@ -460,31 +540,31 @@ void bodyFormation(unsigned int numPieces) {
 
 	float objectDensity = DENSITY_SUN;
 	float bodyVolume = (MASS_SUN)/(objectDensity);
-	//float bodyVolume = (MASS_EARTH*MASS_VAR)/(DENSITY_EARTH*CONVERSION_CONST);
-	//bodyVolume *= VOLUME_VAR;
 	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	sgVec4 startPlacement, startMomentum;
+	sgVec4 startPlacement, startMomentum, target;
+
+  target[0]=-1000;
+  target[1]=0;
+  target[2]=0;
+  target[3]=1;
 
 	float pieceMass = pow(pieceRadius, 3.0);
 	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
 
 	float totalMass = 0.0;
 
-	 srand ( time(NULL) );
+	srand ( time(NULL) );
 
 	for (unsigned int i = 0; i < numPieces; i++) {
 		MyShape::shapes.resize(MyShape::shapes.size()+1);
 
-
 		if (i % 2 == 0) {
 			randomSplitBodyMomentum(startMomentum, pieceMass);
-			randomSplitBodyPlacement(startPlacement, pieceRadius);
-
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
 		}
 		else {
 			sgNegateVec4(startMomentum);
 			sgNegateVec4(startPlacement);
-
 		}
 
 		MyShape::shapes(i) = new Circle;
@@ -496,16 +576,65 @@ void bodyFormation(unsigned int numPieces) {
 
 		//Check if being placed on previously created object
 		while ( isConflict(i) ) {
-			randomSplitBodyPlacement(startPlacement, pieceRadius);
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
 			MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		}
-
-
 		totalMass += MyShape::shapes(i)->getMass();
 	}
-  
   WorldSettings::adjustTotalMass( totalMass );
+}
 
+void bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum) {
+	WorldSettings::setDT(1000);
+	WorldSettings::makeAllInelastic();
+	WorldSettings::setGravBetweenObjects(true);
+	WorldSettings::setConstGravField(false);
+	WorldSettings::setAutoScaling(true);
+	WorldSettings::setTimeElapsed(0);
+	WorldSettings::setTotalMass(0);
 
+	float objectDensity = DENSITY_SUN;
+	float bodyVolume = (MASS_SUN)/(objectDensity);
+	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+	sgVec4 startPlacement, startMomentum;
 
+	float pieceMass = pow(pieceRadius, 3.0);
+	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
+
+	float totalMass = 0.0;
+
+	srand ( time(NULL) );
+
+  int targetSize = MyShape::shapes.size() + numPieces;
+	for (unsigned int i = MyShape::shapes.size(); i < targetSize; i++) {
+		MyShape::shapes.resize(MyShape::shapes.size()+1);
+
+		if (i % 2 == 0) {
+			randomSplitBodyMomentum(startMomentum, pieceMass);
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+		}
+		else {
+			sgNegateVec4(startMomentum);
+			sgNegateVec4(startPlacement);
+		}
+
+    // Apply general group momentum to individual pieces momentum
+    sgAddVec4( startMomentum, groupMomentum );
+
+		MyShape::shapes(i) = new Circle;
+    cout << "StartPos: " << startPlacement[0] << endl;
+		MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+		MyShape::shapes(i)->setMass(pieceMass);
+		MyShape::shapes(i)->setRadius(pieceRadius);
+		MyShape::shapes(i)->setMomentum(startMomentum);
+		MyShape::shapes(i)->setDensity(objectDensity);
+
+		//Check if being placed on previously created object
+		while ( isConflict(i) ) {
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+			MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+		}
+		totalMass += MyShape::shapes(i)->getMass();
+	}
+  WorldSettings::adjustTotalMass( totalMass );
 }

@@ -22,12 +22,12 @@ public:
 	float getMarkerSize();
 	void scaleMembers(float);
 
-	void setRadius(float);
-
 	void drawScale();
 	void drawUnit();
 
 	float getRadius();
+	void setRadius(float);
+
 	float getMomentOfInertia();
 
 	int getType();
