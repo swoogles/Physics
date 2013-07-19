@@ -153,9 +153,9 @@ void Quadrant::subdivideAll( int levels, int numCells )
 
           //sgVec4 offset;
           //sgScaleVec4( pos
-          newPos[0]=pos[0]+(xFactor*dimensions[0]/2.0);
-          newPos[1]=pos[1]+(yFactor*dimensions[1]/2.0);
-          newPos[2]=pos[2]+(zFactor*dimensions[2]/2.0);
+          newPos[0]=pos[0]+(xFactor*dimensions[0]/4.0);
+          newPos[1]=pos[1]+(yFactor*dimensions[1]/4.0);
+          newPos[2]=pos[2]+(zFactor*dimensions[2]/4.0);
           newPos[3]=1;
 
           newDimensions[0] = dimensions[0]/2;

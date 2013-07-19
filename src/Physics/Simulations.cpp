@@ -445,7 +445,7 @@ Quadrant * octreeDemonstration(int numRows) {
     //}
   //}
 
-  int levels = 2;
+  int levels = 5;
   mainQuadrant->subdivideAll(levels,4);
   mainQuadrant->printCorners();
 

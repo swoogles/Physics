@@ -22,7 +22,6 @@ public:
 	float getMarkerSize();
 	void scaleMembers(float);
 
-
 	void drawScale();
 	void drawUnit();
 

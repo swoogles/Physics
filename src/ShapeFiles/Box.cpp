@@ -150,7 +150,10 @@ matrix<double> Box::getPts() {
 }
 
 void Box::drawUnit() {
-  glutWireCube( width );
+  // YOU FUCKING WHORE!!!!
+  // WHY WOULD YOU EVER BE WRITTEN LIKE THIS?!?!?!
+  //glutWireCube( width );
+  glutWireCube( 1.0 );
 }
 
 void Box::drawScale() {

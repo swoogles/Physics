@@ -230,7 +230,7 @@ void init(char simulation) {
 	  simpleCollision();
   }
   if ( simulation == '4' ) {
-	  billiards(4);
+	  billiards(10);
   }
   if ( simulation == '5' ) {
 	  billiards2(10);
