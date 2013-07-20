@@ -85,27 +85,34 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +181 Parallelization/Quadrant.cpp
-badd +211 ShapeFiles/Box.cpp
-badd +545 Physics/Simulations.cpp
+badd +173 ShapeFiles/MyShape.h
+badd +1 ShapeFiles/Circle.cpp
+badd +14 ShapeFiles/Circle.h
 badd +0 Parallelization/Quadrant.h
+badd +0 Parallelization/Quadrant.cpp
+badd +230 ShapeFiles/MyShape.cpp
+badd +191 ShapeFiles/Box.cpp
+badd +455 Physics/Simulations.cpp
+badd +220 main.cpp
+badd +24 Observation/Recording.cpp
+badd +0 Observation/Recording.h
 silent! argdel *
-edit Parallelization/Quadrant.h
+edit Parallelization/Quadrant.cpp
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
 1wincmd h
+wincmd w
 wincmd _ | wincmd |
 split
 1wincmd k
 wincmd w
-wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 27 + 28) / 56)
 exe 'vert 1resize ' . ((&columns * 103 + 103) / 207)
 exe '2resize ' . ((&lines * 26 + 28) / 56)
 exe 'vert 2resize ' . ((&columns * 103 + 103) / 207)
+exe '3resize ' . ((&lines * 27 + 28) / 56)
 exe 'vert 3resize ' . ((&columns * 103 + 103) / 207)
 argglobal
 setlocal keymap=
@@ -208,15 +215,18 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 32 - ((11 * winheight(0) + 13) / 27)
+10,61fold
+10
+normal zo
+let s:l = 119 - ((48 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-32
-normal! 013l
+119
+normal! 04l
 wincmd w
 argglobal
-edit Parallelization/Quadrant.cpp
+edit Observation/Recording.h
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -317,15 +327,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 201 - ((22 * winheight(0) + 13) / 26)
+let s:l = 26 - ((25 * winheight(0) + 13) / 26)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-201
-normal! 017l
+26
+normal! 0
 wincmd w
 argglobal
-edit Physics/Simulations.cpp
+edit Parallelization/Quadrant.h
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -348,7 +358,8 @@ setlocal nocopyindent
 setlocal cryptmethod=
 setlocal nocursorbind
 setlocal nocursorcolumn
-setlocal nocursorline
+set cursorline
+setlocal cursorline
 setlocal define=
 setlocal dictionary=
 setlocal nodiff
@@ -426,18 +437,18 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 435 - ((42 * winheight(0) + 27) / 54)
+let s:l = 37 - ((6 * winheight(0) + 13) / 27)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-435
+37
 normal! 0
 wincmd w
 2wincmd w
-exe '1resize ' . ((&lines * 27 + 28) / 56)
 exe 'vert 1resize ' . ((&columns * 103 + 103) / 207)
 exe '2resize ' . ((&lines * 26 + 28) / 56)
 exe 'vert 2resize ' . ((&columns * 103 + 103) / 207)
+exe '3resize ' . ((&lines * 27 + 28) / 56)
 exe 'vert 3resize ' . ((&columns * 103 + 103) / 207)
 tabnext 1
 if exists('s:wipebuf')

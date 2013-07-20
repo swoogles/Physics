@@ -192,7 +192,7 @@ void MyShape::setPos(float inX, float inY, float inZ) {
 }
 
 void MyShape::setPos(sgVec4 newPos) {
-	sgCopyVec4(pos, newPos);
+	sgCopyVec4(this->pos, newPos);
 }
 
 void MyShape::adjustPos(float dx, float dy, float dz) {

@@ -11,11 +11,14 @@
 #include <string>
 #include <plib/sg.h>
 
+#include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Box.h"
 
 //using namespace std;
 
-class Quadrant
+#define INVALID_OCTREE_INDEX -1
+
+class Quadrant : public Box
 {
   // Octree<Quadrant> quadOctree(); /* Create 4096x4096x4096 octree containing doubles. */
 
@@ -23,6 +26,7 @@ class Quadrant
 
   // Quadrant * nextQuadrant;
     Box * borders;
+    sgVec4 preCenterOfMass;
 
   public:
     int level;
@@ -39,10 +43,14 @@ class Quadrant
     
     sgVec4 dimensions;
 
-    sgVec4 pos;
+    //sgVec4 pos;
 
     void insertShape( MyShape * newShape );
 
+    void getCenterOfMass(sgVec4 centerOfMass);
+    void setCenterOfMass( sgVec4 centerOfMass );
+
+    Quadrant * determineShapeQuadrant( MyShape * shapeToInsert );
 };
 
 #endif /* QUADRANT_H_ */

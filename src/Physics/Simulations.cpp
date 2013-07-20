@@ -409,6 +409,11 @@ Quadrant * octreeDemonstration(int numRows) {
   float depth = 50;
 
   sgVec4 pos;
+  pos[0] = 0;
+  pos[1] = 0;
+  pos[2] = 0;
+  pos[3] = 1;
+
   sgVec3 dimensions;
   dimensions[0] = width;
   dimensions[1] = height;
@@ -418,7 +423,7 @@ Quadrant * octreeDemonstration(int numRows) {
   Quadrant * mainQuadrant = new Quadrant(4, 1, pos, dimensions);
 
   int levels = 1;
-  mainQuadrant->subDivideAll(levels,4);
+  mainQuadrant->subDivideAll(levels,8);
   //mainQuadrant->printCorners();
 
 	sgVec4 startPlacement, startMomentum, target;
@@ -426,6 +431,7 @@ Quadrant * octreeDemonstration(int numRows) {
   startPlacement[1] = 5;
   startPlacement[0] = 2;
 
+  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
   int curShape = MyShape::shapes.size();
   MyShape::shapes.resize( curShape+1);
   MyShape::shapes(curShape) = new Circle;
@@ -434,10 +440,24 @@ Quadrant * octreeDemonstration(int numRows) {
   MyShape::shapes(curShape)->setRadius(.5);
   mainQuadrant->insertShape( MyShape::shapes(curShape) );
 
-  startPlacement[0] = 2;
+  startPlacement[0] = -5;
   startPlacement[1] = -5;
-  startPlacement[0] = 2;
+  startPlacement[2] = 2;
 
+  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
+  curShape = MyShape::shapes.size();
+  MyShape::shapes.resize( curShape+1);
+  MyShape::shapes(curShape) = new Circle;
+  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  MyShape::shapes(curShape)->setMass(1);
+  MyShape::shapes(curShape)->setRadius(.5);
+  mainQuadrant->insertShape( MyShape::shapes(curShape) );
+
+  startPlacement[0] = -5;
+  startPlacement[1] = -5;
+  startPlacement[2] = 2;
+
+  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
   curShape = MyShape::shapes.size();
   MyShape::shapes.resize( curShape+1);
   MyShape::shapes(curShape) = new Circle;
