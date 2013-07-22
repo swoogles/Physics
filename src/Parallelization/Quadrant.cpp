@@ -7,6 +7,28 @@ ostream& operator<<(ostream& os, sgVec4 outputVec) {
 	return os;
 }
 
+Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
+{
+  this->level = level;
+  int length = 2;
+  //quadOctree = new Octree<Quadrant * >(numCells);
+
+  setPos( pos );
+  //sgCopyVec4( this->pos, pos );
+  sgCopyVec4( this->dimensions, dimensions );
+
+  borders = new Box();
+  borders->setPos(pos);
+
+  int numShapes = MyShape::shapes.size();
+  borders->setSideLength( dimensions[0] );
+
+  MyShape::shapes.resize(numShapes + 1);
+	MyShape::shapes(numShapes) = borders;
+
+}
+
+
 void Quadrant::printCorners()
 {
   sgVec4 curCenter;
@@ -75,6 +97,12 @@ void Quadrant::subDivide( int x, int y, int z, int numCells )
   int xFactor;
   int yFactor;
   int zFactor;
+
+  if ( quadOctree == NULL )
+  {
+    quadOctree = new Octree<Quadrant * >(numCells);
+  }
+
   if ( x ) {
     xFactor=1;
   }
@@ -133,6 +161,11 @@ void Quadrant::subDivideAll( int levels, int numCells )
   // Quadrant
   Quadrant * targetQuadrant;
 
+  if ( quadOctree == NULL )
+  {
+    quadOctree = new Octree<Quadrant * >(numCells);
+  }
+
   if ( this->level < levels )
   {
 
@@ -183,44 +216,6 @@ void Quadrant::subDivideAll( int levels, int numCells )
   }
 }
 
-Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
-{
-  this->level = level;
-  int length = 2;
-  quadOctree = new Octree<Quadrant * >(numCells);
-
-  setPos( pos );
-  //sgCopyVec4( this->pos, pos );
-  sgCopyVec4( this->dimensions, dimensions );
-
-  borders = new Box();
-  borders->setPos(pos);
-
-  int numShapes = MyShape::shapes.size();
-  borders->setSideLength( dimensions[0] );
-
-  MyShape::shapes.resize(numShapes + 1);
-	MyShape::shapes(numShapes) = borders;
-
-}
-
-void Quadrant::insertShape( MyShape * insertedShape )
-{
-  if ( shapeInQuadrant == NULL )
-  {
-    cout << "Empty quadrant, assigning shape" << endl;
-    shapeInQuadrant = insertedShape;
-  }
-  else
-  {
-    cout << "Need to divide before inserting shape" << endl;
-    int levels = 2;
-    this->determineShapeQuadrant( insertedShape );
-    //this->subDivide( levels, 4 );
-  }
-
-}
-
 void Quadrant::getCenterOfMass(sgVec4 centerOfMass)
 {
 	sgCopyVec4(centerOfMass, this->preCenterOfMass);
@@ -233,9 +228,47 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
   sgScaleVec4( this->preCenterOfMass, mass);
 }
 
+void Quadrant::insertShape( MyShape * insertedShape )
+{
+  if ( shapeInQuadrant == NULL && quadOctree == NULL )
+  {
+    cout << "executing step 1" << endl;
+    shapeInQuadrant = insertedShape;
+    cout << "executed step 1" << endl;
+  }
+  else if ( shapeInQuadrant == NULL && quadOctree != NULL )
+  {
+    cout << "executing step 2" << endl;
+    // TODO Update centerOfMass
+    int levels = 2;
+    Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
+    cout << "intermission" << endl;
+    targetQuadrant->insertShape( insertedShape );
+    //if ( targetQuadrant->shapeInQuadrant
+    //this->subDivide( levels, 4 );
+    cout << "executed step 2" << endl;
+  }
+  else
+  {
+    cout << "executing step 3" << endl;
+    Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
+    targetQuadrant->insertShape( insertedShape );
+
+    targetQuadrant = this->determineShapeQuadrant( shapeInQuadrant );
+    targetQuadrant->insertShape( shapeInQuadrant );
+
+    shapeInQuadrant = NULL;
+
+    cout << "executed step 3" << endl;
+  }
+
+}
+
+
 // Guaranteed to hand back an instantiated Quadrant
 Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
 {
+  cout << "Determining shape Quadrant" << endl;
   sgVec4 insertPos;
   shapeToInsert->getPos( insertPos ); 
   float insertX = insertPos[0];
@@ -320,6 +353,8 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
     }
   }
 
+  Quadrant * insertionQuadrant;
+
   // Only proceed if we have determined that the provided shape does actually
   // belong in this Quadrant
   if ( targetX != INVALID_OCTREE_INDEX &&
@@ -327,18 +362,26 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
       targetZ != INVALID_OCTREE_INDEX )
   {
     int numCells = 8;
-    Quadrant * insertionQuadrant = getQuadrantFromCell( targetX, targetY, targetZ );
-    if ( insertionQuadrant = NULL )
+    insertionQuadrant = getQuadrantFromCell( targetX, targetY, targetZ );
+    if ( insertionQuadrant == NULL )
     {
-      cout << "Subdiving for new shape!" << endl;
+      //cout << "Subdiving for new shape!" << endl;
       //subDivide( targetX, targetY, targetZ, numCells );
-      quadOctree->set( targetX, targetY, targetZ, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
+
+      insertionQuadrant = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
+      //quadOctree->set( targetX, targetY, targetZ, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
     }
     else
     {
-      cout << "Position requires further dividing of an existant Quadrant" << endl;
-      subDivide( targetX, targetY, targetZ, numCells );
+      //cout << "Position requires further dividing of an existant Quadrant" << endl;
+      //subDivide( targetX, targetY, targetZ, numCells );
     }
   }
+
+  if ( insertionQuadrant == NULL )
+  {
+    cout << "Oh fu..!" << endl;
+  }
+  return insertionQuadrant;
   
 }
