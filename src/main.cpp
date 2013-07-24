@@ -105,7 +105,10 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
 	maxY = -(FLT_MAX-1);
 
 	for (unsigned int i = 0; i < shapeList.size(); i++) {
+    cout << "i: " << i << endl;
+    cout << "shape[i]" << shapeList(i) << endl;
 		shapeList(i)->getPos(curPos);
+    cout << "i-: " << i << endl;
 
 		if (curPos[0] < minX)
 			minX = curPos[0];
@@ -117,6 +120,7 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
 			maxY = curPos[1];
 
 	}
+  cout << "Calced maxes" << endl;
 }
 
 // You want to avoid passing argument to this method, because it would slow down every single

@@ -232,25 +232,26 @@ void Quadrant::insertShape( MyShape * insertedShape )
 {
   if ( shapeInQuadrant == NULL && quadOctree == NULL )
   {
-    cout << "executing step 1" << endl;
+    //cout << "executing step 1" << endl;
     shapeInQuadrant = insertedShape;
-    cout << "executed step 1" << endl;
+    //cout << "executed step 1" << endl;
   }
   else if ( shapeInQuadrant == NULL && quadOctree != NULL )
   {
-    cout << "executing step 2" << endl;
+    //cout << "executing step 2" << endl;
     // TODO Update centerOfMass
     int levels = 2;
     Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
-    cout << "intermission" << endl;
+    //cout << "targetQuadrantAddress: " << targetQuadrant << endl;
+    //cout << "intermission" << endl;
     targetQuadrant->insertShape( insertedShape );
     //if ( targetQuadrant->shapeInQuadrant
     //this->subDivide( levels, 4 );
-    cout << "executed step 2" << endl;
+    //cout << "executed step 2" << endl;
   }
   else
   {
-    cout << "executing step 3" << endl;
+    //cout << "executing step 3" << endl;
     Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
     targetQuadrant->insertShape( insertedShape );
 
@@ -259,7 +260,7 @@ void Quadrant::insertShape( MyShape * insertedShape )
 
     shapeInQuadrant = NULL;
 
-    cout << "executed step 3" << endl;
+    //cout << "executed step 3" << endl;
   }
 
 }
@@ -268,7 +269,7 @@ void Quadrant::insertShape( MyShape * insertedShape )
 // Guaranteed to hand back an instantiated Quadrant
 Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
 {
-  cout << "Determining shape Quadrant" << endl;
+  //cout << "Determining shape Quadrant" << endl;
   sgVec4 insertPos;
   shapeToInsert->getPos( insertPos ); 
   float insertX = insertPos[0];
@@ -355,6 +356,8 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
 
   Quadrant * insertionQuadrant;
 
+  //cout << "Ok" << endl;
+
   // Only proceed if we have determined that the provided shape does actually
   // belong in this Quadrant
   if ( targetX != INVALID_OCTREE_INDEX &&
@@ -362,25 +365,38 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
       targetZ != INVALID_OCTREE_INDEX )
   {
     int numCells = 8;
+    if ( quadOctree == NULL )
+    {
+      quadOctree = new Octree<Quadrant * >(numCells);
+    }
+
+    //cout << "QuadOctree: " << quadOctree  << endl;
     insertionQuadrant = getQuadrantFromCell( targetX, targetY, targetZ );
+    //cout << "Should insert shape in quadrant[" 
+      //<< targetX << ","
+      //<< targetY << ","
+      //<< targetZ << "]" << endl;
+
     if ( insertionQuadrant == NULL )
     {
-      //cout << "Subdiving for new shape!" << endl;
+      //cout << "Creating a new quadrant for insertion" << endl;
+      //cout << endl;
       //subDivide( targetX, targetY, targetZ, numCells );
 
       insertionQuadrant = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
-      //quadOctree->set( targetX, targetY, targetZ, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
+      quadOctree->set( targetX, targetY, targetZ, insertionQuadrant );
     }
     else
     {
       //cout << "Position requires further dividing of an existant Quadrant" << endl;
+      //cout << endl;
       //subDivide( targetX, targetY, targetZ, numCells );
     }
   }
 
   if ( insertionQuadrant == NULL )
   {
-    cout << "Oh fu..!" << endl;
+    //cout << "Oh fu..!" << endl;
   }
   return insertionQuadrant;
   

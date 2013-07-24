@@ -135,6 +135,14 @@ float getSplitBodyRadius(float volume, int numPieces );
  */
 void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target);
 
+/*! \relates MyShape
+ *  \brief Gets a random starting position vector inside the volume vector
+ *
+ *  \param startPos Random starting position is returned here
+ *  \param volume Determines size of bounding box
+ */
+void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 target );
+
 
 /*! \relates MyShape
  *  \brief Gets a random starting momentum vector based on second parameter

@@ -496,15 +496,38 @@ void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target)
   startPos[3] = 1;
 
   sgVec4 translatedPos;
-  // cout << "Initial startPos: " << startPos << endl;
   sgAddVec4( translatedPos, startPos, target );
   startPos[0] = translatedPos[0];
   startPos[1] = translatedPos[1];
   startPos[2] = translatedPos[2];
-  // cout << "Translated startPos: " << startPos << endl;
-  //startPos = startPos + target;
 
-  // cout << "Largest Distance: " << largestDistance << endl;
+
+}
+
+void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 target ) {
+  int randMult;
+  int dimensionInteger;
+
+  for (int i = 0; i < 3; i++)
+  {
+    //randMult = rand()%30; //Earth spacing
+    dimensionInteger = (int) volume[i];
+
+    randMult = rand()%(dimensionInteger/2);
+    if (randMult % 2 == 0) {
+      randMult *= -1;
+    }
+    startPos[i] = randMult;
+  }
+
+  startPos[3] = 1;
+
+  sgVec4 translatedPos;
+  sgAddVec4( translatedPos, startPos, target );
+
+  startPos[0] = translatedPos[0];
+  startPos[1] = translatedPos[1];
+  startPos[2] = translatedPos[2];
 
 }
 

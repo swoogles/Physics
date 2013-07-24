@@ -388,7 +388,7 @@ Quadrant * octreeDemonstration(int numRows) {
 
   WorldSettings::setConstGravFieldVal(gField);
 
-  unsigned int numPieces = 0;
+  unsigned int numPieces = 4;
 
   //float cueMass = 0.156;
   float ballMass = 0.156;
@@ -414,6 +414,12 @@ Quadrant * octreeDemonstration(int numRows) {
   pos[2] = 0;
   pos[3] = 1;
 
+  sgVec4 target;
+  target[0]=0;
+  target[1]=0;
+  target[2]=0;
+  target[3]=1;
+
   sgVec3 dimensions;
   dimensions[0] = width;
   dimensions[1] = height;
@@ -426,7 +432,7 @@ Quadrant * octreeDemonstration(int numRows) {
   mainQuadrant->subDivideAll(levels,8);
   //mainQuadrant->printCorners();
 
-	sgVec4 startPlacement, startMomentum, target;
+	sgVec4 startPlacement, startMomentum;
   startPlacement[0] = 15;
   startPlacement[1] = 20;
   startPlacement[0] = 15;
@@ -478,6 +484,35 @@ Quadrant * octreeDemonstration(int numRows) {
   MyShape::shapes(curShape)->setMass(1);
   MyShape::shapes(curShape)->setRadius(.5);
   mainQuadrant->insertShape( MyShape::shapes(curShape) );
+
+	float totalMass = 0.0;
+
+  int prevNumPieces = MyShape::shapes.size();
+  cout << "prevNumPieces: " << prevNumPieces << endl;
+  cout << "endNumPieces:" << prevNumPieces + numPieces << endl;
+ 	//for (unsigned int i = prevNumPieces; i < prevNumPieces + numPieces -1; i++) {
+	// for (unsigned int i = 0; i < numPieces; i++) {
+		// MyShape::shapes.resize(MyShape::shapes.size()+1);
+// 
+    // randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
+// 
+    // cout << "Adding @ " << startPlacement << endl;
+		// MyShape::shapes(i) = new Circle;
+		// MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+		// MyShape::shapes(i)->setMass(0);
+		// MyShape::shapes(i)->setRadius(.5);
+// 
+		// //Check if being placed on previously created object
+		// while ( isConflict(i) ) {
+			// randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
+			// MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+		// }
+    // mainQuadrant->insertShape( MyShape::shapes(i) );
+		// totalMass += MyShape::shapes(i)->getMass();
+	// }
+
+  WorldSettings::adjustTotalMass( totalMass );
+ //mainQuadrant->insertShape( MyShape::shapes(curShape) );
 
   return mainQuadrant;
 
