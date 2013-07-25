@@ -232,13 +232,13 @@ void Quadrant::insertShape( MyShape * insertedShape )
 {
   if ( shapeInQuadrant == NULL && quadOctree == NULL )
   {
-    //cout << "executing step 1" << endl;
+    cout << "executing step 1" << endl;
     shapeInQuadrant = insertedShape;
-    //cout << "executed step 1" << endl;
+    cout << "executed step 1" << endl;
   }
   else if ( shapeInQuadrant == NULL && quadOctree != NULL )
   {
-    //cout << "executing step 2" << endl;
+    cout << "executing step 2" << endl;
     // TODO Update centerOfMass
     int levels = 2;
     Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
@@ -247,11 +247,11 @@ void Quadrant::insertShape( MyShape * insertedShape )
     targetQuadrant->insertShape( insertedShape );
     //if ( targetQuadrant->shapeInQuadrant
     //this->subDivide( levels, 4 );
-    //cout << "executed step 2" << endl;
+    cout << "executed step 2" << endl;
   }
   else
   {
-    //cout << "executing step 3" << endl;
+    cout << "executing step 3" << endl;
     Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
     targetQuadrant->insertShape( insertedShape );
 
@@ -260,7 +260,7 @@ void Quadrant::insertShape( MyShape * insertedShape )
 
     shapeInQuadrant = NULL;
 
-    //cout << "executed step 3" << endl;
+    cout << "executed step 3" << endl;
   }
 
 }

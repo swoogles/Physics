@@ -242,9 +242,7 @@ void billiards2(int numRows) {
 	float cueRadius = 2;
 	float ballRadius = .95;
 
-		numPieces= numRows*numRows;
-
-	MyShape::shapes.resize(MyShape::shapes.size() + numPieces + 1);
+  numPieces= numRows*numRows;
 
 	sgVec4 cueVelocity;
 	cueVelocity[0] = 30;
@@ -256,36 +254,32 @@ void billiards2(int numRows) {
 	newColor[0] = 1;
 	newColor[1] = 1;
 	newColor[2] = 1;
+    
+  MyShape * shapeForInsertion;
 
-	MyShape::shapes(0) = new Circle;
-	MyShape::shapes(0)->setPos(numRows, numRows*3, 0);
-	MyShape::shapes(0)->setMass(cueMass);
-	//MyShape::shapes(0)->setRadius(cueRadius);
-	MyShape::shapes(0)->setRadius(ballRadius);
-	MyShape::shapes(0)->setVelocity(cueVelocity);
-	MyShape::shapes(0)->setColor(newColor);
+	shapeForInsertion = new Circle;
+	shapeForInsertion->setPos(numRows, numRows*3, 0);
+	shapeForInsertion->setMass(cueMass);
+	shapeForInsertion->setRadius(ballRadius);
+	shapeForInsertion->setVelocity(cueVelocity);
+	shapeForInsertion->setColor(newColor);
+  MyShape::addShapeToList( shapeForInsertion );
 
-	unsigned int curShape = 1;
+	// MyShape::shapes.resize(MyShape::shapes.size() + numPieces );
+
 	for (unsigned int i = 0; i < numRows; i++) {
 		for (unsigned int j = 0; j < numRows; j++) {
-			MyShape::shapes(curShape) = new Circle;
-			MyShape::shapes(curShape)->setPos(j*3, i*3, 0);
-			//MyShape::shapes(curShape)->setPos(j*1.1, i*2.0, 0);
-			MyShape::shapes(curShape)->setMass(ballMass);
-			MyShape::shapes(curShape)->setRadius(ballRadius);
+			shapeForInsertion = new Circle;
+			shapeForInsertion->setPos(j*3, i*3, 0);
+			shapeForInsertion->setMass(ballMass);
+			shapeForInsertion->setRadius(ballRadius);
       newColor[1] = -( ( -.5 + (j/float(numRows)) ) * ( -.5 + (j/float(numRows)) ) )+ 1.0;
-      MyShape::shapes(curShape)->setColor(newColor);
-			//cout << j << " ";
-			curShape++;
+      shapeForInsertion->setColor(newColor);
+
+      MyShape::addShapeToList( shapeForInsertion );
 		}
 		cout << endl;
 	}
-
-	/*
-	for (unsigned int i = 1; i < MyShape::shapes.size(); i++) {
-		MyShape::shapes(0) = new Circle;
-	}
-	*/
 
 	cout << "NumPieces: " << numPieces << endl;
 	cout << "Type: " << MyShape::shapes(0)->getType() << endl;
@@ -320,11 +314,10 @@ void billiards3(int numRows) {
 
 		numPieces= numRows*numRows*numRows;
 
-	MyShape::shapes.resize(MyShape::shapes.size() + numPieces + 1);
+	//MyShape::shapes.resize(MyShape::shapes.size() + numPieces + 1);
 
 	sgVec4 cueVelocity;
 	cueVelocity[0] = 30;
-	//cueVelocity[1] = -15.05;
 	cueVelocity[1] = -75;
 	cueVelocity[2] = 20;
 
@@ -333,13 +326,15 @@ void billiards3(int numRows) {
 	newColor[1] = 1;
 	newColor[2] = 1;
 
-	MyShape::shapes(0) = new Circle;
-	MyShape::shapes(0)->setPos(numRows, numRows*5, 0);
-	MyShape::shapes(0)->setMass(cueMass);
-	MyShape::shapes(0)->setRadius(cueRadius);
-	//MyShape::shapes(0)->setRadius(ballRadius);
-	MyShape::shapes(0)->setVelocity(cueVelocity);
-	MyShape::shapes(0)->setColor(newColor);
+  MyShape * shapeForInsertion;
+
+	shapeForInsertion = new Circle;
+	shapeForInsertion->setPos(numRows, numRows*5, 0);
+	shapeForInsertion->setMass(cueMass);
+	shapeForInsertion->setRadius(cueRadius);
+	shapeForInsertion->setVelocity(cueVelocity);
+	shapeForInsertion->setColor(newColor);
+  MyShape::addShapeToList( shapeForInsertion );
 
 	newColor[0] = 0;
 	newColor[2] = 0;
@@ -348,27 +343,19 @@ void billiards3(int numRows) {
 	for (unsigned int i = 0; i < numRows; i++) {
 		for (unsigned int j = 0; j < numRows; j++) {
       for (unsigned int z = 0; z < numRows; z++) {
-			MyShape::shapes(curShape) = new Circle;
-			MyShape::shapes(curShape)->setPos(j*4, i*4, z*4);
-			//MyShape::shapes(curShape)->setPos(j*1.1, i*2.0, 0);
-			MyShape::shapes(curShape)->setMass(ballMass);
-			MyShape::shapes(curShape)->setRadius(ballRadius);
-      //newColor[0] = 1-(z/float(numRows));
+
+			shapeForInsertion = new Circle;
+			shapeForInsertion->setPos(j*4, i*4, z*4);
+			shapeForInsertion->setMass(ballMass);
+			shapeForInsertion->setRadius(ballRadius);
       newColor[1] = -( ( -.5 + (z/float(numRows)) ) * ( -.5 + (z/float(numRows)) ) )+ 1.0;
-      //newColor[2] = z/float(numRows);
-      MyShape::shapes(curShape)->setColor(newColor);
-			//cout << j << " ";
-			curShape++;
+      shapeForInsertion->setColor(newColor);
+
+      MyShape::addShapeToList( shapeForInsertion );
       }
 		}
 		cout << endl;
 	}
-
-	/*
-	for (unsigned int i = 1; i < MyShape::shapes.size(); i++) {
-		MyShape::shapes(0) = new Circle;
-	}
-	*/
 
 	cout << "NumPieces: " << numPieces << endl;
 	cout << "Type: " << MyShape::shapes(0)->getType() << endl;
@@ -429,69 +416,103 @@ Quadrant * octreeDemonstration(int numRows) {
   Quadrant * mainQuadrant = new Quadrant(4, 1, pos, dimensions);
 
   int levels = 1;
-  mainQuadrant->subDivideAll(levels,8);
+  //mainQuadrant->subDivideAll(levels,8);
   //mainQuadrant->printCorners();
 
 	sgVec4 startPlacement, startMomentum;
+
   startPlacement[0] = 15;
   startPlacement[1] = 20;
   startPlacement[0] = 15;
 
+  MyShape * shapeForInsertion;
+
   cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
-  int curShape = MyShape::shapes.size();
-  MyShape::shapes.resize( curShape+1);
-  MyShape::shapes(curShape) = new Circle;
-  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  MyShape::shapes(curShape)->setMass(1);
-  MyShape::shapes(curShape)->setRadius(.5);
-  mainQuadrant->insertShape( MyShape::shapes(curShape) );
+  shapeForInsertion = new Circle;
+  shapeForInsertion->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  shapeForInsertion->setMass(1);
+  shapeForInsertion->setRadius(.5);
+  MyShape::addShapeToList( shapeForInsertion );
+  mainQuadrant->insertShape( shapeForInsertion );
 
   startPlacement[0] = -5;
   startPlacement[1] = 15;
   startPlacement[2] = 12;
 
-  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
-  curShape = MyShape::shapes.size();
-  MyShape::shapes.resize( curShape+1);
-  MyShape::shapes(curShape) = new Circle;
-  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  MyShape::shapes(curShape)->setMass(1);
-  MyShape::shapes(curShape)->setRadius(.5);
-  mainQuadrant->insertShape( MyShape::shapes(curShape) );
-
+  shapeForInsertion = new Circle;
+  shapeForInsertion->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  shapeForInsertion->setMass(1);
+  shapeForInsertion->setRadius(.5);
+  MyShape::addShapeToList( shapeForInsertion );
+  mainQuadrant->insertShape( shapeForInsertion );
+  
   startPlacement[0] = -5;
   startPlacement[1] = -5;
   startPlacement[2] = -10;
 
-  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
-  curShape = MyShape::shapes.size();
-  MyShape::shapes.resize( curShape+1);
-  MyShape::shapes(curShape) = new Circle;
-  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  MyShape::shapes(curShape)->setMass(1);
-  MyShape::shapes(curShape)->setRadius(.5);
-  mainQuadrant->insertShape( MyShape::shapes(curShape) );
+  shapeForInsertion = new Circle;
+  shapeForInsertion->setPos( startPlacement );
+  shapeForInsertion->setMass(1);
+  shapeForInsertion->setRadius(.5);
+  MyShape::addShapeToList( shapeForInsertion );
+  mainQuadrant->insertShape( shapeForInsertion );
 
   startPlacement[0] = -5;
   startPlacement[1] = -5;
   startPlacement[2] = -20;
 
-  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
-  curShape = MyShape::shapes.size();
-  MyShape::shapes.resize( curShape+1);
-  MyShape::shapes(curShape) = new Circle;
-  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  MyShape::shapes(curShape)->setMass(1);
-  MyShape::shapes(curShape)->setRadius(.5);
-  mainQuadrant->insertShape( MyShape::shapes(curShape) );
+  shapeForInsertion = new Circle;
+  shapeForInsertion->setPos( startPlacement );
+  shapeForInsertion->setMass(1);
+  shapeForInsertion->setRadius(.5);
+  MyShape::addShapeToList( shapeForInsertion );
+  mainQuadrant->insertShape( shapeForInsertion );
+
+  startPlacement[0] = -5;
+  startPlacement[1] = -5;
+  startPlacement[2] = -15;
+
+  shapeForInsertion = new Circle;
+  shapeForInsertion->setPos( startPlacement );
+  shapeForInsertion->setMass(1);
+  shapeForInsertion->setRadius(.5);
+  MyShape::addShapeToList( shapeForInsertion );
+  mainQuadrant->insertShape( shapeForInsertion );
+
+  startPlacement[0] = -5;
+  startPlacement[1] = -8;
+  startPlacement[2] = -15;
+    
+  shapeForInsertion = new Circle;
+  shapeForInsertion->setPos( startPlacement );
+  shapeForInsertion->setMass(1);
+  shapeForInsertion->setRadius(.5);
+  MyShape::addShapeToList( shapeForInsertion );
+  mainQuadrant->insertShape( shapeForInsertion );
+
+  startPlacement[0] = -5;
+  startPlacement[1] = -9;
+  startPlacement[2] = -16;
+
+  shapeForInsertion = new Circle;
+  shapeForInsertion->setPos( startPlacement );
+  shapeForInsertion->setMass(1);
+  shapeForInsertion->setRadius(.5);
+  MyShape::addShapeToList( shapeForInsertion );
+  mainQuadrant->insertShape( shapeForInsertion );
+
 
 	float totalMass = 0.0;
 
   int prevNumPieces = MyShape::shapes.size();
   cout << "prevNumPieces: " << prevNumPieces << endl;
   cout << "endNumPieces:" << prevNumPieces + numPieces << endl;
- 	//for (unsigned int i = prevNumPieces; i < prevNumPieces + numPieces -1; i++) {
-	// for (unsigned int i = 0; i < numPieces; i++) {
+
+  for (unsigned int j = 0; j < MyShape::shapes.size(); j++) {
+    //cout << "shape[" << j << "]" << MyShape::shapes(j) << endl;
+  }
+
+ 	// for (unsigned int i = prevNumPieces; i < prevNumPieces + numPieces; i++) {
 		// MyShape::shapes.resize(MyShape::shapes.size()+1);
 // 
     // randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
@@ -509,7 +530,14 @@ Quadrant * octreeDemonstration(int numRows) {
 		// }
     // mainQuadrant->insertShape( MyShape::shapes(i) );
 		// totalMass += MyShape::shapes(i)->getMass();
+// 
+    // for (unsigned int j = 0; j < MyShape::shapes.size(); j++) {
+      // cout << "shape[" << j << "]" << MyShape::shapes(j) << endl;
+    // }
 	// }
+
+  // MyShape::shapes.erase_element( 5 );
+  // MyShape::shapes.resize( MyShape::shapes.size() - 1);
 
   WorldSettings::adjustTotalMass( totalMass );
  //mainQuadrant->insertShape( MyShape::shapes(curShape) );
@@ -530,10 +558,6 @@ void simpleCollision() {
 	float bRadius = 1;
 
 	sgVec4 startPlacement, startAngMom;
-
-	for (unsigned int i = 0; i < numPieces; i++) {
-		MyShape::shapes.resize(MyShape::shapes.size()+1);
-	}
 
 	// Object A
 	startPlacement[0] = -1;
@@ -618,7 +642,9 @@ void bodyFormation(unsigned int numPieces) {
 	srand ( time(NULL) );
 
 	for (unsigned int i = 0; i < numPieces; i++) {
-		MyShape::shapes.resize(MyShape::shapes.size()+1);
+    MyShape * curShape;
+
+		// MyShape::shapes.resize(MyShape::shapes.size()+1);
 
 		if (i % 2 == 0) {
 			randomSplitBodyMomentum(startMomentum, pieceMass);
@@ -629,19 +655,21 @@ void bodyFormation(unsigned int numPieces) {
 			sgNegateVec4(startPlacement);
 		}
 
-		MyShape::shapes(i) = new Circle;
-		MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-		MyShape::shapes(i)->setMass(pieceMass);
-		MyShape::shapes(i)->setRadius(pieceRadius);
-		MyShape::shapes(i)->setMomentum(startMomentum);
-		MyShape::shapes(i)->setDensity(objectDensity);
+		curShape = new Circle;
+    curShape->setPos( startPlacement );
+		curShape->setMass(pieceMass);
+		curShape->setRadius(pieceRadius);
+		curShape->setMomentum(startMomentum);
+		curShape->setDensity(objectDensity);
 
+    MyShape::addShapeToList( curShape );
 		//Check if being placed on previously created object
 		while ( isConflict(i) ) {
 			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
-			MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+      curShape->setPos( startPlacement );
 		}
-		totalMass += MyShape::shapes(i)->getMass();
+
+		totalMass += curShape->getMass();
 	}
   WorldSettings::adjustTotalMass( totalMass );
 }

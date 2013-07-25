@@ -267,6 +267,22 @@ public:
 	 */
 	static vector<MyShape *> shapes;
 
+	/*! \brief Returns a shape from the main shapes list
+	 *
+	 *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
+	 *  \return Pointer to desired shape
+	 */
+  static MyShape * getShapeFromList( int shapeIndex );
+
+	/*! \brief Returns a shape from the main shapes list
+	 *
+	 *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
+	 *  \return Pointer to desired shape
+	 */
+  static int addShapeToList( MyShape * insertShape );
+
+
+
 	//Get rid of this and store in WorldSettings instead
 	static float G;
 

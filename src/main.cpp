@@ -104,11 +104,12 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
 	maxX = -(FLT_MAX-1);
 	maxY = -(FLT_MAX-1);
 
+  // for (unsigned int j = 0; j < MyShape::shapes.size(); j++) {
+    // cout << "shape[" << j << "]" << MyShape::shapes(j) << endl;
+  // }
+
 	for (unsigned int i = 0; i < shapeList.size(); i++) {
-    cout << "i: " << i << endl;
-    cout << "shape[i]" << shapeList(i) << endl;
 		shapeList(i)->getPos(curPos);
-    cout << "i-: " << i << endl;
 
 		if (curPos[0] < minX)
 			minX = curPos[0];
@@ -273,6 +274,10 @@ void init(char simulation) {
     MyShape::shapes.resize(numShapes + 1);
     MyShape::shapes(numShapes) = new Box();
     
+  }
+
+  if ( simulation == '9' ) {
+	  billiards3(10);
   }
   
 	//billiards3(7);

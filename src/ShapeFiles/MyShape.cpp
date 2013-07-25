@@ -502,6 +502,26 @@ void MyShape::getUnitVecTo(MyShape * destination, sgVec4 unitv) {
 }
 */
 
+MyShape * MyShape::getShapeFromList( int shapeIndex )
+{
+  MyShape * returnShape;
+  if ( shapes.size() > shapeIndex )
+  {
+    returnShape = shapes(shapeIndex);
+  }
+
+  return returnShape;
+}
+
+int MyShape::addShapeToList( MyShape * insertShape )
+{
+  int curSize = shapes.size();
+  shapes.resize(curSize + 1);
+  shapes(curSize) = insertShape;
+  return curSize;
+}
+
+
 void MyShape::clearShapes() {
 	for (int i = MyShape::shapes.size() - 1; i > -1; i--) {
       cout << "Shape # " << i << endl;
