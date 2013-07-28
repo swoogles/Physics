@@ -453,6 +453,7 @@ int main(int argcp, char **argv) {
   //std::string record = argv[1][0];
   char record = argv[1][0];
   char simulation = argv[2][0];
+
   init( simulation );
   cout << "argv[1]: " << simulation << endl;
 
@@ -464,17 +465,6 @@ int main(int argcp, char **argv) {
   //Creates main menu bar
   main_window_UI::init();
 
-/*
-  int sub_menu = glutCreateMenu(size_menu);
-  glutAddMenuEntry("Option 2", 2);
-  glutAddMenuEntry("Move Shapes up", 3);
-  glutCreateMenu(top_menu);
-  glutAddMenuEntry("Quit", 1);
-  glutAddSubMenu("Further Options", sub_menu);
-  glutAttachMenu(GLUT_RIGHT_BUTTON);
-  */
-
-
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowPosition(controlWinPosX,controlWinPosY);
   glutInitWindowSize(controlWinWidth,controlWinHeight);
@@ -483,10 +473,6 @@ int main(int argcp, char **argv) {
   glutDisplayFunc(controlDisplay);
   glutMouseFunc(myMouse);
   glutKeyboardFunc(myKey);
-  //glutIdleFunc(controlDisplay);
-  //glutIdleFunc(display);
-  //glutTimerFunc(100, myTimer, FPS);
-  //glutReshapeFunc(box, y);
 
   //Get the buttons laid out and what-not
   control_center::init();

@@ -10,14 +10,6 @@
 //Initializing the static variables needed for drawing
 GLfloat * Box::cube_vertices = new GLfloat[48];
 
-
-GLubyte * Box::frontIndices = new GLubyte[4];
-GLubyte * Box::backIndices = new GLubyte[4];
-GLubyte * Box::rightIndices = new GLubyte[4];
-GLubyte * Box::leftIndices = new GLubyte[4];
-GLubyte * Box::topIndices = new GLubyte[4];
-GLubyte * Box::bottomIndices = new GLubyte[4];
-
 Box::Box() {
   width = 1;
   height = 1;
@@ -193,23 +185,3 @@ float Box::getDepth() {
 void Box::setDepth(float inDepth) {
 	depth = inDepth;
 }
-
-/*
-void Box::drawUnit() {
-	  glEnableClientState( GL_VERTEX_ARRAY ) ;
-	  glEnableClientState( GL_COLOR_ARRAY ) ;
-
-	  glVertexPointer( 3, GL_FLOAT, 6*sizeof(GLfloat), cube_vertices ) ;
-	  glColorPointer(  3, GL_FLOAT, 6*sizeof(GLfloat), &cube_vertices[3] ) ;
-
-	  glDrawElements( GL_QUADS, 4, GL_UNSIGNED_BYTE, frontIndices ) ;
-	  glDrawElements( GL_QUADS, 4, GL_UNSIGNED_BYTE, backIndices ) ;
-	  glDrawElements( GL_QUADS, 4, GL_UNSIGNED_BYTE, rightIndices ) ;
-	  glDrawElements( GL_QUADS, 4, GL_UNSIGNED_BYTE, leftIndices ) ;
-	  glDrawElements( GL_QUADS, 4, GL_UNSIGNED_BYTE, topIndices ) ;
-	  glDrawElements( GL_QUADS, 4, GL_UNSIGNED_BYTE, bottomIndices ) ;
-
-	  glDisableClientState( GL_VERTEX_ARRAY);
-	  glDisableClientState( GL_COLOR_ARRAY);
-}
-*/

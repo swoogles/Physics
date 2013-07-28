@@ -1,19 +1,17 @@
 /*
- * MyShape.cpp
+ * Moveable.cpp
  *
  *  Created on: Jul 10, 2011
  *      Author: brasure
  */
 
-#include "MyShape.h"
+#include "Moveable.h"
 #include "../Physics/WorldSettings.h"
 
 #include <iostream>
 
 using namespace std;
 using namespace boost::numeric::ublas;
-
-float MyShape::G = 6.67384e-11;
 
 //TODO Make sure I'm supposed to actually be referencing the 0 here...
 boost::numeric::ublas::vector<MyShape *> MyShape::shapes(0);

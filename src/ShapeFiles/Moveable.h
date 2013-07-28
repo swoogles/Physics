@@ -5,8 +5,8 @@
  *      Author: brasure
  */
 
-#ifndef MYSHAPE_H_
-#define MYSHAPE_H_
+#ifndef MOVEABLE_H_
+#define MOVEABLE_H_
 
 #include <GL/gl.h>
 #include <GL/glut.h>
@@ -42,7 +42,6 @@ using boost::numeric::ublas::vector;
  *  \n \n Currently Circles are the only objects that have been really developed, as they are the easiest starting point physically
  */
 class MyShape {
-//class MyShape: public Moveable{
 protected:
 	//vector<double> pos;
 	GLint numPts;
@@ -78,16 +77,6 @@ public:
 
 	virtual ~MyShape();
 
-	/*! \brief Returns points used for outline markers
-	 *
-	 *  This was useful when originally getting the linear algebra figured out for openGL, but has been put on the shelf for the time being
-	 */
-	virtual matrix<double> getPts();
-
-
-	//! Print outline coordinates
-	void printPts();
-
 	/*! \brief The key MyShape function called in the display function
 	 *
 	 *  Steps:
@@ -111,14 +100,6 @@ public:
 
 	//! Draw unit shape (should be called last in draw() )
 	virtual void drawUnit();
-
-
-	/*
-	void scale(float);
-	void scale(float, float);
-	virtual void scaleMembers(float);
-	virtual void scaleMembers(float, float);
-	*/
 
 
 	//! Set position of object to <inX, inY, inZ>
@@ -188,13 +169,6 @@ public:
 	//! Returns velocity of object in retVec
 	void getVelocity(sgVec4 retVec);
 
-	/*! \brief Calculates the moment of inertia for the object
-	 *
-	 *  Calculation varies for different types of object
-	 *  \return Moment of Inertia value
-	 */
-	virtual float getMomentOfInertia();
-
 	//! Sets angular momentum of object to <newAngMomentum>
 	void setAngMomentum(sgVec4 newAngMomentum);
 	//! Alters angular momentum of object by <dAngMomentum>
@@ -209,92 +183,13 @@ public:
 	//! Returns angular velocity of object in retVec
 	void getAngVelocity(sgVec4 retVec);
 
-	//! Sets mass of object to newMass
-	void setMass(float newMass);
-	//! Alters mass of object by dMass
-	void adjustMass(float dMass);
-	//! Returns mass of object
-	float getMass();
-
-	//! Sets density of object to newDensity
-	void setDensity(float newDensity);
-	//! Returns density of object
-	float getDensity();
-
-	//! Sets kineticEnergy of object to newDensity
-	bool setKineticEnergy(float newKineticEnergy);
-	//! Returns kineticEnergy of object
-	float getKineticEnergy();
-
-	//! Sets color of object to <newColor>
-	void setColor(sgVec3 newColor);
-	//! Returns color of object in retVec
-	void getColor(sgVec3 retVec);
-
-	/*! \brief Calculates color of object based on how a star of that mass/density would burn
-	 *
-	 *  Right now this function only handles stars near the size of the Sun
-	 */
-	void calcColor();
 
 	//! Moves object based on current normal and angular momentum
 	void update(float);
 
-	/*
-	void hFlip();
-	void vFlip();
-	*/
-
-	//! Another relic from figuring out the linear algebra, keeping around just in case
-	virtual float getMarkerSize();
-
-	//! Purely virtual method used by Circle
-	virtual void setRadius(float );
-	//! Purely virtual method used by Circle
-	virtual float getRadius();
-
-	/*! \brief Returns an integer indicating the type of shape
-	 *
-	 *  Possible values:
-	 *  \n 1: Circle
-	 *  \n 2: Box
-	 *  \n Rest to be determined
-	 */
-	virtual int getType();
-
-  // TODO make generic versions of these variables and methods.
-  // Eg. Observers::getObserverFromList, Quadrant
-	/*! \brief Vector that holds all currently active shapes
-	 *
-	 *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
-	 */
-	static vector<MyShape *> shapes;
-
-	/*! \brief Returns a shape from the main shapes list
-	 *
-	 *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
-	 *  \return Pointer to desired shape
-	 */
-  static MyShape * getShapeFromList( int shapeIndex );
-
-	/*! \brief Returns a shape from the main shapes list
-	 *
-	 *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
-	 *  \return Pointer to desired shape
-	 */
-  static int addShapeToList( MyShape * insertShape );
-
-
-
-	//Get rid of this and store in WorldSettings instead
-	static float G;
-
-   static void clearShapes();
-
 };
 
 
-#endif /* MYSHAPE_H_ */
+#endif /* MOVEABLE_H_ */
 
-//******Non-Class Functions*****
 

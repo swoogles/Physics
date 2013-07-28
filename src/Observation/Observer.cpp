@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// TODO Again, make sure I'm properly/necessarily referencing spot 0;
 boost::numeric::ublas::vector<Observer *> Observer::observers(0);
 int Observer::curObserver;
 
@@ -84,12 +85,6 @@ void Observer::zoomOut() {
 }
 
 void Observer::setAngle(float xAngle, float yAngle, float zAngle) {
-	/*
-	angle = inAngle;
-	cout << "Being Used" << endl;
-	this->calcRotMat();
-	*/
-
 	sgMakeIdentQuat(orientationQuat);
 
 

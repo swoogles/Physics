@@ -51,13 +51,10 @@ void myKey(unsigned char key, int x, int y) {
 	}
 	if (key == 'w') {
 		//MoveShapes(0,.5,0);
-		//cout << shapes(1)->getPts() << endl;
-	}
 	if (key == 'a') {}
 		//moveShapes(-.5,0,0);
 	if (key == 's') {
 		//moveShapes(0,-.5,0);
-		//cout << shapes(1)->getPts() << endl;
 	}
 	if (key == 'd') {}
 		//moveShapes(.5,0,0);

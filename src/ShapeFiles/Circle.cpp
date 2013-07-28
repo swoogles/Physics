@@ -26,13 +26,6 @@ void Circle::scaleMembers(float scalarFac) {
 matrix<double> Circle::getPts() {
 	int curPt = 0;
 
-	/*
-	float circDelta = 2*PI/numPts;
-	float xPos = pos(0);
-	float yPos = pos(1);
-	float zPos = pos(2);
-	*/
-
 
 	for (float i = 0; i <= 2*PI; i += 2*PI/numPts)
 	{
