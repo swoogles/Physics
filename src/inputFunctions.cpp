@@ -51,6 +51,7 @@ void myKey(unsigned char key, int x, int y) {
 	}
 	if (key == 'w') {
 		//MoveShapes(0,.5,0);
+  }
 	if (key == 'a') {}
 		//moveShapes(-.5,0,0);
 	if (key == 's') {

@@ -204,8 +204,6 @@ void init(char simulation) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	Box::init();
-
 	WorldSettings::Pause();
 
 	Observer::init();

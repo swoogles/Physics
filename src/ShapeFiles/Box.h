@@ -34,8 +34,6 @@ public:
 	Box();
 	virtual ~Box();
 
-	static void init();
-
 	matrix<double> getPts();
 	void drawUnit();
   void drawScale();

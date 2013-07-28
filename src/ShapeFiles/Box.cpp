@@ -14,68 +14,8 @@ Box::Box() {
   width = 1;
   height = 1;
   depth = 1;
-
 }
 
-void Box::init() {
-	int i = 0;
-
-	//Vert 0
-	cube_vertices[i++]=-1.0; cube_vertices[i++]=-1.0;cube_vertices[i++]=1.0;
-	cube_vertices[i++]=1.0; cube_vertices[i++]=0.0;cube_vertices[i++]=0.0;
-	//Vert 1
-	cube_vertices[i++]=1.0; cube_vertices[i++]=-1.0;cube_vertices[i++]=1.0;
-	cube_vertices[i++]=0.5; cube_vertices[i++]=0.5;cube_vertices[i++]=0.0;
-	//Vert 2
-	cube_vertices[i++]=1.0; cube_vertices[i++]=1.0;cube_vertices[i++]=1.0;
-	cube_vertices[i++]=0.0; cube_vertices[i++]=1.0;cube_vertices[i++]=0.0;
-	//Vert 3
-	cube_vertices[i++]=-1.0; cube_vertices[i++]=1.0;cube_vertices[i++]=1.0;
-	cube_vertices[i++]=0.0; cube_vertices[i++]=0.5;cube_vertices[i++]=0.5;
-	//Vert 4
-	cube_vertices[i++]=-1.0; cube_vertices[i++]=-1.0;cube_vertices[i++]=-1.0;
-	cube_vertices[i++]=0.0; cube_vertices[i++]=0.0;cube_vertices[i++]=1.0;
-	//Vert 5
-	cube_vertices[i++]=1.0; cube_vertices[i++]=-1.0;cube_vertices[i++]=-1.0;
-	cube_vertices[i++]=0.5; cube_vertices[i++]=0.0;cube_vertices[i++]=0.5;
-	//Vert 6
-	cube_vertices[i++]=1.0; cube_vertices[i++]=1.0;cube_vertices[i++]=-1.0;
-	cube_vertices[i++]=1.0; cube_vertices[i++]=0.0;cube_vertices[i++]=0.0;
-	//Vert 7
-	cube_vertices[i++]=-1.0; cube_vertices[i++]=1.0;cube_vertices[i++]=-1.0;
-	cube_vertices[i++]=0.5; cube_vertices[i++]=0.5;cube_vertices[i++]=0.0;
-
-	i = 0;
-
-	frontIndices[i++] = 0; frontIndices[i++] = 1;
-	frontIndices[i++] = 2; frontIndices[i++] = 3;
-
-	i = 0;
-	//backIndices = new GLubyte[4];
-	backIndices[i++] = 5; backIndices[i++] = 4;
-	backIndices[i++] = 7; backIndices[i++] = 6;
-
-	i = 0;
-	//rightIndices = new GLubyte[4];
-	rightIndices[i++] = 1; rightIndices[i++] = 5;
-	rightIndices[i++] = 6; rightIndices[i++] = 2;
-
-	i = 0;
-	//leftIndices = new GLubyte[4];
-	leftIndices[i++] = 4; leftIndices[i++] = 0;
-	leftIndices[i++] = 3; leftIndices[i++] = 7;
-
-	i = 0;
-	//topIndices = new GLubyte[4];
-	topIndices[i++] = 3; topIndices[i++] = 2;
-	topIndices[i++] = 6; topIndices[i++] = 7;
-
-	i = 0;
-	//bottomIndices = new GLubyte[4];
-	bottomIndices[i++] = 4; bottomIndices[i++] = 5;
-	bottomIndices[i++] = 1; bottomIndices[i++] = 0;
-
-}
 
 Box::~Box() {
 }

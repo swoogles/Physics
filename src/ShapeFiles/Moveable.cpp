@@ -14,15 +14,15 @@ using namespace std;
 using namespace boost::numeric::ublas;
 
 //TODO Make sure I'm supposed to actually be referencing the 0 here...
-boost::numeric::ublas::vector<MyShape *> MyShape::shapes(0);
+boost::numeric::ublas::vector<Moveable *> Moveable::moveables(0);
 
 
-MyShape::MyShape() {
-	numPts = 16;
+Moveable::Moveable() {
+	//numPts = 16;
 	//pos.resize(4);
 	//toolVec.resize(4);
 
-	pts.resize(numPts, 4);
+	//pts.resize(numPts, 4);
 	//color.resize(3);
 
 	//scaleMat.resize(4,4);
@@ -56,19 +56,12 @@ MyShape::MyShape() {
 	ptsHighlighted = true;
 }
 
-MyShape::~MyShape() {
-	//cout << "Killing MyShape" << endl;
+Moveable::~Moveable() {
+	//cout << "Killing Moveable" << endl;
 }
 
-matrix<double> MyShape::getPts() {
-	return pts;
-}
 
-void MyShape::printPts() {
-	cout << pts << endl;
-}
-
-void MyShape::draw() {
+void Moveable::draw() {
 	glPushMatrix();
 
 	//Translate
@@ -90,64 +83,59 @@ void MyShape::draw() {
 }
 
 
-void MyShape::drawScale() {}
-void MyShape::drawUnit() {}
+void Moveable::drawScale() {}
+void Moveable::drawUnit() {}
 
-void MyShape::setPos(float inX, float inY, float inZ) {
+void Moveable::setPos(float inX, float inY, float inZ) {
 	pos[0] = inX;
 	pos[1] = inY;
 	pos[2] = inZ;
 
 }
 
-void MyShape::setPos(sgVec4 newPos) {
+void Moveable::setPos(sgVec4 newPos) {
 	sgCopyVec4(this->pos, newPos);
 }
 
-void MyShape::adjustPos(float dx, float dy, float dz) {
+void Moveable::adjustPos(float dx, float dy, float dz) {
 	pos[0] += dx;
 	pos[1] += dy;
 	pos[2] += dz;
 }
 
-void MyShape::adjustPos(sgVec4 dPos) {
+void Moveable::adjustPos(sgVec4 dPos) {
 	pos[0] += dPos[0];
 	pos[2] += dPos[1];
 	pos[1] += dPos[2];
 }
 
 
-sgVec4 *  MyShape::getPos(){
+sgVec4 *  Moveable::getPos(){
 	sgVec4 * retPos = new sgVec4[1];
 	sgCopyVec4( (*retPos), pos);
 	return retPos;
 }
 
-void MyShape::getPos(sgVec4 retVec) {
+void Moveable::getPos(sgVec4 retVec) {
 	sgCopyVec4(retVec, pos);
 }
 
 /*
-void MyShape::hFlip() {
+void Moveable::hFlip() {
 	scaleMat(0,0) = -1;
 	scaleMat(1,1) = 1;
 
 }
 
-void MyShape::vFlip() {
+void Moveable::vFlip() {
 	scaleMat(0,0) = 1;
 	scaleMat(1,1) = -1;
 
 }
 */
 
-float MyShape::getMarkerSize() {
-	return 0;
-}
 
-
-
-void MyShape::setAngle(float xAngle, float yAngle, float zAngle) {
+void Moveable::setAngle(float xAngle, float yAngle, float zAngle) {
 	sgMakeIdentQuat(orientationQuat);
 
 	sgQuat tempQuat;
@@ -168,7 +156,7 @@ void MyShape::setAngle(float xAngle, float yAngle, float zAngle) {
 	sgQuatToMatrix(orientationMat, orientationQuat);
 }
 
-void MyShape::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
+void Moveable::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
 	sgQuat tempRotQuat;
 	sgAngleAxisToQuat(tempRotQuat, dAngle,  rotAxis);
 	//sgRotQuat(orientationQuat, dAngle, rotAxis);
@@ -179,7 +167,7 @@ void MyShape::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
 }
 
 
-void MyShape::setMomentum(float inX, float inY, float inZ) {
+void Moveable::setMomentum(float inX, float inY, float inZ) {
 	momentum[0] = inX;
 	momentum[1] = inY;
 	momentum[2] = inZ;
@@ -187,34 +175,34 @@ void MyShape::setMomentum(float inX, float inY, float inZ) {
 	sgCopyVec4(prevMomentum, momentum);
 }
 
-void MyShape::setMomentum(sgVec4 newMomentum) {
+void Moveable::setMomentum(sgVec4 newMomentum) {
 	sgCopyVec4(momentum, newMomentum);
 	sgCopyVec4(prevMomentum, momentum);
 }
 
-void MyShape::adjustMomentum(float dx, float dy, float dz) {
+void Moveable::adjustMomentum(float dx, float dy, float dz) {
 	momentum[0] += dx;
 	momentum[1] += dy;
 	momentum[2] += dz;
 }
 
-void MyShape::adjustMomentum(sgVec4 dMomentum) {
+void Moveable::adjustMomentum(sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
 }
 
-sgVec4 * MyShape::getMomentum() {
+sgVec4 * Moveable::getMomentum() {
 	sgVec4 * retMomentum = new sgVec4[1];
 	sgCopyVec4( (*retMomentum), momentum);
 	return retMomentum;
 }
 
-void MyShape::getMomentum(sgVec4 retVec) {
+void Moveable::getMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, momentum);
 }
 
 
 
-void MyShape::setVelocity(float inX, float inY, float inZ) {
+void Moveable::setVelocity(float inX, float inY, float inZ) {
 	momentum[0] = inX * mass;
 	momentum[1] = inY * mass;
 	momentum[2] = inZ * mass;
@@ -222,7 +210,7 @@ void MyShape::setVelocity(float inX, float inY, float inZ) {
 	sgCopyVec4(prevMomentum, momentum);
 }
 
-void MyShape::setVelocity(sgVec4 newVel) {
+void Moveable::setVelocity(sgVec4 newVel) {
 	momentum[0] = newVel[0] * mass;
 	momentum[1] = newVel[1] * mass;
 	momentum[2] = newVel[2] * mass;
@@ -230,25 +218,25 @@ void MyShape::setVelocity(sgVec4 newVel) {
 	sgCopyVec4(prevMomentum, momentum);
 
 }
-void MyShape::adjustVelocity(float dx, float dy, float dz) {
+void Moveable::adjustVelocity(float dx, float dy, float dz) {
 	momentum[0] += dx/mass;
 	momentum[1] += dx/mass;
 	momentum[2] += dx/mass;
 }
-void MyShape::adjustVelocity(sgVec4 dVel) {
+void Moveable::adjustVelocity(sgVec4 dVel) {
 	sgVec4 tempVec;
 	sgScaleVec4(tempVec, momentum, 1/mass);
 	sgAddVec4(tempVec, dVel);
 	sgScaleVec4(momentum, tempVec, mass);
 }
 
-sgVec4 * MyShape::getVelocity() {
+sgVec4 * Moveable::getVelocity() {
 	sgVec4 * velocity = new sgVec4[1];
 	sgScaleVec4( (*velocity), momentum, 1/mass);
 	return velocity;
 }
 
-void MyShape::getVelocity(sgVec4 retVec) {
+void Moveable::getVelocity(sgVec4 retVec) {
 	sgVec4 tempVec;
 	sgCopyVec4(tempVec, momentum);
 	sgScaleVec4(tempVec, 1/mass);
@@ -256,9 +244,9 @@ void MyShape::getVelocity(sgVec4 retVec) {
 }
 
 // Angular Momentum and Velocity
-float MyShape::getMomentOfInertia() { return 1;}
+float Moveable::getMomentOfInertia() { return 1;}
 
-void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
+void Moveable::setAngMomentum(sgVec4 newAngMomentum) {
 	float I = getMomentOfInertia();
 	sgCopyVec4(angMomentum, newAngMomentum);
 	sgCopyVec4(angVelocity, angMomentum);
@@ -267,7 +255,7 @@ void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
 
 }
 
-void MyShape::adjustAngMomentum(sgVec4 dAngMomentum) {
+void Moveable::adjustAngMomentum(sgVec4 dAngMomentum) {
 	//TODO generalize for other shapes
 	float I = getMomentOfInertia();
 
@@ -276,11 +264,11 @@ void MyShape::adjustAngMomentum(sgVec4 dAngMomentum) {
 	sgScaleVec4(angVelocity, 1.0/I);
 }
 
-void MyShape::getAngMomentum(sgVec4 retVec) {
+void Moveable::getAngMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, angMomentum);
 }
 
-void MyShape::setAngVelocity(sgVec4 newAngVelocity) {
+void Moveable::setAngVelocity(sgVec4 newAngVelocity) {
 	float I = getMomentOfInertia();
 	sgCopyVec4(angVelocity, newAngVelocity);
 	sgCopyVec4(angMomentum, angVelocity);
@@ -288,97 +276,49 @@ void MyShape::setAngVelocity(sgVec4 newAngVelocity) {
 	sgCopyVec4(prevAngVelocity, angVelocity);
 }
 
-void MyShape::adjustAngVelocity(sgVec4 dAngVelocity) {
+void Moveable::adjustAngVelocity(sgVec4 dAngVelocity) {
 	float I = getMomentOfInertia();
 	sgAddVec4(angVelocity, dAngVelocity);
 	sgCopyVec4(angMomentum, angVelocity);
 	sgScaleVec4(angMomentum, I);
 }
 
-void MyShape::getAngVelocity(sgVec4 retAngVelocity) {
+void Moveable::getAngVelocity(sgVec4 retAngVelocity) {
 	sgCopyVec4(retAngVelocity, angVelocity);
 }
 
 
 
-void MyShape::setMass(float newMass) {
+void Moveable::setMass(float newMass) {
 	mass = newMass;
 }
 
-void MyShape::adjustMass(float dMass) {
+void Moveable::adjustMass(float dMass) {
 	mass += dMass;
 }
 
-float MyShape::getMass() {
+float Moveable::getMass() {
 	return mass;
 }
 
 
-void MyShape::setDensity(float newDensity) {
+void Moveable::setDensity(float newDensity) {
 	density = newDensity;
 }
 
-float MyShape::getDensity() {
+float Moveable::getDensity() {
 	return density;
 }
 
-bool MyShape::setKineticEnergy(float newKineticEnergy)
-{
-  bool moving;
-  sgVec4 * curVelocity = getVelocity();
-  if ( sgLengthVec4( *curVelocity ) == 0 )
-  {
-    moving = false;
-  }
-  else
-  {
-    sgVec4 newVelocity;
-    sgNormaliseVec4(newVelocity, *curVelocity );
-
-
-    float totalVelocity = sqrt( newKineticEnergy ) / mass * 2;
-    sgScaleVec4( newVelocity, totalVelocity );
-    setVelocity( newVelocity );
-    moving = true;
-  }
-
-  return moving;
-}
-
-
-//! Returns kineticEnergy of object
-float MyShape::getKineticEnergy()
-{
-  return kineticEnergy;
-}
-
-void MyShape::setColor(sgVec3 newColor) {
+void Moveable::setColor(sgVec3 newColor) {
 	sgCopyVec3(color, newColor);
 
 }
-void MyShape::getColor(sgVec3 retVec) {
+void Moveable::getColor(sgVec3 retVec) {
 	sgCopyVec3(retVec, color);
 }
 
-void MyShape::calcColor() {
-  float totalMass=WorldSettings::getTotalMass();
-  // cout << "totalMass:" << totalMass << endl;
-
-	float redAmount = 0.25 + mass / (totalMass/3.0);
-	if (redAmount > 1.0)
-		redAmount = 1.0;
-
-	float greenAmount = mass / (0.8 *totalMass);
-	if (greenAmount > 1.0) {
-		greenAmount = 1.0;
-	}
-
-
-	color[0] = redAmount;
-	color[1] = greenAmount;
-}
-
-void MyShape::update(float dt) {
+void Moveable::update(float dt) {
 
 	sgVec4 velocity;
 	sgVec4 prevVelocity;
@@ -403,56 +343,51 @@ void MyShape::update(float dt) {
 }
 
 /*
-void MyShape::getUnitVecTo(MyShape * destination, sgVec4 unitv) {
+void Moveable::getUnitVecTo(Moveable * destination, sgVec4 unitv) {
 	sgSubVec4(unitv, pos, destination->pos);
 	sgNormaliseVec4(unitv);
 }
 */
 
-MyShape * MyShape::getShapeFromList( int shapeIndex )
+Moveable * Moveable::getMoveableFromList( int moveableIndex )
 {
-  MyShape * returnShape;
-  if ( shapes.size() > shapeIndex )
+  Moveable * returnMoveable;
+  if ( moveables.size() > moveableIndex )
   {
-    returnShape = shapes(shapeIndex);
+    returnMoveable = moveables(moveableIndex);
   }
 
-  return returnShape;
+  return returnMoveable;
 }
 
-int MyShape::addShapeToList( MyShape * insertShape )
+int Moveable::addMoveableToList( Moveable * insertMoveable )
 {
-  int curSize = shapes.size();
-  shapes.resize(curSize + 1);
-  shapes(curSize) = insertShape;
+  int curSize = moveables.size();
+  moveables.resize(curSize + 1);
+  moveables(curSize) = insertMoveable;
   return curSize;
 }
 
-void MyShape::removeShapeFromList( int ShapeIndex )
+void Moveable::removeMoveableFromList( int moveableIndex )
 {
   //
-  MyShape::shapes(i)->~MyShape();
-  MyShape::shapes.erase_element(i);
+  Moveable::moveables(moveableIndex)->~Moveable();
+  Moveable::moveables.erase_element(moveableIndex);
   // TODO Decide how to best erase/resize
-  // boost::numeric::ublas::vector<MyShape *> newListA;
-  // newListA = shapes.subVector(0,i);
-  // boost::numeric::ublas::vector<MyShape *> newListB;
-  // newListB = shapes.subVector(i, shapes.size() );
-  // shapes = newListA + newListB;
+  // boost::numeric::ublas::vector<Moveable *> newListA;
+  // newListA = moveables.subVector(0,i);
+  // boost::numeric::ublas::vector<Moveable *> newListB;
+  // newListB = moveables.subVector(i, moveables.size() );
+  // moveables = newListA + newListB;
 }
 
 
-void MyShape::clearShapes() {
-	for (int i = MyShape::shapes.size() - 1; i > -1; i--) {
-      cout << "Shape # " << i << endl;
-		MyShape::shapes(i)->~MyShape();
-		MyShape::shapes.erase_element(i);
+void Moveable::clearMoveables() {
+	for (int i = Moveable::moveables.size() - 1; i > -1; i--) {
+      cout << "Moveable # " << i << endl;
+		Moveable::moveables(i)->~Moveable();
+		Moveable::moveables.erase_element(i);
 	}
-	MyShape::shapes.resize(0);
+	Moveable::moveables.resize(0);
 }
 
-
-void MyShape::setRadius(float) {}
-float MyShape::getRadius() { return 1;}
-
-int MyShape::getType() {}

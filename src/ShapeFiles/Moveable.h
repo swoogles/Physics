@@ -1,5 +1,5 @@
 /*
- * MyShape.h
+ * Moveable.h
  *
  *  Created on: Jul 10, 2011
  *      Author: brasure
@@ -41,11 +41,9 @@ using boost::numeric::ublas::vector;
  *
  *  \n \n Currently Circles are the only objects that have been really developed, as they are the easiest starting point physically
  */
-class MyShape {
+class Moveable {
 protected:
 	//vector<double> pos;
-	GLint numPts;
-	matrix<double> pts;
 	//vector<double> color;
 	bool ptsHighlighted;
 
@@ -65,7 +63,6 @@ protected:
 	sgVec4 prevMomentum;
 	float mass;
 	float density;
-  float kineticEnergy;
 
 	sgVec3 color;
 
@@ -73,9 +70,9 @@ protected:
 public:
 	/*! \brief Sets default values of members common to all shapes
 	 */
-	MyShape();
+	Moveable();
 
-	virtual ~MyShape();
+	virtual ~Moveable();
 
 	/*! \brief The key MyShape function called in the display function
 	 *
@@ -169,6 +166,13 @@ public:
 	//! Returns velocity of object in retVec
 	void getVelocity(sgVec4 retVec);
 
+	/*! \brief Calculates the moment of inertia for the object
+	 *
+	 *  Calculation varies for different types of object
+	 *  \return Moment of Inertia value
+	 */
+	virtual float getMomentOfInertia();
+
 	//! Sets angular momentum of object to <newAngMomentum>
 	void setAngMomentum(sgVec4 newAngMomentum);
 	//! Alters angular momentum of object by <dAngMomentum>
@@ -186,6 +190,54 @@ public:
 
 	//! Moves object based on current normal and angular momentum
 	void update(float);
+
+	//! Sets mass of object to newMass
+	void setMass(float newMass);
+	//! Alters mass of object by dMass
+	void adjustMass(float dMass);
+	//! Returns mass of object
+	float getMass();
+
+	//! Sets density of object to newDensity
+	void setDensity(float newDensity);
+	//! Returns density of object
+	float getDensity();
+
+	//! Sets color of object to <newColor>
+	void setColor(sgVec3 newColor);
+	//! Returns color of object in retVec
+	void getColor(sgVec3 retVec);
+
+  // TODO make generic versions of these variables and methods.
+  // Eg. Observers::getObserverFromList, Quadrant
+	/*! \brief Vector that holds all currently active moveables
+	 *
+	 *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
+	 */
+	static vector<Moveable *> moveables;
+
+	/*! \brief Returns a moveable from the main moveables list
+	 *
+	 *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
+	 *  \return Pointer to desired moveable
+	 */
+  static Moveable * getMoveableFromList( int moveableIndex );
+
+	/*! \brief Returns a moveable from the main moveables list
+	 *
+	 *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
+	 *  \return Pointer to desired moveable
+	 */
+  static int addMoveableToList( Moveable * insertMoveable );
+
+	/*! \brief Removes a moveable from the main moveables list
+	 *
+	 *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
+	 *  \return Pointer to desired moveable
+	 */
+  static void removeMoveableFromList( int moveableIndex );
+
+  static void clearMoveables();
 
 };
 
