@@ -18,16 +18,6 @@ boost::numeric::ublas::vector<Moveable *> Moveable::moveables(0);
 
 
 Moveable::Moveable() {
-	//numPts = 16;
-	//pos.resize(4);
-	//toolVec.resize(4);
-
-	//pts.resize(numPts, 4);
-	//color.resize(3);
-
-	//scaleMat.resize(4,4);
-	//rotMat.resize(4,4);
-
 	pos[0] = 0; pos[1] = 0; pos[2] = 0; pos[3] = 1;
 	color[0] = 0.25; color[1] = 0.0; color[2] = 0.0;
 
@@ -42,13 +32,9 @@ Moveable::Moveable() {
 		angVelocity[i] = 0;
 		for (int j = 0; j < 4; j++) {
 			if (i == j) {
-				//scaleMat(i,j) = 1;
-				//rotMat(i,j) = 1;
 				orientationMat[i][j] = 1;
 			}
 			else {
-				//scaleMat(i,j) = 0;
-				//rotMat(i,j) = 0;
 			}
 		}
 	}

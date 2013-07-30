@@ -30,9 +30,8 @@
  *  I believe this will be relatively straightforward, but I want to make sure that the new hierarchy of classes will be suitable for the project's
  *  potential future classes.
  */
-class Observer {
+class Observer:public Moveable {
 private:
-	sgVec4 pos;
 	sgQuat orientationQuat;
 	sgMat4 orientationMat;
 
@@ -61,20 +60,11 @@ public:
 	 */
 	void getView();
 
-	//! Same as MyShape::getPos()
-	sgVec4 * getPos();
-	//! Same as MyShape::getPos(sgVec4)
-	void getPos(sgVec4);
-	//! Same as MyShape::setPos(float, float, float)
-	void setPos(float, float, float);
-
 	//! Move observer closer to target
 	void zoomIn();
 	//! Move observer further from target
 	void zoomOut();
 
-	//! Same as MyShape::setAngle(float, float, float)
-	void setAngle(float, float, float);
 	//! Same as MyShape::adjustAngle(const SGfloat, const sgVec3);
 	void adjustAngle(const SGfloat, const sgVec3);
 

@@ -62,19 +62,7 @@ void Observer::getView() {
 
 }
 
-sgVec4 * Observer::getPos(){
-	return &pos;
-}
 
-void Observer::getPos(sgVec4 retPos) {
-	sgCopyVec4(retPos, pos);
-}
-
-void Observer::setPos(float inX, float inY, float inZ) {
-	pos[0] = inX;
-	pos[1] = inY;
-	pos[2] = inZ;
-}
 
 void Observer::zoomIn() {
 	pos[2] *= .95;
@@ -84,27 +72,6 @@ void Observer::zoomOut() {
 	pos[2] *= 1.05;
 }
 
-void Observer::setAngle(float xAngle, float yAngle, float zAngle) {
-	sgMakeIdentQuat(orientationQuat);
-
-
-	sgQuat tempQuat;
-	sgVec3 xAxis, yAxis, zAxis;
-	xAxis[0] = 1; xAxis[1] = 0; xAxis[2] = 0;
-	yAxis[0] = 0; yAxis[1] = 1; yAxis[2] = 0;
-	zAxis[0] = 0; zAxis[1] = 0; zAxis[2] = 1;
-
-	sgAngleAxisToQuat(tempQuat, xAngle, xAxis);
-	sgPostMultQuat(orientationQuat, tempQuat);
-
-	sgAngleAxisToQuat(tempQuat, yAngle, yAxis);
-	sgPostMultQuat(orientationQuat, tempQuat);
-
-	sgAngleAxisToQuat(tempQuat, zAngle, zAxis);
-	sgPostMultQuat(orientationQuat, tempQuat);
-
-	sgQuatToMatrix(orientationMat, orientationQuat);
-}
 
 void Observer::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
 	sgQuat tempRotQuat;
