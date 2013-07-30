@@ -49,8 +49,8 @@ void Circle::drawScale() {
 }
 
 void Circle::drawUnit() {
-	//glutWireSphere( 1, numPts, numPts);
-	glutSolidSphere( 1, numPts, numPts);
+	glutWireSphere( 1, numPts, numPts);
+	//glutSolidSphere( 1, numPts, numPts);
 }
 
 float Circle::getRadius() {

@@ -224,7 +224,7 @@ void init(char simulation) {
 	  largeGridAlternating();
   }
   if ( simulation == '1' ) {
-	  bodyFormation( 650 );
+	  bodyFormation( 400 );
   }
   if ( simulation == '2' ) {
 	  disruption();

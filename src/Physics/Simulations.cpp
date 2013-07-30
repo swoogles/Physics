@@ -569,24 +569,28 @@ void simpleCollision() {
 	startAngMom[1] = 0;
 	startAngMom[2] = 0;
 
-	MyShape::shapes(0) = new Circle;
-	MyShape::shapes(0)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-	MyShape::shapes(0)->setMass(aMass);
-	MyShape::shapes(0)->setRadius(aRadius*2);
-	MyShape::shapes(0)->setVelocity(0, 25, 0);
-	MyShape::shapes(0)->setAngVelocity(startAngMom);
+  MyShape * curShape;
+
+	curShape = new Circle;
+	curShape->setPos(startPlacement);
+	curShape->setMass(aMass);
+	curShape->setRadius(aRadius*2);
+	curShape->setVelocity(0, 25, 0);
+	curShape->setAngVelocity(startAngMom);
+  MyShape::addShapeToList( curShape );
 
 	// Object B
 	startPlacement[0] = 2.5;
 	//startPlacement[1] = -.9; //45 Degree placement
 	startPlacement[1] = 0;
 	startPlacement[2] = 0;
-	startPlacement[3] = 1;
-	MyShape::shapes(1) = new Circle;
-	MyShape::shapes(1)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-	MyShape::shapes(1)->setMass(bMass);
-	MyShape::shapes(1)->setRadius(bRadius*2);
-	MyShape::shapes(1)->setVelocity(0, -25, 0);
+
+	curShape = new Circle;
+	curShape->setPos(startPlacement);
+	curShape->setMass(bMass);
+	curShape->setRadius(bRadius*2);
+	curShape->setVelocity(0, -25, 0);
+  MyShape::addShapeToList( curShape );
 
 
 }
@@ -625,7 +629,7 @@ void bodyFormation(unsigned int numPieces) {
 	WorldSettings::setTotalMass(0);
 
 	float objectDensity = DENSITY_SUN;
-	float bodyVolume = (MASS_SUN)/(objectDensity);
+	float bodyVolume = (MASS_SUN * 3)/(objectDensity);
 	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
 	sgVec4 startPlacement, startMomentum, target;
 
@@ -695,9 +699,9 @@ void bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sgVec4 groupMom
 
 	srand ( time(NULL) );
 
+  MyShape * curShape;
   int targetSize = MyShape::shapes.size() + numPieces;
 	for (unsigned int i = MyShape::shapes.size(); i < targetSize; i++) {
-		MyShape::shapes.resize(MyShape::shapes.size()+1);
 
 		if (i % 2 == 0) {
 			randomSplitBodyMomentum(startMomentum, pieceMass);
@@ -711,18 +715,20 @@ void bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sgVec4 groupMom
     // Apply general group momentum to individual pieces momentum
     sgAddVec4( startMomentum, groupMomentum );
 
-		MyShape::shapes(i) = new Circle;
+		curShape = new Circle;
     cout << "StartPos: " << startPlacement[0] << endl;
-		MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-		MyShape::shapes(i)->setMass(pieceMass);
-		MyShape::shapes(i)->setRadius(pieceRadius);
-		MyShape::shapes(i)->setMomentum(startMomentum);
-		MyShape::shapes(i)->setDensity(objectDensity);
+		curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+		curShape->setMass(pieceMass);
+		curShape->setRadius(pieceRadius);
+		curShape->setMomentum(startMomentum);
+		curShape->setDensity(objectDensity);
+
+    MyShape::addShapeToList( curShape );
 
 		//Check if being placed on previously created object
 		while ( isConflict(i) ) {
 			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
-			MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+			curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		}
 		totalMass += MyShape::shapes(i)->getMass();
 	}

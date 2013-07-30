@@ -327,9 +327,7 @@ void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMo
   object1->getMomentum(aMomentum);
   object2->getMomentum(bMomentum);
 
-  r[0] = aPos[0] - hitPt[0];
-  r[1] = aPos[1] - hitPt[1];
-  r[2] = aPos[2] - hitPt[2];
+  sgSubVec3( r, aPos, hitPt );
 
   aMom3[0] = aMomentum[0];
   aMom3[1] = aMomentum[1];
@@ -338,13 +336,7 @@ void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMo
 
   sgAddVec3(totalAngMom3, crossed);
 
-  //cout << "Momentum A: " << aMom3 << endl;
-  //cout << "Outter Angular Momentum A: " << crossed << endl;
-
-  r[0] = bPos[0] - hitPt[0];
-  r[1] = bPos[1] - hitPt[1];
-  r[2] = bPos[2] - hitPt[2];
-
+  sgSubVec3( r, bPos, hitPt );
 
   bMom3[0] = bMomentum[0];
   bMom3[1] = bMomentum[1];
@@ -353,13 +345,6 @@ void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMo
 
   sgAddVec3(totalAngMom3, crossed);
 
-  //cout << "Momentum B: " << bMom3 << endl;
-  //cout << "Outter Angular Momentum B: " << crossed << endl;
-
-  //cout << "Total Outter AngMom: " << totalAngMom3 << endl;
-
-  //Merging code
-
   retAngMomentum[0] = totalAngMom3[0];
   retAngMomentum[1] = totalAngMom3[1];
   retAngMomentum[2] = totalAngMom3[2];
@@ -367,12 +352,10 @@ void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMo
 
 
   object1->getAngMomentum(tempVec);
-  //cout << "Inner Angular Momentum A: " << tempVec << endl;
 
   sgAddVec4(retAngMomentum, tempVec);
 
   object2->getAngMomentum(tempVec);
-  //cout << "Inner Angular Momentum B: " << tempVec << endl;
 
   sgAddVec4(retAngMomentum, tempVec);
 
@@ -382,18 +365,7 @@ void mergeObjects(MyShape * object1, MyShape * object2) {
   sgVec3 color;
 
   object1->getColor( color );
-  // cout << "\n\nCOLLISION:\n";
-  // cout << "Object 1 Color r:" << color[0] <<
-  // "\tg:"    << color[1] <<
-  // "\tb:"    << color[2] << endl;
   object2->getColor( color );
-  // cout << "Object 2 Color r:" << color <<
-  // cout << "Object 2 Color r:" << color[0] <<
-  // "\tg:"    << color[1] <<
-  // "\tb:"    << color[2] << endl;
-
-  // cout << "Object 1 radius:" << object1->getRadius() << endl;
-  // cout << "Object 2 radius:" << object1->getRadius() << endl;
 
   float newMass = object1->getMass() + object2->getMass();
   float density = object1->getDensity();
@@ -441,22 +413,10 @@ void mergeObjects(MyShape * object1, MyShape * object2) {
   object1->setAngMomentum(totalAngMom);
 
   object1->calcColor();
-  // newColor[0]=1.0;
-  // newColor[1]=1.0;
-  // newColor[2]=1.0;
-  // object1->setColor( newColor );
 
   object1->setPos(COM);
 
   object1->getColor( color );
-  // cout << "Post Collision:";
-  // cout << "Object 1 Color r:" << color[0] <<
-  // "\tg:"    << color[1] <<
-  // "\tb:"    << color[2];
-  // cout << "Object 1 Color r:" << color[0] <<
-  // "\tg:"    << color[1] <<
-  // "\tb:"    << color[2];
-
   //TODO Do AngMomentum calculations
 
   //cout << MASS_SUN << endl;
@@ -495,15 +455,10 @@ void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target)
 
   startPos[3] = 1;
 
-  sgVec4 translatedPos;
-  sgAddVec4( translatedPos, startPos, target );
-  startPos[0] = translatedPos[0];
-  startPos[1] = translatedPos[1];
-  startPos[2] = translatedPos[2];
-
-
+  sgAddVec4( startPos, target );
 }
 
+//TODO Decide if this can be deleted
 void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 target ) {
   int randMult;
   int dimensionInteger;
@@ -522,13 +477,7 @@ void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 targe
 
   startPos[3] = 1;
 
-  sgVec4 translatedPos;
-  sgAddVec4( translatedPos, startPos, target );
-
-  startPos[0] = translatedPos[0];
-  startPos[1] = translatedPos[1];
-  startPos[2] = translatedPos[2];
-
+  sgAddVec4( startPos, target );
 }
 
 void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
