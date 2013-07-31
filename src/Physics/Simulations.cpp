@@ -373,6 +373,7 @@ Quadrant * octreeDemonstration(int numRows) {
   Quadrant * mainQuadrant = new Quadrant(4, 1, pos, dimensions);
 
   int levels = 1;
+  int numShape = 0;
   //mainQuadrant->subDivideAll(levels,8);
   //mainQuadrant->printCorners();
 
@@ -384,7 +385,7 @@ Quadrant * octreeDemonstration(int numRows) {
 
   MyShape * shapeForInsertion;
 
-  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
+  cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
   shapeForInsertion = new Circle;
   shapeForInsertion->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
   shapeForInsertion->setMass(1);
@@ -392,43 +393,43 @@ Quadrant * octreeDemonstration(int numRows) {
   MyShape::addShapeToList( shapeForInsertion );
   mainQuadrant->insertShape( shapeForInsertion );
 
+  cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
   startPlacement[0] = -5;
   startPlacement[1] = 15;
   startPlacement[2] = 12;
-
   shapeForInsertion = new Circle;
   shapeForInsertion->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
   shapeForInsertion->setMass(1);
   shapeForInsertion->setRadius(.5);
   MyShape::addShapeToList( shapeForInsertion );
   mainQuadrant->insertShape( shapeForInsertion );
-  
-  startPlacement[0] = -5;
-  startPlacement[1] = -5;
-  startPlacement[2] = -10;
 
-  shapeForInsertion = new Circle;
-  shapeForInsertion->setPos( startPlacement );
-  shapeForInsertion->setMass(1);
-  shapeForInsertion->setRadius(.5);
-  MyShape::addShapeToList( shapeForInsertion );
-  mainQuadrant->insertShape( shapeForInsertion );
+  // cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
+  // startPlacement[0] = -5;
+  // startPlacement[1] = -5;
+  // startPlacement[2] = -10;
+  // shapeForInsertion = new Circle;
+  // shapeForInsertion->setPos( startPlacement );
+  // shapeForInsertion->setMass(1);
+  // shapeForInsertion->setRadius(.5);
+  // MyShape::addShapeToList( shapeForInsertion );
+  // mainQuadrant->insertShape( shapeForInsertion );
 
-  startPlacement[0] = -5;
-  startPlacement[1] = -5;
-  startPlacement[2] = -20;
+  // cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
+  // startPlacement[0] = -5;
+  // startPlacement[1] = -5;
+  // startPlacement[2] = -20;
+  // shapeForInsertion = new Circle;
+  // shapeForInsertion->setPos( startPlacement );
+  // shapeForInsertion->setMass(1);
+  // shapeForInsertion->setRadius(.5);
+  // MyShape::addShapeToList( shapeForInsertion );
+  // mainQuadrant->insertShape( shapeForInsertion );
 
-  shapeForInsertion = new Circle;
-  shapeForInsertion->setPos( startPlacement );
-  shapeForInsertion->setMass(1);
-  shapeForInsertion->setRadius(.5);
-  MyShape::addShapeToList( shapeForInsertion );
-  mainQuadrant->insertShape( shapeForInsertion );
-
+  cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
   startPlacement[0] = -5;
   startPlacement[1] = -5;
   startPlacement[2] = -15;
-
   shapeForInsertion = new Circle;
   shapeForInsertion->setPos( startPlacement );
   shapeForInsertion->setMass(1);
@@ -436,27 +437,29 @@ Quadrant * octreeDemonstration(int numRows) {
   MyShape::addShapeToList( shapeForInsertion );
   mainQuadrant->insertShape( shapeForInsertion );
 
+  cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
   startPlacement[0] = -5;
   startPlacement[1] = -8;
   startPlacement[2] = -15;
-    
   shapeForInsertion = new Circle;
   shapeForInsertion->setPos( startPlacement );
   shapeForInsertion->setMass(1);
   shapeForInsertion->setRadius(.5);
   MyShape::addShapeToList( shapeForInsertion );
   mainQuadrant->insertShape( shapeForInsertion );
+  cout << endl << endl;
 
+  cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
   startPlacement[0] = -5;
   startPlacement[1] = -9;
   startPlacement[2] = -16;
-
   shapeForInsertion = new Circle;
   shapeForInsertion->setPos( startPlacement );
   shapeForInsertion->setMass(1);
   shapeForInsertion->setRadius(.5);
   MyShape::addShapeToList( shapeForInsertion );
   mainQuadrant->insertShape( shapeForInsertion );
+  cout << endl << endl;
 
 
 	float totalMass = 0.0;

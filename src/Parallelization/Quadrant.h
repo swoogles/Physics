@@ -20,18 +20,13 @@
 
 class Quadrant : public Box
 {
-  // Octree<Quadrant> quadOctree(); /* Create 4096x4096x4096 octree containing doubles. */
-
-  // string label;
-
-  // Quadrant * nextQuadrant;
     Box * borders;
     sgVec4 preCenterOfMass;
 
   public:
     int level;
-    Octree<Quadrant *> * quadOctree; /* Create 4096x4096x4096 octree containing doubles. */
-    Octree<int> * intOctree; /* Create 4096x4096x4096 octree containing doubles. */
+    Octree<Quadrant *> * quadOctree; 
+    Octree<int> * intOctree; 
     Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions );
     void subDivide( int x, int y, int z, int numCells );
     void subDivideAll( int levels, int numCells );
