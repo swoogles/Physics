@@ -18,99 +18,72 @@ void testAutoScale() {
 
 
 void largeGridAlternating() {
-	sgVec4 sP;
+	sgVec4 startPos;
 
 	int gridSide = 18;
+
+  MyShape * curShape;
 
 	for (int i = 0; i < gridSide; i++)
 	{
 		for (int j = 0; j < gridSide; j++) {
-			MyShape::shapes.resize(MyShape::shapes.size()+1);
+      int curIndex = i*gridSide + j;
 			if ( (i*gridSide + j) % 2 == 0) {
-				MyShape::shapes(i*gridSide + j) = new Circle;
-				sP[2] = 5;
+				curShape = new Circle;
+				startPos[2] = 5;
 
 			}
 			else {
-				MyShape::shapes(i*gridSide + j) = new Box;
-				sP[2] = -5;
+				curShape = new Box;
+				startPos[2] = -5;
 
 			}
+			startPos[0] = -gridSide + 2*j;
+			startPos[1] = -gridSide + 2*i;
+			startPos[3] = 1;
 
-
-			sP[0] = -gridSide + 2*j;
-			sP[1] = -gridSide + 2*i;
-			sP[3] = 1;
-
-			//cout << "About to set stuff \n";
-			//cout << "Shape #: " << (i*gridSide + j) << endl;
-
-			MyShape::shapes(i*gridSide + j)->setPos(sP[0], sP[1], sP[2]);
-			//MyShape::shapes(i*4 + j)->setPos(sP);
-
-			//cout << "set pos \n";
-			//MyShape::shapes(i)->setPos(-1+2*i, -1+2*i, 0);
-			MyShape::shapes(i*gridSide + j)->setMass(.6e10);
-			//cout << "Done making shape" << endl;
+			curShape->setPos(startPos);
+			curShape->setMass(.6e10);
+      MyShape::addShapeToList( curShape );
 		}
 	}
 }
 
-
-
 void simpleOrbit() {
 
 	sgVec4 startPos, startMom;
-	sgVec4 * tempMom;
 	float sunRadiusScale = 15;
 	float earthRadiusScale = 220;
 
 	float sunDensity = DENSITY_SUN;
 	float sunMass = MASS_SUN;
 	float sunVolume = (sunMass*MASS_VAR)/(sunDensity*CONVERSION_CONST);
-	//sunVolume *= VOLUME_VAR;
 	float sunRadius = getSplitBodyRadius(sunVolume, 1);
 
-	cout << "sunVolume: " << sunVolume << endl;
-	cout << "sunRadius: " << sunRadius << endl;
 
 	float earthDensity = DENSITY_EARTH;
 	float earthMass = MASS_EARTH;
 	float earthVolume = (earthMass*MASS_VAR)/(earthDensity*CONVERSION_CONST);
-	//earthVolume *= VOLUME_VAR;
 	float earthRadius = getSplitBodyRadius(earthVolume, 1);
-	cout << "earthVolume: " << earthVolume << endl;
-	cout << "earthRadius: " << earthRadius << endl;
 
 	startMom[0] = 0;
 	startMom[1] = -2e-1;//-2.9e2; //-2.9 * earthMass;
 	startMom[2] = 0;
 	startMom[3] = 0;
 
-	int curShape = 0;
-
 	startPos[0] = 0;
 	startPos[1] = 0;
 	startPos[2] = 0;
 	startPos[3] = 1;
 
-	MyShape::shapes.resize(MyShape::shapes.size()+1);
-	MyShape::shapes(curShape) = new Circle;
-	MyShape::shapes(curShape)->setPos(startPos[0], startPos[1], startPos[2]);
-	MyShape::shapes(curShape)->setRadius(sunRadius * sunRadiusScale);
-	//MyShape::shapes(curShape)->setMomentum(startMom);
-	MyShape::shapes(curShape)->setMomentum(startMom[0], startMom[1], startMom[2]);
-	MyShape::shapes(curShape)->setDensity(sunDensity);
-	MyShape::shapes(curShape)->setMass(sunMass);
+  MyShape * curShape;
 
-	tempMom = MyShape::shapes(curShape)->getMomentum();
-	cout << "sunMom: " << (*tempMom)[0] << ", " << (*tempMom)[1] << endl;
-	delete tempMom;
-
-	cout << "sunMass: " << MyShape::shapes(curShape)->getMass() << endl;
-
-	curShape++;
-
+	curShape = new Circle;
+	curShape->setPos(startPos);
+	curShape->setRadius(sunRadius * sunRadiusScale);
+	curShape->setMomentum(startMom);
+	curShape->setDensity(sunDensity);
+	curShape->setMass(sunMass);
 
 	startPos[0] = sunRadius * 214.94;
 	startPos[1] = 0;
@@ -119,30 +92,22 @@ void simpleOrbit() {
 
 	sgNegateVec4(startMom);
 
-	MyShape::shapes.resize(MyShape::shapes.size()+1);
-	MyShape::shapes(curShape) = new Circle;
-	MyShape::shapes(curShape)->setPos(startPos[0], startPos[1], startPos[2]);
-	MyShape::shapes(curShape)->setRadius(earthRadius*earthRadiusScale);
-	MyShape::shapes(curShape)->setMomentum(startMom);
-	MyShape::shapes(curShape)->setMomentum(startMom[0], startMom[1], startMom[2]);
-	MyShape::shapes(curShape)->setDensity(earthDensity);
-	MyShape::shapes(curShape)->setMass(earthMass);
+	curShape = new Circle;
+	curShape->setPos(startPos);
+	curShape->setRadius(earthRadius*earthRadiusScale);
+	curShape->setMomentum(startMom);
+	curShape->setDensity(earthDensity);
+	curShape->setMass(earthMass);
 
-
-	tempMom = MyShape::shapes(curShape)->getMomentum();
-	cout << "earthMom: " << (*tempMom)[0] << ", " << (*tempMom)[1] << endl;
-	delete tempMom;
-
-	cout << "earthMass: " << MyShape::shapes(curShape)->getMass() << endl;
+	cout << "earthMom: " << curShape->getMomentum() << endl;
+	cout << "earthMass: " << curShape->getMass() << endl;
 
 	cout << "numBodies: " << MyShape::shapes.size() << endl;
-	cout << "earth #" << curShape << endl;
 }
 
 void billiards(int numRows) {
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
-	//WorldSettings::makeAllInelastic();
 	WorldSettings::setGravBetweenObjects(false);
 	WorldSettings::setConstGravField(false);
 	WorldSettings::setTimeElapsed(0);
@@ -152,23 +117,15 @@ void billiards(int numRows) {
 
 	WorldSettings::setConstGravFieldVal(gField);
 
-	//TODO setup to accept number of rows, rather than balls
-	//unsigned int numRows = 31; //500 Ball Craziness
-	//unsigned int numRows = 5; //Standard 15 balls
-	//unsigned int numRows = 9;
 	unsigned int numPieces = 0;
 	float cueMass = 100.0;
-	//float cueMass = 0.156;
-	float ballMass = 0.156;
-
-	//float ballRadius = 0.057;
 	float cueRadius = 2;
+
+	float ballMass = 0.156;
 	float ballRadius = .95;
 
 	for (int i = 1; i < numRows+1; i++)
 		numPieces+=i;
-
-	MyShape::shapes.resize(MyShape::shapes.size() + numPieces + 1);
 
 	sgVec4 cueVelocity;
 	cueVelocity[0] = 30;
@@ -181,25 +138,25 @@ void billiards(int numRows) {
 	newColor[1] = 1;
 	newColor[2] = 1;
 
-	MyShape::shapes(0) = new Circle;
-	MyShape::shapes(0)->setPos(numRows, numRows*3, 0);
-	MyShape::shapes(0)->setMass(cueMass);
-	//MyShape::shapes(0)->setRadius(cueRadius);
-	MyShape::shapes(0)->setRadius(ballRadius);
-	MyShape::shapes(0)->setVelocity(cueVelocity);
-	MyShape::shapes(0)->setColor(newColor);
+  MyShape * curShape;
 
-	unsigned int curShape = 1;
+	curShape = new Circle;
+	curShape->setPos(numRows, numRows*3, 0);
+	curShape->setMass(cueMass);
+	curShape->setRadius(ballRadius);
+	curShape->setVelocity(cueVelocity);
+	curShape->setColor(newColor);
+
+  MyShape::addShapeToList( curShape );
+
 	unsigned int cutOff = numRows*2;
 	for (unsigned int i = 1; i < numRows+1; i++) {
 		for (unsigned int j = i; j < cutOff; j+= 2) {
-			MyShape::shapes(curShape) = new Circle;
-			MyShape::shapes(curShape)->setPos(j*1.7, i*2.5, 0);
-			//MyShape::shapes(curShape)->setPos(j*1.1, i*2.0, 0);
-			MyShape::shapes(curShape)->setMass(ballMass);
-			MyShape::shapes(curShape)->setRadius(ballRadius);
-			//cout << j << " ";
-			curShape++;
+			curShape = new Circle;
+			curShape->setPos(j*1.7, i*2.5, 0);
+			curShape->setMass(ballMass);
+			curShape->setRadius(ballRadius);
+      MyShape::addShapeToList( curShape );
 		}
 		cout << endl;
 		cutOff--;
@@ -212,7 +169,7 @@ void billiards(int numRows) {
 	*/
 
 	cout << "NumPieces: " << numPieces << endl;
-	cout << "Type: " << MyShape::shapes(0)->getType() << endl;
+	cout << "Type: " << MyShape::getShapeFromList(0)->getType() << endl;
 
 }
 

@@ -251,7 +251,16 @@ void Quadrant::insertShape( MyShape * insertedShape )
   }
   else
   {
-    cout << "executing step 3" << endl;
+    //cout << "executing step 3" << endl;
+    sgVec4 curPos;
+    cout << "insertedShape: "  << insertedShape << endl;
+    insertedShape->getPos(curPos) ;
+    cout << "insertedShape.pos: "  << curPos << endl;
+
+    cout << "shapeInQuadrant: "  << shapeInQuadrant << endl;
+    shapeInQuadrant->getPos(curPos ) ;
+    cout << "shapeInQuadrant.pos: "  << curPos << endl;
+    MyShape * tempShape;
     Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
     targetQuadrant->insertShape( insertedShape );
 
@@ -260,7 +269,7 @@ void Quadrant::insertShape( MyShape * insertedShape )
 
     shapeInQuadrant = NULL;
 
-    cout << "executed step 3" << endl;
+    //cout << "executed step 3" << endl;
   }
 
 }
@@ -372,14 +381,14 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
 
     //cout << "QuadOctree: " << quadOctree  << endl;
     insertionQuadrant = getQuadrantFromCell( targetX, targetY, targetZ );
-    //cout << "Should insert shape in quadrant[" 
-      //<< targetX << ","
-      //<< targetY << ","
-      //<< targetZ << "]" << endl;
+    cout << "Should insert shape in quadrant[" 
+      << targetX << ","
+      << targetY << ","
+      << targetZ << "]" << endl;
 
     if ( insertionQuadrant == NULL )
     {
-      //cout << "Creating a new quadrant for insertion" << endl;
+      cout << "Creating a new quadrant for insertion" << endl;
       //cout << endl;
       //subDivide( targetX, targetY, targetZ, numCells );
 
