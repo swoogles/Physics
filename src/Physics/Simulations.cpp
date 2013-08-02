@@ -452,7 +452,7 @@ Quadrant * octreeDemonstration(int numRows) {
   cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
   startPlacement[0] = -5;
   startPlacement[1] = -9;
-  startPlacement[2] = -16;
+  startPlacement[2] = -17;
   shapeForInsertion = new Circle;
   shapeForInsertion->setPos( startPlacement );
   shapeForInsertion->setMass(1);

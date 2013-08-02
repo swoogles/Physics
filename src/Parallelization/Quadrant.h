@@ -28,8 +28,6 @@ class Quadrant : public Box
     Octree<Quadrant *> * quadOctree; 
     Octree<int> * intOctree; 
     Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions );
-    void subDivide( int x, int y, int z, int numCells );
-    void subDivideAll( int levels, int numCells );
     Quadrant * getQuadrantFromCell( int x, int y, int z );
 
     void printCorners();
