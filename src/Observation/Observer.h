@@ -16,7 +16,7 @@
 
 #include <plib/sg.h>
 
-#include "../ShapeFiles/MyShape.h"
+#include "../ShapeFiles/Moveable.h"
 
 #include "../CameraFunctions.h"
 
@@ -35,7 +35,7 @@ private:
 	sgQuat orientationQuat;
 	sgMat4 orientationMat;
 
-	MyShape * target;
+	Moveable * target;
 	float * perspectiveMat;
 
 	sgVec3 angVel;

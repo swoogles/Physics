@@ -214,7 +214,7 @@ public:
 	 *
 	 *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
 	 */
-	static vector<Moveable *> moveables;
+	static boost::numeric::ublas::vector<Moveable *> moveables;
 
 	/*! \brief Returns a moveable from the main moveables list
 	 *

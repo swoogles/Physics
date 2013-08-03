@@ -169,7 +169,7 @@ void billiards(int numRows) {
 	*/
 
 	cout << "NumPieces: " << numPieces << endl;
-	cout << "Type: " << MyShape::getShapeFromList(0)->getType() << endl;
+	//cout << "Type: " << MyShape::getShapeFromList(0)->getType() << endl;
 
 }
 
@@ -373,106 +373,108 @@ Quadrant * octreeDemonstration(int numRows) {
   Quadrant * mainQuadrant = new Quadrant(4, 1, pos, dimensions);
 
   int levels = 1;
-  int numShape = 0;
-  //mainQuadrant->subDivideAll(levels,8);
+  mainQuadrant->subDivideAll(levels,8);
   //mainQuadrant->printCorners();
 
 	sgVec4 startPlacement, startMomentum;
-
   startPlacement[0] = 15;
   startPlacement[1] = 20;
   startPlacement[0] = 15;
 
-  MyShape * shapeForInsertion;
+  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
+  int curShape = MyShape::shapes.size();
+  MyShape::shapes.resize( curShape+1);
+  MyShape::shapes(curShape) = new Circle;
+  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  MyShape::shapes(curShape)->setMass(1);
+  MyShape::shapes(curShape)->setRadius(.5);
+  mainQuadrant->insertShape( MyShape::shapes(curShape) );
 
-  cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
-  shapeForInsertion = new Circle;
-  shapeForInsertion->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  shapeForInsertion->setMass(1);
-  shapeForInsertion->setRadius(.5);
-  MyShape::addShapeToList( shapeForInsertion );
-  mainQuadrant->insertShape( shapeForInsertion );
-
-  cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
   startPlacement[0] = -5;
   startPlacement[1] = 15;
   startPlacement[2] = 12;
-  shapeForInsertion = new Circle;
-  shapeForInsertion->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  shapeForInsertion->setMass(1);
-  shapeForInsertion->setRadius(.5);
-  MyShape::addShapeToList( shapeForInsertion );
-  mainQuadrant->insertShape( shapeForInsertion );
 
-  // cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
-  // startPlacement[0] = -5;
-  // startPlacement[1] = -5;
-  // startPlacement[2] = -10;
-  // shapeForInsertion = new Circle;
-  // shapeForInsertion->setPos( startPlacement );
-  // shapeForInsertion->setMass(1);
-  // shapeForInsertion->setRadius(.5);
-  // MyShape::addShapeToList( shapeForInsertion );
-  // mainQuadrant->insertShape( shapeForInsertion );
+  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
+  curShape = MyShape::shapes.size();
+  MyShape::shapes.resize( curShape+1);
+  MyShape::shapes(curShape) = new Circle;
+  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  MyShape::shapes(curShape)->setMass(1);
+  MyShape::shapes(curShape)->setRadius(.5);
+  mainQuadrant->insertShape( MyShape::shapes(curShape) );
 
-  // cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
-  // startPlacement[0] = -5;
-  // startPlacement[1] = -5;
-  // startPlacement[2] = -20;
-  // shapeForInsertion = new Circle;
-  // shapeForInsertion->setPos( startPlacement );
-  // shapeForInsertion->setMass(1);
-  // shapeForInsertion->setRadius(.5);
-  // MyShape::addShapeToList( shapeForInsertion );
-  // mainQuadrant->insertShape( shapeForInsertion );
-
-  cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
   startPlacement[0] = -5;
   startPlacement[1] = -5;
-  startPlacement[2] = -15;
-  shapeForInsertion = new Circle;
-  shapeForInsertion->setPos( startPlacement );
-  shapeForInsertion->setMass(1);
-  shapeForInsertion->setRadius(.5);
-  MyShape::addShapeToList( shapeForInsertion );
-  mainQuadrant->insertShape( shapeForInsertion );
+  startPlacement[2] = -10;
 
-  cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
+  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
+  curShape = MyShape::shapes.size();
+  MyShape::shapes.resize( curShape+1);
+  MyShape::shapes(curShape) = new Circle;
+  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  MyShape::shapes(curShape)->setMass(1);
+  MyShape::shapes(curShape)->setRadius(.5);
+  mainQuadrant->insertShape( MyShape::shapes(curShape) );
+
+  startPlacement[0] = -5;
+  startPlacement[1] = -5;
+  startPlacement[2] = -20;
+
+  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
+  curShape = MyShape::shapes.size();
+  MyShape::shapes.resize( curShape+1);
+  MyShape::shapes(curShape) = new Circle;
+  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  MyShape::shapes(curShape)->setMass(1);
+  MyShape::shapes(curShape)->setRadius(.5);
+  mainQuadrant->insertShape( MyShape::shapes(curShape) );
+
+  startPlacement[0] = -5;
+  startPlacement[1] = -5;
+  startPlacement[2] = -17;
+
+  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
+  curShape = MyShape::shapes.size();
+  MyShape::shapes.resize( curShape+1);
+  MyShape::shapes(curShape) = new Circle;
+  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  MyShape::shapes(curShape)->setMass(1);
+  MyShape::shapes(curShape)->setRadius(.5);
+  mainQuadrant->insertShape( MyShape::shapes(curShape) );
+
   startPlacement[0] = -5;
   startPlacement[1] = -8;
-  startPlacement[2] = -15;
-  shapeForInsertion = new Circle;
-  shapeForInsertion->setPos( startPlacement );
-  shapeForInsertion->setMass(1);
-  shapeForInsertion->setRadius(.5);
-  MyShape::addShapeToList( shapeForInsertion );
-  mainQuadrant->insertShape( shapeForInsertion );
-  cout << endl << endl;
-
-  cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
-  startPlacement[0] = -5;
-  startPlacement[1] = -9;
   startPlacement[2] = -17;
-  shapeForInsertion = new Circle;
-  shapeForInsertion->setPos( startPlacement );
-  shapeForInsertion->setMass(1);
-  shapeForInsertion->setRadius(.5);
-  MyShape::addShapeToList( shapeForInsertion );
-  mainQuadrant->insertShape( shapeForInsertion );
-  cout << endl << endl;
 
+  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
+  curShape = MyShape::shapes.size();
+  MyShape::shapes.resize( curShape+1);
+  MyShape::shapes(curShape) = new Circle;
+  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  MyShape::shapes(curShape)->setMass(1);
+  MyShape::shapes(curShape)->setRadius(.5);
+  mainQuadrant->insertShape( MyShape::shapes(curShape) );
+
+  startPlacement[0] = -5;
+  startPlacement[1] = -7;
+  startPlacement[2] = -16;
+
+  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
+  curShape = MyShape::shapes.size();
+  MyShape::shapes.resize( curShape+1);
+  MyShape::shapes(curShape) = new Circle;
+  MyShape::shapes(curShape)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  MyShape::shapes(curShape)->setMass(1);
+  MyShape::shapes(curShape)->setRadius(.5);
+  mainQuadrant->insertShape( MyShape::shapes(curShape) );
 
 	float totalMass = 0.0;
 
   int prevNumPieces = MyShape::shapes.size();
   cout << "prevNumPieces: " << prevNumPieces << endl;
   cout << "endNumPieces:" << prevNumPieces + numPieces << endl;
-
-  for (unsigned int j = 0; j < MyShape::shapes.size(); j++) {
-    //cout << "shape[" << j << "]" << MyShape::shapes(j) << endl;
-  }
-
- 	// for (unsigned int i = prevNumPieces; i < prevNumPieces + numPieces; i++) {
+ 	//for (unsigned int i = prevNumPieces; i < prevNumPieces + numPieces -1; i++) {
+	// for (unsigned int i = 0; i < numPieces; i++) {
 		// MyShape::shapes.resize(MyShape::shapes.size()+1);
 // 
     // randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
@@ -490,14 +492,7 @@ Quadrant * octreeDemonstration(int numRows) {
 		// }
     // mainQuadrant->insertShape( MyShape::shapes(i) );
 		// totalMass += MyShape::shapes(i)->getMass();
-// 
-    // for (unsigned int j = 0; j < MyShape::shapes.size(); j++) {
-      // cout << "shape[" << j << "]" << MyShape::shapes(j) << endl;
-    // }
 	// }
-
-  // MyShape::shapes.erase_element( 5 );
-  // MyShape::shapes.resize( MyShape::shapes.size() - 1);
 
   WorldSettings::adjustTotalMass( totalMass );
  //mainQuadrant->insertShape( MyShape::shapes(curShape) );
@@ -505,6 +500,7 @@ Quadrant * octreeDemonstration(int numRows) {
   return mainQuadrant;
 
 }
+
 
 
 void simpleCollision() {
