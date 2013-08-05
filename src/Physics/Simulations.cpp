@@ -383,33 +383,32 @@ Quadrant * octreeDemonstration(int numRows) {
 
   MyShape * curShapeInsert;
 
-
-  //curShapeInsert = new Circle;
-  //curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  //curShapeInsert->setMass(1);
-  //curShapeInsert->setRadius(.5);
-  //MyShape::addShapeToList( curShapeInsert );
-  //mainQuadrant->insertShape( curShapeInsert );
-
+  //sgScaleVec3( dimensions, .3 );
 
 	float totalMass = 0.0;
 
   int curShapeIdx;
 
+  sgVec3 curShapeColor;
+  curShapeColor[0]=1.0;
+  curShapeColor[1]=1.0;
+  curShapeColor[2]=1.0;
+
   for (int i = 0; i < 30; i++)
   {
     curShapeIdx = MyShape::shapes.size();
-    cout << "Shape[" << curShapeIdx << "]" << endl;
+    //cout << "Shape[" << curShapeIdx << "]" << endl;
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
     curShapeInsert = new Circle;
     // curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
     curShapeInsert->setPos( startPlacement );
+    curShapeInsert->setColor( curShapeColor );
     curShapeInsert->setMass(1);
     curShapeInsert->setRadius(.5);
     MyShape::addShapeToList( curShapeInsert );
     while ( isConflict( curShapeIdx ) )
     {
-      cout << "Conflict. New Random Position..." << endl;
+      //cout << "Conflict. New Random Position..." << endl;
       randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
       curShapeInsert->setPos( startPlacement );
     }

@@ -20,6 +20,14 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   borders = new Box();
   borders->setPos(pos);
 
+  sgVec3 newColor;
+  float redAmount = level*.2; 
+  float greenAmount = (1-level*.2);
+  newColor[0]=redAmount;
+  newColor[1]=greenAmount;
+  cout << "Quadrant color: " << newColor << endl;
+  borders->setColor( newColor );
+
   int numShapes = MyShape::shapes.size();
   borders->setSideLength( dimensions[0] );
 
@@ -27,7 +35,6 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 	MyShape::shapes(numShapes) = borders;
 
 }
-
 
 void Quadrant::printCorners()
 {
