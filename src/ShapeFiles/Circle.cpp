@@ -63,7 +63,7 @@ void Circle::setRadius(float inRadius) {
 
 
 int Circle::getType() {
-	return 1;
+	return 2;
 }
 
 float Circle::getMomentOfInertia() {

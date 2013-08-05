@@ -348,9 +348,9 @@ Quadrant * octreeDemonstration(int numRows) {
   newColor[1] = 1;
   newColor[2] = 1;
 
-  float width = 50;
-  float height = 50;
-  float depth = 50;
+  float width = 150;
+  float height = 150;
+  float depth = 150;
 
   sgVec4 pos;
   pos[0] = 0;
@@ -383,87 +383,36 @@ Quadrant * octreeDemonstration(int numRows) {
 
   MyShape * curShapeInsert;
 
-  cout << "Shape[" << MyShape::shapes.size() << "]" << endl;
 
-  curShapeInsert = new Circle;
-  curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  curShapeInsert->setMass(1);
-  curShapeInsert->setRadius(.5);
-  MyShape::addShapeToList( curShapeInsert );
-  mainQuadrant->insertShape( curShapeInsert );
+  //curShapeInsert = new Circle;
+  //curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+  //curShapeInsert->setMass(1);
+  //curShapeInsert->setRadius(.5);
+  //MyShape::addShapeToList( curShapeInsert );
+  //mainQuadrant->insertShape( curShapeInsert );
 
-  startPlacement[0] = -5;
-  startPlacement[1] = 15;
-  startPlacement[2] = 12;
-
-  curShapeInsert = new Circle;
-  curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  curShapeInsert->setMass(1);
-  curShapeInsert->setRadius(.5);
-  MyShape::addShapeToList( curShapeInsert );
-  mainQuadrant->insertShape( curShapeInsert );
-
-  startPlacement[0] = -5;
-  startPlacement[1] = -5;
-  startPlacement[2] = -10;
-
-  curShapeInsert = new Circle;
-  curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  curShapeInsert->setMass(1);
-  curShapeInsert->setRadius(.5);
-  MyShape::addShapeToList( curShapeInsert );
-  mainQuadrant->insertShape( curShapeInsert );
-
-  startPlacement[0] = -5;
-  startPlacement[1] = -5;
-  startPlacement[2] = -20;
-  curShapeInsert = new Circle;
-  curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  curShapeInsert->setMass(1);
-  curShapeInsert->setRadius(.5);
-  MyShape::addShapeToList( curShapeInsert );
-  mainQuadrant->insertShape( curShapeInsert );
-
-  startPlacement[0] = -5;
-  startPlacement[1] = -5;
-  startPlacement[2] = -17;
-  curShapeInsert = new Circle;
-  curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  curShapeInsert->setMass(1);
-  curShapeInsert->setRadius(.5);
-  MyShape::addShapeToList( curShapeInsert );
-  mainQuadrant->insertShape( curShapeInsert );
-
-  startPlacement[0] = -5;
-  startPlacement[1] = -8;
-  startPlacement[2] = -17;
-  curShapeInsert = new Circle;
-  curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  curShapeInsert->setMass(1);
-  curShapeInsert->setRadius(.5);
-  MyShape::addShapeToList( curShapeInsert );
-  mainQuadrant->insertShape( curShapeInsert );
-
-  startPlacement[0] = -5;
-  startPlacement[1] = -7;
-  startPlacement[2] = -16;
-  curShapeInsert = new Circle;
-  curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-  curShapeInsert->setMass(1);
-  curShapeInsert->setRadius(.5);
-  MyShape::addShapeToList( curShapeInsert );
-  mainQuadrant->insertShape( curShapeInsert );
 
 	float totalMass = 0.0;
 
-  for (int i = 0; i < 15; i++)
+  int curShapeIdx;
+
+  for (int i = 0; i < 30; i++)
   {
+    curShapeIdx = MyShape::shapes.size();
+    cout << "Shape[" << curShapeIdx << "]" << endl;
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
     curShapeInsert = new Circle;
-    curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+    // curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+    curShapeInsert->setPos( startPlacement );
     curShapeInsert->setMass(1);
     curShapeInsert->setRadius(.5);
     MyShape::addShapeToList( curShapeInsert );
+    while ( isConflict( curShapeIdx ) )
+    {
+      cout << "Conflict. New Random Position..." << endl;
+      randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
+      curShapeInsert->setPos( startPlacement );
+    }
     mainQuadrant->insertShape( curShapeInsert );
   }
 

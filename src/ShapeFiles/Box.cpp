@@ -125,3 +125,7 @@ float Box::getDepth() {
 void Box::setDepth(float inDepth) {
 	depth = inDepth;
 }
+
+int Box::getType() {
+	return 3;
+}

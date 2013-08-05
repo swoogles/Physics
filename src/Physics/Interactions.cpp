@@ -172,16 +172,19 @@ bool isConflict(int newShape) {
 
   for (unsigned int i = 0; i < newShape && conflict == false; i++) {
     object1 = MyShape::shapes(i);
-    getVectorToObject2(object1, object2, sepVec);
+    if ( object1->getType() == 2 )
+    {
+      getVectorToObject2(object1, object2, sepVec);
 
-    distanceSquared = sgLengthSquaredVec4(sepVec);
-    distance = sqrt(distanceSquared);
+      distanceSquared = sgLengthSquaredVec4(sepVec);
+      distance = sqrt(distanceSquared);
 
-    minSep = object1->getRadius() + object2->getRadius();
+      minSep = object1->getRadius() + object2->getRadius();
 
 
-    if (distance < minSep) {
-      conflict = true;
+      if (distance < minSep) {
+        conflict = true;
+      }
     }
   }
   return conflict;

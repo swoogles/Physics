@@ -230,6 +230,7 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 
 void Quadrant::insertShape( MyShape * insertedShape )
 {
+  //this->adjustMass( insertedShape->getMass() );
   if ( shapeInQuadrant == NULL && quadOctree == NULL )
   {
     //cout << "executing step 1" << endl;

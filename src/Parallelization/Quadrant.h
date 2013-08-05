@@ -28,6 +28,9 @@ class Quadrant : public Box
     Box * borders;
     sgVec4 preCenterOfMass;
 
+    float mass;
+
+
   public:
     int level;
     Octree<Quadrant *> * quadOctree; /* Create 4096x4096x4096 octree containing doubles. */
@@ -46,6 +49,10 @@ class Quadrant : public Box
     //sgVec4 pos;
 
     void insertShape( MyShape * newShape );
+
+    inline float getMass() { return mass; }
+    inline void setMass( float mass ) { this->mass = mass; }
+    inline void adjustMass ( float deltaMass ) { mass+= deltaMass; }
 
     void getCenterOfMass(sgVec4 centerOfMass);
     void setCenterOfMass( sgVec4 centerOfMass );

@@ -515,7 +515,7 @@ void MyShape::clearShapes() {
 void MyShape::setRadius(float) {}
 float MyShape::getRadius() { return 1;}
 
-int MyShape::getType() {}
+int MyShape::getType() { return 1;}
 
 int MyShape::addShapeToList( MyShape * insertShape )
 {

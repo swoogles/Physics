@@ -47,6 +47,7 @@ public:
   float getDepth();
   void setDepth(float inDepth);
 
+	int getType();
 };
 
 #endif /* BOX_H_ */
