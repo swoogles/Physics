@@ -221,22 +221,22 @@ void init(char simulation) {
 	//******CURRENT SIMULATION*****
   if ( simulation == '0' ) {
   //if ( strcmp(simulation, "simulation") ) {
-	  largeGridAlternating();
+    Simulations::largeGridAlternating();
   }
   if ( simulation == '1' ) {
-	  bodyFormation( 400 );
+	  Simulations::bodyFormation( 400 );
   }
   if ( simulation == '2' ) {
-	  disruption();
+	  Simulations::disruption();
   }
   if ( simulation == '3' ) {
-	  simpleCollision();
+	  Simulations::simpleCollision();
   }
   if ( simulation == '4' ) {
-	  billiards(10);
+	  Simulations::billiards(10);
   }
   if ( simulation == '5' ) {
-	  billiards2(10);
+	  Simulations::billiards2(10);
   }
 
   if ( simulation == '6' ) {
@@ -250,7 +250,7 @@ void init(char simulation) {
     target[1]=0;
     target[2]=0;
     target[3]=1;
-	  bodyFormationGeneric( 650, target, groupMomentum );
+	  Simulations::bodyFormationGeneric( 650, target, groupMomentum );
     cout << "xpos: " << target[0] << endl;
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
 
@@ -260,11 +260,11 @@ void init(char simulation) {
     groupMomentum[2]=0;
 
     cout << "xpos: " << target[0] << endl;
-	  bodyFormationGeneric( 650, target, groupMomentum );
+	  Simulations::bodyFormationGeneric( 650, target, groupMomentum );
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
   if ( simulation == '7' ) {
-    globalQuadrant = octreeDemonstration(10);
+    globalQuadrant = Simulations::octreeDemonstration(10);
   }
 
   if ( simulation == '8' ) {
@@ -275,7 +275,7 @@ void init(char simulation) {
   }
 
   if ( simulation == '9' ) {
-	  billiards3(10);
+	  Simulations::billiards3(10);
   }
   
 	//billiards3(7);

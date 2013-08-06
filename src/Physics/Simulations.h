@@ -69,24 +69,56 @@ SGfloat massList[NUM_BODIES] = {
 };
 */
 
+using namespace boost::numeric::ublas;
+using boost::numeric::ublas::vector;
 
-void simpleOrbit();
+class Simulations
+{
 
-void largeGridAlternating();
+  private:
+    // TODO make generic versions of these variables and methods.
+    // Eg. Observers::getObserverFromList, Quadrant
+    /*! \brief Vector that holds all currently active shapes
+     *
+     *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
+     */
+    static boost::numeric::ublas::vector<MyShape *> physicalObjects;
 
-void disruption();
+  public:
+    static void largeGridAlternating();
 
-void bodyFormation( unsigned int numPieces );
-void bodyFormationGeneric( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
+    static void simpleOrbit();
 
-void billiards(int);
+    static void disruption();
 
-void billiards2(int);
+    static void bodyFormation( unsigned int numPieces );
+    static void bodyFormationGeneric( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
-void billiards3(int);
+    static void billiards(int);
 
-Quadrant * octreeDemonstration(int);
+    static void billiards2(int);
 
-void simpleCollision();
+    static void billiards3(int);
+
+    static Quadrant * octreeDemonstration(int);
+
+    static void simpleCollision();
+
+	/*! \brief Returns a shape from the static list of objects that should be considered during
+   * physical interactions.
+	 *
+	 *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
+	 *  \return Pointer to desired shape
+	 */
+  static MyShape * getShapeFromList( int shapeIndex );
+
+	/*! \brief Returns a shape from the main shapes list
+	 *
+	 *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
+	 *  \return Pointer to desired shape
+	 */
+  static int addShapeToList( MyShape * insertShape );
+};
+
 
 #endif /* SIMULATIONS_H_ */
