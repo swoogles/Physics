@@ -76,33 +76,49 @@ class Simulations
 {
 
   private:
-  // TODO make generic versions of these variables and methods.
-  // Eg. Observers::getObserverFromList, Quadrant
-	/*! \brief Vector that holds all currently active shapes
+    // TODO make generic versions of these variables and methods.
+    // Eg. Observers::getObserverFromList, Quadrant
+    /*! \brief Vector that holds all currently active shapes
+     *
+     *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
+     */
+    static boost::numeric::ublas::vector<MyShape *> physicalObjects;
+
+  public:
+    static void largeGridAlternating();
+
+    static void simpleOrbit();
+
+    static void disruption();
+
+    static void bodyFormation( unsigned int numPieces );
+    static void bodyFormationGeneric( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
+
+    static void billiards(int);
+
+    static void billiards2(int);
+
+    static void billiards3(int);
+
+    static Quadrant * octreeDemonstration(int);
+
+    static void simpleCollision();
+
+	/*! \brief Returns a shape from the static list of objects that should be considered during
+   * physical interactions.
 	 *
-	 *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
+	 *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
+	 *  \return Pointer to desired shape
 	 */
-	static boost::numeric::ublas::vector<MyShape *> shapes;
+  static MyShape * getShapeFromList( int shapeIndex );
+
+	/*! \brief Returns a shape from the main shapes list
+	 *
+	 *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
+	 *  \return Pointer to desired shape
+	 */
+  static int addShapeToList( MyShape * insertShape );
 };
 
-
-void simpleOrbit();
-
-void largeGridAlternating();
-
-void disruption();
-
-void bodyFormation( unsigned int numPieces );
-void bodyFormationGeneric( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
-
-void billiards(int);
-
-void billiards2(int);
-
-void billiards3(int);
-
-Quadrant * octreeDemonstration(int);
-
-void simpleCollision();
 
 #endif /* SIMULATIONS_H_ */

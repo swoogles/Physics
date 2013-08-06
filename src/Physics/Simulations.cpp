@@ -7,6 +7,8 @@
 
 #include "Simulations.h"
 
+boost::numeric::ublas::vector<MyShape *> Simulations::physicalObjects(0);
+
 using namespace std;
 
 void testAutoScale() {
@@ -17,7 +19,7 @@ void testAutoScale() {
 }
 
 
-void largeGridAlternating() {
+void Simulations::largeGridAlternating() {
 	sgVec4 startPos;
 
 	int gridSide = 18;
@@ -49,7 +51,7 @@ void largeGridAlternating() {
 	}
 }
 
-void simpleOrbit() {
+void Simulations::simpleOrbit() {
 
 	sgVec4 startPos, startMom;
 	float sunRadiusScale = 15;
@@ -105,7 +107,7 @@ void simpleOrbit() {
 	cout << "numBodies: " << MyShape::shapes.size() << endl;
 }
 
-void billiards(int numRows) {
+void Simulations::billiards(int numRows) {
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
 	WorldSettings::setGravBetweenObjects(false);
@@ -173,7 +175,7 @@ void billiards(int numRows) {
 
 }
 
-void billiards2(int numRows) {
+void Simulations::billiards2(int numRows) {
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
 	//WorldSettings::makeAllInelastic();
@@ -243,7 +245,7 @@ void billiards2(int numRows) {
 
 }
 
-void billiards3(int numRows) {
+void Simulations::billiards3(int numRows) {
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
 	//WorldSettings::makeAllInelastic();
@@ -319,7 +321,7 @@ void billiards3(int numRows) {
 
 }
 
-Quadrant * octreeDemonstration(int numRows) {
+Quadrant * Simulations::octreeDemonstration(int numRows) {
   WorldSettings::setDT(.003);
   WorldSettings::makeAllElastic();
   //WorldSettings::makeAllInelastic();
@@ -391,6 +393,7 @@ Quadrant * octreeDemonstration(int numRows) {
   shapeForInsertion->setMass(1);
   shapeForInsertion->setRadius(.5);
   MyShape::addShapeToList( shapeForInsertion );
+  Simulations::addShapeToList( shapeForInsertion );
   mainQuadrant->insertShape( shapeForInsertion );
 
   cout << endl << endl << "Shape[" << numShape++ << "]" << endl;
@@ -507,7 +510,7 @@ Quadrant * octreeDemonstration(int numRows) {
 }
 
 
-void simpleCollision() {
+void Simulations::simpleCollision() {
 	WorldSettings::setDT(.01);
 
 	unsigned int numPieces = 2;
@@ -555,7 +558,7 @@ void simpleCollision() {
 
 }
 
-void disruption() {
+void Simulations::disruption() {
   bodyFormation( 1000 );
   MyShape::shapes.resize(MyShape::shapes.size()+1);
   int size = MyShape::shapes.size();
@@ -579,7 +582,7 @@ void disruption() {
   MyShape::shapes(cur)->setDensity(objectDensity);
 }
 
-void bodyFormation(unsigned int numPieces) {
+void Simulations::bodyFormation(unsigned int numPieces) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();
 	WorldSettings::setGravBetweenObjects(true);
@@ -638,7 +641,7 @@ void bodyFormation(unsigned int numPieces) {
   WorldSettings::adjustTotalMass( totalMass );
 }
 
-void bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum) {
+void Simulations::bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();
 	WorldSettings::setGravBetweenObjects(true);
@@ -693,4 +696,23 @@ void bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sgVec4 groupMom
 		totalMass += MyShape::shapes(i)->getMass();
 	}
   WorldSettings::adjustTotalMass( totalMass );
+}
+
+MyShape * Simulations::getShapeFromList( int shapeIndex )
+{
+  MyShape * returnShape;
+  if ( physicalObjects.size() > shapeIndex )
+  {
+    returnShape = physicalObjects(shapeIndex);
+  }
+
+  return returnShape;
+}
+
+int Simulations::addShapeToList( MyShape * insertShape )
+{
+  int curSize = physicalObjects.size();
+  physicalObjects.resize(curSize + 1);
+  physicalObjects(curSize) = insertShape;
+  return curSize;
 }
