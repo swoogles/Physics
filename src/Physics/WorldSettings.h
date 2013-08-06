@@ -10,6 +10,8 @@
 
 #include <plib/sg.h>
 
+#include <boost/numeric/ublas/vector.hpp>
+
 
 /*! \brief Handles values and settings used for various physical interactions
  *

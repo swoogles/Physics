@@ -69,6 +69,22 @@ SGfloat massList[NUM_BODIES] = {
 };
 */
 
+using namespace boost::numeric::ublas;
+using boost::numeric::ublas::vector;
+
+class Simulations
+{
+
+  private:
+  // TODO make generic versions of these variables and methods.
+  // Eg. Observers::getObserverFromList, Quadrant
+	/*! \brief Vector that holds all currently active shapes
+	 *
+	 *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
+	 */
+	static boost::numeric::ublas::vector<MyShape *> shapes;
+};
+
 
 void simpleOrbit();
 

@@ -7,6 +7,11 @@ ostream& operator<<(ostream& os, sgVec4 outputVec) {
 	return os;
 }
 
+//void Quadrant::calcForcesForAll()
+//{
+//}
+
+
 Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 {
   this->level = level;
