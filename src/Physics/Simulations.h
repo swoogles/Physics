@@ -74,9 +74,7 @@ using boost::numeric::ublas::vector;
 
 class Simulations
 {
-
   private:
-    // TODO make generic versions of these variables and methods.
     // Eg. Observers::getObserverFromList, Quadrant
     /*! \brief Vector that holds all currently active shapes
      *
@@ -104,20 +102,20 @@ class Simulations
 
     static void simpleCollision();
 
-	/*! \brief Returns a shape from the static list of objects that should be considered during
-   * physical interactions.
-	 *
-	 *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
-	 *  \return Pointer to desired shape
-	 */
-  static MyShape * getShapeFromList( int shapeIndex );
+    /*! \brief Returns a shape from the static list of objects that should be considered during
+     * physical interactions.
+     *
+     *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
+     *  \return Pointer to desired shape
+     */
+    static MyShape * getShapeFromList( int shapeIndex );
 
-	/*! \brief Returns a shape from the main shapes list
-	 *
-	 *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
-	 *  \return Pointer to desired shape
-	 */
-  static int addShapeToList( MyShape * insertShape );
+    /*! \brief Returns a shape from the main shapes list
+     *
+     *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
+     *  \return Pointer to desired shape
+     */
+    static int addShapeToList( MyShape * insertShape );
 };
 
 

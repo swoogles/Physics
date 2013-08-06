@@ -131,7 +131,6 @@ void Simulations::billiards(int numRows) {
 
 	sgVec4 cueVelocity;
 	cueVelocity[0] = 30;
-	//cueVelocity[1] = -15.05;
 	cueVelocity[1] = -75;
 	cueVelocity[2] = 0;
 
@@ -164,15 +163,7 @@ void Simulations::billiards(int numRows) {
 		cutOff--;
 	}
 
-	/*
-	for (unsigned int i = 1; i < MyShape::shapes.size(); i++) {
-		MyShape::shapes(0) = new Circle;
-	}
-	*/
-
 	cout << "NumPieces: " << numPieces << endl;
-	//cout << "Type: " << MyShape::getShapeFromList(0)->getType() << endl;
-
 }
 
 void Simulations::billiards2(int numRows) {
@@ -188,16 +179,10 @@ void Simulations::billiards2(int numRows) {
 
 	WorldSettings::setConstGravFieldVal(gField);
 
-	//TODO setup to accept number of rows, rather than balls
-	//unsigned int numRows = 31; //500 Ball Craziness
-	//unsigned int numRows = 5; //Standard 15 balls
-	//unsigned int numRows = 9;
 	unsigned int numPieces = 0;
 	float cueMass = 100.0;
-	//float cueMass = 0.156;
 	float ballMass = 0.156;
 
-	//float ballRadius = 0.057;
 	float cueRadius = 2;
 	float ballRadius = .95;
 
@@ -258,22 +243,14 @@ void Simulations::billiards3(int numRows) {
 
 	WorldSettings::setConstGravFieldVal(gField);
 
-	//TODO setup to accept number of rows, rather than balls
-	//unsigned int numRows = 31; //500 Ball Craziness
-	//unsigned int numRows = 5; //Standard 15 balls
-	//unsigned int numRows = 9;
 	unsigned int numPieces = 0;
 	float cueMass = 100.0;
-	//float cueMass = 0.156;
 	float ballMass = 0.156;
 
-	//float ballRadius = 0.057;
 	float cueRadius = 4;
 	float ballRadius = .95;
 
-		numPieces= numRows*numRows*numRows;
-
-	//MyShape::shapes.resize(MyShape::shapes.size() + numPieces + 1);
+  numPieces= numRows*numRows*numRows;
 
 	sgVec4 cueVelocity;
 	cueVelocity[0] = 30;
@@ -376,20 +353,16 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
 
   int levels = 1;
   mainQuadrant->subDivideAll(levels,8);
-  //mainQuadrant->printCorners();
 
 	sgVec4 startPlacement, startMomentum;
   startPlacement[0] = 15;
   startPlacement[1] = 20;
   startPlacement[0] = 15;
 
+  int curShapeIdx;
   MyShape * curShapeInsert;
 
-  //sgScaleVec3( dimensions, .3 );
-
 	float totalMass = 0.0;
-
-  int curShapeIdx;
 
   sgVec3 curShapeColor;
   curShapeColor[0]=1.0;
@@ -399,10 +372,8 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
   for (int i = 0; i < 30; i++)
   {
     curShapeIdx = MyShape::shapes.size();
-    //cout << "Shape[" << curShapeIdx << "]" << endl;
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
     curShapeInsert = new Circle;
-    // curShapeInsert->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
     curShapeInsert->setPos( startPlacement );
     curShapeInsert->setColor( curShapeColor );
     curShapeInsert->setMass(1);
@@ -410,7 +381,6 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
     MyShape::addShapeToList( curShapeInsert );
     while ( isConflict( curShapeIdx ) )
     {
-      //cout << "Conflict. New Random Position..." << endl;
       randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
       curShapeInsert->setPos( startPlacement );
     }
@@ -423,10 +393,8 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
   cout << "endNumPieces:" << prevNumPieces + numPieces << endl;
 
   WorldSettings::adjustTotalMass( totalMass );
- //mainQuadrant->insertShape( MyShape::shapes(curShape) );
 
   return mainQuadrant;
-
 }
 
 
@@ -530,8 +498,6 @@ void Simulations::bodyFormation(unsigned int numPieces) {
 
 	for (unsigned int i = 0; i < numPieces; i++) {
     MyShape * curShape;
-
-		// MyShape::shapes.resize(MyShape::shapes.size()+1);
 
 		if (i % 2 == 0) {
 			randomSplitBodyMomentum(startMomentum, pieceMass);

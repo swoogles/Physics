@@ -66,7 +66,6 @@ private:
 		static puArrowButton * rotUp_button;
 		static puArrowButton * rotDown_button;
 
-		//TODO AutoScale checkbox
 		static puButton * autoScale_button;
 
 	static puButton * viewSwitcher;
