@@ -237,7 +237,10 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 
 void Quadrant::insertShape( MyShape * insertedShape )
 {
-  //this->adjustMass( insertedShape->getMass() );
+  this->adjustMass( insertedShape->getMass() );
+  //cout << "Quadrant: " << this << endl;
+  //cout << "Mass: " << this->getMass() << endl;
+
   if ( shapeInQuadrant == NULL && quadOctree == NULL )
   {
     //cout << "executing step 1" << endl;

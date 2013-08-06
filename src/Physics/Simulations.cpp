@@ -419,25 +419,6 @@ Quadrant * octreeDemonstration(int numRows) {
   int prevNumPieces = MyShape::shapes.size();
   cout << "prevNumPieces: " << prevNumPieces << endl;
   cout << "endNumPieces:" << prevNumPieces + numPieces << endl;
- 	//for (unsigned int i = prevNumPieces; i < prevNumPieces + numPieces -1; i++) {
-	// for (unsigned int i = 0; i < numPieces; i++) {
-		// MyShape::shapes.resize(MyShape::shapes.size()+1);
-// 
-// 
-    // cout << "Adding @ " << startPlacement << endl;
-		// MyShape::shapes(i) = new Circle;
-		// MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-		// MyShape::shapes(i)->setMass(0);
-		// MyShape::shapes(i)->setRadius(.5);
-// 
-		// //Check if being placed on previously created object
-		// while ( isConflict(i) ) {
-			// randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
-			// MyShape::shapes(i)->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
-		// }
-    // mainQuadrant->insertShape( MyShape::shapes(i) );
-		// totalMass += MyShape::shapes(i)->getMass();
-	// }
 
   WorldSettings::adjustTotalMass( totalMass );
  //mainQuadrant->insertShape( MyShape::shapes(curShape) );
