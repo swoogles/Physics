@@ -369,7 +369,7 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
   curShapeColor[1]=1.0;
   curShapeColor[2]=1.0;
 
-  for (int i = 0; i < 30; i++)
+  for (int i = 0; i < 15; i++)
   {
     curShapeIdx = MyShape::shapes.size();
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);

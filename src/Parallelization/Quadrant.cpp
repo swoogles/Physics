@@ -16,10 +16,8 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 {
   this->level = level;
   int length = 2;
-  //quadOctree = new Octree<Quadrant * >(numCells);
 
   setPos( pos );
-  //sgCopyVec4( this->pos, pos );
   sgCopyVec4( this->dimensions, dimensions );
 
   borders = new Box();
@@ -38,6 +36,8 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
   MyShape::shapes.resize(numShapes + 1);
 	MyShape::shapes(numShapes) = borders;
+
+  array_type quadOctreeMine(boost::extents[2][2][2]);
 
 }
 
@@ -97,6 +97,7 @@ void Quadrant::printCorners()
 
 Quadrant * Quadrant::getQuadrantFromCell( int x, int y, int z )
 {
+  Quadrant * tempQuad = quadOctreeMine[x][y][z];
   return quadOctree->at( x, y, z );
 }
 
@@ -242,7 +243,7 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 
 void Quadrant::insertShape( MyShape * insertedShape )
 {
-  this->adjustMass( insertedShape->getMass() );
+  //this->adjustMass( insertedShape->getMass() );
   //cout << "Quadrant: " << this << endl;
   //cout << "Mass: " << this->getMass() << endl;
 
@@ -386,7 +387,6 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
       quadOctree = new Octree<Quadrant * >(numCells);
     }
 
-    //cout << "QuadOctree: " << quadOctree  << endl;
     insertionQuadrant = getQuadrantFromCell( targetX, targetY, targetZ );
     //cout << "Should insert shape in quadrant[" 
       //<< targetX << ","
