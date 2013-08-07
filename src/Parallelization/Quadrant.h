@@ -21,6 +21,8 @@
 //using namespace boost::numeric::ublas;
 //using boost::numeric::ublas::vector;
 
+using namespace boost;
+
 //using namespace std;
 
 #define INVALID_OCTREE_INDEX -1
@@ -43,7 +45,7 @@ class Quadrant : public Box
     //   <Quadrant *> > >  quadOctreeMine;
 
     //Quadrant*** quadOctreeMine; /* Create 4096x4096x4096 octree containing doubles. */
-  typedef boost::multi_array<Quadrant *, 3> array_type;
+  typedef multi_array<Quadrant *, 3> array_type;
   typedef array_type::index index;
   array_type quadOctreeMine;
 
