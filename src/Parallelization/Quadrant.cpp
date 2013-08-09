@@ -13,6 +13,7 @@ ostream& operator<<(ostream& os, sgVec4 outputVec) {
 
 
 Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
+  : quadOctreeMine(boost::extents[2][2][2])
 {
   this->level = level;
   int length = 2;
@@ -37,42 +38,16 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   MyShape::shapes.resize(numShapes + 1);
 	MyShape::shapes(numShapes) = borders;
 
-  array_type quadOctreeMine(boost::extents[2][2][2]);
-  //quadOctreeMine = array_type(boost::extents[2][2][2]);
+  // quadOctreeMine(boost::extents[2][2][2]);
 
-  boost::numeric::ublas::vector <Quadrant *> newQuadrants(8);
+  // quadOctreeMine = array_type(boost::extents[2][2][2]);
+  //quadOctreeMine[0][0][0] = new Quadrant( numCells, this->level + 1, pos, dimensions );
+  // quadOctreeMine[0][0][0] = NULL;
 
-  if ( level < 2 )
-  {
-  // Assign values to the elements
-  int values = 0;
-  Quadrant * newQuadrant;
-  for(index i = 0; i != 2; ++i) 
-    for(index j = 0; j != 2; ++j)
-      for(index k = 0; k != 2; ++k)
-      {
-        //cout << "creating quadrant" << endl;
-        newQuadrant = new Quadrant( numCells, this->level + 1, pos, dimensions );
-        //cout << "inserting quadrant into newQuadrants list at spot:" << values << endl;
-        newQuadrants.insert_element( values++, newQuadrant );
-        //cout << "inserting quadrant into quadOctreeMine" << endl;
-        quadOctreeMine[i][j][k] = newQuadrant;
-        //cout << "inserted" << endl << endl;
-      }
 
-  // Verify values
-  int verify = 0;
-  for(index i = 0; i != 2; ++i) 
-    for(index j = 0; j != 2; ++j)
-      for(index k = 0; k != 2; ++k)
-      {
-        assert(quadOctreeMine[i][j][k] == newQuadrants(verify++) );
-        delete quadOctreeMine[i][j][k] ;
-        cout << "Asserting..." << endl;
-      }
-
-  }
-  cout << "Constructor> quadOctreeMine: " <<  & quadOctreeMine << endl;
+  // boost::numeric::ublas::vector <Quadrant *> newQuadrants(8);
+  // newQuadrants.insert_element( values++, newQuadrant );
+ // cout << "Constructor> quadOctreeMine: " <<  & quadOctreeMine << endl;
 
 
 }
@@ -133,6 +108,11 @@ void Quadrant::printCorners()
 
 Quadrant * Quadrant::getQuadrantFromCell( int x, int y, int z )
 {
+  cout << "x,y,z: " << x << "," << y << "," << z << endl;
+  Quadrant * chosenQuadrant = quadOctreeMine[0][0][0];
+  // Quadrant * chosenQuadrant = quadOctreeMine[x][y][z];
+
+
   //cout << "Accessor> quadOctreeMine: " <<  & quadOctreeMine << "(pre-creation" << endl;
   //array_type quadOctreeMine(boost::extents[2][2][2]);
   //cout << "Accessor> quadOctreeMine: " <<  & quadOctreeMine << endl;
@@ -442,6 +422,7 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
       //subDivide( targetX, targetY, targetZ, numCells );
 
       insertionQuadrant = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
+      // quadOctreeMine[targetX][targetY][targetZ] = insertionQuadrant;
       quadOctree->set( targetX, targetY, targetZ, insertionQuadrant );
     }
     else

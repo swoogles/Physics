@@ -47,7 +47,7 @@ class Quadrant : public Box
     //Quadrant*** quadOctreeMine; /* Create 4096x4096x4096 octree containing doubles. */
   typedef multi_array<Quadrant *, 3> array_type;
   typedef array_type::index index;
-  array_type quadOctreeMine;
+  array_type  quadOctreeMine;
 
   public:
     int level;

@@ -34,7 +34,32 @@ int main(int argcp, char **argv)
     cout << "NumElements: " << quadOctreeMine->num_elements() << endl;
     cout << "size: " << quadOctreeMine->size() << endl;
 
-    iterator curIt = quadOctreeMine->begin();
+    quadOctreeMine->data()[0] = 5.0;
+
+    cout << "Data: " << ( *quadOctreeMine->data() )<< endl;
+
+    array_type localOctree(boost::extents[2][2][2]);
+
+    localOctree[0][0][0] = 1.0;
+    localOctree[1][1][1] = 1.0;
+
+    cout << "LocalOctree[0][0][0]" << localOctree[0][0][0]  << endl;
+    cout << "localOctree[1][1][1] " << localOctree[1][1][1] << endl;
+
+    array_type localOctree2(boost::extents[2][2][2]);
+
+    localOctree2[0][0][0] = 5.0;
+    localOctree2[1][1][1] = 5.0;
+
+    cout << "LocalOctree2[0][0][0]: " << localOctree2[0][0][0]  << endl;
+    cout << "localOctree2[1][1][1]: " << localOctree2[1][1][1] << endl;
+
+    cout << "LocalOctree[0][0][0]" << localOctree[0][0][0]  << endl;
+    cout << "localOctree[1][1][1] " << localOctree[1][1][1] << endl;
+
+    //quadOctreeMine[0][0][0] = 5.0;
+
+    //iterator curIt = quadOctreeMine->begin();
 
 }
 
