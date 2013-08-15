@@ -49,6 +49,9 @@ class Quadrant : public Box
   typedef array_type::index index;
   array_type  quadOctreeMine;
 
+  bool isLeaf;
+  bool containsBody;
+
   public:
     int level;
     Octree<Quadrant *> * quadOctree; /* Create 4096x4096x4096 octree containing doubles. */

@@ -313,20 +313,6 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
 
   unsigned int numPieces = 4;
 
-  //float cueMass = 0.156;
-  float ballMass = 0.156;
-
-  sgVec4 cueVelocity;
-  cueVelocity[0] = 30;
-  //cueVelocity[1] = -15.05;
-  cueVelocity[1] = -75;
-  cueVelocity[2] = 0;
-
-  sgVec3 newColor;
-  newColor[0] = 1;
-  newColor[1] = 1;
-  newColor[2] = 1;
-
   float width = 150;
   float height = 150;
   float depth = 150;
@@ -386,11 +372,6 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
     }
     mainQuadrant->insertShape( curShapeInsert );
   }
-
-
-  int prevNumPieces = MyShape::shapes.size();
-  cout << "prevNumPieces: " << prevNumPieces << endl;
-  cout << "endNumPieces:" << prevNumPieces + numPieces << endl;
 
   WorldSettings::adjustTotalMass( totalMass );
 
