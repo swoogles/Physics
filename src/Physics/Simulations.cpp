@@ -313,9 +313,13 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
 
   unsigned int numPieces = 4;
 
-  float width = 150;
-  float height = 150;
-  float depth = 150;
+  // float width = 40;
+  // float height = 40;
+  // float depth = 40;
+
+  float width = 100;
+  float height = 100;
+  float depth = 100;
 
   sgVec4 pos;
   pos[0] = 0;
@@ -355,7 +359,12 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
   curShapeColor[1]=1.0;
   curShapeColor[2]=1.0;
 
-  for (int i = 0; i < 15; i++)
+	sgVec4 cueVelocity;
+	cueVelocity[0] = 0;
+	cueVelocity[1] = -.5;
+	cueVelocity[2] = 0;
+
+  for (int i = 0; i < 30; i++)
   {
     curShapeIdx = MyShape::shapes.size();
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
@@ -364,6 +373,11 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
     curShapeInsert->setColor( curShapeColor );
     curShapeInsert->setMass(1);
     curShapeInsert->setRadius(.5);
+    // if ( i % 5 == 0 )
+    // {
+      //curShapeInsert->setVelocity( cueVelocity );
+    // }
+
     MyShape::addShapeToList( curShapeInsert );
     while ( isConflict( curShapeIdx ) )
     {

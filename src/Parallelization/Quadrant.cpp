@@ -59,9 +59,9 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
 Quadrant * Quadrant::getQuadrantFromCell( int x, int y, int z )
 {
-  return quadOctree->at( x, y, z );
   // PHYS-3
-  // return quadOctreeMine[x][y][z];
+  return quadOctreeMine[x][y][z];
+  // return quadOctree->at( x, y, z );
 }
 
 // x,y, & z must have values of 0|1
@@ -76,10 +76,10 @@ void Quadrant::subDivide( int x, int y, int z, int numCells )
 
   // PHYS-3
   // Remove this if block
-  if ( quadOctree == NULL )
-  {
-    quadOctree = new Octree<Quadrant * >(numCells);
-  }
+  // if ( quadOctree == NULL )
+  // {
+  //   quadOctree = new Octree<Quadrant * >(numCells);
+  // }
 
   if ( x ) {
     xFactor=1;
@@ -117,13 +117,15 @@ void Quadrant::subDivide( int x, int y, int z, int numCells )
   newPos[2]=pos[2]+(zFactor*dimensions[2]/4.0);
   //newPos[3]=0;
 
+  Quadrant * insertionQuadrant;
+
 
   // Quadrant
   //TODO Calculate new position
   // cout << "Ein? " << endl;
-  quadOctree->set( x, y, z, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
   // PHYS-3
-  // quadOctreeMine[x][y][z] = insertionQuadrant;
+  quadOctreeMine[x][y][z] = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
+  // quadOctree->set( x, y, z, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
   cout << "New Pos: " << newPos << endl;
   cout << "New Dimensions: " << newDimensions << endl;
   // cout << "Ein? " << endl;
@@ -185,10 +187,12 @@ void Quadrant::subDivideAll( int levels, int numCells )
           newDimensions[1] = dimensions[1]/2;
           newDimensions[2] = dimensions[2]/2;
 
+          Quadrant * insertionQuadrant;
           // PHYS-3
-          // quadOctreeMine[x][y][z] = insertionQuadrant;
-          quadOctree->set( x, y, z, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
-          targetQuadrant = quadOctree->at(x,y,z);
+          quadOctreeMine[x][y][z] = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
+          // quadOctree->set( x, y, z, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
+          targetQuadrant = quadOctreeMine[x][y][z];
+          // targetQuadrant = quadOctree->at(x,y,z);
           targetQuadrant->subDivideAll(levels, 4);
 
         }
@@ -213,14 +217,15 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 void Quadrant::insertShape( MyShape * insertedShape )
 {
   // PHYS-3
-  // if ( !containsBody )
-  if ( shapeInQuadrant == NULL && quadOctree == NULL )
+  if ( !containsBody )
+  // if ( shapeInQuadrant == NULL && quadOctree == NULL )
   {
     shapeInQuadrant = insertedShape;
+    containsBody = true;
   }
   // PHYS-3
-  // else if ( ! isLeaf )
-  else if ( shapeInQuadrant == NULL && quadOctree != NULL )
+  else if ( ! isLeaf )
+  // else if ( shapeInQuadrant == NULL && quadOctree != NULL )
   {
     this->adjustMass( insertedShape->getMass() );
 
@@ -237,9 +242,9 @@ void Quadrant::insertShape( MyShape * insertedShape )
     targetQuadrant = this->determineShapeQuadrant( shapeInQuadrant );
     targetQuadrant->insertShape( shapeInQuadrant );
 
-    shapeInQuadrant = NULL;
+    isLeaf = false;
 
-    //cout << "executed step 3" << endl;
+    shapeInQuadrant = NULL;
   }
 
 }
@@ -349,10 +354,10 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
       quadOctree = new Octree<Quadrant * >(numCells);
     }
 
-    insertionQuadrant = getQuadrantFromCell( targetX, targetY, targetZ );
 
     // PHYS-3
-    // insertionQuadrant = quadOctreeMine[targetX][targetY][targetZ];
+    insertionQuadrant = quadOctreeMine[targetX][targetY][targetZ];
+    // insertionQuadrant = getQuadrantFromCell( targetX, targetY, targetZ );
 
     //cout << "Should insert shape in quadrant[" 
       //<< targetX << ","
@@ -366,8 +371,9 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
       //subDivide( targetX, targetY, targetZ, numCells );
 
       insertionQuadrant = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
-      // quadOctreeMine[targetX][targetY][targetZ] = insertionQuadrant;
-      quadOctree->set( targetX, targetY, targetZ, insertionQuadrant );
+      // PHYS-3
+      quadOctreeMine[targetX][targetY][targetZ] = insertionQuadrant;
+      // quadOctree->set( targetX, targetY, targetZ, insertionQuadrant );
     }
     else
     {
