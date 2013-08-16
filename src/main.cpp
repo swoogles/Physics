@@ -107,6 +107,8 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
   // }
 
 	for (unsigned int i = 0; i < shapeList.size(); i++) {
+    if ( shapeList(i) != NULL )
+    {
 		shapeList(i)->getPos(curPos);
 
 		if (curPos[0] < minX)
@@ -117,6 +119,7 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
 			minY = curPos[1];
 		if (curPos[1] > maxY)
 			maxY = curPos[1];
+    }
 
 	}
   cout << "Calced maxes" << endl;
@@ -126,6 +129,7 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
 // call.
 void display(void)
 {
+  cout << "Displaying" << endl;
 	glutSetWindow(main_window);
 
 	glClearColor(0,0,0,0);
@@ -150,7 +154,15 @@ void display(void)
 
 	glMatrixMode(GL_MODELVIEW);
 	for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
-		MyShape::shapes(i)->draw();
+    cout << "Getting shape..." << endl;
+    if ( MyShape::shapes(i) != NULL )
+    {
+      cout << "Drawing" << endl;
+      cout << MyShape::shapes(i) << endl;
+      cout << "Pos: " << MyShape::shapes(i)->getPos() << endl;
+      MyShape::shapes(i)->draw();
+      cout << "Drawn" << endl;
+    }
 	}
   //globalQuadrant->thisShape->draw();
 
@@ -315,6 +327,7 @@ void init(char simulation) {
 }
 
 void idle() {
+  cout << "idling" << endl;
 	sgVec4 curPos;
 
 	if (! WorldSettings::isPaused() ) {
@@ -345,6 +358,8 @@ void idle() {
     {
       for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
       {
+        cout << "Bloop" << endl;
+        cout << endl;
         if ( numStep == 1 ) {
           totalMass += MyShape::shapes(i)->getMass();
         }
@@ -482,6 +497,8 @@ int main(int argcp, char **argv) {
 
 	//int seconds = 1000000;
 	//usleep(10*seconds);
+
+  cout << "Cool?" << endl;
 
   glutMainLoop();
 

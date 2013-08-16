@@ -389,6 +389,8 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
 
   WorldSettings::adjustTotalMass( totalMass );
 
+  mainQuadrant->~Quadrant();
+
   return mainQuadrant;
 }
 
