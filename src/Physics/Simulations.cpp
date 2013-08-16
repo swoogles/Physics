@@ -364,7 +364,7 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
 	cueVelocity[1] = -.5;
 	cueVelocity[2] = 0;
 
-  for (int i = 0; i < 10000; i++)
+  for (int i = 0; i < 100; i++)
   {
     curShapeIdx = MyShape::shapes.size();
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
