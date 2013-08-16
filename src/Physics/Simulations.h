@@ -9,7 +9,6 @@
 #define SIMULATIONS_H_
 
 #include "../Parallelization/Quadrant.h"
-#include "octree.h"
 #include <iostream>
 #include <boost/numeric/ublas/vector.hpp>
 #include <plib/sg.h>

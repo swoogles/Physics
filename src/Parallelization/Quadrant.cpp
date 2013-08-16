@@ -29,7 +29,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
   sgVec3 newColor;
   float redAmount = level*.2; 
-  float greenAmount = (1-level*.2);
+  float greenAmount = (1-level*.1);
   newColor[0]=redAmount;
   newColor[1]=greenAmount;
   borders->setColor( newColor );
@@ -143,10 +143,10 @@ void Quadrant::subDivideAll( int levels, int numCells )
   // Quadrant
   Quadrant * targetQuadrant;
 
-  if ( quadOctree == NULL )
-  {
-    quadOctree = new Octree<Quadrant * >(numCells);
-  }
+  // if ( quadOctree == NULL )
+  // {
+  //   quadOctree = new Octree<Quadrant * >(numCells);
+  // }
 
   if ( this->level < levels )
   {
@@ -216,35 +216,39 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 
 void Quadrant::insertShape( MyShape * insertedShape )
 {
-  // PHYS-3
   if ( !containsBody )
   // if ( shapeInQuadrant == NULL && quadOctree == NULL )
   {
+    // cout << "step 1 in" << endl;
     shapeInQuadrant = insertedShape;
     containsBody = true;
+    // cout << "step 1 out" << endl;
   }
-  // PHYS-3
   else if ( ! isLeaf )
   // else if ( shapeInQuadrant == NULL && quadOctree != NULL )
   {
+    // cout << "step 2 in" << endl;
     this->adjustMass( insertedShape->getMass() );
 
     // TODO Update centerOfMass
     int levels = 2;
     Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
     targetQuadrant->insertShape( insertedShape );
+    // cout << "step 2 out" << endl;
   }
   else
   {
+    // cout << "step 3 in" << endl;
+    isLeaf = false;
     Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
     targetQuadrant->insertShape( insertedShape );
 
     targetQuadrant = this->determineShapeQuadrant( shapeInQuadrant );
     targetQuadrant->insertShape( shapeInQuadrant );
 
-    isLeaf = false;
 
     shapeInQuadrant = NULL;
+    // cout << "step 3 out" << endl;
   }
 
 }
@@ -286,7 +290,7 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
 
 
   // X coordinate checking
-  if ( insertX > minXBoundary ) //Within min X boundary
+  if ( insertX >= minXBoundary ) //Within min X boundary
   {
     //cout << "X Checking" << endl;
     if ( insertX < centralXBoundary ) //Less than central X boundary
@@ -294,14 +298,14 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
       targetX = 0; 
       newPos[0] = centralXBoundary - xOffset;
     }
-    else if ( insertX < maxXBoundary ) //Less than max X boundary
+    else if ( insertX <= maxXBoundary ) //Less than max X boundary
     {
       targetX = 1;
       newPos[0] = centralXBoundary + xOffset;
     }
 
     // Y coordinate checking
-    if ( insertY > minYBoundary ) //Within min Y boundary
+    if ( insertY >= minYBoundary ) //Within min Y boundary
     {
       //cout << "Y Checking" << endl;
       if ( insertY < centralYBoundary ) //Less than central Y boundary
@@ -309,7 +313,7 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
         targetY = 0; 
         newPos[1] = centralYBoundary - yOffset;
       }
-      else if ( insertY < maxYBoundary ) //Less than max Y boundary
+      else if ( insertY <= maxYBoundary ) //Less than max Y boundary
       {
         targetY = 1;
         newPos[1] = centralYBoundary + yOffset;
@@ -319,7 +323,7 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
       //cout << "minZBoundary: " << minZBoundary << endl;
 
       // Z coordinate checking
-      if ( insertZ > minZBoundary ) //Within min Z boundary
+      if ( insertZ >= minZBoundary ) //Within min Z boundary
       {
         //cout << "Z Checking" << endl;
         //cout << "centralZBoundary" << centralZBoundary << endl;
@@ -329,7 +333,7 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
           newPos[2] = centralZBoundary - zOffset;
           targetZ = 0; 
         }
-        else if ( insertZ < maxZBoundary ) //Less than max Z boundary
+        else if ( insertZ <= maxZBoundary ) //Less than max Z boundary
         {
           targetZ = 1;
           newPos[2] = centralZBoundary + zOffset;
@@ -348,11 +352,12 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
       targetY != INVALID_OCTREE_INDEX &&
       targetZ != INVALID_OCTREE_INDEX )
   {
+    // cout << "Valid" << endl;
     int numCells = 8;
-    if ( quadOctree == NULL )
-    {
-      quadOctree = new Octree<Quadrant * >(numCells);
-    }
+    // if ( quadOctree == NULL )
+    // {
+    //   quadOctree = new Octree<Quadrant * >(numCells);
+    // }
 
 
     // PHYS-3
@@ -366,7 +371,7 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
 
     if ( insertionQuadrant == NULL )
     {
-      //cout << "Creating a new quadrant for insertion" << endl;
+      // cout << "Creating a new quadrant for insertion" << endl;
       //cout << endl;
       //subDivide( targetX, targetY, targetZ, numCells );
 
@@ -383,10 +388,6 @@ Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
     }
   }
 
-  if ( insertionQuadrant == NULL )
-  {
-    //cout << "Oh fu..!" << endl;
-  }
   return insertionQuadrant;
   
 }

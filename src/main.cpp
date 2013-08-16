@@ -11,8 +11,6 @@
 #include <GL/glu.h>
 #include <cmath>
 
-#include "octree.h"
-
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
@@ -264,7 +262,9 @@ void init(char simulation) {
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
   if ( simulation == '7' ) {
+    cout << "Sim setup starting..." << endl;
     globalQuadrant = Simulations::octreeDemonstration(10);
+    cout << "Sim setup complete!" << endl;
   }
 
   if ( simulation == '8' ) {
@@ -308,6 +308,9 @@ void init(char simulation) {
 	//openShapes(saveFileName);
 
 	//glhPerspectivef2(MyShape::perspectiveMat, 45, 1, 1, 5);
+
+    int numShapes = MyShape::shapes.size();
+    cout << "NumShapes in simulation: " << numShapes << endl;
 
 }
 

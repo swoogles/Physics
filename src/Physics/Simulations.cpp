@@ -317,9 +317,9 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
   // float height = 40;
   // float depth = 40;
 
-  float width = 100;
-  float height = 100;
-  float depth = 100;
+  float width = 250;
+  float height = 250;
+  float depth = 250;
 
   sgVec4 pos;
   pos[0] = 0;
@@ -364,7 +364,7 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
 	cueVelocity[1] = -.5;
 	cueVelocity[2] = 0;
 
-  for (int i = 0; i < 30; i++)
+  for (int i = 0; i < 10000; i++)
   {
     curShapeIdx = MyShape::shapes.size();
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
