@@ -28,10 +28,12 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   borders->setPos(pos);
 
   sgVec3 newColor;
-  float redAmount = level*.2; 
-  float greenAmount = (1-level*.1);
+  float redAmount = level*.15; 
+  float greenAmount = (1-level*.15);
+  float blueAmount = (1-level*.15);
   newColor[0]=redAmount;
   newColor[1]=greenAmount;
+  newColor[2]=blueAmount;
   borders->setColor( newColor );
 
   int numShapes = MyShape::shapes.size();
