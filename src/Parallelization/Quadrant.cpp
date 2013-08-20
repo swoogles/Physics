@@ -24,9 +24,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   setPos( pos );
   sgCopyVec4( this->dimensions, dimensions );
 
-  bordersNew = boost::make_shared<Box>();
-  bordersNew->setPos(pos);
-  borders = new Box();
+  borders = make_shared<Box>();
   borders->setPos(pos);
 
   sgVec3 newColor;
@@ -218,7 +216,7 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
   sgScaleVec4( this->preCenterOfMass, mass);
 }
 
-void Quadrant::insertShape( MyShape * insertedShape )
+void Quadrant::insertShape( shape_pointer insertedShape )
 {
   if ( !containsBody )
   // if ( shapeInQuadrant == NULL && quadOctree == NULL )
@@ -251,7 +249,7 @@ void Quadrant::insertShape( MyShape * insertedShape )
     targetQuadrant->insertShape( shapeInQuadrant );
 
 
-    shapeInQuadrant = NULL;
+    // shapeInQuadrant = NULL;
     // cout << "step 3 out" << endl;
   }
 
@@ -259,7 +257,7 @@ void Quadrant::insertShape( MyShape * insertedShape )
 
 
 // Guaranteed to hand back an instantiated Quadrant
-Quadrant * Quadrant::determineShapeQuadrant( MyShape * shapeToInsert )
+Quadrant * Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
   //cout << "Determining shape Quadrant" << endl;
   sgVec4 insertPos;

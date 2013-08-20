@@ -90,7 +90,7 @@ float totalMass = 0;
 
 Quadrant * globalQuadrant;
 
-void calcXYMinsAndMaxes(boost::numeric::ublas::vector<MyShape *> shapeList,
+void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > shapeList,
 						float &minX, float &minY, float &maxX, float &maxY) {
 	cout << "Ok " << endl;
 	cout << "Size: " << shapeList.size() << endl;
@@ -271,7 +271,7 @@ void init(char simulation) {
   if ( simulation == '8' ) {
     int numShapes = MyShape::shapes.size();
     MyShape::shapes.resize(numShapes + 1);
-    MyShape::shapes(numShapes) = new Box();
+    MyShape::shapes(numShapes) = make_shared<Box>(); ;
     
   }
 
@@ -337,10 +337,11 @@ void idle() {
       // largest(j) = NULL;
     // }
 
-    MyShape * largest[10];
-    for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-      largest[j] = NULL;
-    }
+    typedef boost::shared_ptr<MyShape> shape_pointer;
+    shape_pointer largest[10];
+    // for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+    //   largest[j] = NULL;
+    // }
 
     if ( MyShape::shapes.size() > 0 )
     {

@@ -7,7 +7,7 @@
 
 #include "Simulations.h"
 
-boost::numeric::ublas::vector< boost::shared_ptr<MyShape *> > Simulations::physicalObjects(0);
+boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > Simulations::physicalObjects(0);
 
 using namespace std;
 
@@ -580,7 +580,7 @@ void Simulations::bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sg
   WorldSettings::adjustTotalMass( totalMass );
 }
 
-shape_pointer Simulations::getShapeFromList( int shapeIndex )
+boost::shared_ptr<MyShape> Simulations::getShapeFromList( int shapeIndex )
 {
   shape_pointer returnShape;
   if ( physicalObjects.size() > shapeIndex )

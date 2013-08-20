@@ -33,7 +33,7 @@ using namespace std;
  *  both objects have their elastic bools on.
  *
  */
-void elasticCollision(MyShape * object1, MyShape * object2);
+void elasticCollision(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2);
 
 
 /*! \relates MyShape
@@ -60,7 +60,7 @@ void calcCollisionsAll();
  *
  *
  */
-float calcForceGrav(MyShape * object1, MyShape * object2, SGfloat rSquared);
+float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, SGfloat rSquared);
 
 
 /*! \relates MyShape
@@ -70,7 +70,7 @@ float calcForceGrav(MyShape * object1, MyShape * object2, SGfloat rSquared);
  *  \param object2 End Object
  *  \param sepVector Calculated separation vector
  */
-void getVectorToObject2(MyShape * object1, MyShape * object2, sgVec4 sepVector);
+void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 sepVector);
 
 
 /*! \relates MyShape
@@ -89,7 +89,7 @@ void getVectorToObject2(MyShape * object1, MyShape * object2, sgVec4 sepVector);
  *
  *	\return The angular momentum to be assigned to the merged object
  */
-void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMomentum);
+void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 retAngMomentum);
 
 
 /*! \relates Circle
@@ -110,7 +110,7 @@ float calcMergedRadius(float massBoth, float density);
  *
  *  Note: This function does NOT delete the second object, currently that must be handled outside
  */
-void mergeObjects(MyShape * object1, MyShape * object2);
+void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2);
 
 
 /*! \relates Circle
@@ -158,7 +158,7 @@ void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass);
  *  \brief Returns true if objects are touching eachother
  *
  */
-bool contact(MyShape * object1, MyShape * object2);
+bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2);
 
 /*! \relates MyShape
  *  \brief Returns true if new shape is placed on top of a previously created shape

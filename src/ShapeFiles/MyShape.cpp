@@ -15,7 +15,7 @@ using namespace boost::numeric::ublas;
 
 float MyShape::G = 6.67384e-11;
 
-boost::numeric::ublas::vector< boost::shared_ptr<MyShape *> > MyShape::shapes(0);
+boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > MyShape::shapes(0);
 
 
 

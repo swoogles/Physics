@@ -33,13 +33,13 @@ class Quadrant : public Box
   // string label;
 
   // Quadrant * nextQuadrant;
-  Box * borders;
-  boost::shared_ptr<Box> bordersNew;                                                                      
+  boost::shared_ptr<Box> borders;
 
   sgVec4 preCenterOfMass;
 
   float mass;
 
+  typedef boost::shared_ptr<MyShape> shape_pointer;
 
   typedef boost::shared_ptr<Quadrant *> quadPointer;
   typedef multi_array< quadPointer, 3> array_typeNew;
@@ -62,14 +62,14 @@ class Quadrant : public Box
 
   void printCorners();
 
-  MyShape * shapeInQuadrant;
+  shape_pointer shapeInQuadrant;
   boost::shared_ptr<MyShape> shapeInQuadrantNew;
 
   sgVec4 dimensions;
 
   //sgVec4 pos;
 
-  void insertShape( MyShape * newShape );
+  void insertShape( shape_pointer newShape );
 
   inline float getMass() { return mass; }
   inline void setMass( float mass ) { this->mass = mass; }
@@ -78,7 +78,7 @@ class Quadrant : public Box
   void getCenterOfMass(sgVec4 centerOfMass);
   void setCenterOfMass( sgVec4 centerOfMass );
 
-  Quadrant * determineShapeQuadrant( MyShape * shapeToInsert );
+  Quadrant * determineShapeQuadrant( shape_pointer shapeToInsert );
 
 };
 

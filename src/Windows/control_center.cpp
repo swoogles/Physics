@@ -100,7 +100,7 @@ void control_center::makeNewObject(puObject * caller) {
 	}
 
 
-	MyShape::shapes(newSpot) = new Circle;
+	MyShape::shapes(newSpot) = boost::make_shared<Circle>();
 	MyShape::shapes(newSpot)->setPos(startPlacement);
 	MyShape::shapes(newSpot)->setMomentum(startMomentum);
 	MyShape::shapes(newSpot)->setMass(mass_in->getFloatValue());
@@ -130,7 +130,7 @@ void makeRandomObjectUp(puObject * caller) {
 	sgVec3 * makeSpot = (sgVec3 *) control_center::userDat;
 
 	MyShape::shapes.resize(newSpot+1);
-	MyShape::shapes(newSpot) = new Box;
+	MyShape::shapes(newSpot) = boost::make_shared<Box>();
 	MyShape::shapes(newSpot)->setPos( (*makeSpot)[0],(*makeSpot)[1],0);
 }
 

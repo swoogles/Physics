@@ -17,7 +17,7 @@ ostream& operator<<(ostream& os, sgVec3 outputVec) {
 }
 */
 
-void elasticCollision(MyShape * object1, MyShape * object2) {
+void elasticCollision(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2) {
 	sgVec4 sepVec;
 	sgVec4 sepVecUnit;
 
@@ -63,7 +63,7 @@ void elasticCollision(MyShape * object1, MyShape * object2) {
 
 }
 
-bool contact(MyShape * object1, MyShape * object2) {
+bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2) {
 	sgVec4 sepVec;
 	float minSep;
 
@@ -87,7 +87,8 @@ void calcForcesAll(float dt) {
 		sgVec4 sepVec;
 		sgVec4 unitVec;
 		sgVec4 gravVec;
-		MyShape * object1, * object2;
+    boost::shared_ptr<MyShape> object1;
+    boost::shared_ptr<MyShape> object2;
 		float fGrav;
     float minSep;
 		SGfloat distanceSquared;
@@ -166,7 +167,8 @@ bool isConflict(int newShape) {
   SGfloat distanceSquared, distance, minSep;
   bool conflict = false;
 
-  MyShape * object1, * object2;
+  boost::shared_ptr<MyShape> object1;
+  boost::shared_ptr<MyShape> object2;
 
   object2 = MyShape::shapes(newShape);
 
@@ -192,7 +194,8 @@ bool isConflict(int newShape) {
 
 void calcCollisionsAll() {
   sgVec4 sepVec;
-  MyShape * object1, * object2;
+  boost::shared_ptr<MyShape> object1;
+  boost::shared_ptr<MyShape> object2;
   SGfloat distanceSquared, distance, minSep;
 
   bool killed = false;
@@ -232,7 +235,7 @@ void calcCollisionsAll() {
 
         else if (WorldSettings::isAllInelastic() ){
           mergeObjects(object1, object2);
-          object2->~MyShape();
+          // object2->~MyShape();
 
           MyShape::shapes.erase_element(j);
           for (unsigned int curPos = j; curPos < MyShape::shapes.size()-1; curPos++) {
@@ -251,7 +254,7 @@ void calcCollisionsAll() {
 }
 
 //setting rSquared to a constant value with a grid can make some awesome effects
-float calcForceGrav(MyShape * object1, MyShape * object2, SGfloat rSquared) {
+float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, SGfloat rSquared) {
   sgVec4 *ob1pos, *ob2pos;
   ob1pos = object1->getPos();
   ob2pos = object2->getPos();
@@ -269,7 +272,7 @@ float calcForceGrav(MyShape * object1, MyShape * object2, SGfloat rSquared) {
   return ( MyShape::G * object1->getMass() * object2->getMass()) / rSquared;
 }
 
-void getVectorToObject2(MyShape * object1, MyShape * object2, sgVec4 sepVector) {
+void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 sepVector) {
   sgVec4 * pos1, *pos2;
   pos1 = object1->getPos();
   pos2 = object2->getPos();
@@ -291,7 +294,7 @@ float calcMergedRadius(float massBoth, float density) {
   return radius;
 }
 
-void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMomentum)
+void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 retAngMomentum)
 {
   sgVec4 sepVecUnit;
 
@@ -364,7 +367,7 @@ void calcMergedAngMomentum(MyShape * object1, MyShape * object2, sgVec4 retAngMo
 
 }
 
-void mergeObjects(MyShape * object1, MyShape * object2) {
+void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2) {
   sgVec3 color;
 
   object1->getColor( color );
@@ -524,7 +527,7 @@ void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
 void calcDrag(float dt) {
   float dragConstant = -30;
   sgVec4 dragForce;
-  MyShape * curShape;
+  boost::shared_ptr<MyShape> curShape;
 
   for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
     curShape = MyShape::shapes(i);

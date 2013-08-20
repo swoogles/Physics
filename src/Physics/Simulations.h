@@ -79,7 +79,7 @@ class Simulations
      *
      *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
      */
-    typedef boost::shared_ptr<MyShape *> shape_pointer;
+    typedef boost::shared_ptr<MyShape> shape_pointer;
     static boost::numeric::ublas::vector< shape_pointer > physicalObjects;
 
 
@@ -109,14 +109,14 @@ class Simulations
      *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
      *  \return Pointer to desired shape
      */
-    static MyShape * getShapeFromList( int shapeIndex );
+    static shape_pointer getShapeFromList( int shapeIndex );
 
     /*! \brief Returns a shape from the main shapes list
      *
      *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
      *  \return Pointer to desired shape
      */
-    static int addShapeToList( MyShape * insertShape );
+    static int addShapeToList( shape_pointer insertShape );
 };
 
 

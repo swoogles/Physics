@@ -272,7 +272,7 @@ public:
 	 */
 	// static vector<MyShape *> shapes;
   //PHYS-7
-  typedef boost::shared_ptr<MyShape *> shape_pointer;
+  typedef boost::shared_ptr<MyShape> shape_pointer;
 	static vector<shape_pointer> shapes;
 
 
