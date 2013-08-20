@@ -270,7 +270,11 @@ public:
 	 *
 	 *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
 	 */
-	static vector<MyShape *> shapes;
+	// static vector<MyShape *> shapes;
+  //PHYS-7
+  typedef boost::shared_ptr<MyShape *> shape_pointer;
+	static vector<shape_pointer> shapes;
+
 
 	//Get rid of this and store in WorldSettings instead
 	static float G;
@@ -282,9 +286,9 @@ public:
 	 *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
 	 *  \return Pointer to desired moveable
 	 */
-  static int addShapeToList( MyShape * insertShape );
+  static int addShapeToList( shape_pointer insertShape );
 
-  static void removeShapeFromList( MyShape * shapeToRemove );
+  static void removeShapeFromList( shape_pointer shapeToRemove );
 
 };
 

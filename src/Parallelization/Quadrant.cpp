@@ -24,6 +24,8 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   setPos( pos );
   sgCopyVec4( this->dimensions, dimensions );
 
+  bordersNew = boost::make_shared<Box>();
+  bordersNew->setPos(pos);
   borders = new Box();
   borders->setPos(pos);
 

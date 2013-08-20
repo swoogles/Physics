@@ -79,7 +79,9 @@ class Simulations
      *
      *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
      */
-    static boost::numeric::ublas::vector<MyShape *> physicalObjects;
+    typedef boost::shared_ptr<MyShape *> shape_pointer;
+    static boost::numeric::ublas::vector< shape_pointer > physicalObjects;
+
 
   public:
     static void largeGridAlternating();

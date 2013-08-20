@@ -7,7 +7,7 @@
 
 #include "Simulations.h"
 
-boost::numeric::ublas::vector<MyShape *> Simulations::physicalObjects(0);
+boost::numeric::ublas::vector< boost::shared_ptr<MyShape *> > Simulations::physicalObjects(0);
 
 using namespace std;
 
@@ -24,19 +24,19 @@ void Simulations::largeGridAlternating() {
 
 	int gridSide = 18;
 
-  MyShape * curShape;
+  shape_pointer curShape;
 
 	for (int i = 0; i < gridSide; i++)
 	{
 		for (int j = 0; j < gridSide; j++) {
       int curIndex = i*gridSide + j;
 			if ( (i*gridSide + j) % 2 == 0) {
-				curShape = new Circle;
+				curShape = boost::make_shared<Circle>();
 				startPos[2] = 5;
 
 			}
 			else {
-				curShape = new Box;
+				curShape = boost::make_shared<Box>();
 				startPos[2] = -5;
 
 			}
@@ -78,9 +78,9 @@ void Simulations::simpleOrbit() {
 	startPos[2] = 0;
 	startPos[3] = 1;
 
-  MyShape * curShape;
+  shape_pointer curShape;
 
-	curShape = new Circle;
+	curShape = boost::make_shared<Circle>();
 	curShape->setPos(startPos);
 	curShape->setRadius(sunRadius * sunRadiusScale);
 	curShape->setMomentum(startMom);
@@ -94,7 +94,7 @@ void Simulations::simpleOrbit() {
 
 	sgNegateVec4(startMom);
 
-	curShape = new Circle;
+	curShape = boost::make_shared<Circle>();
 	curShape->setPos(startPos);
 	curShape->setRadius(earthRadius*earthRadiusScale);
 	curShape->setMomentum(startMom);
@@ -139,9 +139,9 @@ void Simulations::billiards(int numRows) {
 	newColor[1] = 1;
 	newColor[2] = 1;
 
-  MyShape * curShape;
+  shape_pointer curShape;
 
-	curShape = new Circle;
+	curShape = boost::make_shared<Circle>();
 	curShape->setPos(numRows, numRows*3, 0);
 	curShape->setMass(cueMass);
 	curShape->setRadius(ballRadius);
@@ -153,7 +153,7 @@ void Simulations::billiards(int numRows) {
 	unsigned int cutOff = numRows*2;
 	for (unsigned int i = 1; i < numRows+1; i++) {
 		for (unsigned int j = i; j < cutOff; j+= 2) {
-			curShape = new Circle;
+			curShape = boost::make_shared<Circle>();
 			curShape->setPos(j*1.7, i*2.5, 0);
 			curShape->setMass(ballMass);
 			curShape->setRadius(ballRadius);
@@ -199,9 +199,9 @@ void Simulations::billiards2(int numRows) {
 	newColor[1] = 1;
 	newColor[2] = 1;
     
-  MyShape * shapeForInsertion;
+  shape_pointer shapeForInsertion;
 
-	shapeForInsertion = new Circle;
+	shapeForInsertion = boost::make_shared<Circle>();
 	shapeForInsertion->setPos(numRows, numRows*3, 0);
 	shapeForInsertion->setMass(cueMass);
 	shapeForInsertion->setRadius(ballRadius);
@@ -213,7 +213,7 @@ void Simulations::billiards2(int numRows) {
 
 	for (unsigned int i = 0; i < numRows; i++) {
 		for (unsigned int j = 0; j < numRows; j++) {
-			shapeForInsertion = new Circle;
+			shapeForInsertion = boost::make_shared<Circle>();
 			shapeForInsertion->setPos(j*3, i*3, 0);
 			shapeForInsertion->setMass(ballMass);
 			shapeForInsertion->setRadius(ballRadius);
@@ -262,9 +262,9 @@ void Simulations::billiards3(int numRows) {
 	newColor[1] = 1;
 	newColor[2] = 1;
 
-  MyShape * shapeForInsertion;
+  shape_pointer shapeForInsertion;
 
-	shapeForInsertion = new Circle;
+	shapeForInsertion = boost::make_shared<Circle>();
 	shapeForInsertion->setPos(numRows, numRows*5, 0);
 	shapeForInsertion->setMass(cueMass);
 	shapeForInsertion->setRadius(cueRadius);
@@ -280,7 +280,7 @@ void Simulations::billiards3(int numRows) {
 		for (unsigned int j = 0; j < numRows; j++) {
       for (unsigned int z = 0; z < numRows; z++) {
 
-			shapeForInsertion = new Circle;
+			shapeForInsertion = boost::make_shared<Circle>();
 			shapeForInsertion->setPos(j*4, i*4, z*4);
 			shapeForInsertion->setMass(ballMass);
 			shapeForInsertion->setRadius(ballRadius);
@@ -350,7 +350,7 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
   startPlacement[0] = 15;
 
   int curShapeIdx;
-  MyShape * curShapeInsert;
+  shape_pointer curShapeInsert;
 
 	float totalMass = 0.0;
 
@@ -368,7 +368,7 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
   {
     curShapeIdx = MyShape::shapes.size();
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
-    curShapeInsert = new Circle;
+    curShapeInsert = boost::make_shared<Circle>();
     curShapeInsert->setPos( startPlacement );
     curShapeInsert->setColor( curShapeColor );
     curShapeInsert->setMass(1);
@@ -415,9 +415,9 @@ void Simulations::simpleCollision() {
 	startAngMom[1] = 0;
 	startAngMom[2] = 0;
 
-  MyShape * curShape;
+  shape_pointer curShape;
 
-	curShape = new Circle;
+	curShape = boost::make_shared<Circle>();
 	curShape->setPos(startPlacement);
 	curShape->setMass(aMass);
 	curShape->setRadius(aRadius*2);
@@ -431,7 +431,7 @@ void Simulations::simpleCollision() {
 	startPlacement[1] = 0;
 	startPlacement[2] = 0;
 
-	curShape = new Circle;
+	curShape = boost::make_shared<Circle>();
 	curShape->setPos(startPlacement);
 	curShape->setMass(bMass);
 	curShape->setRadius(bRadius*2);
@@ -457,7 +457,7 @@ void Simulations::disruption() {
   startMomentum[1] = 0;
   startMomentum[2] = 0;
 
-  MyShape::shapes(cur) = new Circle;
+  MyShape::shapes(cur) = boost::make_shared<Circle>();
   MyShape::shapes(cur)->setPos(-pieceRadius * 30, 0, 0);
   MyShape::shapes(cur)->setMass(pieceMass);
   MyShape::shapes(cur)->setRadius(pieceRadius);
@@ -492,7 +492,7 @@ void Simulations::bodyFormation(unsigned int numPieces) {
 	srand ( time(NULL) );
 
 	for (unsigned int i = 0; i < numPieces; i++) {
-    MyShape * curShape;
+    shape_pointer curShape;
 
 		if (i % 2 == 0) {
 			randomSplitBodyMomentum(startMomentum, pieceMass);
@@ -503,7 +503,8 @@ void Simulations::bodyFormation(unsigned int numPieces) {
 			sgNegateVec4(startPlacement);
 		}
 
-		curShape = new Circle;
+    curShape = make_shared<Circle>();
+		curShape = boost::make_shared<Circle>();
     curShape->setPos( startPlacement );
 		curShape->setMass(pieceMass);
 		curShape->setRadius(pieceRadius);
@@ -543,7 +544,7 @@ void Simulations::bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sg
 
 	srand ( time(NULL) );
 
-  MyShape * curShape;
+  shape_pointer curShape;
   int targetSize = MyShape::shapes.size() + numPieces;
 	for (unsigned int i = MyShape::shapes.size(); i < targetSize; i++) {
 
@@ -559,7 +560,7 @@ void Simulations::bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sg
     // Apply general group momentum to individual pieces momentum
     sgAddVec4( startMomentum, groupMomentum );
 
-		curShape = new Circle;
+		curShape = boost::make_shared<Circle>();
     cout << "StartPos: " << startPlacement[0] << endl;
 		curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		curShape->setMass(pieceMass);
@@ -579,9 +580,9 @@ void Simulations::bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sg
   WorldSettings::adjustTotalMass( totalMass );
 }
 
-MyShape * Simulations::getShapeFromList( int shapeIndex )
+shape_pointer Simulations::getShapeFromList( int shapeIndex )
 {
-  MyShape * returnShape;
+  shape_pointer returnShape;
   if ( physicalObjects.size() > shapeIndex )
   {
     returnShape = physicalObjects(shapeIndex);
@@ -590,7 +591,7 @@ MyShape * Simulations::getShapeFromList( int shapeIndex )
   return returnShape;
 }
 
-int Simulations::addShapeToList( MyShape * insertShape )
+int Simulations::addShapeToList( shape_pointer insertShape )
 {
   int curSize = physicalObjects.size();
   physicalObjects.resize(curSize + 1);

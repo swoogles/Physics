@@ -15,7 +15,7 @@ using namespace boost::numeric::ublas;
 
 float MyShape::G = 6.67384e-11;
 
-boost::numeric::ublas::vector<MyShape *> MyShape::shapes(0);
+boost::numeric::ublas::vector< boost::shared_ptr<MyShape *> > MyShape::shapes(0);
 
 
 
@@ -503,12 +503,20 @@ void MyShape::getUnitVecTo(MyShape * destination, sgVec4 unitv) {
 */
 
 void MyShape::clearShapes() {
-	for (int i = MyShape::shapes.size() - 1; i > -1; i--) {
-      cout << "Shape # " << i << endl;
-		MyShape::shapes(i)->~MyShape();
-		MyShape::shapes.erase_element(i);
+	// for (int i = MyShape::shapes.size() - 1; i > -1; i--) {
+      // cout << "Shape # " << i << endl;
+	// 	MyShape::shapes(i)->~MyShape();
+	// 	MyShape::shapes.erase_element(i);
+	// }
+	// MyShape::shapes.resize(0);
+
+  // PHYS-7
+	for (int i = shapes.size() - 1; i > -1; i--) {
+      // cout << "Shape # " << i << endl;
+		// shapes(i)->~MyShape();
+		shapes.erase_element(i);
 	}
-	MyShape::shapes.resize(0);
+	shapes.resize(0);
 }
 
 
@@ -517,8 +525,14 @@ float MyShape::getRadius() { return 1;}
 
 int MyShape::getType() { return 1;}
 
-int MyShape::addShapeToList( MyShape * insertShape )
+int MyShape::addShapeToList( shape_pointer insertShape )
 {
+  // int curSize = shapes.size();
+  // shapes.resize(curSize + 1);
+  // shapes(curSize) = insertShape;
+  // return curSize;
+
+  //PHYS-7
   int curSize = shapes.size();
   shapes.resize(curSize + 1);
   shapes(curSize) = insertShape;
@@ -526,15 +540,38 @@ int MyShape::addShapeToList( MyShape * insertShape )
 }
 
 
-void MyShape::removeShapeFromList( MyShape * shapeToRemove )
+void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
 {
-  boost::numeric::ublas::vector<MyShape *> newShapeVector;
+  // boost::numeric::ublas::vector<MyShape *> newShapeVector;
+  // newShapeVector.resize( shapes.size() - 1 );
+  // bool removedShape = false;
+
+  // int curIndex = 0;
+  // foreach_( MyShape * curShape, shapes )
+  // {
+  //   if ( curShape != shapeToRemove )
+  //   {
+  //     newShapeVector(curIndex) = curShape;
+  //     curIndex++;
+  //   }
+  //   else
+  //   {
+  //     removedShape = true;
+  //   }
+  // }
+
+  // if ( removedShape )
+  // {
+  //   shapes = boost::numeric::ublas::vector<MyShape *>( newShapeVector );
+  // }
+
+  //PHYS-7
+  boost::numeric::ublas::vector<shape_pointer> newShapeVector;
   newShapeVector.resize( shapes.size() - 1 );
   bool removedShape = false;
 
   int curIndex = 0;
-  cout << "Old Shapes vector: " << endl;
-  foreach_( MyShape * curShape, shapes )
+  foreach_( shape_pointer curShape, shapes)
   {
     if ( curShape != shapeToRemove )
     {
@@ -546,19 +583,9 @@ void MyShape::removeShapeFromList( MyShape * shapeToRemove )
       removedShape = true;
     }
   }
-
-  cout << "New Shapes vector: " << endl;
-  foreach_( MyShape * curShape, newShapeVector )
-  {
-    sgVec4 * pos = curShape->getPos();
-    cout << "curShape.pos[0]: " << (*pos)[0]<< endl;
-    cout << "curShape.pos[1]: " << (*pos)[1]<< endl;
-    cout << "curShape.pos[2]: " << (*pos)[2]<< endl;
-  }
-
   if ( removedShape )
   {
-    shapes = boost::numeric::ublas::vector<MyShape *>( newShapeVector );
+    shapes = boost::numeric::ublas::vector<shape_pointer>( newShapeVector );
   }
 
 }
