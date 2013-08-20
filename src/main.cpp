@@ -235,6 +235,7 @@ void init(char simulation) {
   }
   if ( simulation == '5' ) {
 	  Simulations::billiards2(10);
+    MyShape::removeShapeFromList(  MyShape::shapes(15) );
   }
 
   if ( simulation == '6' ) {

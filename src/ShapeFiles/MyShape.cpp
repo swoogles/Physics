@@ -524,3 +524,41 @@ int MyShape::addShapeToList( MyShape * insertShape )
   shapes(curSize) = insertShape;
   return curSize;
 }
+
+
+void MyShape::removeShapeFromList( MyShape * shapeToRemove )
+{
+  boost::numeric::ublas::vector<MyShape *> newShapeVector;
+  newShapeVector.resize( shapes.size() - 1 );
+  bool removedShape = false;
+
+  int curIndex = 0;
+  cout << "Old Shapes vector: " << endl;
+  foreach_( MyShape * curShape, shapes )
+  {
+    if ( curShape != shapeToRemove )
+    {
+      newShapeVector(curIndex) = curShape;
+      curIndex++;
+    }
+    else
+    {
+      removedShape = true;
+    }
+  }
+
+  cout << "New Shapes vector: " << endl;
+  foreach_( MyShape * curShape, newShapeVector )
+  {
+    sgVec4 * pos = curShape->getPos();
+    cout << "curShape.pos[0]: " << (*pos)[0]<< endl;
+    cout << "curShape.pos[1]: " << (*pos)[1]<< endl;
+    cout << "curShape.pos[2]: " << (*pos)[2]<< endl;
+  }
+
+  if ( removedShape )
+  {
+    shapes = boost::numeric::ublas::vector<MyShape *>( newShapeVector );
+  }
+
+}

@@ -12,10 +12,14 @@
 #include <GL/glut.h>
 #include <cmath>
 
+#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
+#include <boost/make_shared.hpp> 
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
+#include <boost/foreach.hpp>
 #include <iostream>
 
 #include <plib/sg.h>
@@ -24,6 +28,7 @@
 
 
 #define PI 3.14159265
+#define foreach_  BOOST_FOREACH                                                                                              
 
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::vector;
@@ -278,6 +283,8 @@ public:
 	 *  \return Pointer to desired moveable
 	 */
   static int addShapeToList( MyShape * insertShape );
+
+  static void removeShapeFromList( MyShape * shapeToRemove );
 
 };
 
