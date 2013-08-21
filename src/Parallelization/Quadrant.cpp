@@ -13,7 +13,9 @@ ostream& operator<<(ostream& os, sgVec4 outputVec) {
 
 
 Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
-  : quadOctreeMine(boost::extents[2][2][2])
+  : quadOctreeMine(boost::extents[2][2][2]),
+    quadOctree(boost::extents[2][2][2])
+
 {
   this->level = level;
   int length = 2;
@@ -59,11 +61,9 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
 
 
-Quadrant * Quadrant::getQuadrantFromCell( int x, int y, int z )
+boost::shared_ptr<Quadrant> Quadrant::getQuadrantFromCell( int x, int y, int z )
 {
-  // PHYS-3
-  return quadOctreeMine[x][y][z];
-  // return quadOctree->at( x, y, z );
+  return quadOctree[x][y][z];
 }
 
 // x,y, & z must have values of 0|1
@@ -119,15 +119,13 @@ void Quadrant::subDivide( int x, int y, int z, int numCells )
   newPos[2]=pos[2]+(zFactor*dimensions[2]/4.0);
   //newPos[3]=0;
 
-  Quadrant * insertionQuadrant;
+  quad_pointer insertionQuadrant;
 
 
   // Quadrant
   //TODO Calculate new position
   // cout << "Ein? " << endl;
-  // PHYS-3
-  quadOctreeMine[x][y][z] = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
-  // quadOctree->set( x, y, z, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
+  quadOctree[x][y][z] = boost::make_shared<Quadrant>( Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
   cout << "New Pos: " << newPos << endl;
   cout << "New Dimensions: " << newDimensions << endl;
   // cout << "Ein? " << endl;
@@ -143,7 +141,7 @@ void Quadrant::subDivideAll( int levels, int numCells )
   int zFactor;
 
   // Quadrant
-  Quadrant * targetQuadrant;
+  quad_pointer targetQuadrant;
 
   // if ( quadOctree == NULL )
   // {
@@ -189,12 +187,9 @@ void Quadrant::subDivideAll( int levels, int numCells )
           newDimensions[1] = dimensions[1]/2;
           newDimensions[2] = dimensions[2]/2;
 
-          Quadrant * insertionQuadrant;
-          // PHYS-3
-          quadOctreeMine[x][y][z] = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
-          // quadOctree->set( x, y, z, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
-          targetQuadrant = quadOctreeMine[x][y][z];
-          // targetQuadrant = quadOctree->at(x,y,z);
+          quad_pointer insertionQuadrant;
+          quadOctree[x][y][z] = boost::make_shared<Quadrant>( Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
+          targetQuadrant = quadOctree[x][y][z];
           targetQuadrant->subDivideAll(levels, 4);
 
         }
@@ -234,7 +229,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
 
     // TODO Update centerOfMass
     int levels = 2;
-    Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
+    quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     targetQuadrant->insertShape( insertedShape );
     // cout << "step 2 out" << endl;
   }
@@ -242,7 +237,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
   {
     // cout << "step 3 in" << endl;
     isLeaf = false;
-    Quadrant * targetQuadrant = this->determineShapeQuadrant( insertedShape );
+    quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     targetQuadrant->insertShape( insertedShape );
 
     targetQuadrant = this->determineShapeQuadrant( shapeInQuadrant );
@@ -257,7 +252,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
 
 
 // Guaranteed to hand back an instantiated Quadrant
-Quadrant * Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
+boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
   //cout << "Determining shape Quadrant" << endl;
   sgVec4 insertPos;
@@ -344,7 +339,7 @@ Quadrant * Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
     }
   }
 
-  Quadrant * insertionQuadrant;
+  quad_pointer insertionQuadrant;
 
   //cout << "Ok" << endl;
 
@@ -362,8 +357,7 @@ Quadrant * Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
     // }
 
 
-    // PHYS-3
-    insertionQuadrant = quadOctreeMine[targetX][targetY][targetZ];
+    insertionQuadrant = quadOctree[targetX][targetY][targetZ];
     // insertionQuadrant = getQuadrantFromCell( targetX, targetY, targetZ );
 
     //cout << "Should insert shape in quadrant[" 
@@ -377,10 +371,8 @@ Quadrant * Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
       //cout << endl;
       //subDivide( targetX, targetY, targetZ, numCells );
 
-      insertionQuadrant = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
-      // PHYS-3
-      quadOctreeMine[targetX][targetY][targetZ] = insertionQuadrant;
-      // quadOctree->set( targetX, targetY, targetZ, insertionQuadrant );
+      insertionQuadrant = boost::make_shared<Quadrant>( Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
+      quadOctree[targetX][targetY][targetZ] = insertionQuadrant;
     }
     else
     {

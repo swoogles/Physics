@@ -14,6 +14,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <boost/foreach.hpp>
 
 #include "Parallelization/Quadrant.h"
 
@@ -56,6 +57,8 @@
 #define WH 5
 #define FPS 20
 
+#define foreach_  BOOST_FOREACH                                                                                              
+
 //#define DT .04
 //#define DT 4000  //Formation DT
 //#define DT 1.81e5  //Formation DT
@@ -88,7 +91,7 @@ int numStep = 0;
 float totalMass = 0;
 
 
-Quadrant * globalQuadrant;
+boost::shared_ptr<Quadrant> globalQuadrant;
 
 void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > shapeList,
 						float &minX, float &minY, float &maxX, float &maxY) {
@@ -102,12 +105,10 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape
 	maxX = -(FLT_MAX-1);
 	maxY = -(FLT_MAX-1);
 
-  // for (unsigned int j = 0; j < MyShape::shapes.size(); j++) {
-    // cout << "shape[" << j << "]" << MyShape::shapes(j) << endl;
-  // }
-
-	for (unsigned int i = 0; i < shapeList.size(); i++) {
-		shapeList(i)->getPos(curPos);
+  typedef boost::shared_ptr<MyShape> shape_pointer;
+  foreach_ ( shape_pointer curShape, shapeList )
+  {
+    curShape->getPos(curPos);
 
 		if (curPos[0] < minX)
 			minX = curPos[0];
@@ -149,8 +150,10 @@ void display(void)
 
 
 	glMatrixMode(GL_MODELVIEW);
-	for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
-		MyShape::shapes(i)->draw();
+  typedef boost::shared_ptr<MyShape> shape_pointer;
+  foreach_ ( shape_pointer curShape, MyShape::shapes )
+  {
+		curShape->draw();
 	}
   //globalQuadrant->thisShape->draw();
 
@@ -345,15 +348,16 @@ void idle() {
 
     if ( MyShape::shapes.size() > 0 )
     {
-      for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
+      foreach_ ( shape_pointer curShape, MyShape::shapes )
+      // for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
       {
         if ( numStep == 1 ) {
-          totalMass += MyShape::shapes(i)->getMass();
+          totalMass += curShape->getMass();
         }
 
         //MyShape::shapes(i)->adjustMomentum(gravity);
-        MyShape::shapes(i)->update(WorldSettings::getDT());
-        MyShape::shapes(i)->getPos(curPos);
+        curShape->update(WorldSettings::getDT());
+        curShape->getPos(curPos);
 
         if (WorldSettings::isAutoScaling())
           WorldSettings::updateXYMinsAndMaxes(curPos);
@@ -365,16 +369,16 @@ void idle() {
             if ( largest[j] != NULL ) {
               // if ( largest(j) != NULL ) {
 
-              if ( MyShape::shapes(i)->getMass() > largest[j]->getMass() ) {
+              if ( curShape->getMass() > largest[j]->getMass() ) {
                 if ( j < 10 -1 ) {
                   largest[j+1] = largest[j];
                 }
-                largest[j] = MyShape::shapes(i);
+                largest[j] = curShape;
               }
             }
               else {
                 largest[j+1] = largest[j];
-                largest[j] = MyShape::shapes(i);
+                largest[j] = curShape;
               }
             }
 

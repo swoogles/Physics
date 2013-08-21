@@ -298,7 +298,8 @@ void Simulations::billiards3(int numRows) {
 
 }
 
-Quadrant * Simulations::octreeDemonstration(int numRows) {
+boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows) 
+{
   WorldSettings::setDT(.003);
   WorldSettings::makeAllElastic();
   //WorldSettings::makeAllInelastic();
@@ -339,7 +340,7 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
   dimensions[2] = depth;
 
 
-  Quadrant * mainQuadrant = new Quadrant(4, 1, pos, dimensions);
+  boost::shared_ptr<Quadrant> mainQuadrant = boost::make_shared<Quadrant>( Quadrant(4, 1, pos, dimensions) );
 
   int levels = 1;
   mainQuadrant->subDivideAll(levels,8);
@@ -388,6 +389,11 @@ Quadrant * Simulations::octreeDemonstration(int numRows) {
   }
 
   WorldSettings::adjustTotalMass( totalMass );
+
+  dimensions[0] = width*2;
+  dimensions[1] = height*2;
+  dimensions[2] = depth*2;
+  mainQuadrant = boost::make_shared<Quadrant>( Quadrant(4, 1, pos, dimensions) );
 
   return mainQuadrant;
 }

@@ -41,9 +41,9 @@ class Quadrant : public Box
 
   typedef boost::shared_ptr<MyShape> shape_pointer;
 
-  typedef boost::shared_ptr<Quadrant *> quadPointer;
-  typedef multi_array< quadPointer, 3> array_typeNew;
-  array_typeNew  quadOctreeMineNew;
+  typedef boost::shared_ptr<Quadrant> quad_pointer;
+  typedef multi_array< quad_pointer, 3> array_typeNew;
+  array_typeNew  quadOctree;
 
   typedef multi_array<Quadrant *, 3> array_type;
   typedef array_type::index index;
@@ -58,7 +58,7 @@ class Quadrant : public Box
   Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions );
   void subDivide( int x, int y, int z, int numCells );
   void subDivideAll( int levels, int numCells );
-  Quadrant * getQuadrantFromCell( int x, int y, int z );
+  quad_pointer getQuadrantFromCell( int x, int y, int z );
 
   void printCorners();
 
@@ -78,7 +78,7 @@ class Quadrant : public Box
   void getCenterOfMass(sgVec4 centerOfMass);
   void setCenterOfMass( sgVec4 centerOfMass );
 
-  Quadrant * determineShapeQuadrant( shape_pointer shapeToInsert );
+  quad_pointer determineShapeQuadrant( shape_pointer shapeToInsert );
 
 };
 

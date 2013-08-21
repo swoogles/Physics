@@ -99,7 +99,7 @@ class Simulations
 
     static void billiards3(int);
 
-    static Quadrant * octreeDemonstration(int);
+    static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
     static void simpleCollision();
 
