@@ -343,7 +343,7 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
   boost::shared_ptr<Quadrant> mainQuadrant = boost::make_shared<Quadrant>( Quadrant(4, 1, pos, dimensions) );
 
   int levels = 1;
-  mainQuadrant->subDivideAll(levels,8);
+  // mainQuadrant->subDivideAll(levels,8);
 
 	sgVec4 startPlacement, startMomentum;
   startPlacement[0] = 15;
@@ -365,7 +365,7 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
 	cueVelocity[1] = -.5;
 	cueVelocity[2] = 0;
 
-  for (int i = 0; i < 200; i++)
+  for (int i = 0; i < 8000; i++)
   {
     curShapeIdx = MyShape::shapes.size();
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
@@ -393,7 +393,8 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
   dimensions[0] = width*2;
   dimensions[1] = height*2;
   dimensions[2] = depth*2;
-  mainQuadrant = boost::make_shared<Quadrant>( Quadrant(4, 1, pos, dimensions) );
+  cout << "Reassigning quadrant" << endl;
+  // mainQuadrant = boost::make_shared<Quadrant>( Quadrant(4, 1, pos, dimensions) );
 
   return mainQuadrant;
 }

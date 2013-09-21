@@ -56,6 +56,7 @@ class Quadrant : public Box
   int level;
   // Octree<Quadrant *> * quadOctree; /* Create 4096x4096x4096 octree containing doubles. */
   Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions );
+  ~Quadrant();
   void subDivide( int x, int y, int z, int numCells );
   void subDivideAll( int levels, int numCells );
   quad_pointer getQuadrantFromCell( int x, int y, int z );

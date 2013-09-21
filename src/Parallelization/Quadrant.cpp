@@ -13,9 +13,7 @@ ostream& operator<<(ostream& os, sgVec4 outputVec) {
 
 
 Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
-  : quadOctreeMine(boost::extents[2][2][2]),
-    quadOctree(boost::extents[2][2][2])
-
+  : quadOctree(boost::extents[2][2][2])
 {
   this->level = level;
   int length = 2;
@@ -38,25 +36,15 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   newColor[2]=blueAmount;
   borders->setColor( newColor );
 
-  int numShapes = MyShape::shapes.size();
   borders->setSideLength( dimensions[0] );
 
-  MyShape::shapes.resize(numShapes + 1);
-	MyShape::shapes(numShapes) = borders;
+  MyShape::addShapeToList( borders );
+}
 
-
-  // quadOctreeMine(boost::extents[2][2][2]);
-
-  // quadOctreeMine = array_type(boost::extents[2][2][2]);
-  //quadOctreeMine[0][0][0] = new Quadrant( numCells, this->level + 1, pos, dimensions );
-  // quadOctreeMine[0][0][0] = NULL;
-
-
-  // boost::numeric::ublas::vector <Quadrant *> newQuadrants(8);
-  // newQuadrants.insert_element( values++, newQuadrant );
- // cout << "Constructor> quadOctreeMine: " <<  & quadOctreeMine << endl;
-
-
+Quadrant::~Quadrant()
+{
+  // cout << "Breaking down quadrant" << endl;
+  // MyShape::removeShapeFromList( borders );
 }
 
 
@@ -76,13 +64,6 @@ void Quadrant::subDivide( int x, int y, int z, int numCells )
   int yFactor;
   int zFactor;
 
-  // PHYS-3
-  // Remove this if block
-  // if ( quadOctree == NULL )
-  // {
-  //   quadOctree = new Octree<Quadrant * >(numCells);
-  // }
-
   if ( x ) {
     xFactor=1;
   }
@@ -101,10 +82,6 @@ void Quadrant::subDivide( int x, int y, int z, int numCells )
   else {
     zFactor =-1;
   }
-
-  // cout << "xFactor: " << xFactor << endl;
-  // cout << "yFactor: " << yFactor << endl;
-  // cout << "zFactor: " << zFactor << endl;
 
   newDimensions[0] = dimensions[0]/2;
   newDimensions[1] = dimensions[1]/2;
@@ -142,11 +119,6 @@ void Quadrant::subDivideAll( int levels, int numCells )
 
   // Quadrant
   quad_pointer targetQuadrant;
-
-  // if ( quadOctree == NULL )
-  // {
-  //   quadOctree = new Octree<Quadrant * >(numCells);
-  // }
 
   if ( this->level < levels )
   {
