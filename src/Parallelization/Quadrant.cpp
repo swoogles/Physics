@@ -10,7 +10,33 @@ ostream& operator<<(ostream& os, sgVec4 outputVec) {
 //void Quadrant::calcForcesForAll()
 //{
 //}
+Quadrant::~Quadrant()
+{
+  delete borders;
+  for ( int x = 0; x < 2; x++ )
+  {
+    for ( int y = 0; y < 2; y++ )
+    {
+      for ( int z = 0; z < 2; z++ )
+      {
 
+        // Quadrant * insertionQuadrant;
+        // PHYS-3
+        Quadrant * targetQuadrant = quadOctreeMine[x][y][z]; // = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
+        if ( targetQuadrant != NULL )
+        {
+          targetQuadrant->~Quadrant();
+        }
+        // quadOctree->set( x, y, z, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
+        // targetQuadrant = quadOctreeMine[x][y][z];
+        // targetQuadrant = quadOctree->at(x,y,z);
+        // targetQuadrant->subDivideAll(levels, 4);
+
+      }
+    }
+  }
+
+}
 
 Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   : quadOctree(boost::extents[2][2][2])
