@@ -365,7 +365,7 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
 	cueVelocity[1] = -.5;
 	cueVelocity[2] = 0;
 
-  for (int i = 0; i < 8000; i++)
+  for (int i = 0; i < 1000; i++)
   {
     curShapeIdx = MyShape::shapes.size();
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);

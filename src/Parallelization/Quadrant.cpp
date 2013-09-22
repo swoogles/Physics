@@ -45,6 +45,7 @@ Quadrant::~Quadrant()
 {
   // cout << "Breaking down quadrant" << endl;
   // MyShape::removeShapeFromList( borders );
+  MyShape::removeShapeFromList( shapeInQuadrant );
 }
 
 

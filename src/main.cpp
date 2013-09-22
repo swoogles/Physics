@@ -269,6 +269,8 @@ void init(char simulation) {
     cout << "Sim setup starting..." << endl;
     globalQuadrant = Simulations::octreeDemonstration(10);
     cout << "Sim setup complete!" << endl;
+    globalQuadrant.reset();
+    cout << "Reset quadrant" << endl;
   }
 
   if ( simulation == '8' ) {
