@@ -365,7 +365,7 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
 	cueVelocity[1] = -.5;
 	cueVelocity[2] = 0;
 
-  for (int i = 0; i < 1000; i++)
+  for (int i = 0; i < 15; i++)
   {
     curShapeIdx = MyShape::shapes.size();
     randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
@@ -380,6 +380,7 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
     // }
 
     MyShape::addShapeToList( curShapeInsert );
+    cout <<"A<<"<<endl;
     while ( isConflict( curShapeIdx ) )
     {
       randomSplitBodyPlacementInZone(startPlacement, dimensions, target);

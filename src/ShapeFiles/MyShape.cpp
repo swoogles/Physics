@@ -567,30 +567,36 @@ void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
 
   //PHYS-7
   boost::numeric::ublas::vector<shape_pointer> newShapeVector;
-  int newSize =  shapes.size();
+  int newSize =  shapes.size()-1;
   newShapeVector.resize(newSize);
   bool removedShape = false;
 
+  cout << "OldSize: " << shapes.size() << endl;
   cout << "NewSize: " << newSize << endl;
 
   int curIndex = 0;
+  cout << "ShapeToRemove: " << shapeToRemove.get() << endl;
   foreach_( shape_pointer curShape, shapes)
   {
+    cout << "curIndex: " << curIndex << endl;
+    cout << "curShape: " << curShape.get() << endl;
     // cout << "Looping in remove method" << endl;
-    if ( curShape != shapeToRemove )
+    if ( curShape.get() != shapeToRemove.get() )
     {
       // cout << "Getting Shape for copy to new vector" << endl;
       // newShapeVector(curIndex) = curShape;
-      newShapeVector.insert_element(0, curShape);
+      newShapeVector.insert_element(curIndex, curShape);
       curIndex++;
       // cout << "Got Shape for copy to new vector" << endl;
     }
     else
     {
+      cout << "Found shape to remove" << endl;
       removedShape = true;
     }
     // cout << "Looped." << endl;
   }
+  cout << "About to poo myself!" << endl;
   if ( removedShape )
   {
     shapes = boost::numeric::ublas::vector<shape_pointer>( newShapeVector );

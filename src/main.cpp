@@ -53,6 +53,8 @@
 
 #include <float.h>
 
+#include <unistd.h>
+
 #define WW 5
 #define WH 5
 #define FPS 20
@@ -151,10 +153,13 @@ void display(void)
 
 	glMatrixMode(GL_MODELVIEW);
   typedef boost::shared_ptr<MyShape> shape_pointer;
-  foreach_ ( shape_pointer curShape, MyShape::shapes )
+  if ( MyShape::shapes.size() > 0 )
   {
-		curShape->draw();
-	}
+    foreach_ ( shape_pointer curShape, MyShape::shapes )
+    {
+      curShape->draw();
+    }
+  }
   //globalQuadrant->thisShape->draw();
 
 
@@ -269,7 +274,14 @@ void init(char simulation) {
     cout << "Sim setup starting..." << endl;
     globalQuadrant = Simulations::octreeDemonstration(10);
     cout << "Sim setup complete!" << endl;
+    // while ( MyShape::shapes.size() > 0 )
+    // {
+    //   MyShape::removeShapeFromList(MyShape::shapes(0));
+    // }
+    // MyShape::removeShapeFromList(MyShape::shapes(1));
     globalQuadrant.reset();
+    // int numShapes = MyShapes
+    // for ( int i = 0; i < 
     cout << "Reset quadrant" << endl;
   }
 
