@@ -340,7 +340,9 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
   dimensions[2] = depth;
 
 
-  boost::shared_ptr<Quadrant> mainQuadrant = boost::make_shared<Quadrant>( Quadrant(4, 1, pos, dimensions) );
+  // boost::shared_ptr<Quadrant> mainQuadrant( new Quadrant(4, 1, pos, dimensions) );
+  // boost::shared_ptr<Quadrant> mainQuadrant = boost::make_shared<Quadrant>( Quadrant(4, 1, pos, dimensions) );
+  boost::shared_ptr<Quadrant> mainQuadrant = boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
 
   int levels = 1;
   // mainQuadrant->subDivideAll(levels,8);
@@ -374,19 +376,16 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
     curShapeInsert->setColor( curShapeColor );
     curShapeInsert->setMass(1);
     curShapeInsert->setRadius(.5);
-    // if ( i % 5 == 0 )
-    // {
-      //curShapeInsert->setVelocity( cueVelocity );
-    // }
 
     MyShape::addShapeToList( curShapeInsert );
-    cout <<"A<<"<<endl;
     while ( isConflict( curShapeIdx ) )
     {
       randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
       curShapeInsert->setPos( startPlacement );
     }
+    cout << "Inserting" << endl;
     mainQuadrant->insertShape( curShapeInsert );
+    cout << "Inserted" << endl;
   }
 
   WorldSettings::adjustTotalMass( totalMass );

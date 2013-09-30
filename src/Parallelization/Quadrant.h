@@ -15,6 +15,8 @@
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/multi_array.hpp>
+#include <boost/current_function.hpp>
+#include <boost/ref.hpp>
 #include <cassert>
 
 //using namespace boost::numeric::ublas;

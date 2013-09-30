@@ -173,17 +173,13 @@ bool isConflict(int newShape) {
   object2 = MyShape::shapes(newShape);
 
   for (unsigned int i = 0; i < newShape && conflict == false; i++) {
-    cout << "Checking conflict with shape: " << i << endl;
     object1 = MyShape::shapes(i);
     if ( object1->getType() == 2 )
     {
-      cout << "a1" << endl;
       getVectorToObject2(object1, object2, sepVec);
 
       distanceSquared = sgLengthSquaredVec4(sepVec);
       distance = sqrt(distanceSquared);
-
-      cout << "a2"  << endl;
 
       minSep = object1->getRadius() + object2->getRadius();
 

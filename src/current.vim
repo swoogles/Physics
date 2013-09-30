@@ -15,33 +15,33 @@ nmap t :cs find t =expand("<cword>")
 nmap c :cs find c =expand("<cword>")  
 nmap g :cs find g =expand("<cword>")  
 nmap s :cs find s =expand("<cword>")  
+nnoremap <silent>  :TComment
+nnoremap <silent> r :TCommentRight
 noremap s :TCommentAs =&ft_
 noremap n :TCommentAs =&ft 
 noremap a :TCommentAs 
 noremap b :TCommentBlock
 vnoremap <silent> r :TCommentRight
 vnoremap <silent> i :TCommentInline
-nnoremap <silent> r :TCommentRight
 onoremap <silent> r :TCommentRight
 noremap   :TComment 
 noremap <silent> p m`vip:TComment``
 vnoremap <silent>  :TCommentMaybeInline
-nnoremap <silent>  :TComment
 onoremap <silent>  :TComment
+snoremap <silent> ,__ :TComment
+nnoremap <silent> ,__ :TComment
+snoremap <silent> ,_r :TCommentRight
+nnoremap <silent> ,_r :TCommentRight
 noremap ,_s :TCommentAs =&ft_
 noremap ,_n :TCommentAs =&ft 
 noremap ,_a :TCommentAs 
 noremap ,_b :TCommentBlock
 xnoremap <silent> ,_r :TCommentRight
-nnoremap <silent> ,_r :TCommentRight
-snoremap <silent> ,_r :TCommentRight
 onoremap <silent> ,_r :TCommentRight
 xnoremap <silent> ,_i :TCommentInline
 noremap ,_  :TComment 
 noremap <silent> ,_p vip:TComment
 xnoremap <silent> ,__ :TCommentMaybeInline
-nnoremap <silent> ,__ :TComment
-snoremap <silent> ,__ :TComment
 onoremap <silent> ,__ :TComment
 map ,mq <Plug>MBEMarkCurrent
 map ,mbt <Plug>TMiniBufExplorer
@@ -171,14 +171,16 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +71 Parallelization/Quadrant.cpp
-badd +396 Physics/Simulations.cpp
-badd +101 main.cpp
-badd +144 ShapeFiles/MyShape.cpp
-badd +177 Physics/Interactions.cpp
-badd +284 ShapeFiles/MyShape.h
+badd +75 Parallelization/Quadrant.cpp
+badd +345 Physics/Simulations.cpp
+badd +272 main.cpp
+badd +602 ShapeFiles/MyShape.cpp
+badd +381 Physics/Interactions.cpp
+badd +30 ShapeFiles/MyShape.h
+badd +35 Parallelization/Quadrant.h
+badd +14 Physics/Simulations.h
 silent! argdel *
-edit Parallelization/Quadrant.cpp
+edit Parallelization/Quadrant.h
 set splitbelow splitright
 wincmd _ | wincmd |
 split
@@ -308,15 +310,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 75 - ((5 * winheight(0) + 15) / 31)
+let s:l = 19 - ((18 * winheight(0) + 15) / 31)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-75
+19
 normal! 0
 wincmd w
 argglobal
-edit ShapeFiles/MyShape.cpp
+edit Parallelization/Quadrant.cpp
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -417,15 +419,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 582 - ((13 * winheight(0) + 16) / 32)
+let s:l = 60 - ((15 * winheight(0) + 16) / 32)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-582
-normal! 041l
+60
+normal! 012l
 wincmd w
 argglobal
-edit Physics/Simulations.cpp
+edit Physics/Simulations.h
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -448,8 +450,7 @@ setlocal nocopyindent
 setlocal cryptmethod=
 setlocal nocursorbind
 setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
+setlocal nocursorline
 setlocal define=
 setlocal dictionary=
 setlocal nodiff
@@ -527,11 +528,11 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 382 - ((23 * winheight(0) + 15) / 31)
+let s:l = 91 - ((3 * winheight(0) + 15) / 31)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-382
+91
 normal! 0
 wincmd w
 argglobal
@@ -636,11 +637,11 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 284 - ((22 * winheight(0) + 16) / 32)
+let s:l = 180 - ((23 * winheight(0) + 16) / 32)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-284
+180
 normal! 0
 wincmd w
 argglobal
@@ -654,9 +655,9 @@ nnoremap <buffer> j gj
 nnoremap <buffer> k gk
 nnoremap <buffer> l :call search('\[[0-9]*:[^\]]*\]'):<BS>
 nnoremap <buffer> p :wincmd p:<BS>
-nnoremap <buffer> <S-Tab> :call search('\[[0-9]*:[^\]]*\]','b'):<BS>
-nnoremap <buffer> <Up> gk
 nnoremap <buffer> <Down> gj
+nnoremap <buffer> <Up> gk
+nnoremap <buffer> <S-Tab> :call search('\[[0-9]*:[^\]]*\]','b'):<BS>
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=

@@ -181,6 +181,9 @@ void display(void)
 
 	glutSwapBuffers();
 	glutPostRedisplay();
+
+  sleep(3);
+  globalQuadrant.reset();
 }
 
 void controlDisplay(void) {
@@ -279,10 +282,11 @@ void init(char simulation) {
     //   MyShape::removeShapeFromList(MyShape::shapes(0));
     // }
     // MyShape::removeShapeFromList(MyShape::shapes(1));
-    globalQuadrant.reset();
     // int numShapes = MyShapes
     // for ( int i = 0; i < 
     cout << "Reset quadrant" << endl;
+    // sleep(3);
+    // globalQuadrant.reset();
   }
 
   if ( simulation == '8' ) {
@@ -501,7 +505,6 @@ int main(int argcp, char **argv) {
   glutSetWindow(main_window);
 
 	//int seconds = 1000000;
-	//usleep(10*seconds);
 
   glutMainLoop();
 

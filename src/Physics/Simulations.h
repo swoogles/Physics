@@ -11,6 +11,7 @@
 #include "../Parallelization/Quadrant.h"
 #include <iostream>
 #include <boost/numeric/ublas/vector.hpp>
+#include <boost/ref.hpp>
 #include <plib/sg.h>
 //#include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Circle.h"
