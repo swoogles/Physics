@@ -422,13 +422,33 @@ void idle() {
 
     Observer::observers(curObserver)->update(WorldSettings::getDT());
 
-    /*
-       float minX, minY, maxX, maxY;
-       calcXYMinsAndMaxes(MyShape::shapes, minX, minY, maxX, maxY);
-       */
-    
-    sleep(3);
-    globalQuadrant.reset();
+    sgVec4 pos;
+    pos[0] = 0;
+    pos[1] = 0;
+    pos[2] = 0;
+    pos[3] = 1;
+
+    float width = 250;
+    float height = 250;
+    float depth = 250;
+    sgVec3 dimensions;
+    dimensions[0] = width;
+    dimensions[1] = height;
+    dimensions[2] = depth;
+
+    // globalQuadrant.reset();
+
+    globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
+    // sleep(2);
+    // cout << "Idling!" << endl;
+    // cout << "Shapes size: " << MyShape::shapes.size() << endl;
+    typedef boost::shared_ptr<MyShape> shape_pointer;
+    boost::numeric::ublas::vector<shape_pointer> localShapeList = MyShape::shapes;
+    foreach_ ( shape_pointer curShape, localShapeList )
+    {
+      // cout << "processing shape" << endl;
+      globalQuadrant->insertShape( curShape );
+    }
 
     if (WorldSettings::isAutoScaling()) {
 

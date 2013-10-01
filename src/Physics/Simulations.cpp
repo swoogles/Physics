@@ -300,12 +300,14 @@ void Simulations::billiards3(int numRows) {
 
 boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows) 
 {
-  WorldSettings::setDT(.003);
+  WorldSettings::setDT(1000);
   WorldSettings::makeAllElastic();
   //WorldSettings::makeAllInelastic();
-  WorldSettings::setGravBetweenObjects(false);
+  WorldSettings::setGravBetweenObjects(true);
   WorldSettings::setConstGravField(false);
-  WorldSettings::setTimeElapsed(0);
+	// WorldSettings::setAutoScaling(true);
+	WorldSettings::setTimeElapsed(0);
+	WorldSettings::setTotalMass(0);
 
   sgVec4 gField;
   gField[0] = -.2; gField[1] = 0; gField[2] = 0;
@@ -383,9 +385,7 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
       randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
       curShapeInsert->setPos( startPlacement );
     }
-    cout << "Inserting" << endl;
     mainQuadrant->insertShape( curShapeInsert );
-    cout << "Inserted" << endl;
   }
 
   WorldSettings::adjustTotalMass( totalMass );
@@ -393,7 +393,6 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
   dimensions[0] = width*2;
   dimensions[1] = height*2;
   dimensions[2] = depth*2;
-  cout << "Reassigning quadrant" << endl;
   // mainQuadrant = boost::make_shared<Quadrant>( Quadrant(4, 1, pos, dimensions) );
 
   return mainQuadrant;

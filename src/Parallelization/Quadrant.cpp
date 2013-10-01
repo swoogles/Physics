@@ -10,44 +10,19 @@ ostream& operator<<(ostream& os, sgVec4 outputVec) {
 //void Quadrant::calcForcesForAll()
 //{
 //}
+
 Quadrant::~Quadrant()
 {
   // MyShape::removeShapeFromList( MyShape::shapes(0) );
   MyShape::removeShapeFromList( borders );
-  cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
+  // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
 }
-  // borders = NULL;
-  //MyShape::removeShapeFromList( borders );
-  // MyShape::removeShapeFromList( shapeInQuadrant );
-  // for ( int x = 0; x < 2; x++ )
-  // {
-  //   for ( int y = 0; y < 2; y++ )
-  //   {
-  //     for ( int z = 0; z < 2; z++ )
-  //     {
 
-        // Quadrant * insertionQuadrant;
-        // PHYS-3
-        // Quadrant * targetQuadrant = quadOctreeMine[x][y][z]; // = new Quadrant( numCells, this->level + 1, newPos, newDimensions );
-        // if ( targetQuadrant != NULL )
-        // {
-          // targetQuadrant->~Quadrant();
-        // }
-        // quadOctree->set( x, y, z, new Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
-        // targetQuadrant = quadOctreeMine[x][y][z];
-        // targetQuadrant = quadOctree->at(x,y,z);
-        // targetQuadrant->subDivideAll(levels, 4);
-
-  //     }
-  //   }
-  // }
-
-// }
 
 Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   : quadOctree(boost::extents[2][2][2])
 {
-  cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
+  // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
   this->level = level;
   int length = 2;
 
@@ -73,14 +48,6 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
   MyShape::addShapeToList( borders );
 }
-
-// Quadrant::~Quadrant()
-// {
-  // MyShape::removeShapeFromList( borders );
-//   MyShape::removeShapeFromList( shapeInQuadrant );
-// }
-
-
 
 boost::shared_ptr<Quadrant> Quadrant::getQuadrantFromCell( int x, int y, int z )
 {
@@ -121,8 +88,6 @@ void Quadrant::subDivide( int x, int y, int z, int numCells )
   newDimensions[2] = dimensions[2]/2;
 
 
-  // cout << "Ein? " << endl;
-  cout << "original Pos: " << pos << endl;
   //sgVec4 off
   newPos[0]=pos[0]+(xFactor*dimensions[0]/4.0);
   newPos[1]=pos[1]+(yFactor*dimensions[1]/4.0);
@@ -134,12 +99,8 @@ void Quadrant::subDivide( int x, int y, int z, int numCells )
 
   // Quadrant
   //TODO Calculate new position
-  // cout << "Ein? " << endl;
   // quadOctree[x][y][z] = boost::make_shared<Quadrant>( Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
   quadOctree[x][y][z] = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
-  cout << "New Pos: " << newPos << endl;
-  cout << "New Dimensions: " << newDimensions << endl;
-  // cout << "Ein? " << endl;
 }
 
 void Quadrant::subDivideAll( int levels, int numCells )
@@ -182,8 +143,6 @@ void Quadrant::subDivideAll( int levels, int numCells )
             zFactor =-1;
           }
 
-          //sgVec4 offset;
-          //sgScaleVec4( pos
           newPos[0]=pos[0]+(xFactor*dimensions[0]/4.0);
           newPos[1]=pos[1]+(yFactor*dimensions[1]/4.0);
           newPos[2]=pos[2]+(zFactor*dimensions[2]/4.0);
@@ -220,38 +179,33 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 void Quadrant::insertShape( shape_pointer insertedShape )
 {
   if ( !containsBody )
-  // if ( shapeInQuadrant == NULL && quadOctree == NULL )
   {
-    // cout << "step 1 in" << endl;
     shapeInQuadrant = insertedShape;
     containsBody = true;
-    // cout << "step 1 out" << endl;
   }
   else if ( ! isLeaf )
-  // else if ( shapeInQuadrant == NULL && quadOctree != NULL )
   {
-    // cout << "step 2 in" << endl;
     this->adjustMass( insertedShape->getMass() );
 
     // TODO Update centerOfMass
     int levels = 2;
+    // cout << "insertShapeA" << endl;
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     targetQuadrant->insertShape( insertedShape );
-    // cout << "step 2 out" << endl;
   }
   else
   {
-    // cout << "step 3 in" << endl;
     isLeaf = false;
+    // cout << "insertShapeB" << endl;
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
+    // cout << "insertShapeB.1" << endl;
     targetQuadrant->insertShape( insertedShape );
 
+    // cout << "insertShapeB.2" << endl;
     targetQuadrant = this->determineShapeQuadrant( shapeInQuadrant );
+    // cout << "insertShapeB.3" << endl;
     targetQuadrant->insertShape( shapeInQuadrant );
-
-
-    // shapeInQuadrant = NULL;
-    // cout << "step 3 out" << endl;
+    // cout << "insertShapeB.4" << endl;
   }
 
 }
@@ -260,7 +214,6 @@ void Quadrant::insertShape( shape_pointer insertedShape )
 // Guaranteed to hand back an instantiated Quadrant
 boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
-  //cout << "Determining shape Quadrant" << endl;
   sgVec4 insertPos;
   shapeToInsert->getPos( insertPos ); 
   float insertX = insertPos[0];
@@ -295,7 +248,6 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
   // X coordinate checking
   if ( insertX >= minXBoundary ) //Within min X boundary
   {
-    //cout << "X Checking" << endl;
     if ( insertX < centralXBoundary ) //Less than central X boundary
     {
       targetX = 0; 
@@ -310,7 +262,6 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
     // Y coordinate checking
     if ( insertY >= minYBoundary ) //Within min Y boundary
     {
-      //cout << "Y Checking" << endl;
       if ( insertY < centralYBoundary ) //Less than central Y boundary
       {
         targetY = 0; 
@@ -322,15 +273,9 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
         newPos[1] = centralYBoundary + yOffset;
       }
 
-      //cout << "insertZ: " << insertZ << endl;
-      //cout << "minZBoundary: " << minZBoundary << endl;
-
       // Z coordinate checking
       if ( insertZ >= minZBoundary ) //Within min Z boundary
       {
-        //cout << "Z Checking" << endl;
-        //cout << "centralZBoundary" << centralZBoundary << endl;
-        //cout << "maxZBoundary" << maxZBoundary << endl;
         if ( insertZ < centralZBoundary ) //Less than central Z boundary
         {
           newPos[2] = centralZBoundary - zOffset;
@@ -347,44 +292,26 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
 
   quad_pointer insertionQuadrant;
 
-  //cout << "Ok" << endl;
-
   // Only proceed if we have determined that the provided shape does actually
   // belong in this Quadrant
   if ( targetX != INVALID_OCTREE_INDEX &&
       targetY != INVALID_OCTREE_INDEX &&
       targetZ != INVALID_OCTREE_INDEX )
   {
-    // cout << "Valid" << endl;
     int numCells = 8;
 
     insertionQuadrant = quadOctree[targetX][targetY][targetZ];
     // insertionQuadrant = getQuadrantFromCell( targetX, targetY, targetZ );
 
-    //cout << "Should insert shape in quadrant[" 
-      //<< targetX << ","
-      //<< targetY << ","
-      //<< targetZ << "]" << endl;
 
     if ( insertionQuadrant == NULL )
     {
-      cout << "Creating a new quadrant for insertion" << endl;
-      //cout << endl;
       //subDivide( targetX, targetY, targetZ, numCells );
 
       insertionQuadrant = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) ) ;
-      cout << "Poooooooo" << endl;
       quadOctree[targetX][targetY][targetZ] = insertionQuadrant;
-      cout << "Created a new quadrant for insertion" << endl;
-    }
-    else
-    {
-      //cout << "Position requires further dividing of an existant Quadrant" << endl;
-      //cout << endl;
-      //subDivide( targetX, targetY, targetZ, numCells );
     }
   }
 
   return insertionQuadrant;
-  
 }
