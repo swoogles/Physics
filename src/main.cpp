@@ -182,8 +182,6 @@ void display(void)
 	glutSwapBuffers();
 	glutPostRedisplay();
 
-  sleep(3);
-  globalQuadrant.reset();
 }
 
 void controlDisplay(void) {
@@ -428,6 +426,9 @@ void idle() {
        float minX, minY, maxX, maxY;
        calcXYMinsAndMaxes(MyShape::shapes, minX, minY, maxX, maxY);
        */
+    
+    sleep(3);
+    globalQuadrant.reset();
 
     if (WorldSettings::isAutoScaling()) {
 
