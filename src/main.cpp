@@ -15,6 +15,7 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/foreach.hpp>
+#include <boost/ref.hpp>
 
 #include "Parallelization/Quadrant.h"
 
@@ -241,7 +242,7 @@ void init(char simulation) {
 	  Simulations::simpleCollision();
   }
   if ( simulation == '4' ) {
-	  Simulations::billiardsReturningList(10);
+    MyShape::shapes = Simulations::billiardsReturningList(5).getShapes() ;
   }
   if ( simulation == '5' ) {
 	  Simulations::billiards2(10);

@@ -47,6 +47,7 @@ class ShapeList {
     int addShapeToList( shape_pointer insertShape );
     int removeShapeFromList( shape_pointer shapeToRemove );
     int clearShapes();
+    boost::numeric::ublas::vector<shape_pointer> getShapes();
 
 };
 

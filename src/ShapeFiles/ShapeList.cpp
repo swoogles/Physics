@@ -12,6 +12,7 @@
 
 using namespace std;
 using namespace boost::numeric::ublas;
+    typedef boost::shared_ptr<MyShape> shape_pointer;
 
 int ShapeList::addShapeToList( shape_pointer insertShape )
 {
@@ -54,4 +55,9 @@ int ShapeList::clearShapes() {
   shapes.clear();
   shapes.resize(0);
   return shapes.size();
+}
+
+boost::numeric::ublas::vector<shape_pointer> ShapeList::getShapes()
+{
+  return shapes;
 }
