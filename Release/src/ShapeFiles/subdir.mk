@@ -10,6 +10,7 @@ CPP_SRCS += \
 ../src/ShapeFiles/MyShape.cpp \
 ../src/ShapeFiles/Moveable.cpp \
 ../src/ShapeFiles/RoundShape.cpp \
+../src/ShapeFiles/ShapeList.cpp \
 ../src/ShapeFiles/StraightShape.cpp 
 
 OBJS += \
@@ -19,6 +20,7 @@ OBJS += \
 ./src/ShapeFiles/MyShape.o \
 ./src/ShapeFiles/Moveable.o \
 ./src/ShapeFiles/RoundShape.o \
+./src/ShapeFiles/ShapeList.o \
 ./src/ShapeFiles/StraightShape.o 
 
 CPP_DEPS += \
@@ -28,6 +30,7 @@ CPP_DEPS += \
 ./src/ShapeFiles/MyShape.d \
 ./src/ShapeFiles/Moveable.d \
 ./src/ShapeFiles/RoundShape.d \
+./src/ShapeFiles/ShapeList.d \
 ./src/ShapeFiles/StraightShape.d 
 
 

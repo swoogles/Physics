@@ -16,6 +16,7 @@
 //#include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/Box.h"
+#include "../ShapeFiles/ShapeList.h"
 #include "Interactions.h"
 
 #define MASS_VAR 1e21
@@ -96,7 +97,12 @@ class Simulations
 
     static void billiards(int);
 
+    static ShapeList billiardsReturningList(int);
+
     static void billiards2(int);
+
+    //VERY EXPERIMENTAL
+    static ShapeList billiards2ReturningList(int);
 
     static void billiards3(int);
 

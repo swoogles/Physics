@@ -503,19 +503,7 @@ void MyShape::getUnitVecTo(MyShape * destination, sgVec4 unitv) {
 */
 
 void MyShape::clearShapes() {
-	// for (int i = MyShape::shapes.size() - 1; i > -1; i--) {
-      // cout << "Shape # " << i << endl;
-	// 	MyShape::shapes(i)->~MyShape();
-	// 	MyShape::shapes.erase_element(i);
-	// }
-	// MyShape::shapes.resize(0);
-
-  // PHYS-7
-	for (int i = shapes.size() - 1; i > -1; i--) {
-      // cout << "Shape # " << i << endl;
-		// shapes(i)->~MyShape();
-		shapes.erase_element(i);
-	}
+  shapes.clear();
 	shapes.resize(0);
 }
 
@@ -527,12 +515,6 @@ int MyShape::getType() { return 1;}
 
 int MyShape::addShapeToList( shape_pointer insertShape )
 {
-  // int curSize = shapes.size();
-  // shapes.resize(curSize + 1);
-  // shapes(curSize) = insertShape;
-  // return curSize;
-
-  //PHYS-7
   int curSize = shapes.size();
   shapes.resize(curSize + 1);
   shapes(curSize) = insertShape;
@@ -542,64 +524,27 @@ int MyShape::addShapeToList( shape_pointer insertShape )
 
 void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
 {
-  // boost::numeric::ublas::vector<MyShape *> newShapeVector;
-  // newShapeVector.resize( shapes.size() - 1 );
-  // bool removedShape = false;
-
-  // int curIndex = 0;
-  // foreach_( MyShape * curShape, shapes )
-  // {
-  //   if ( curShape != shapeToRemove )
-  //   {
-  //     newShapeVector(curIndex) = curShape;
-  //     curIndex++;
-  //   }
-  //   else
-  //   {
-  //     removedShape = true;
-  //   }
-  // }
-
-  // if ( removedShape )
-  // {
-  //   shapes = boost::numeric::ublas::vector<MyShape *>( newShapeVector );
-  // }
-
-  //PHYS-7
   boost::numeric::ublas::vector<shape_pointer> newShapeVector;
   int newSize =  shapes.size();
   newShapeVector.resize(newSize);
   bool removedShape = false;
 
-  // cout << "OldSize: " << shapes.size() << endl;
-  // cout << "NewSize: " << newSize << endl;
-
   int curIndex = 0;
-  // cout << "ShapeToRemove: " << shapeToRemove.get() << endl;
   foreach_( shape_pointer curShape, shapes)
   {
-    // cout << "curIndex: " << curIndex << endl;
-    // cout << "curShape: " << curShape.get() << endl;
     if ( curShape.get() != shapeToRemove.get() )
     {
-      // cout << "Getting Shape for copy to new vector" << endl;
-      // newShapeVector(curIndex) = curShape;
       newShapeVector.insert_element(curIndex, curShape);
       curIndex++;
-      // cout << "Got Shape for copy to new vector" << endl;
     }
     else
     {
-      // cout << "Found shape to remove" << endl;
       removedShape = true;
       newShapeVector.resize(newSize-1);
     }
-    // cout << "Looped." << endl;
   }
-  // cout << "About to poo myself!" << endl;
   if ( removedShape )
   {
     shapes = boost::numeric::ublas::vector<shape_pointer>( newShapeVector );
   }
-
 }

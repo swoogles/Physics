@@ -166,6 +166,69 @@ void Simulations::billiards(int numRows) {
 	cout << "NumPieces: " << numPieces << endl;
 }
 
+ShapeList Simulations::billiardsReturningList(int numRows) {
+	WorldSettings::setDT(.003);
+	WorldSettings::makeAllElastic();
+	WorldSettings::setGravBetweenObjects(false);
+	WorldSettings::setConstGravField(false);
+	WorldSettings::setTimeElapsed(0);
+
+  ShapeList physicalObjects;
+
+	sgVec4 gField;
+	gField[0] = -.2; gField[1] = 0; gField[2] = 0;
+
+	WorldSettings::setConstGravFieldVal(gField);
+
+	unsigned int numPieces = 0;
+	float cueMass = 100.0;
+	float cueRadius = 2;
+
+	float ballMass = 0.156;
+	float ballRadius = .95;
+
+	for (int i = 1; i < numRows+1; i++)
+		numPieces+=i;
+
+	sgVec4 cueVelocity;
+	cueVelocity[0] = 30;
+	cueVelocity[1] = -75;
+	cueVelocity[2] = 0;
+
+	sgVec3 newColor;
+	newColor[0] = 1;
+	newColor[1] = 1;
+	newColor[2] = 1;
+
+  shape_pointer curShape;
+
+	curShape = boost::make_shared<Circle>();
+	curShape->setPos(numRows, numRows*3, 0);
+	curShape->setMass(cueMass);
+	curShape->setRadius(ballRadius);
+	curShape->setVelocity(cueVelocity);
+	curShape->setColor(newColor);
+
+  physicalObjects.addShapeToList( curShape );
+
+	unsigned int cutOff = numRows*2;
+	for (unsigned int i = 1; i < numRows+1; i++) {
+		for (unsigned int j = i; j < cutOff; j+= 2) {
+			curShape = boost::make_shared<Circle>();
+			curShape->setPos(j*1.7, i*2.5, 0);
+			curShape->setMass(ballMass);
+			curShape->setRadius(ballRadius);
+      physicalObjects.addShapeToList( curShape );
+		}
+		cout << endl;
+		cutOff--;
+	}
+
+	cout << "NumPieces: " << numPieces << endl;
+
+  return physicalObjects;
+}
+
 void Simulations::billiards2(int numRows) {
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
@@ -227,6 +290,74 @@ void Simulations::billiards2(int numRows) {
 
 	cout << "NumPieces: " << numPieces << endl;
 	cout << "Type: " << MyShape::shapes(0)->getType() << endl;
+
+}
+
+ShapeList Simulations::billiards2ReturningList(int numRows) {
+	WorldSettings::setDT(.003);
+	WorldSettings::makeAllElastic();
+	//WorldSettings::makeAllInelastic();
+	WorldSettings::setGravBetweenObjects(false);
+	WorldSettings::setConstGravField(false);
+	WorldSettings::setTimeElapsed(0);
+
+  ShapeList physicalObjects;
+  
+	sgVec4 gField;
+	gField[0] = -.2; gField[1] = 0; gField[2] = 0;
+
+	WorldSettings::setConstGravFieldVal(gField);
+
+	unsigned int numPieces = 0;
+	float cueMass = 100.0;
+	float ballMass = 0.156;
+
+	float cueRadius = 2;
+	float ballRadius = .95;
+
+  numPieces= numRows*numRows;
+
+	sgVec4 cueVelocity;
+	cueVelocity[0] = 30;
+	//cueVelocity[1] = -15.05;
+	cueVelocity[1] = -75;
+	cueVelocity[2] = 0;
+
+	sgVec3 newColor;
+	newColor[0] = 1;
+	newColor[1] = 1;
+	newColor[2] = 1;
+    
+  shape_pointer shapeForInsertion;
+
+	shapeForInsertion = boost::make_shared<Circle>();
+	shapeForInsertion->setPos(numRows, numRows*3, 0);
+	shapeForInsertion->setMass(cueMass);
+	shapeForInsertion->setRadius(ballRadius);
+	shapeForInsertion->setVelocity(cueVelocity);
+	shapeForInsertion->setColor(newColor);
+  physicalObjects.addShapeToList( shapeForInsertion );
+
+	// MyShape::shapes.resize(MyShape::shapes.size() + numPieces );
+
+	for (unsigned int i = 0; i < numRows; i++) {
+		for (unsigned int j = 0; j < numRows; j++) {
+			shapeForInsertion = boost::make_shared<Circle>();
+			shapeForInsertion->setPos(j*3, i*3, 0);
+			shapeForInsertion->setMass(ballMass);
+			shapeForInsertion->setRadius(ballRadius);
+      newColor[1] = -( ( -.5 + (j/float(numRows)) ) * ( -.5 + (j/float(numRows)) ) )+ 1.0;
+      shapeForInsertion->setColor(newColor);
+
+      physicalObjects.addShapeToList( shapeForInsertion );
+		}
+		cout << endl;
+	}
+
+	cout << "NumPieces: " << numPieces << endl;
+	cout << "Type: " << MyShape::shapes(0)->getType() << endl;
+
+  return physicalObjects;
 
 }
 

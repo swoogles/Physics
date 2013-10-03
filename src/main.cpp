@@ -127,6 +127,7 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape
 
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
+// TODO Allow an arbitrary list of objects to be displayed
 void display(void)
 {
 	glutSetWindow(main_window);
@@ -240,7 +241,7 @@ void init(char simulation) {
 	  Simulations::simpleCollision();
   }
   if ( simulation == '4' ) {
-	  Simulations::billiards(10);
+	  Simulations::billiardsReturningList(10);
   }
   if ( simulation == '5' ) {
 	  Simulations::billiards2(10);
