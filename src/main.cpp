@@ -343,16 +343,13 @@ void init(char simulation) {
 void idle() {
 	sgVec4 curPos;
 
-  cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
+  // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
 	if (! WorldSettings::isPaused() ) {
     numStep++;
 
-    cout << "PhysicalObjects.size: " << physicalObjects << endl;
 		calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
-    cout << "Calced forces" << endl;
 		WorldSettings::updateTimeElapsed();
 		main_window_UI::update();
-    cout << "Updated UI" << endl;
 		//calcDrag(WorldSettings::getDT());
 
 		if (WorldSettings::isAutoScaling())
@@ -377,7 +374,6 @@ void idle() {
       foreach_ ( shape_pointer curShape, physicalObjects )
       // for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
       {
-        cout << "updating shape" << endl;
         if ( numStep == 1 ) {
           totalMass += curShape->getMass();
         }
@@ -389,47 +385,10 @@ void idle() {
         if (WorldSettings::isAutoScaling())
           WorldSettings::updateXYMinsAndMaxes(curPos);
 
-        cout << "Shape.1" << endl;
-
-        //Largest Objects
-        if ( numStep % 50 == 0 ) {
-          cout << endl << endl;
-          for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-            if ( largest[j] != NULL ) {
-              // if ( largest(j) != NULL ) {
-
-              if ( curShape->getMass() > largest[j]->getMass() ) {
-                if ( j < 10 -1 ) {
-                  largest[j+1] = largest[j];
-                }
-                largest[j] = curShape;
-              }
-            }
-              else {
-                largest[j+1] = largest[j];
-                largest[j] = curShape;
-              }
-            }
-
-          }
-
-        }
-        sgVec3 color;
-        for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-          if ( largest[j] != NULL ) {
-            largest[j]->getColor( color );
-            cout << "largest[" << j << "]: " << largest[j]->getMass() 
-              << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
-              << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
-          }
-        }
-        if ( numStep % 50 == 0 ) {
-          cout << endl << endl;
         }
 
         calcCollisionsAll_ArbitraryList(physicalObjects);
       }
-      cout << "Done!!" << endl;
     }
 
     int curObserver = Observer::getCurObserver();
@@ -442,9 +401,10 @@ void idle() {
     pos[2] = 0;
     pos[3] = 1;
 
-    float width = 250;
-    float height = 250;
-    float depth = 250;
+    float side = 1e4;
+    float width = side;
+    float height = side;
+    float depth = side;
     sgVec3 dimensions;
     dimensions[0] = width;
     dimensions[1] = height;
@@ -549,4 +509,61 @@ int main(int argcp, char **argv) {
 void myTimer(int v) {
 	glutPostRedisplay();
 	glutTimerFunc(1000/FPS, myTimer, v);
+}
+
+void calcLargest()
+{
+
+        //Largest Objects
+        // if ( numStep % 50 == 0 ) {
+        //   cout << endl << endl;
+        //   for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+        //     cout << "Shape.2" << endl;
+        //     if ( largest[j] != NULL ) {
+        //       cout << "Shape.3" << endl;
+
+        //       if ( curShape->getMass() > largest[j]->getMass() ) {
+        //         cout << "Shape.4" << endl;
+        //         if ( j < 10 -1 ) {
+        //           cout << "Shape.5" << endl;
+        //           largest[j+1] = largest[j];
+        //         }
+        //           cout << "Shape.6" << endl;
+        //         largest[j] = curShape;
+        //           cout << "Shape.7" << endl;
+        //       }
+        //     }
+        //       else {
+
+        //           cout << "index: " << j << endl;
+
+        //           shape_pointer x = largest[j];
+
+        //           cout << "index: " << j+1 << endl;
+        //           x = largest[j+1];
+
+
+        //         largest[j+1] = largest[j];
+        //           cout << "Shape.9" << endl;
+        //         largest[j] = curShape;
+        //           cout << "Shape.10" << endl;
+        //       }
+        //       cout << "Um..." << endl;
+        //     }
+
+        //   }
+
+        // }
+        // cout << "Going to output largest" << endl;
+        // sgVec3 color;
+        // for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+        //   if ( largest[j] != NULL ) {
+        //     largest[j]->getColor( color );
+        //     cout << "largest[" << j << "]: " << largest[j]->getMass() 
+        //       << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
+        //       << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
+        //   }
+        // }
+        // if ( numStep % 50 == 0 ) {
+        //   cout << endl << endl;
 }

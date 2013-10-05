@@ -548,7 +548,7 @@ void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape>
   float newRadius = calcMergedRadius(newMass, density);
 
   // object1->getRadius();
-  cout << "Merged Object radius:" << object1->getRadius() << endl;
+  // cout << "Merged Object radius:" << object1->getRadius() << endl;
 
   sgVec4 totalAngMom;
 
