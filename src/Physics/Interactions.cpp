@@ -270,6 +270,36 @@ bool isConflict(int newShape) {
   return conflict;
 }
 
+bool isConflict_ArbitraryList( boost::numeric::ublas::vector<shape_pointer> physicalObjects, int newShape) {
+  sgVec4 sepVec;
+  SGfloat distanceSquared, distance, minSep;
+  bool conflict = false;
+
+  boost::shared_ptr<MyShape> object1;
+  boost::shared_ptr<MyShape> object2;
+
+  object2 = physicalObjects(newShape);
+
+  for (unsigned int i = 0; i < newShape && conflict == false; i++) {
+    object1 = physicalObjects(i);
+    if ( object1->getType() == 2 )
+    {
+      getVectorToObject2(object1, object2, sepVec);
+
+      distanceSquared = sgLengthSquaredVec4(sepVec);
+      distance = sqrt(distanceSquared);
+
+      minSep = object1->getRadius() + object2->getRadius();
+
+
+      if (distance < minSep) {
+        conflict = true;
+      }
+    }
+  }
+  return conflict;
+}
+
 void calcCollisionsAll() {
   sgVec4 sepVec;
   boost::shared_ptr<MyShape> object1;

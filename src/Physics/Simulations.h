@@ -93,6 +93,8 @@ class Simulations
     static void disruption();
 
     static void bodyFormation( unsigned int numPieces );
+    static ShapeList bodyFormation_ArbitraryList( unsigned int numPieces );
+
     static void bodyFormationGeneric( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
     static void billiards(int);

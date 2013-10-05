@@ -234,7 +234,9 @@ void init(char simulation) {
     Simulations::largeGridAlternating();
   }
   if ( simulation == '1' ) {
-	  Simulations::bodyFormation( 400 );
+	  physicalObjects = Simulations::bodyFormation_ArbitraryList( 400 ).getShapes();
+    MyShape::shapes = physicalObjects; 
+    cout << "Done setting up sim." << endl;
   }
   if ( simulation == '2' ) {
 	  Simulations::disruption();
@@ -248,7 +250,7 @@ void init(char simulation) {
   }
   if ( simulation == '5' ) {
 	  Simulations::billiards2(10);
-    MyShape::removeShapeFromList(  MyShape::shapes(15) );
+    // MyShape::removeShapeFromList(  MyShape::shapes(15) );
   }
 
   if ( simulation == '6' ) {
@@ -341,6 +343,7 @@ void init(char simulation) {
 void idle() {
 	sgVec4 curPos;
 
+  cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
 	if (! WorldSettings::isPaused() ) {
     numStep++;
 
@@ -385,6 +388,8 @@ void idle() {
 
         if (WorldSettings::isAutoScaling())
           WorldSettings::updateXYMinsAndMaxes(curPos);
+
+        cout << "Shape.1" << endl;
 
         //Largest Objects
         if ( numStep % 50 == 0 ) {

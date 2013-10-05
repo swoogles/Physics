@@ -17,6 +17,7 @@
 #include <plib/sg.h>
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/Box.h"
+#include "../ShapeFiles/ShapeList.h"
 
 #include "WorldSettings.h"
 #include "Simulations.h"
@@ -190,6 +191,18 @@ bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> obje
  *  \returns True if new object causes a conflict
  */
 bool isConflict(int newShape);
+
+/*! \relates MyShape
+ *  \brief Returns true if new shape is placed on top of a previously created shape
+ *
+ *  Loops through shapes vector up until newShape, seeing if any shapes overlap with the newly-placed one. Only necessary when dealing with elastic collisions;
+ *  otherwise, the new object will just be merged with the existing one.
+ *
+ *  \param newShape Index of newshape in shapes vector
+ *
+ *  \returns True if new object causes a conflict
+ */
+bool isConflict_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physiaclObjects, int newShape);
 
 
 /*! \relates MyShape

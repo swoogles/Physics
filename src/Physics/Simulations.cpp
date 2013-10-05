@@ -660,6 +660,76 @@ void Simulations::bodyFormation(unsigned int numPieces) {
   WorldSettings::adjustTotalMass( totalMass );
 }
 
+ShapeList Simulations::bodyFormation_ArbitraryList(unsigned int numPieces) {
+	WorldSettings::setDT(1000);
+	WorldSettings::makeAllInelastic();
+	WorldSettings::setGravBetweenObjects(true);
+	WorldSettings::setConstGravField(false);
+	WorldSettings::setAutoScaling(true);
+	WorldSettings::setTimeElapsed(0);
+	WorldSettings::setTotalMass(0);
+
+  ShapeList physicalObjects;
+
+	float objectDensity = DENSITY_SUN;
+	float bodyVolume = (MASS_SUN * 3)/(objectDensity);
+	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+	sgVec4 startPlacement, startMomentum, target;
+
+  target[0]=-1000;
+  target[1]=0;
+  target[2]=0;
+  target[3]=1;
+
+	float pieceMass = pow(pieceRadius, 3.0);
+	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
+
+	float totalMass = 0.0;
+
+	srand ( time(NULL) );
+
+  cout << "yay?" << endl;
+
+	for (unsigned int i = 0; i < numPieces; i++) {
+    cout << "Shape: " << i << endl;
+    shape_pointer curShape;
+
+		if (i % 2 == 0) {
+			randomSplitBodyMomentum(startMomentum, pieceMass);
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+		}
+		else {
+			sgNegateVec4(startMomentum);
+			sgNegateVec4(startPlacement);
+		}
+
+    cout << "A" << endl;
+    curShape = make_shared<Circle>();
+		curShape = boost::make_shared<Circle>();
+    curShape->setPos( startPlacement );
+		curShape->setMass(pieceMass);
+		curShape->setRadius(pieceRadius);
+		curShape->setMomentum(startMomentum);
+		curShape->setDensity(objectDensity);
+    cout << "B" << endl;
+
+    physicalObjects.addShapeToList( curShape );
+    cout << "C" << endl;
+		//Check if being placed on previously created object
+		while ( isConflict_ArbitraryList(physicalObjects.getShapes(), i) ) {
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+      curShape->setPos( startPlacement );
+		}
+
+    cout << "D" << endl;
+		totalMass += curShape->getMass();
+	}
+  WorldSettings::adjustTotalMass( totalMass );
+
+  cout << "Finishing sim setup" << endl;
+  return physicalObjects;
+}
+
 void Simulations::bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();
