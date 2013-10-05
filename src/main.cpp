@@ -239,7 +239,9 @@ void init(char simulation) {
     cout << "Done setting up sim." << endl;
   }
   if ( simulation == '2' ) {
-	  Simulations::disruption();
+	  // Simulations::disruption();
+	  physicalObjects = Simulations::disruption_ArbitraryList().getShapes();
+    MyShape::shapes = physicalObjects; 
   }
   if ( simulation == '3' ) {
 	  Simulations::simpleCollision();

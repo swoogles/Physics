@@ -602,6 +602,31 @@ void Simulations::disruption() {
   MyShape::shapes(cur)->setDensity(objectDensity);
 }
 
+ShapeList Simulations::disruption_ArbitraryList() {
+  
+  ShapeList physicalObjects = Simulations::bodyFormation_ArbitraryList( 1000 );
+
+  int numPieces = 1;
+	float objectDensity = DENSITY_SUN;
+	float bodyVolume = (MASS_SUN)/(objectDensity)/3;
+	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+	float pieceMass = pow(pieceRadius, 3.0);
+	sgVec4 startMomentum;
+  startMomentum[0] = pieceMass/35 ; 
+  startMomentum[1] = 0;
+  startMomentum[2] = 0;
+
+  shape_pointer curShape = boost::make_shared<Circle>();
+  curShape->setPos(-pieceRadius * 30, 0, 0);
+  curShape->setMass(pieceMass);
+  curShape->setRadius(pieceRadius);
+  curShape->setMomentum(startMomentum);
+  curShape->setDensity(objectDensity);
+  physicalObjects.addShapeToList( curShape );
+
+  return physicalObjects;
+}
+
 void Simulations::bodyFormation(unsigned int numPieces) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();

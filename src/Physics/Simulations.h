@@ -92,6 +92,8 @@ class Simulations
 
     static void disruption();
 
+    static ShapeList disruption_ArbitraryList();
+
     static void bodyFormation( unsigned int numPieces );
     static ShapeList bodyFormation_ArbitraryList( unsigned int numPieces );
 
