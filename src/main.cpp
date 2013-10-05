@@ -95,6 +95,7 @@ float totalMass = 0;
 
 
 boost::shared_ptr<Quadrant> globalQuadrant;
+boost::numeric::ublas::vector<shape_pointer> physicalObjects; 
 
 void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > shapeList,
 						float &minX, float &minY, float &maxX, float &maxY) {
@@ -242,7 +243,8 @@ void init(char simulation) {
 	  Simulations::simpleCollision();
   }
   if ( simulation == '4' ) {
-    MyShape::shapes = Simulations::billiardsReturningList(5).getShapes() ;
+    physicalObjects = Simulations::billiardsReturningList(5).getShapes() ;
+    MyShape::shapes = physicalObjects; 
   }
   if ( simulation == '5' ) {
 	  Simulations::billiards2(10);
@@ -310,7 +312,7 @@ void init(char simulation) {
 
 
 	float minX, minY, maxX, maxY;
-	calcXYMinsAndMaxes(MyShape::shapes, minX, minY, maxX, maxY);
+	calcXYMinsAndMaxes(physicalObjects, minX, minY, maxX, maxY);
 
 	cout << "minX: " << minX << endl;
 	cout << "minY: " << minY << endl;
@@ -342,9 +344,12 @@ void idle() {
 	if (! WorldSettings::isPaused() ) {
     numStep++;
 
-		calcForcesAll(WorldSettings::getDT());
+    cout << "PhysicalObjects.size: " << physicalObjects << endl;
+		calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
+    cout << "Calced forces" << endl;
 		WorldSettings::updateTimeElapsed();
 		main_window_UI::update();
+    cout << "Updated UI" << endl;
 		//calcDrag(WorldSettings::getDT());
 
 		if (WorldSettings::isAutoScaling())
@@ -364,11 +369,12 @@ void idle() {
     //   largest[j] = NULL;
     // }
 
-    if ( MyShape::shapes.size() > 0 )
+    if ( physicalObjects.size() > 0 )
     {
-      foreach_ ( shape_pointer curShape, MyShape::shapes )
+      foreach_ ( shape_pointer curShape, physicalObjects )
       // for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
       {
+        cout << "updating shape" << endl;
         if ( numStep == 1 ) {
           totalMass += curShape->getMass();
         }
@@ -416,8 +422,9 @@ void idle() {
           cout << endl << endl;
         }
 
-        calcCollisionsAll();
+        calcCollisionsAll_ArbitraryList(physicalObjects);
       }
+      cout << "Done!!" << endl;
     }
 
     int curObserver = Observer::getCurObserver();
@@ -445,7 +452,7 @@ void idle() {
     // cout << "Idling!" << endl;
     // cout << "Shapes size: " << MyShape::shapes.size() << endl;
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    boost::numeric::ublas::vector<shape_pointer> localShapeList = MyShape::shapes;
+    boost::numeric::ublas::vector<shape_pointer> localShapeList = physicalObjects;
     foreach_ ( shape_pointer curShape, localShapeList )
     {
       // cout << "processing shape" << endl;

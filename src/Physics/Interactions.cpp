@@ -160,6 +160,84 @@ void calcForcesAll(float dt) {
 
 }
 
+void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects, float dt) {
+		sgVec4 sepVec;
+		sgVec4 unitVec;
+		sgVec4 gravVec;
+    boost::shared_ptr<MyShape> object1;
+    boost::shared_ptr<MyShape> object2;
+		float fGrav;
+    float minSep;
+		SGfloat distanceSquared;
+		SGfloat distance;
+
+		sgVec4 gravField;
+
+		bool killed = false;
+
+		//bool constGravField = WorldSettings::isConstGravField();
+
+		if (WorldSettings::isConstGravField() ) {
+			WorldSettings::getConstGravFieldVal(gravField);
+			sgScaleVec4(gravField, 1/dt);
+		}
+
+		//sgVec4 * ob1mom;
+    unsigned int j = 0; 
+    if ( physicalObjects.size() > 0 )
+    {
+      for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
+      {
+        if (killed) {
+          // cout << "curI: " << i << endl;
+        }
+        object1 = physicalObjects(i);
+
+        if (WorldSettings::isConstGravField() ) {
+          object1->adjustMomentum(gravField);
+        }
+
+        for (unsigned int j = i + 1; j < physicalObjects.size(); NULL)
+        {
+          object2 = physicalObjects(j);
+
+
+          getVectorToObject2(object1, object2, sepVec);
+
+          distanceSquared = sgLengthSquaredVec4(sepVec);
+          distance = sqrt(distanceSquared);
+
+          minSep = object1->getRadius() + object2->getRadius();
+
+
+          if (WorldSettings::isGravBetweenObjects() ) {
+            fGrav = calcForceGrav(object1, object2, distanceSquared);
+
+            sgNormaliseVec4(unitVec, sepVec);
+
+            sgScaleVec4(gravVec, unitVec, fGrav);
+            sgScaleVec4(gravVec, dt);
+
+            object1->adjustMomentum(gravVec);
+            sgNegateVec4(gravVec);
+            object2->adjustMomentum(gravVec);
+          }
+
+          j++;
+        }
+
+      }
+
+      // Add unary forces to last object
+      object1 = physicalObjects(physicalObjects.size()-1);
+
+      if (WorldSettings::isConstGravField() ) {
+        object1->adjustMomentum(gravField);
+      }
+    }
+
+}
+
 //void calcHitAndMerge
 
 bool isConflict(int newShape) {
@@ -242,6 +320,67 @@ void calcCollisionsAll() {
             MyShape::shapes(curPos) = MyShape::shapes(curPos+1);
           }
           MyShape::shapes.resize(MyShape::shapes.size()-1, true);
+        }
+
+      }
+      else {
+        j++;
+      }
+    }
+  }
+
+}
+
+void calcCollisionsAll_ArbitraryList( boost::numeric::ublas::vector<shape_pointer> physicalObjects ) {
+  sgVec4 sepVec;
+  boost::shared_ptr<MyShape> object1;
+  boost::shared_ptr<MyShape> object2;
+  SGfloat distanceSquared, distance, minSep;
+
+  bool killed = false;
+
+  sgVec4 gravField;
+
+  for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
+  {
+    if (killed) {
+      // cout << "curI: " << i << endl;
+    }
+    object1 = physicalObjects(i);
+
+    if (WorldSettings::isConstGravField() ) {
+      object1->adjustMomentum(gravField);
+    }
+
+    for (unsigned int j = i + 1; j < physicalObjects.size(); NULL)
+    {
+      //cout << "Stuck in inner loop " << endl;
+      object2 = physicalObjects(j);
+
+      getVectorToObject2(object1, object2, sepVec);
+
+      distanceSquared = sgLengthSquaredVec4(sepVec);
+      distance = sqrt(distanceSquared);
+
+      minSep = object1->getRadius() + object2->getRadius();
+
+
+      if (distance < minSep) {
+
+        if (WorldSettings::isAllElastic() ) {
+          elasticCollision(object1,object2);
+          j++;
+        }
+
+        else if (WorldSettings::isAllInelastic() ){
+          mergeObjects(object1, object2);
+          // object2->~MyShape();
+
+          physicalObjects.erase_element(j);
+          for (unsigned int curPos = j; curPos < physicalObjects.size()-1; curPos++) {
+            physicalObjects(curPos) = physicalObjects(curPos+1);
+          }
+          physicalObjects.resize(physicalObjects.size()-1, true);
         }
 
       }

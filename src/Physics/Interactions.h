@@ -23,6 +23,8 @@
 
 using namespace std;
 
+typedef boost::shared_ptr<MyShape> shape_pointer;
+
 //void inelasticCollisions(float dt);
 //void elasticCollisions(float dt);
 
@@ -46,6 +48,16 @@ void elasticCollision(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MySh
  */
 void calcForcesAll(float dt);
 
+/*! \relates MyShape
+ *  \brief Calculates forces on all current objects
+ *
+ *  Loops through the shapes vector, calculating all currently active forces on and between each object. Can include drag, a constant gravity field,  and
+ *  gravity between objects.
+ *
+ *  \param dt Determines time over which each force acts
+ */
+void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects, float dt);
+
 
 /*! \relates MyShape
  *  \brief Determines if any objects are colliding and responds appropriately.
@@ -53,6 +65,13 @@ void calcForcesAll(float dt);
  *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
  */
 void calcCollisionsAll();
+
+/*! \relates MyShape
+ *  \brief Determines if any objects are colliding and responds appropriately.
+ *
+ *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
+ */
+void calcCollisionsAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects);
 
 
 /*! \relates MyShape

@@ -15,8 +15,8 @@ nmap t :cs find t =expand("<cword>")
 nmap c :cs find c =expand("<cword>")  
 nmap g :cs find g =expand("<cword>")  
 nmap s :cs find s =expand("<cword>")  
-nnoremap <silent> r :TCommentRight
 nnoremap <silent>  :TComment
+nnoremap <silent> r :TCommentRight
 noremap s :TCommentAs =&ft_
 noremap n :TCommentAs =&ft 
 noremap a :TCommentAs 
@@ -28,10 +28,10 @@ noremap   :TComment
 noremap <silent> p m`vip:TComment``
 vnoremap <silent>  :TCommentMaybeInline
 onoremap <silent>  :TComment
-nnoremap <silent> ,_r :TCommentRight
-snoremap <silent> ,_r :TCommentRight
-nnoremap <silent> ,__ :TComment
 snoremap <silent> ,__ :TComment
+nnoremap <silent> ,__ :TComment
+snoremap <silent> ,_r :TCommentRight
+nnoremap <silent> ,_r :TCommentRight
 noremap ,_s :TCommentAs =&ft_
 noremap ,_n :TCommentAs =&ft 
 noremap ,_a :TCommentAs 
@@ -163,7 +163,6 @@ set tabstop=2
 set tags=tags;/
 set updatetime=300
 set wildmenu
-set window=67
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -173,15 +172,17 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
 endif
 set shortmess=aoO
 badd +21 Parallelization/Quadrant.cpp
-badd +241 Physics/Simulations.cpp
-badd +451 main.cpp
+badd +238 Physics/Simulations.cpp
+badd +245 main.cpp
 badd +221 ShapeFiles/MyShape.cpp
 badd +85 Physics/Interactions.cpp
 badd +282 ShapeFiles/MyShape.h
 badd +19 Parallelization/Quadrant.h
 badd +100 Physics/Simulations.h
-badd +23 ShapeFiles/ShapeList.h
-badd +10 ShapeFiles/ShapeList.cpp
+badd +50 ShapeFiles/ShapeList.h
+badd +43 ShapeFiles/ShapeList.cpp
+badd +29 Physics/Interactions.h
+badd +0 CameraFunctions.cpp
 silent! argdel *
 edit main.cpp
 set splitbelow splitright
@@ -313,15 +314,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 122 - ((0 * winheight(0) + 15) / 31)
+let s:l = 377 - ((24 * winheight(0) + 15) / 31)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-122
+377
 normal! 0
 wincmd w
 argglobal
-edit Physics/Simulations.cpp
+edit CameraFunctions.cpp
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -422,15 +423,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 227 - ((21 * winheight(0) + 16) / 32)
+let s:l = 113 - ((2 * winheight(0) + 16) / 32)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-227
+113
 normal! 0
 wincmd w
 argglobal
-edit ShapeFiles/ShapeList.h
+edit Physics/Interactions.h
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -531,15 +532,15 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 44 - ((17 * winheight(0) + 15) / 31)
+let s:l = 74 - ((18 * winheight(0) + 15) / 31)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-44
-normal! 027l
+74
+normal! 0
 wincmd w
 argglobal
-edit ShapeFiles/ShapeList.cpp
+edit Physics/Interactions.cpp
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -562,8 +563,7 @@ setlocal nocopyindent
 setlocal cryptmethod=
 setlocal nocursorbind
 setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
+setlocal nocursorline
 setlocal define=
 setlocal dictionary=
 setlocal nodiff
@@ -641,12 +641,12 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 57 - ((31 * winheight(0) + 16) / 32)
+let s:l = 334 - ((7 * winheight(0) + 16) / 32)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-57
-normal! 0
+334
+normal! 038l
 wincmd w
 argglobal
 enew
@@ -659,9 +659,9 @@ nnoremap <buffer> j gj
 nnoremap <buffer> k gk
 nnoremap <buffer> l :call search('\[[0-9]*:[^\]]*\]'):<BS>
 nnoremap <buffer> p :wincmd p:<BS>
-nnoremap <buffer> <S-Tab> :call search('\[[0-9]*:[^\]]*\]','b'):<BS>
-nnoremap <buffer> <Up> gk
 nnoremap <buffer> <Down> gj
+nnoremap <buffer> <Up> gk
+nnoremap <buffer> <S-Tab> :call search('\[[0-9]*:[^\]]*\]','b'):<BS>
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
