@@ -303,10 +303,10 @@ void init(char simulation) {
   }
 
   if ( simulation == '9' ) {
-	  Simulations::billiards3(10);
+    physicalObjects = Simulations::billiards3_ArbitraryList( 5 ).getShapes();
+    MyShape::shapes = physicalObjects; 
   }
   
-	//billiards3(7);
 
 	char saveFileName[150] = "/media/Media\ Hog/ProjectOutput/TheReturn/";
 	strcat(saveFileName, "output.dat");

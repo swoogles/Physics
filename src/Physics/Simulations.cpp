@@ -429,6 +429,76 @@ void Simulations::billiards3(int numRows) {
 
 }
 
+ShapeList Simulations::billiards3_ArbitraryList(int numRows) {
+	WorldSettings::setDT(.003);
+	WorldSettings::makeAllElastic();
+	//WorldSettings::makeAllInelastic();
+	WorldSettings::setGravBetweenObjects(false);
+	WorldSettings::setConstGravField(false);
+	WorldSettings::setTimeElapsed(0);
+
+  ShapeList physicalObjects;
+
+	sgVec4 gField;
+	gField[0] = -.2; gField[1] = 0; gField[2] = 0;
+
+	WorldSettings::setConstGravFieldVal(gField);
+
+	unsigned int numPieces = 0;
+	float cueMass = 100.0;
+	float ballMass = 0.156;
+
+	float cueRadius = 4;
+	float ballRadius = .95;
+
+  numPieces= numRows*numRows*numRows;
+
+	sgVec4 cueVelocity;
+	cueVelocity[0] = 30;
+	cueVelocity[1] = -75;
+	cueVelocity[2] = 20;
+
+	sgVec3 newColor;
+	newColor[0] = 1;
+	newColor[1] = 1;
+	newColor[2] = 1;
+
+  shape_pointer shapeForInsertion;
+
+	shapeForInsertion = boost::make_shared<Circle>();
+	shapeForInsertion->setPos(numRows, numRows*5, 0);
+	shapeForInsertion->setMass(cueMass);
+	shapeForInsertion->setRadius(cueRadius);
+	shapeForInsertion->setVelocity(cueVelocity);
+	shapeForInsertion->setColor(newColor);
+  physicalObjects.addShapeToList( shapeForInsertion );
+
+	newColor[0] = 0;
+	newColor[2] = 0;
+
+	unsigned int curShape = 1;
+	for (unsigned int i = 0; i < numRows; i++) {
+		for (unsigned int j = 0; j < numRows; j++) {
+      for (unsigned int z = 0; z < numRows; z++) {
+
+			shapeForInsertion = boost::make_shared<Circle>();
+			shapeForInsertion->setPos(j*4, i*4, z*4);
+			shapeForInsertion->setMass(ballMass);
+			shapeForInsertion->setRadius(ballRadius);
+      newColor[1] = -( ( -.5 + (z/float(numRows)) ) * ( -.5 + (z/float(numRows)) ) )+ 1.0;
+      shapeForInsertion->setColor(newColor);
+
+      physicalObjects.addShapeToList( shapeForInsertion );
+      }
+		}
+		cout << endl;
+	}
+
+	cout << "NumPieces: " << numPieces << endl;
+
+  return physicalObjects;
+}
+
 boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows) 
 {
   WorldSettings::setDT(1000);
@@ -810,6 +880,68 @@ void Simulations::bodyFormationGeneric(unsigned int numPieces, sgVec4 target, sg
 		totalMass += MyShape::shapes(i)->getMass();
 	}
   WorldSettings::adjustTotalMass( totalMass );
+}
+
+ShapeList Simulations::bodyFormationGeneric_ArbitraryList(unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum) {
+	WorldSettings::setDT(1000);
+	WorldSettings::makeAllInelastic();
+	WorldSettings::setGravBetweenObjects(true);
+	WorldSettings::setConstGravField(false);
+	WorldSettings::setAutoScaling(true);
+	WorldSettings::setTimeElapsed(0);
+	WorldSettings::setTotalMass(0);
+
+  ShapeList physicalObjects;
+
+	float objectDensity = DENSITY_SUN;
+	float bodyVolume = (MASS_SUN)/(objectDensity);
+	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+	sgVec4 startPlacement, startMomentum;
+
+	float pieceMass = pow(pieceRadius, 3.0);
+	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
+
+	float totalMass = 0.0;
+
+	srand ( time(NULL) );
+
+  shape_pointer curShape;
+  // int targetSize = MyShape::shapes.size() + numPieces;
+	// for (unsigned int i = MyShape::shapes.size(); i < targetSize; i++) {
+	for (unsigned int i = 0; i < numPieces; i++) {
+
+		if (i % 2 == 0) {
+			randomSplitBodyMomentum(startMomentum, pieceMass);
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+		}
+		else {
+			sgNegateVec4(startMomentum);
+			sgNegateVec4(startPlacement);
+		}
+
+    // Apply general group momentum to individual pieces momentum
+    sgAddVec4( startMomentum, groupMomentum );
+
+		curShape = boost::make_shared<Circle>();
+    cout << "StartPos: " << startPlacement[0] << endl;
+		curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+		curShape->setMass(pieceMass);
+		curShape->setRadius(pieceRadius);
+		curShape->setMomentum(startMomentum);
+		curShape->setDensity(objectDensity);
+
+    physicalObjects.addShapeToList( curShape );
+
+		//Check if being placed on previously created object
+		while ( isConflict(i) ) {
+			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+			curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+		}
+		totalMass += pieceMass;
+	}
+  WorldSettings::adjustTotalMass( totalMass );
+
+  return physicalObjects;
 }
 
 boost::shared_ptr<MyShape> Simulations::getShapeFromList( int shapeIndex )

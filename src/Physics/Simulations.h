@@ -99,6 +99,8 @@ class Simulations
 
     static void bodyFormationGeneric( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
+    static ShapeList bodyFormationGeneric_ArbitraryList( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
+
     static void billiards(int);
 
     static ShapeList billiardsReturningList(int);
@@ -109,6 +111,7 @@ class Simulations
     static ShapeList billiards2ReturningList(int);
 
     static void billiards3(int);
+    static ShapeList billiards3_ArbitraryList(int);
 
     static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
