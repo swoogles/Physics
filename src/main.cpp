@@ -99,8 +99,6 @@ boost::numeric::ublas::vector<shape_pointer> physicalObjects;
 
 void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > shapeList,
 						float &minX, float &minY, float &maxX, float &maxY) {
-	cout << "Ok " << endl;
-	cout << "Size: " << shapeList.size() << endl;
 	sgVec4 curPos;
 
 	minX = FLT_MAX;
@@ -145,7 +143,6 @@ void display(void)
 	int curObserver = Observer::getCurObserver();
 	Observer::observers(curObserver)->getView();
 	Observer::observers(curObserver)->getPos(curPos);
-	//cout << "Observer pos: " << curPos[0] << ", " << curPos[1] << ", " << curPos[2] << endl;
 
 	sgVec3 curColor;
 	curColor[0] = 1.0;
@@ -163,8 +160,6 @@ void display(void)
       curShape->draw();
     }
   }
-  //globalQuadrant->thisShape->draw();
-
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -218,19 +213,15 @@ void init(char simulation) {
 
 	Observer::init();
 
-	cout << "Making observer" << endl;
 	Observer::observers.resize(Observer::observers.size()+1);
 	Observer::observers(0) = new Observer;
 	Observer::observers(0)->setPos(0,0,0);
-	cout << "Position set" << endl;
 	Observer::observers(0)->setAngle(0, 0, 0);
-	cout << "Angle set" << endl;
 	Observer::setCurObserver(0);
 	//Observer::observers(0)->setAngVel(0, 0.2, 0);
 
 	//******CURRENT SIMULATION*****
   if ( simulation == '0' ) {
-  //if ( strcmp(simulation, "simulation") ) {
     Simulations::largeGridAlternating();
   }
   if ( simulation == '1' ) {
@@ -252,7 +243,6 @@ void init(char simulation) {
   }
   if ( simulation == '5' ) {
 	  Simulations::billiards2(10);
-    // MyShape::removeShapeFromList(  MyShape::shapes(15) );
   }
 
   if ( simulation == '6' ) {
@@ -280,19 +270,8 @@ void init(char simulation) {
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
   if ( simulation == '7' ) {
-    cout << "Sim setup starting..." << endl;
     globalQuadrant = Simulations::octreeDemonstration(10);
-    cout << "Sim setup complete!" << endl;
-    // while ( MyShape::shapes.size() > 0 )
-    // {
-    //   MyShape::removeShapeFromList(MyShape::shapes(0));
-    // }
-    // MyShape::removeShapeFromList(MyShape::shapes(1));
-    // int numShapes = MyShapes
-    // for ( int i = 0; i < 
     cout << "Reset quadrant" << endl;
-    // sleep(3);
-    // globalQuadrant.reset();
   }
 
   if ( simulation == '8' ) {
@@ -359,17 +338,9 @@ void idle() {
 			WorldSettings::resetXYMinsAndMaxes();
     }
 
-    //Largest Objects
-    // boost::numeric::ublas::vector<MyShape *> largest(10);
-    // for (unsigned int j = largest.size() -1 ; j > 0 ; j-- ) {
-      // largest(j) = NULL;
-    // }
 
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    shape_pointer largest[10];
-    // for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-    //   largest[j] = NULL;
-    // }
+    // shape_pointer largest[10];
 
     if ( physicalObjects.size() > 0 )
     {
@@ -385,7 +356,9 @@ void idle() {
         curShape->getPos(curPos);
 
         if (WorldSettings::isAutoScaling())
+        {
           WorldSettings::updateXYMinsAndMaxes(curPos);
+        }
 
         }
 
@@ -472,7 +445,6 @@ int main(int argcp, char **argv) {
   glutTimerFunc(100, myTimer, FPS);
 
   puInit();
-  //std::string record = argv[1][0];
   char record = argv[1][0];
   char simulation = argv[2][0];
 
@@ -500,8 +472,6 @@ int main(int argcp, char **argv) {
   control_center::init();
 
   glutSetWindow(main_window);
-
-	//int seconds = 1000000;
 
   glutMainLoop();
 
