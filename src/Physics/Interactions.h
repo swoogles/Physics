@@ -17,11 +17,14 @@
 #include <plib/sg.h>
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/Box.h"
+#include "../ShapeFiles/ShapeList.h"
 
 #include "WorldSettings.h"
 #include "Simulations.h"
 
 using namespace std;
+
+typedef boost::shared_ptr<MyShape> shape_pointer;
 
 //void inelasticCollisions(float dt);
 //void elasticCollisions(float dt);
@@ -46,6 +49,16 @@ void elasticCollision(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MySh
  */
 void calcForcesAll(float dt);
 
+/*! \relates MyShape
+ *  \brief Calculates forces on all current objects
+ *
+ *  Loops through the shapes vector, calculating all currently active forces on and between each object. Can include drag, a constant gravity field,  and
+ *  gravity between objects.
+ *
+ *  \param dt Determines time over which each force acts
+ */
+void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects, float dt);
+
 
 /*! \relates MyShape
  *  \brief Determines if any objects are colliding and responds appropriately.
@@ -53,6 +66,13 @@ void calcForcesAll(float dt);
  *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
  */
 void calcCollisionsAll();
+
+/*! \relates MyShape
+ *  \brief Determines if any objects are colliding and responds appropriately.
+ *
+ *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
+ */
+void calcCollisionsAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects);
 
 
 /*! \relates MyShape
@@ -171,6 +191,18 @@ bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> obje
  *  \returns True if new object causes a conflict
  */
 bool isConflict(int newShape);
+
+/*! \relates MyShape
+ *  \brief Returns true if new shape is placed on top of a previously created shape
+ *
+ *  Loops through shapes vector up until newShape, seeing if any shapes overlap with the newly-placed one. Only necessary when dealing with elastic collisions;
+ *  otherwise, the new object will just be merged with the existing one.
+ *
+ *  \param newShape Index of newshape in shapes vector
+ *
+ *  \returns True if new object causes a conflict
+ */
+bool isConflict_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physiaclObjects, int newShape);
 
 
 /*! \relates MyShape

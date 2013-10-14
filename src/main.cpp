@@ -15,6 +15,7 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/foreach.hpp>
+#include <boost/ref.hpp>
 
 #include "Parallelization/Quadrant.h"
 
@@ -94,11 +95,10 @@ float totalMass = 0;
 
 
 boost::shared_ptr<Quadrant> globalQuadrant;
+boost::numeric::ublas::vector<shape_pointer> physicalObjects; 
 
 void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > shapeList,
 						float &minX, float &minY, float &maxX, float &maxY) {
-	cout << "Ok " << endl;
-	cout << "Size: " << shapeList.size() << endl;
 	sgVec4 curPos;
 
 	minX = FLT_MAX;
@@ -127,6 +127,7 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape
 
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
+// TODO Allow an arbitrary list of objects to be displayed
 void display(void)
 {
 	glutSetWindow(main_window);
@@ -142,7 +143,6 @@ void display(void)
 	int curObserver = Observer::getCurObserver();
 	Observer::observers(curObserver)->getView();
 	Observer::observers(curObserver)->getPos(curPos);
-	//cout << "Observer pos: " << curPos[0] << ", " << curPos[1] << ", " << curPos[2] << endl;
 
 	sgVec3 curColor;
 	curColor[0] = 1.0;
@@ -160,8 +160,6 @@ void display(void)
       curShape->draw();
     }
   }
-  //globalQuadrant->thisShape->draw();
-
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -215,36 +213,36 @@ void init(char simulation) {
 
 	Observer::init();
 
-	cout << "Making observer" << endl;
 	Observer::observers.resize(Observer::observers.size()+1);
 	Observer::observers(0) = new Observer;
 	Observer::observers(0)->setPos(0,0,0);
-	cout << "Position set" << endl;
 	Observer::observers(0)->setAngle(0, 0, 0);
-	cout << "Angle set" << endl;
 	Observer::setCurObserver(0);
 	//Observer::observers(0)->setAngVel(0, 0.2, 0);
 
 	//******CURRENT SIMULATION*****
   if ( simulation == '0' ) {
-  //if ( strcmp(simulation, "simulation") ) {
     Simulations::largeGridAlternating();
   }
   if ( simulation == '1' ) {
-	  Simulations::bodyFormation( 400 );
+	  physicalObjects = Simulations::bodyFormation_ArbitraryList( 400 ).getShapes();
+    MyShape::shapes = physicalObjects; 
+    cout << "Done setting up sim." << endl;
   }
   if ( simulation == '2' ) {
-	  Simulations::disruption();
+	  // Simulations::disruption();
+	  physicalObjects = Simulations::disruption_ArbitraryList().getShapes();
+    MyShape::shapes = physicalObjects; 
   }
   if ( simulation == '3' ) {
 	  Simulations::simpleCollision();
   }
   if ( simulation == '4' ) {
-	  Simulations::billiards(10);
+    physicalObjects = Simulations::billiardsReturningList(5).getShapes() ;
+    MyShape::shapes = physicalObjects; 
   }
   if ( simulation == '5' ) {
 	  Simulations::billiards2(10);
-    MyShape::removeShapeFromList(  MyShape::shapes(15) );
   }
 
   if ( simulation == '6' ) {
@@ -272,19 +270,8 @@ void init(char simulation) {
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
   if ( simulation == '7' ) {
-    cout << "Sim setup starting..." << endl;
     globalQuadrant = Simulations::octreeDemonstration(10);
-    cout << "Sim setup complete!" << endl;
-    // while ( MyShape::shapes.size() > 0 )
-    // {
-    //   MyShape::removeShapeFromList(MyShape::shapes(0));
-    // }
-    // MyShape::removeShapeFromList(MyShape::shapes(1));
-    // int numShapes = MyShapes
-    // for ( int i = 0; i < 
     cout << "Reset quadrant" << endl;
-    // sleep(3);
-    // globalQuadrant.reset();
   }
 
   if ( simulation == '8' ) {
@@ -295,10 +282,10 @@ void init(char simulation) {
   }
 
   if ( simulation == '9' ) {
-	  Simulations::billiards3(10);
+    physicalObjects = Simulations::billiards3_ArbitraryList( 5 ).getShapes();
+    MyShape::shapes = physicalObjects; 
   }
   
-	//billiards3(7);
 
 	char saveFileName[150] = "/media/Media\ Hog/ProjectOutput/TheReturn/";
 	strcat(saveFileName, "output.dat");
@@ -308,7 +295,7 @@ void init(char simulation) {
 
 
 	float minX, minY, maxX, maxY;
-	calcXYMinsAndMaxes(MyShape::shapes, minX, minY, maxX, maxY);
+	calcXYMinsAndMaxes(physicalObjects, minX, minY, maxX, maxY);
 
 	cout << "minX: " << minX << endl;
 	cout << "minY: " << minY << endl;
@@ -337,10 +324,11 @@ void init(char simulation) {
 void idle() {
 	sgVec4 curPos;
 
+  // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
 	if (! WorldSettings::isPaused() ) {
     numStep++;
 
-		calcForcesAll(WorldSettings::getDT());
+		calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
 		WorldSettings::updateTimeElapsed();
 		main_window_UI::update();
 		//calcDrag(WorldSettings::getDT());
@@ -350,21 +338,13 @@ void idle() {
 			WorldSettings::resetXYMinsAndMaxes();
     }
 
-    //Largest Objects
-    // boost::numeric::ublas::vector<MyShape *> largest(10);
-    // for (unsigned int j = largest.size() -1 ; j > 0 ; j-- ) {
-      // largest(j) = NULL;
-    // }
 
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    shape_pointer largest[10];
-    // for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-    //   largest[j] = NULL;
-    // }
+    // shape_pointer largest[10];
 
-    if ( MyShape::shapes.size() > 0 )
+    if ( physicalObjects.size() > 0 )
     {
-      foreach_ ( shape_pointer curShape, MyShape::shapes )
+      foreach_ ( shape_pointer curShape, physicalObjects )
       // for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
       {
         if ( numStep == 1 ) {
@@ -376,45 +356,13 @@ void idle() {
         curShape->getPos(curPos);
 
         if (WorldSettings::isAutoScaling())
+        {
           WorldSettings::updateXYMinsAndMaxes(curPos);
-
-        //Largest Objects
-        if ( numStep % 50 == 0 ) {
-          cout << endl << endl;
-          for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-            if ( largest[j] != NULL ) {
-              // if ( largest(j) != NULL ) {
-
-              if ( curShape->getMass() > largest[j]->getMass() ) {
-                if ( j < 10 -1 ) {
-                  largest[j+1] = largest[j];
-                }
-                largest[j] = curShape;
-              }
-            }
-              else {
-                largest[j+1] = largest[j];
-                largest[j] = curShape;
-              }
-            }
-
-          }
-
-        }
-        sgVec3 color;
-        for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-          if ( largest[j] != NULL ) {
-            largest[j]->getColor( color );
-            cout << "largest[" << j << "]: " << largest[j]->getMass() 
-              << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
-              << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
-          }
-        }
-        if ( numStep % 50 == 0 ) {
-          cout << endl << endl;
         }
 
-        calcCollisionsAll();
+        }
+
+        calcCollisionsAll_ArbitraryList(physicalObjects);
       }
     }
 
@@ -428,9 +376,10 @@ void idle() {
     pos[2] = 0;
     pos[3] = 1;
 
-    float width = 250;
-    float height = 250;
-    float depth = 250;
+    float side = 1e4;
+    float width = side;
+    float height = side;
+    float depth = side;
     sgVec3 dimensions;
     dimensions[0] = width;
     dimensions[1] = height;
@@ -443,7 +392,7 @@ void idle() {
     // cout << "Idling!" << endl;
     // cout << "Shapes size: " << MyShape::shapes.size() << endl;
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    boost::numeric::ublas::vector<shape_pointer> localShapeList = MyShape::shapes;
+    boost::numeric::ublas::vector<shape_pointer> localShapeList = physicalObjects;
     foreach_ ( shape_pointer curShape, localShapeList )
     {
       // cout << "processing shape" << endl;
@@ -496,7 +445,6 @@ int main(int argcp, char **argv) {
   glutTimerFunc(100, myTimer, FPS);
 
   puInit();
-  //std::string record = argv[1][0];
   char record = argv[1][0];
   char simulation = argv[2][0];
 
@@ -525,8 +473,6 @@ int main(int argcp, char **argv) {
 
   glutSetWindow(main_window);
 
-	//int seconds = 1000000;
-
   glutMainLoop();
 
   return 0;
@@ -535,4 +481,61 @@ int main(int argcp, char **argv) {
 void myTimer(int v) {
 	glutPostRedisplay();
 	glutTimerFunc(1000/FPS, myTimer, v);
+}
+
+void calcLargest()
+{
+
+        //Largest Objects
+        // if ( numStep % 50 == 0 ) {
+        //   cout << endl << endl;
+        //   for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+        //     cout << "Shape.2" << endl;
+        //     if ( largest[j] != NULL ) {
+        //       cout << "Shape.3" << endl;
+
+        //       if ( curShape->getMass() > largest[j]->getMass() ) {
+        //         cout << "Shape.4" << endl;
+        //         if ( j < 10 -1 ) {
+        //           cout << "Shape.5" << endl;
+        //           largest[j+1] = largest[j];
+        //         }
+        //           cout << "Shape.6" << endl;
+        //         largest[j] = curShape;
+        //           cout << "Shape.7" << endl;
+        //       }
+        //     }
+        //       else {
+
+        //           cout << "index: " << j << endl;
+
+        //           shape_pointer x = largest[j];
+
+        //           cout << "index: " << j+1 << endl;
+        //           x = largest[j+1];
+
+
+        //         largest[j+1] = largest[j];
+        //           cout << "Shape.9" << endl;
+        //         largest[j] = curShape;
+        //           cout << "Shape.10" << endl;
+        //       }
+        //       cout << "Um..." << endl;
+        //     }
+
+        //   }
+
+        // }
+        // cout << "Going to output largest" << endl;
+        // sgVec3 color;
+        // for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+        //   if ( largest[j] != NULL ) {
+        //     largest[j]->getColor( color );
+        //     cout << "largest[" << j << "]: " << largest[j]->getMass() 
+        //       << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
+        //       << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
+        //   }
+        // }
+        // if ( numStep % 50 == 0 ) {
+        //   cout << endl << endl;
 }

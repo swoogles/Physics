@@ -16,6 +16,7 @@
 //#include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/Box.h"
+#include "../ShapeFiles/ShapeList.h"
 #include "Interactions.h"
 
 #define MASS_VAR 1e21
@@ -91,14 +92,26 @@ class Simulations
 
     static void disruption();
 
+    static ShapeList disruption_ArbitraryList();
+
     static void bodyFormation( unsigned int numPieces );
+    static ShapeList bodyFormation_ArbitraryList( unsigned int numPieces );
+
     static void bodyFormationGeneric( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
+
+    static ShapeList bodyFormationGeneric_ArbitraryList( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
     static void billiards(int);
 
+    static ShapeList billiardsReturningList(int);
+
     static void billiards2(int);
 
+    //VERY EXPERIMENTAL
+    static ShapeList billiards2ReturningList(int);
+
     static void billiards3(int);
+    static ShapeList billiards3_ArbitraryList(int);
 
     static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
