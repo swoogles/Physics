@@ -472,8 +472,8 @@ int main(int argcp, char **argv) {
 
   int mainWinPosX = 100;
   int mainWinPosY = 50;
-  int mainWinHeight = 1100;
-  int mainWinWidth = mainWinHeight * 1.3;
+  int mainWinHeight = 720;
+  int mainWinWidth = 1280;
 
   int controlWinPosX = mainWinPosX;
   int controlWinPosY = mainWinPosY + mainWinHeight + 30;
