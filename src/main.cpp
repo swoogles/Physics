@@ -58,7 +58,7 @@
 
 #define WW 5
 #define WH 5
-#define FPS 20
+#define FPS 1
 
 #define foreach_  BOOST_FOREACH                                                                                              
 
@@ -157,6 +157,9 @@ void display(void)
   {
     foreach_ ( shape_pointer curShape, MyShape::shapes )
     {
+      // sgVec4 curPos;
+      // curShape->getPos(curPos);
+      // cout << "CurShape.pos: <" << curPos[0] << ", " << curPos[1] << ", " << curPos[2] << endl;
       curShape->draw();
     }
   }
@@ -180,6 +183,7 @@ void display(void)
 	glutSwapBuffers();
 	glutPostRedisplay();
 
+  // sleep(1);
 }
 
 void controlDisplay(void) {
@@ -442,7 +446,7 @@ int main(int argcp, char **argv) {
   glutKeyboardFunc(myKey);
 
   glutIdleFunc(idle);
-  glutTimerFunc(100, myTimer, FPS);
+  glutTimerFunc(1000, myTimer, FPS);
 
   puInit();
   char record = argv[1][0];

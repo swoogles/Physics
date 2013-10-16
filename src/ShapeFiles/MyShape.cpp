@@ -77,7 +77,8 @@ void MyShape::draw() {
 	glTranslatef(pos[0], pos[1], pos[2]);
 
 	//Rotate
-	glMultMatrixf( (const GLfloat*)orientationMat);
+  // TODO TURN THIS BACK ON. YOU ARE NOT ROTATING ANYTHING RIGHT NOW
+	// glMultMatrixf( (const GLfloat*)orientationMat);
 
 
 	//Scale
