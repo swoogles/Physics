@@ -88,7 +88,6 @@ float calcMinPullback(float fov,
 {
 	  float absMaxX;
 	  float absMaxY;
-	  float absTotal;
 	  float pullBack;
 
 	  if (abs(minX) > maxX)

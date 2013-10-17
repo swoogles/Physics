@@ -166,10 +166,7 @@ bool screenshot(unsigned int width, unsigned int height, char *path, int quality
 
 void intToAsc(int iCurPic, char * sCurPic)
 {
-   int spot = 18;
-
    int i = 0;
-   char temp;
 
    int tempNum = 0;
 

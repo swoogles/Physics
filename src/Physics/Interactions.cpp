@@ -82,84 +82,6 @@ bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> obje
 		return false;
 }
 
-void calcForcesAll(float dt) {
-		//cout << "Calcing" << endl;
-		sgVec4 sepVec;
-		sgVec4 unitVec;
-		sgVec4 gravVec;
-    boost::shared_ptr<MyShape> object1;
-    boost::shared_ptr<MyShape> object2;
-		float fGrav;
-    float minSep;
-		SGfloat distanceSquared;
-		SGfloat distance;
-
-		sgVec4 gravField;
-
-		bool killed = false;
-
-		//bool constGravField = WorldSettings::isConstGravField();
-
-		if (WorldSettings::isConstGravField() ) {
-			WorldSettings::getConstGravFieldVal(gravField);
-			sgScaleVec4(gravField, 1/dt);
-		}
-
-		//sgVec4 * ob1mom;
-    unsigned int j = 0; 
-    if ( MyShape::shapes.size() > 0 )
-    {
-      for (unsigned int i = 0; i < MyShape::shapes.size()-1; i++)
-      {
-        if (killed) {
-          // cout << "curI: " << i << endl;
-        }
-        object1 = MyShape::shapes(i);
-
-        if (WorldSettings::isConstGravField() ) {
-          object1->adjustMomentum(gravField);
-        }
-
-        for (unsigned int j = i + 1; j < MyShape::shapes.size(); NULL)
-        {
-          object2 = MyShape::shapes(j);
-
-
-          getVectorToObject2(object1, object2, sepVec);
-
-          distanceSquared = sgLengthSquaredVec4(sepVec);
-          distance = sqrt(distanceSquared);
-
-          minSep = object1->getRadius() + object2->getRadius();
-
-
-          if (WorldSettings::isGravBetweenObjects() ) {
-            fGrav = calcForceGrav(object1, object2, distanceSquared);
-
-            sgNormaliseVec4(unitVec, sepVec);
-
-            sgScaleVec4(gravVec, unitVec, fGrav);
-            sgScaleVec4(gravVec, dt);
-
-            object1->adjustMomentum(gravVec);
-            sgNegateVec4(gravVec);
-            object2->adjustMomentum(gravVec);
-          }
-
-          j++;
-        }
-
-      }
-      // Add unary forces to last object
-      object1 = MyShape::shapes(MyShape::shapes.size()-1);
-
-      if (WorldSettings::isConstGravField() ) {
-        object1->adjustMomentum(gravField);
-      }
-    }
-
-}
-
 void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects, float dt) {
 		sgVec4 sepVec;
 		sgVec4 unitVec;
@@ -167,9 +89,7 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
     boost::shared_ptr<MyShape> object1;
     boost::shared_ptr<MyShape> object2;
 		float fGrav;
-    float minSep;
 		SGfloat distanceSquared;
-		SGfloat distance;
 
 		sgVec4 gravField;
 
@@ -183,7 +103,6 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
 		}
 
 		//sgVec4 * ob1mom;
-    unsigned int j = 0; 
     if ( physicalObjects.size() > 0 )
     {
       for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
@@ -197,7 +116,7 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
           object1->adjustMomentum(gravField);
         }
 
-        for (unsigned int j = i + 1; j < physicalObjects.size(); NULL)
+        for (unsigned int j = i + 1; j < physicalObjects.size(); )
         {
           object2 = physicalObjects(j);
 
@@ -205,10 +124,6 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
           getVectorToObject2(object1, object2, sepVec);
 
           distanceSquared = sgLengthSquaredVec4(sepVec);
-          distance = sqrt(distanceSquared);
-
-          minSep = object1->getRadius() + object2->getRadius();
-
 
           if (WorldSettings::isGravBetweenObjects() ) {
             fGrav = calcForceGrav(object1, object2, distanceSquared);
@@ -250,7 +165,7 @@ bool isConflict(int newShape) {
 
   object2 = MyShape::shapes(newShape);
 
-  for (unsigned int i = 0; i < newShape && conflict == false; i++) {
+  for (int i = 0; i < newShape && conflict == false; i++) {
     object1 = MyShape::shapes(i);
     if ( object1->getType() == 2 )
     {
@@ -280,7 +195,7 @@ bool isConflict_ArbitraryList( boost::numeric::ublas::vector<shape_pointer> phys
 
   object2 = physicalObjects(newShape);
 
-  for (unsigned int i = 0; i < newShape && conflict == false; i++) {
+  for (int i = 0; i < newShape && conflict == false; i++) {
     object1 = physicalObjects(i);
     if ( object1->getType() == 2 )
     {
@@ -321,7 +236,7 @@ void calcCollisionsAll() {
       object1->adjustMomentum(gravField);
     }
 
-    for (unsigned int j = i + 1; j < MyShape::shapes.size(); NULL)
+    for (unsigned int j = i + 1; j < MyShape::shapes.size(); )
     {
       //cout << "Stuck in inner loop " << endl;
       object2 = MyShape::shapes(j);
@@ -382,7 +297,7 @@ void calcCollisionsAll_ArbitraryList( boost::numeric::ublas::vector<shape_pointe
       object1->adjustMomentum(gravField);
     }
 
-    for (unsigned int j = i + 1; j < physicalObjects.size(); NULL)
+    for (unsigned int j = i + 1; j < physicalObjects.size();)
     {
       //cout << "Stuck in inner loop " << endl;
       object2 = physicalObjects(j);
@@ -471,7 +386,6 @@ void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr
   sgVec4 aMomentum, bMomentum;
   sgVec4 tempVec, tempVec2;
   sgVec4 hitPt;
-  sgVec3 totalAngMom;
   sgVec3 totalAngMom3;
 
   sgVec3 r, aMom3, bMom3, COM;
@@ -483,7 +397,6 @@ void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr
   sgAddVec4(hitPt, aPos, tempVec);
 
   for (int i = 0; i < 3; i++) {
-    totalAngMom[i] = 0;
     totalAngMom3[i] = 0;
   }
 
@@ -575,8 +488,6 @@ void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape>
   sgVec4 * object2momentum = object2->getMomentum();
 
   sgVec4 object2AngMom;
-
-  sgVec3 newColor;
 
   object2->getAngMomentum(object2AngMom);
 

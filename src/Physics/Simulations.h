@@ -94,12 +94,12 @@ class Simulations
 
     static ShapeList disruption_ArbitraryList();
 
-    static void bodyFormation( unsigned int numPieces );
-    static ShapeList bodyFormation_ArbitraryList( unsigned int numPieces );
+    static void bodyFormation( int numPieces );
+    static ShapeList bodyFormation_ArbitraryList( int numPieces );
 
-    static void bodyFormationGeneric( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
+    static void bodyFormationGeneric( int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
-    static ShapeList bodyFormationGeneric_ArbitraryList( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
+    static ShapeList bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
     static void billiards(int);
 
@@ -108,7 +108,7 @@ class Simulations
     static void billiards2(int);
 
     //VERY EXPERIMENTAL
-    static ShapeList billiards2ReturningList(int);
+    static ShapeList billiards2_ArbitraryList(int);
 
     static void billiards3(int);
     static ShapeList billiards3_ArbitraryList(int);
@@ -123,7 +123,7 @@ class Simulations
      *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
      *  \return Pointer to desired shape
      */
-    static shape_pointer getShapeFromList( int shapeIndex );
+    static shape_pointer getShapeFromList( unsigned int shapeIndex );
 
     /*! \brief Returns a shape from the main shapes list
      *

@@ -56,13 +56,9 @@ main_window_UI::main_window_UI() {
 void main_window_UI::init() {
 	main_menu = new puMenuBar();
 	int winWidth = glutGet(GLUT_WINDOW_WIDTH);
-	int winHeight = glutGet(GLUT_WINDOW_HEIGHT);
-
 
 	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
 	puCallback file_submenu_cb [] = { exit_cb,  NULL,      save_cb, open_cb, NULL};
-	//char      *help_submenu    [] = { "About...", "Help" , NULL } ;
-	//puCallback help_submenu_cb [] = { about_cb  , help_cb, NULL } ;
 
 	main_menu->add_submenu("File", file_submenu, file_submenu_cb);
 
@@ -76,8 +72,6 @@ void main_window_UI::init() {
 	int valueWidth;
 	astronomicalTimeGroup = new puGroup(0,0);
 
-	//curX-
-
 	textWidth = 50;
 	valueWidth = 50;
 	curX -= textWidth+valueWidth;
@@ -85,11 +79,7 @@ void main_window_UI::init() {
 	hoursElapsed_label->setLabel("Hours:");
 	hoursElapsed_value = new puInput(curX+textWidth, timeHeight, curX+textWidth+valueWidth, timeHeight+20);
 	hoursElapsed_value->setValue("23");
-	//hoursElapsed_value->setLabel("23");
-	//hoursElapsed_value->setColour(PUCOL_LABEL, 0.0, 1.0, 1.0, 1.0);
 
-	textWidth = 50;
-	valueWidth = 50;
 	curX -= textWidth+valueWidth;
 	daysElapsed_label = new puText(curX, timeHeight);
 	daysElapsed_label->setLabel("Days:");
@@ -97,16 +87,12 @@ void main_window_UI::init() {
 	daysElapsed_value->setValue("324");
 
 
-	textWidth = 50;
-	valueWidth = 50;
 	curX -= textWidth+valueWidth;
 	yearsElapsed_label = new puText(curX, timeHeight);
 	yearsElapsed_label->setLabel("Years:");
 	yearsElapsed_value = new puInput(curX+textWidth, timeHeight, curX+textWidth+valueWidth, timeHeight+20);
 	yearsElapsed_value->setValue("234");
 
-	textWidth = 80;
-	valueWidth = 50;
 	curX -= textWidth+valueWidth;
 	milleniaElapsed_label = new puText(curX, timeHeight);
 	milleniaElapsed_label->setLabel("Millenia:");
@@ -116,15 +102,6 @@ void main_window_UI::init() {
 
 	astronomicalTimeGroup->close();
 	astronomicalTimeGroup->setChildColour(PUCLASS_TEXT, PUCOL_LABEL, 1.0, 1.0, 1.0);
-
-	/*
-	  inputbox -> setChildColour ( PUCLASS_ARROW | PUCLASS_FRAME,
-	                             PUCOL_HIGHLIGHT, 1.0, 1.0, 1.0 ) ;
-	*/
-
-
-	//open_selector->hide();
-
 
 }
 
@@ -146,11 +123,9 @@ void main_window_UI::update() {
 	curDiv = 24;
 	curTime /= curDiv;
 	fracPart = modf(curTime, &intPart);
-	//cout << "fracPart: " << fracPart << endl;
 	curVal = fracPart*curDiv;
 	hoursElapsed_value->setValue(curVal);
 	curTime = intPart;
-
 
 
 	curDiv = 365;
@@ -173,8 +148,6 @@ void main_window_UI::update() {
 }
 
 void main_window_UI::open_cb(puObject * caller) {
-	//control_center::makeNewObject(caller);
-	//open_selector->reveal();
 	open_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media\ Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
 	open_selector->setCallback( openFile_cb );
 	open_selector->setInitialValue("lastRun.phys");
@@ -183,7 +156,6 @@ void main_window_UI::open_cb(puObject * caller) {
 
 void main_window_UI::openFile_cb(puObject * caller) {
 	char fileName[150];
-	char dialogText[150] = "Opening File: \n";
 	open_selector->getValue (fileName);
 
 	cout << "Filename: " << fileName << endl;
@@ -192,26 +164,9 @@ void main_window_UI::openFile_cb(puObject * caller) {
 	puDeleteObject( open_selector );
 	open_selector = 0;
 
-   MyShape::clearShapes();
+  MyShape::clearShapes();
 	WorldSettings::Pause();
 	openShapes(fileName);
-
-
-	/* // Messed up string box, low priority fix
-	if ( fileName[0] != 0 ) {
-		//strcat(dialogText, "Opening File: \n");
-		strcat(dialogText, fileName);
-		//strcat(dialogText, ".cpp");
-		strcat(dialogText, "\0");
-
-
-
-		mk_dialog(dialogText);
-	}
-	else {
-
-	}
-	*/
 
 }
 
@@ -240,42 +195,27 @@ void main_window_UI::exit_cb(puObject * caller) {
 }
 
 void main_window_UI::mk_dialog(char * dialogText) {
-	//cout << "Entering mk_dialog" << endl;
-
 	dialog_box = new puDialogBox(150, 50);
 	{
 		new puFrame( 0, 0, 400, 100);
 		dialog_box_message = new puText (10, 70) ;
 		dialog_box_message->setLabel(dialogText);
-		//TODO need dialog box to display correct dialog, rather than fucked up string
 
+		//TODO need dialog box to display correct dialog, rather than fucked up string
 		cout << "mk_dialog text: " << dialogText << endl;
 
 
-		//cout << "Making one shot" << endl;
 		dialog_box_ok_button = new puOneShot(180, 10, 240, 50);
 		dialog_box_ok_button->setLegend("OK");
 		dialog_box_ok_button->makeReturnDefault(TRUE);
 		dialog_box_ok_button->setCallback(close_dialog_cb);
-		//cout << "Made one shot and finishing dialog" << endl;
 	}
 	dialog_box->close();
 	dialog_box->reveal();
 }
 
 void main_window_UI::close_dialog_cb(puObject * caller) {
-	cout << "Entering close_dialog_cb" << endl;
 	puDeleteObject (dialog_box);
 	dialog_box = NULL;
 }
 
-/*
-void *puMenuBar::add_submenu ( const char *name, char *legends[], puCallback cb[] );
-
-
-
-puMenuBar *menu = new puMenuBar ( -1 ) ;
-menu->add_submenu ( "File", file_submenu, file_submenu_cb ) ;
-menu->add_submenu ( "Help", help_submenu, help_submenu_cb ) ;
-menu->close () ;
-*/

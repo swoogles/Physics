@@ -221,7 +221,7 @@ public:
 	 *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
 	 *  \return Pointer to desired moveable
 	 */
-  static Moveable * getMoveableFromList( int moveableIndex );
+  static Moveable * getMoveableFromList( unsigned int moveableIndex );
 
 	/*! \brief Returns a moveable from the main moveables list
 	 *

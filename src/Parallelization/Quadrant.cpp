@@ -24,7 +24,6 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 {
   // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
   this->level = level;
-  int length = 2;
 
   isLeaf=true;
   containsBody=false;
@@ -188,8 +187,6 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     this->adjustMass( insertedShape->getMass() );
 
     // TODO Update centerOfMass
-    int levels = 2;
-    // cout << "insertShapeA" << endl;
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     if ( targetQuadrant != NULL )
     {
@@ -199,19 +196,12 @@ void Quadrant::insertShape( shape_pointer insertedShape )
   else
   {
     isLeaf = false;
-    // cout << "insertShapeB" << endl;
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     quad_pointer targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
-    // cout << "insertShapeB.1" << endl;
     if ( targetQuadrant != NULL && targetQuadrantB != NULL )
     {
       targetQuadrant->insertShape( insertedShape );
-
-      // cout << "insertShapeB.2" << endl;
-      // targetQuadrant = this->determineShapeQuadrant( shapeInQuadrant );
-      // cout << "insertShapeB.3" << endl;
       targetQuadrantB->insertShape( shapeInQuadrant );
-      // cout << "insertShapeB.4" << endl;
     }
   }
 

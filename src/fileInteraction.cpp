@@ -57,7 +57,6 @@ void saveShapes(char * fileName) {
 
 void openShapes(char * fileName) {
   typedef boost::shared_ptr<MyShape> shape_pointer;
-	char curString[150];
 	ifstream curFile;
 	sgVec4 curVec;
 	float curVar;

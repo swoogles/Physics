@@ -335,9 +335,9 @@ void Moveable::getUnitVecTo(Moveable * destination, sgVec4 unitv) {
 }
 */
 
-Moveable * Moveable::getMoveableFromList( int moveableIndex )
+Moveable * Moveable::getMoveableFromList( unsigned int moveableIndex )
 {
-  Moveable * returnMoveable;
+  Moveable * returnMoveable = NULL;
   if ( moveables.size() > moveableIndex )
   {
     returnMoveable = moveables(moveableIndex);

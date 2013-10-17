@@ -78,11 +78,6 @@ float globalPullback;
 void myTimer(int v);
 
 static int main_window;
-static puMenuBar *main_menu_bar;
-static int observer_one;
-
-static int observer_two;
-
 
 static int control_center_num;
 
@@ -246,7 +241,9 @@ void init(char simulation) {
     MyShape::shapes = physicalObjects; 
   }
   if ( simulation == '5' ) {
-	  Simulations::billiards2(10);
+	  physicalObjects = Simulations::billiards2_ArbitraryList(10).getShapes();
+    cout << "Good so far" << endl;
+    MyShape::shapes = physicalObjects; 
   }
 
   if ( simulation == '6' ) {
@@ -315,13 +312,10 @@ void init(char simulation) {
 	Recorder::setPath("/media/bfrasure/Media\ Hog/VideoOutput/outFrame");
 	Recorder::setSkipFrames(1);
 
-	//clearShapes();
 	//openShapes(saveFileName);
 
-	//glhPerspectivef2(MyShape::perspectiveMat, 45, 1, 1, 5);
-
-    int numShapes = MyShape::shapes.size();
-    cout << "NumShapes in simulation: " << numShapes << endl;
+  int numShapes = MyShape::shapes.size();
+  cout << "NumShapes in simulation: " << numShapes << endl;
 
 }
 
