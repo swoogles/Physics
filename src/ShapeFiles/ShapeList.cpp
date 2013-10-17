@@ -31,6 +31,7 @@ int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
 
 
   int curIndex = 0;
+  int removedIndex = -1;
   foreach_( shape_pointer curShape, shapes)
   {
     if ( curShape.get() != shapeToRemove.get() )
@@ -42,12 +43,15 @@ int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
     {
       removedShape = true;
       newShapeVector.resize(newSize-1);
+      removedIndex = curIndex;
     }
   }
   if ( removedShape )
   {
     shapes = boost::numeric::ublas::vector<shape_pointer>( newShapeVector );
   }
+
+  return removedIndex;
 
 }
 

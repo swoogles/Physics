@@ -234,7 +234,8 @@ void init(char simulation) {
     MyShape::shapes = physicalObjects; 
   }
   if ( simulation == '3' ) {
-	  Simulations::simpleCollision();
+	  physicalObjects = Simulations::simpleCollision_ArbitraryList().getShapes();
+    MyShape::shapes = physicalObjects; 
   }
   if ( simulation == '4' ) {
     physicalObjects = Simulations::billiardsReturningList(5).getShapes() ;

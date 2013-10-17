@@ -576,7 +576,7 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
 }
 
 
-void Simulations::simpleCollision() {
+ShapeList Simulations::simpleCollision_ArbitraryList() {
 	WorldSettings::setDT(.01);
 
 	//float objectDensity = 5;
@@ -597,6 +597,8 @@ void Simulations::simpleCollision() {
 	startAngMom[1] = 0;
 	startAngMom[2] = 0;
 
+  ShapeList physicalObjects;
+
   shape_pointer curShape;
 
 	curShape = boost::make_shared<Circle>();
@@ -605,7 +607,8 @@ void Simulations::simpleCollision() {
 	curShape->setRadius(aRadius*2);
 	curShape->setVelocity(0, 25, 0);
 	curShape->setAngVelocity(startAngMom);
-  MyShape::addShapeToList( curShape );
+  // MyShape::addShapeToList( curShape );
+  physicalObjects.addShapeToList( curShape );
 
 	// Object B
 	startPlacement[0] = 2.5;
@@ -618,33 +621,11 @@ void Simulations::simpleCollision() {
 	curShape->setMass(bMass);
 	curShape->setRadius(bRadius*2);
 	curShape->setVelocity(0, -25, 0);
-  MyShape::addShapeToList( curShape );
+  // MyShape::addShapeToList( curShape );
+  physicalObjects.addShapeToList( curShape );
 
+  return physicalObjects;
 
-}
-
-void Simulations::disruption() {
-  bodyFormation( 1000 );
-  MyShape::shapes.resize(MyShape::shapes.size()+1);
-  int size = MyShape::shapes.size();
-  int cur = size - 1;
-
-  int numPieces = 1;
-	float objectDensity = DENSITY_SUN;
-	float bodyVolume = (MASS_SUN)/(objectDensity)/3;
-	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	float pieceMass = pow(pieceRadius, 3.0);
-	sgVec4 startMomentum;
-  startMomentum[0] = pieceMass/35 ; 
-  startMomentum[1] = 0;
-  startMomentum[2] = 0;
-
-  MyShape::shapes(cur) = boost::make_shared<Circle>();
-  MyShape::shapes(cur)->setPos(-pieceRadius * 30, 0, 0);
-  MyShape::shapes(cur)->setMass(pieceMass);
-  MyShape::shapes(cur)->setRadius(pieceRadius);
-  MyShape::shapes(cur)->setMomentum(startMomentum);
-  MyShape::shapes(cur)->setDensity(objectDensity);
 }
 
 ShapeList Simulations::disruption_ArbitraryList() {
@@ -670,64 +651,6 @@ ShapeList Simulations::disruption_ArbitraryList() {
   physicalObjects.addShapeToList( curShape );
 
   return physicalObjects;
-}
-
-void Simulations::bodyFormation(int numPieces) {
-	WorldSettings::setDT(1000);
-	WorldSettings::makeAllInelastic();
-	WorldSettings::setGravBetweenObjects(true);
-	WorldSettings::setConstGravField(false);
-	WorldSettings::setAutoScaling(true);
-	WorldSettings::setTimeElapsed(0);
-	WorldSettings::setTotalMass(0);
-
-	float objectDensity = DENSITY_SUN;
-	float bodyVolume = (MASS_SUN * 3)/(objectDensity);
-	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	sgVec4 startPlacement, startMomentum, target;
-
-  target[0]=-1000;
-  target[1]=0;
-  target[2]=0;
-  target[3]=1;
-
-	float pieceMass = pow(pieceRadius, 3.0);
-	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
-
-	float totalMass = 0.0;
-
-	srand ( time(NULL) );
-
-	for (int i = 0; i < numPieces; i++) {
-    shape_pointer curShape;
-
-		if (i % 2 == 0) {
-			randomSplitBodyMomentum(startMomentum, pieceMass);
-			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
-		}
-		else {
-			sgNegateVec4(startMomentum);
-			sgNegateVec4(startPlacement);
-		}
-
-    curShape = make_shared<Circle>();
-		curShape = boost::make_shared<Circle>();
-    curShape->setPos( startPlacement );
-		curShape->setMass(pieceMass);
-		curShape->setRadius(pieceRadius);
-		curShape->setMomentum(startMomentum);
-		curShape->setDensity(objectDensity);
-
-    MyShape::addShapeToList( curShape );
-		//Check if being placed on previously created object
-		while ( isConflict(i) ) {
-			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
-      curShape->setPos( startPlacement );
-		}
-
-		totalMass += curShape->getMass();
-	}
-  WorldSettings::adjustTotalMass( totalMass );
 }
 
 ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {

@@ -148,7 +148,7 @@ void main_window_UI::update() {
 }
 
 void main_window_UI::open_cb(puObject * caller) {
-	open_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media\ Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
+	open_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
 	open_selector->setCallback( openFile_cb );
 	open_selector->setInitialValue("lastRun.phys");
 
@@ -171,7 +171,7 @@ void main_window_UI::openFile_cb(puObject * caller) {
 }
 
 void main_window_UI::save_cb(puObject * caller) {
-	save_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media\ Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
+	save_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
 	save_selector->setCallback( saveFile_cb );
 	save_selector->setInitialValue("lastRun.phys");
 

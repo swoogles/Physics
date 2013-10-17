@@ -90,11 +90,8 @@ class Simulations
 
     static void simpleOrbit();
 
-    static void disruption();
-
     static ShapeList disruption_ArbitraryList();
 
-    static void bodyFormation( int numPieces );
     static ShapeList bodyFormation_ArbitraryList( int numPieces );
 
     static void bodyFormationGeneric( int numPieces, sgVec4 target, sgVec4 groupMomentum );
@@ -115,7 +112,7 @@ class Simulations
 
     static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
-    static void simpleCollision();
+    static ShapeList simpleCollision_ArbitraryList();
 
     /*! \brief Returns a shape from the static list of objects that should be considered during
      * physical interactions.
