@@ -758,10 +758,7 @@ ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {
 
 	srand ( time(NULL) );
 
-  cout << "yay?" << endl;
-
 	for (int i = 0; i < numPieces; i++) {
-    cout << "Shape: " << i << endl;
     shape_pointer curShape;
 
 		if (i % 2 == 0) {
@@ -773,7 +770,6 @@ ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {
 			sgNegateVec4(startPlacement);
 		}
 
-    cout << "A" << endl;
     curShape = make_shared<Circle>();
 		curShape = boost::make_shared<Circle>();
     curShape->setPos( startPlacement );
@@ -781,17 +777,14 @@ ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {
 		curShape->setRadius(pieceRadius);
 		curShape->setMomentum(startMomentum);
 		curShape->setDensity(objectDensity);
-    cout << "B" << endl;
 
     physicalObjects.addShapeToList( curShape );
-    cout << "C" << endl;
 		//Check if being placed on previously created object
 		while ( isConflict_ArbitraryList(physicalObjects.getShapes(), i) ) {
 			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
       curShape->setPos( startPlacement );
 		}
 
-    cout << "D" << endl;
 		totalMass += curShape->getMass();
 	}
   WorldSettings::adjustTotalMass( totalMass );

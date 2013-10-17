@@ -288,7 +288,7 @@ void init(char simulation) {
   }
   
 
-	char saveFileName[150] = "/media/Media\ Hog/ProjectOutput/TheReturn/";
+	char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
 	strcat(saveFileName, "output.dat");
 
 	//cout << "fileName: " << saveFileName << endl;
@@ -309,7 +309,8 @@ void init(char simulation) {
 	Observer::observers(0)->setPos(0, 0, -pullBack*2);
 
 	Recorder::init();
-	Recorder::setPath("/media/bfrasure/Media\ Hog/VideoOutput/outFrame");
+  char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
+	Recorder::setPath(pathName);
 	Recorder::setSkipFrames(1);
 
 	//openShapes(saveFileName);
