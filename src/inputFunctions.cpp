@@ -10,36 +10,20 @@
 using namespace std;
 
 void myMouse(int button, int state, int x, int y) {
-	int z;
 	if (state == GLUT_UP) {
 		if (button == GLUT_WHEEL_UP) {
 			int curObserver = Observer::getCurObserver();
 			Observer::observers(curObserver)->zoomIn();
 			control_center::uncheckAutoScaling();
 			WorldSettings::setAutoScaling(false);
-			//z = x;
 		}
 		if (button == GLUT_WHEEL_DOWN) {
 			int curObserver = Observer::getCurObserver();
 			Observer::observers(curObserver)->zoomOut();
 			control_center::uncheckAutoScaling();
 			WorldSettings::setAutoScaling(false);
-			// V decrease
-			//glTranslatef(0,0,-1);
 		}
 
-	}
-	/*
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-	{
-		cout << "rotating!" << endl;
-		rotateShapes(PI/8);
-	}
-	*/
-		if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-	{
-		cout << "rotating!" << endl;
-		//rotateShapes(PI/8);
 	}
 	puMouse ( button, state, x, y ) ;
 	glutPostRedisplay ();

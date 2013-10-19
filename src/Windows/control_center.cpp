@@ -100,7 +100,7 @@ void control_center::makeNewObject(puObject * caller) {
 	}
 
 
-	MyShape::shapes(newSpot) = new Circle;
+	MyShape::shapes(newSpot) = boost::make_shared<Circle>();
 	MyShape::shapes(newSpot)->setPos(startPlacement);
 	MyShape::shapes(newSpot)->setMomentum(startMomentum);
 	MyShape::shapes(newSpot)->setMass(mass_in->getFloatValue());
@@ -130,7 +130,7 @@ void makeRandomObjectUp(puObject * caller) {
 	sgVec3 * makeSpot = (sgVec3 *) control_center::userDat;
 
 	MyShape::shapes.resize(newSpot+1);
-	MyShape::shapes(newSpot) = new Box;
+	MyShape::shapes(newSpot) = boost::make_shared<Box>();
 	MyShape::shapes(newSpot)->setPos( (*makeSpot)[0],(*makeSpot)[1],0);
 }
 
@@ -149,15 +149,6 @@ void control_center::switchViewNow(puObject * caller) {
 }
 
 void control_center::init() {
-	 char *objectList[] = {
-			  "Planet1",
-			  "Planet2",
-			  "BallAlpha",
-			  "BallBeta",
-			  0,
-	  };
-
-		int winWidth = glutGet(GLUT_WINDOW_WIDTH);
 		int winHeight = glutGet(GLUT_WINDOW_HEIGHT);
 
 	  int curHeight = winHeight;
@@ -166,11 +157,6 @@ void control_center::init() {
 	  int *textHeight = new int;
 	  *textWidth = 0;
 	  *textHeight = 0;
-
-	  sgVec3 createSpot;
-	  createSpot[0] = 2;
-	  createSpot[1] = -1;
-	  createSpot[2] = 0;
 
 	  int vsXinit = 5;
 	  int vsYinit = 5;
@@ -181,15 +167,12 @@ void control_center::init() {
 	  viewSwitcher->setCallback(switchViewNow);
 
 	  placement_group = new puGroup(0,0);
-	  //pick_object = new puaSelectBox(5, controlHeight-20, 5+50, controlHeight-5, objectList);
 	  object_name_label = new puText(5, curHeight-elementHeight);
 	  object_name_label->setLabel("Name:");
 	  object_name_label->setColour(PUCOL_LABEL, 1.0, 0.0, 1.0, .5);
 
 	  object_name_input = new puInput(55, curHeight-elementHeight, 55+45, curHeight);
 	  object_name_input->acceptInput();
-
-
 
 	  curHeight -= elementHeight;
 

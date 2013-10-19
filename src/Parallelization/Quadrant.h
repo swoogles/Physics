@@ -15,6 +15,8 @@
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/multi_array.hpp>
+#include <boost/current_function.hpp>
+#include <boost/ref.hpp>
 #include <cassert>
 
 //using namespace boost::numeric::ublas;
@@ -33,17 +35,18 @@ class Quadrant : public Box
   // string label;
 
   // Quadrant * nextQuadrant;
-    Box * borders;
-    sgVec4 preCenterOfMass;
+  boost::shared_ptr<Box> borders;
 
-    float mass;
+  sgVec4 preCenterOfMass;
 
-    // static boost::numeric::ublas::vector
-    //   <boost::numeric::ublas::vector
-    //   <boost::numeric::ublas::vector
-    //   <Quadrant *> > >  quadOctreeMine;
+  float mass;
 
-    //Quadrant*** quadOctreeMine; /* Create 4096x4096x4096 octree containing doubles. */
+  typedef boost::shared_ptr<MyShape> shape_pointer;
+
+  typedef boost::shared_ptr<Quadrant> quad_pointer;
+  typedef multi_array< quad_pointer, 3> array_typeNew;
+  array_typeNew  quadOctree;
+
   typedef multi_array<Quadrant *, 3> array_type;
   typedef array_type::index index;
   array_type  quadOctreeMine;
@@ -52,31 +55,33 @@ class Quadrant : public Box
   bool containsBody;
 
   public:
-    int level;
-    // Octree<Quadrant *> * quadOctree; /* Create 4096x4096x4096 octree containing doubles. */
-    Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions );
-    void subDivide( int x, int y, int z, int numCells );
-    void subDivideAll( int levels, int numCells );
-    Quadrant * getQuadrantFromCell( int x, int y, int z );
+  int level;
+  // Octree<Quadrant *> * quadOctree; /* Create 4096x4096x4096 octree containing doubles. */
+  Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions );
+  ~Quadrant();
+  void subDivide( int x, int y, int z, int numCells );
+  void subDivideAll( int levels, int numCells );
+  quad_pointer getQuadrantFromCell( int x, int y, int z );
 
-    void printCorners();
+  void printCorners();
 
-    MyShape * shapeInQuadrant;
-    
-    sgVec4 dimensions;
+  shape_pointer shapeInQuadrant;
+  boost::shared_ptr<MyShape> shapeInQuadrantNew;
 
-    //sgVec4 pos;
+  sgVec4 dimensions;
 
-    void insertShape( MyShape * newShape );
+  //sgVec4 pos;
 
-    inline float getMass() { return mass; }
-    inline void setMass( float mass ) { this->mass = mass; }
-    inline void adjustMass ( float deltaMass ) { mass+= deltaMass; }
+  void insertShape( shape_pointer newShape );
 
-    void getCenterOfMass(sgVec4 centerOfMass);
-    void setCenterOfMass( sgVec4 centerOfMass );
+  inline float getMass() { return mass; }
+  inline void setMass( float mass ) { this->mass = mass; }
+  inline void adjustMass ( float deltaMass ) { mass+= deltaMass; }
 
-    Quadrant * determineShapeQuadrant( MyShape * shapeToInsert );
+  void getCenterOfMass(sgVec4 centerOfMass);
+  void setCenterOfMass( sgVec4 centerOfMass );
+
+  quad_pointer determineShapeQuadrant( shape_pointer shapeToInsert );
 
 };
 

@@ -9,7 +9,8 @@
 
 //TODO save more information in header
 void saveShapes(char * fileName) {
-	MyShape * curShape;
+  typedef boost::shared_ptr<MyShape> shape_pointer;
+	shape_pointer curShape;
 	sgVec4 curField;
 	ofstream myfile;
 	myfile.open (fileName);
@@ -55,11 +56,11 @@ void saveShapes(char * fileName) {
 }
 
 void openShapes(char * fileName) {
-	char curString[150];
+  typedef boost::shared_ptr<MyShape> shape_pointer;
 	ifstream curFile;
 	sgVec4 curVec;
 	float curVar;
-	MyShape * curShape;
+	shape_pointer curShape;
 
 	float newDT;
 	int type;
@@ -78,7 +79,7 @@ void openShapes(char * fileName) {
 
 		curFile >> type;
 		if (type == 1) {
-			MyShape::shapes(i) = new Circle;
+			MyShape::shapes(i) = make_shared<Circle>(); 
 			curShape = MyShape::shapes(i);
 
 			//Set start position

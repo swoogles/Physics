@@ -12,10 +12,14 @@
 #include <GL/glut.h>
 #include <cmath>
 
+#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
+#include <boost/make_shared.hpp> 
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
+#include <boost/foreach.hpp>
 #include <iostream>
 
 #include <plib/sg.h>
@@ -24,6 +28,7 @@
 
 
 #define PI 3.14159265
+#define foreach_  BOOST_FOREACH                                                                                              
 
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::vector;
@@ -265,7 +270,11 @@ public:
 	 *
 	 *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
 	 */
-	static vector<MyShape *> shapes;
+	// static vector<MyShape *> shapes;
+  //PHYS-7
+  typedef boost::shared_ptr<MyShape> shape_pointer;
+	static vector<shape_pointer> shapes;
+
 
 	//Get rid of this and store in WorldSettings instead
 	static float G;
@@ -277,7 +286,9 @@ public:
 	 *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
 	 *  \return Pointer to desired moveable
 	 */
-  static int addShapeToList( MyShape * insertShape );
+  static int addShapeToList( shape_pointer insertShape );
+
+  static void removeShapeFromList( shape_pointer shapeToRemove );
 
 };
 

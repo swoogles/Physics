@@ -11,10 +11,12 @@
 #include "../Parallelization/Quadrant.h"
 #include <iostream>
 #include <boost/numeric/ublas/vector.hpp>
+#include <boost/ref.hpp>
 #include <plib/sg.h>
 //#include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/Box.h"
+#include "../ShapeFiles/ShapeList.h"
 #include "Interactions.h"
 
 #define MASS_VAR 1e21
@@ -79,27 +81,38 @@ class Simulations
      *
      *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
      */
-    static boost::numeric::ublas::vector<MyShape *> physicalObjects;
+    typedef boost::shared_ptr<MyShape> shape_pointer;
+    static boost::numeric::ublas::vector< shape_pointer > physicalObjects;
+
 
   public:
     static void largeGridAlternating();
 
     static void simpleOrbit();
 
-    static void disruption();
+    static ShapeList disruption_ArbitraryList();
 
-    static void bodyFormation( unsigned int numPieces );
-    static void bodyFormationGeneric( unsigned int numPieces, sgVec4 target, sgVec4 groupMomentum );
+    static ShapeList bodyFormation_ArbitraryList( int numPieces );
+
+    static void bodyFormationGeneric( int numPieces, sgVec4 target, sgVec4 groupMomentum );
+
+    static ShapeList bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
     static void billiards(int);
 
+    static ShapeList billiardsReturningList(int);
+
     static void billiards2(int);
 
+    //VERY EXPERIMENTAL
+    static ShapeList billiards2_ArbitraryList(int);
+
     static void billiards3(int);
+    static ShapeList billiards3_ArbitraryList(int);
 
-    static Quadrant * octreeDemonstration(int);
+    static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
-    static void simpleCollision();
+    static ShapeList simpleCollision_ArbitraryList();
 
     /*! \brief Returns a shape from the static list of objects that should be considered during
      * physical interactions.
@@ -107,14 +120,14 @@ class Simulations
      *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
      *  \return Pointer to desired shape
      */
-    static MyShape * getShapeFromList( int shapeIndex );
+    static shape_pointer getShapeFromList( unsigned int shapeIndex );
 
     /*! \brief Returns a shape from the main shapes list
      *
      *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
      *  \return Pointer to desired shape
      */
-    static int addShapeToList( MyShape * insertShape );
+    static int addShapeToList( shape_pointer insertShape );
 };
 
 

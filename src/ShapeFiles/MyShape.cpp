@@ -15,7 +15,7 @@ using namespace boost::numeric::ublas;
 
 float MyShape::G = 6.67384e-11;
 
-boost::numeric::ublas::vector<MyShape *> MyShape::shapes(0);
+boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > MyShape::shapes(0);
 
 
 
@@ -77,31 +77,13 @@ void MyShape::draw() {
 	glTranslatef(pos[0], pos[1], pos[2]);
 
 	//Rotate
-	glMultMatrixf( (const GLfloat*)orientationMat);
+  // TODO TURN THIS BACK ON. YOU ARE NOT ROTATING ANYTHING RIGHT NOW
+	// glMultMatrixf( (const GLfloat*)orientationMat);
 
 
 	//Scale
 	drawScale();
 
-	/*
-	bool changed = false;
-	static float model[16], projection[16], final[16];
-	glGetFloatv(GL_MODELVIEW, model);
-
-	for (int i = 0; i < 16; i++)
-		if (model[i] != projection[i])
-			changed = true;
-
-	if (changed)
-		for (int i = 0; i < 4; i++) {
-			cout << endl;
-			for (int j = 0; j < 4; j++) {
-				cout << model[j+i*4] << "  ";
-			}
-		}
-
-	glGetFloatv(GL_MODELVIEW, projection);
-	*/
 
 	glColor3fv(color);
 
@@ -109,58 +91,6 @@ void MyShape::draw() {
 
 	glPopMatrix();
 
-	/*
-	this->getPts();
-
-	glBegin(GL_POLYGON);
-	{
-		glColor3f(0,0,1);
-		for (unsigned int i = 0; i < pts.size1(); i++){
-			//cout << "PersMat: " << endl << perspectiveMat << endl;
-
-			//cout << "Orig Point:" << row(pts, i) << endl;
-			//toolVec = prod(worldRotFrame, row(pts, i));
-			//cout << "After rot: " << toolVec << endl;
-			//toolVec = prod(perspectiveMat, row(pts,i));
-			//cout << "After persp" << toolVec << endl << endl;
-
-
-			//glVertex3f(pts(curPt,0), pts(curPt,1), pts(curPt,2));
-			toolVec = row(pts,i);
-			glVertex3f(toolVec(0), toolVec(1), toolVec(2));
-			curPt++;
-		}
-
-
-	}
-	glEnd();
-
-
-	if (ptsHighlighted) {
-		markSize = this->getMarkerSize();
-		//cout << "Marksize: " << markSize << endl;
-		glBegin(GL_QUADS);
-		glColor3f(1,1,1);
-		for (unsigned int i = 0; i < pts.size1(); i++) {
-			glColor3f(red, green, 0);
-			toolVec = row(pts,i);
-			//toolVec = prod(worldRotFrame, row(pts, i));
-			//toolVec = prod(perspectiveMat, row(pts,i));
-
-			glVertex3f(toolVec(0) - markSize, toolVec(1) + markSize, toolVec(2));
-			glVertex3f(toolVec(0) + markSize, toolVec(1) + markSize, toolVec(2));
-			glVertex3f(toolVec(0) + markSize, toolVec(1) - markSize, toolVec(2));
-			glVertex3f(toolVec(0) - markSize, toolVec(1) - markSize, toolVec(2));
-
-			red -= 1.0/pts.size1();
-			green += 1.0/pts.size1();
-
-
-			//Make coordinate marks
-		}
-		glEnd();
-	}
-	*/
 }
 
 
@@ -503,12 +433,8 @@ void MyShape::getUnitVecTo(MyShape * destination, sgVec4 unitv) {
 */
 
 void MyShape::clearShapes() {
-	for (int i = MyShape::shapes.size() - 1; i > -1; i--) {
-      cout << "Shape # " << i << endl;
-		MyShape::shapes(i)->~MyShape();
-		MyShape::shapes.erase_element(i);
-	}
-	MyShape::shapes.resize(0);
+  shapes.clear();
+	shapes.resize(0);
 }
 
 
@@ -517,10 +443,38 @@ float MyShape::getRadius() { return 1;}
 
 int MyShape::getType() { return 1;}
 
-int MyShape::addShapeToList( MyShape * insertShape )
+int MyShape::addShapeToList( shape_pointer insertShape )
 {
   int curSize = shapes.size();
   shapes.resize(curSize + 1);
   shapes(curSize) = insertShape;
   return curSize;
+}
+
+
+void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
+{
+  boost::numeric::ublas::vector<shape_pointer> newShapeVector;
+  int newSize =  shapes.size();
+  newShapeVector.resize(newSize);
+  bool removedShape = false;
+
+  int curIndex = 0;
+  foreach_( shape_pointer curShape, shapes)
+  {
+    if ( curShape.get() != shapeToRemove.get() )
+    {
+      newShapeVector.insert_element(curIndex, curShape);
+      curIndex++;
+    }
+    else
+    {
+      removedShape = true;
+      newShapeVector.resize(newSize-1);
+    }
+  }
+  if ( removedShape )
+  {
+    shapes = boost::numeric::ublas::vector<shape_pointer>( newShapeVector );
+  }
 }
