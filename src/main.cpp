@@ -242,7 +242,7 @@ void init(char simulation) {
     MyShape::shapes = physicalObjects; 
   }
   if ( simulation == '5' ) {
-	  physicalObjects = Simulations::billiards2_ArbitraryList(10).getShapes();
+	  physicalObjects = Simulations::billiards2_ArbitraryList(15).getShapes();
     cout << "Good so far" << endl;
     MyShape::shapes = physicalObjects; 
   }
@@ -376,7 +376,8 @@ void idle() {
     pos[2] = 0;
     pos[3] = 1;
 
-    float side = 1e4;
+    float side = 1e4; //Formation Value
+    side = 5e2;
     float width = side;
     float height = side;
     float depth = side;

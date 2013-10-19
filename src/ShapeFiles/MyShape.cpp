@@ -84,25 +84,6 @@ void MyShape::draw() {
 	//Scale
 	drawScale();
 
-	/*
-	bool changed = false;
-	static float model[16], projection[16], final[16];
-	glGetFloatv(GL_MODELVIEW, model);
-
-	for (int i = 0; i < 16; i++)
-		if (model[i] != projection[i])
-			changed = true;
-
-	if (changed)
-		for (int i = 0; i < 4; i++) {
-			cout << endl;
-			for (int j = 0; j < 4; j++) {
-				cout << model[j+i*4] << "  ";
-			}
-		}
-
-	glGetFloatv(GL_MODELVIEW, projection);
-	*/
 
 	glColor3fv(color);
 
@@ -110,58 +91,6 @@ void MyShape::draw() {
 
 	glPopMatrix();
 
-	/*
-	this->getPts();
-
-	glBegin(GL_POLYGON);
-	{
-		glColor3f(0,0,1);
-		for (unsigned int i = 0; i < pts.size1(); i++){
-			//cout << "PersMat: " << endl << perspectiveMat << endl;
-
-			//cout << "Orig Point:" << row(pts, i) << endl;
-			//toolVec = prod(worldRotFrame, row(pts, i));
-			//cout << "After rot: " << toolVec << endl;
-			//toolVec = prod(perspectiveMat, row(pts,i));
-			//cout << "After persp" << toolVec << endl << endl;
-
-
-			//glVertex3f(pts(curPt,0), pts(curPt,1), pts(curPt,2));
-			toolVec = row(pts,i);
-			glVertex3f(toolVec(0), toolVec(1), toolVec(2));
-			curPt++;
-		}
-
-
-	}
-	glEnd();
-
-
-	if (ptsHighlighted) {
-		markSize = this->getMarkerSize();
-		//cout << "Marksize: " << markSize << endl;
-		glBegin(GL_QUADS);
-		glColor3f(1,1,1);
-		for (unsigned int i = 0; i < pts.size1(); i++) {
-			glColor3f(red, green, 0);
-			toolVec = row(pts,i);
-			//toolVec = prod(worldRotFrame, row(pts, i));
-			//toolVec = prod(perspectiveMat, row(pts,i));
-
-			glVertex3f(toolVec(0) - markSize, toolVec(1) + markSize, toolVec(2));
-			glVertex3f(toolVec(0) + markSize, toolVec(1) + markSize, toolVec(2));
-			glVertex3f(toolVec(0) + markSize, toolVec(1) - markSize, toolVec(2));
-			glVertex3f(toolVec(0) - markSize, toolVec(1) - markSize, toolVec(2));
-
-			red -= 1.0/pts.size1();
-			green += 1.0/pts.size1();
-
-
-			//Make coordinate marks
-		}
-		glEnd();
-	}
-	*/
 }
 
 
