@@ -339,20 +339,10 @@ void calcCollisionsAll_ArbitraryList( boost::numeric::ublas::vector<shape_pointe
 
 //setting rSquared to a constant value with a grid can make some awesome effects
 float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, SGfloat rSquared) {
-  sgVec4 *ob1pos, *ob2pos;
-  ob1pos = object1->getPos();
-  ob2pos = object2->getPos();
-  //float rSquared = sgDistanceSquaredVec4( (*ob1pos), (*ob2pos) );
-  //float rSquared = 2;
-  //float G = object1->G;
   if (rSquared < .00001)
   {
     rSquared = .00001;
   }
-
-  delete ob1pos;
-  delete ob2pos;
-
   return ( MyShape::G * object1->getMass() * object2->getMass()) / rSquared;
 }
 
