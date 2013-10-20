@@ -347,18 +347,10 @@ float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShap
 }
 
 void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 sepVector) {
-  sgVec4 * pos1, *pos2;
-  pos1 = object1->getPos();
-  pos2 = object2->getPos();
-
-  //cout << "Pos1: " << *pos1 << endl;
-  //cout << "Pos2: " << *pos2 << endl;
-
-  sgSubVec4(sepVector, *pos2, *pos1);
-
-  delete pos1;
-  delete pos2;
-
+  sgVec4 pos1, pos2;
+  object1->getPos(pos1 );
+  object2->getPos(pos2 );
+  sgSubVec4(sepVector, pos2, pos1);
 }
 
 float calcMergedRadius(float massBoth, float density) {
