@@ -37,7 +37,8 @@ class Quadrant : public Box
   // Quadrant * nextQuadrant;
   boost::shared_ptr<Box> borders;
 
-  sgVec4 preCenterOfMass;
+  // sgVec4 preCenterOfMass;
+  sgVec4 weightedPosition;
 
   float mass;
 
@@ -77,6 +78,9 @@ class Quadrant : public Box
   inline float getMass() { return mass; }
   inline void setMass( float mass ) { this->mass = mass; }
   inline void adjustMass ( float deltaMass ) { mass+= deltaMass; }
+
+  void getWeightedPosition(sgVec4 centerOfMass);
+  void setWeightedPosition(sgVec4 centerOfMass);
 
   void getCenterOfMass(sgVec4 centerOfMass);
   void setCenterOfMass( sgVec4 centerOfMass );
