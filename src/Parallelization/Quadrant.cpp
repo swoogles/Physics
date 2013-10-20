@@ -27,6 +27,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
   isLeaf=true;
   containsBody=false;
+  mass = 0;
 
   setPos( pos );
   sgCopyVec4( this->dimensions, dimensions );
@@ -181,6 +182,8 @@ void Quadrant::insertShape( shape_pointer insertedShape )
   {
     shapeInQuadrant = insertedShape;
     containsBody = true;
+    this->setMass( insertedShape->getMass() );
+    cout << "Level " << level << " Mass: " << this->getMass() << endl;
   }
   else if ( ! isLeaf )
   {
@@ -191,6 +194,8 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     if ( targetQuadrant != NULL )
     {
       targetQuadrant->insertShape( insertedShape );
+      this->adjustMass( insertedShape->getMass() );
+      cout << "Level " << level << " Mass: " << this->getMass() << endl;
     }
   }
   else
@@ -198,6 +203,11 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     isLeaf = false;
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     quad_pointer targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
+    this->adjustMass( insertedShape->getMass() );
+    sgVec4 originalCenterOfMass;
+    this->getCenterOfMass( originalCenterOfMass );
+
+    cout << "Level " << level << " Mass: " << this->getMass() << endl;
     if ( targetQuadrant != NULL && targetQuadrantB != NULL )
     {
       targetQuadrant->insertShape( insertedShape );
