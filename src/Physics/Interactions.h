@@ -18,6 +18,7 @@
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/Box.h"
 #include "../ShapeFiles/ShapeList.h"
+#include "../Parallelization/Quadrant.h"
 
 #include "WorldSettings.h"
 #include "Simulations.h"
@@ -48,6 +49,16 @@ void elasticCollision(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MySh
  *  \param dt Determines time over which each force acts
  */
 void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects, float dt);
+
+/*! \relates MyShape
+ *  \brief Calculates forces on all current objects
+ *
+ *  Loops through the shapes vector, calculating all currently active forces on and between each object. Can include drag, a constant gravity field,  and
+ *  gravity between objects.
+ *
+ *  \param dt Determines time over which each force acts
+ */
+void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::vector<shape_pointer> physicalObjects, boost::shared_ptr<Quadrant> octree, float dt);
 
 
 /*! \relates MyShape

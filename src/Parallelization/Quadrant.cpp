@@ -202,8 +202,16 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     this->adjustMass( insertedShape->getMass() );
 
     // TODO Update centerOfMass
-    sgVec4 weightedPosition;
-    this->getWeightedPosition( weightedPosition );
+    sgVec4 quadrantWeightedPosition;
+    this->getWeightedPosition( quadrantWeightedPosition );
+
+    sgVec4 shapeWeightedPosition;
+    insertedShape->getPos( shapeWeightedPosition );
+    sgScaleVec4( shapeWeightedPosition, insertedShape->getMass() );
+
+    sgAddVec4(quadrantWeightedPosition, shapeWeightedPosition );
+    this->setWeightedPosition( quadrantWeightedPosition );
+
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     if ( targetQuadrant != NULL )
     {
@@ -217,9 +225,19 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     isLeaf = false;
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     quad_pointer targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
-    this->adjustMass( insertedShape->getMass() );
-    sgVec4 originalCenterOfMass;
-    this->getCenterOfMass( originalCenterOfMass );
+    // this->adjustMass( insertedShape->getMass() );
+    // sgVec4 originalCenterOfMass;
+    // this->getCenterOfMass( originalCenterOfMass );
+
+    sgVec4 quadrantWeightedPosition;
+    this->getWeightedPosition( quadrantWeightedPosition );
+
+    sgVec4 shapeWeightedPosition;
+    insertedShape->getPos( shapeWeightedPosition );
+    sgScaleVec4( shapeWeightedPosition, insertedShape->getMass() );
+
+    sgAddVec4(quadrantWeightedPosition, shapeWeightedPosition );
+    this->setWeightedPosition( quadrantWeightedPosition );
 
     // cout << "Level " << level << " Mass: " << this->getMass() << endl;
     if ( targetQuadrant != NULL && targetQuadrantB != NULL )
@@ -335,4 +353,34 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
   }
 
   return insertionQuadrant;
+}
+
+void Quadrant::getPos(sgVec4 retVec) {
+  sgVec4 centerOfMass;
+  this->getCenterOfMass( centerOfMass );
+  // sgScaleVec4( centerOfMass, 1.0/mass );
+
+	sgCopyVec4(retVec, centerOfMass);
+}
+
+void Quadrant::calcForceOnShape( shape_pointer curShape, sgVec3 netForceFromQuadrant, float dt )
+{
+  if ( isLeaf )
+  {
+    if ( curShape == shapeInQuadrant )
+    {
+      cout << "Matched shape!" << endl;
+    }
+  }
+  else
+  {
+    sgVec4 sepVec;
+    // getVectorToObject2( curShape, this, sepVec );
+
+    sgVec4 pos1, pos2;
+    curShape->getPos(pos1 );
+    this->getPos(pos2 );
+    sgSubVec4(sepVec, pos2, pos1);
+  }
+
 }

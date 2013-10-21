@@ -153,6 +153,88 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
 
 }
 
+void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::vector<shape_pointer> physicalObjects, boost::shared_ptr<Quadrant> octree, float dt) {
+		sgVec4 sepVec;
+		sgVec4 unitVec;
+		sgVec4 gravVec;
+    boost::shared_ptr<MyShape> object1;
+    boost::shared_ptr<MyShape> object2;
+		float fGrav;
+		SGfloat distanceSquared;
+
+		sgVec4 gravField;
+
+		bool killed = false;
+
+		//bool constGravField = WorldSettings::isConstGravField();
+
+		if (WorldSettings::isConstGravField() ) {
+			WorldSettings::getConstGravFieldVal(gravField);
+			sgScaleVec4(gravField, 1/dt);
+		}
+
+
+    foreach_ ( shape_pointer curShape, physicalObjects )
+    {
+      sgVec3 netForceFromQuadrant;
+      octree->calcForceOnShape( curShape, netForceFromQuadrant, dt );
+      getVectorToObject2(object1, object2, sepVec);
+    }
+
+
+
+
+		//sgVec4 * ob1mom;
+    if ( physicalObjects.size() > 0 )
+    {
+      for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
+      {
+        if (killed) {
+          // cout << "curI: " << i << endl;
+        }
+        object1 = physicalObjects(i);
+
+        if (WorldSettings::isConstGravField() ) {
+          object1->adjustMomentum(gravField);
+        }
+
+        for (unsigned int j = i + 1; j < physicalObjects.size(); )
+        {
+          object2 = physicalObjects(j);
+
+
+          getVectorToObject2(object1, object2, sepVec);
+
+          distanceSquared = sgLengthSquaredVec4(sepVec);
+
+          if (WorldSettings::isGravBetweenObjects() ) {
+            fGrav = calcForceGrav(object1, object2, distanceSquared);
+
+            sgNormaliseVec4(unitVec, sepVec);
+
+            sgScaleVec4(gravVec, unitVec, fGrav);
+            sgScaleVec4(gravVec, dt);
+
+            object1->adjustMomentum(gravVec);
+            sgNegateVec4(gravVec);
+            object2->adjustMomentum(gravVec);
+          }
+
+          j++;
+        }
+
+      }
+
+      // Add unary forces to last object
+      object1 = physicalObjects(physicalObjects.size()-1);
+
+      if (WorldSettings::isConstGravField() ) {
+        object1->adjustMomentum(gravField);
+      }
+    }
+
+}
+
 //void calcHitAndMerge
 
 bool isConflict(int newShape) {

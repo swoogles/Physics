@@ -12,6 +12,7 @@
 
 #include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Box.h"
+#include "../Physics/Interactions.h"
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/multi_array.hpp>
@@ -86,6 +87,10 @@ class Quadrant : public Box
   void setCenterOfMass( sgVec4 centerOfMass );
 
   quad_pointer determineShapeQuadrant( shape_pointer shapeToInsert );
+
+	void getPos(sgVec4 retVec);
+
+  void calcForceOnShape( shape_pointer curShape, sgVec3 netForceFromQuadrant, float dt );
 
 };
 

@@ -399,6 +399,9 @@ void idle() {
       // cout << "processing shape" << endl;
       globalQuadrant->insertShape( curShape );
     }
+    sgVec4 centerOfMass;
+    globalQuadrant->getCenterOfMass( centerOfMass );
+    cout << "Center of Mass: " << centerOfMass << endl;
 
     if (WorldSettings::isAutoScaling()) {
 
