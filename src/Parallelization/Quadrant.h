@@ -12,7 +12,8 @@
 
 #include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Box.h"
-#include "../Physics/Interactions.h"
+#include "../ShapeFiles/Circle.h"
+// #include "../Physics/Interactions.h"
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/multi_array.hpp>
@@ -37,6 +38,8 @@ class Quadrant : public Box
 
   // Quadrant * nextQuadrant;
   boost::shared_ptr<Box> borders;
+
+  boost::shared_ptr<Circle> centerOfMassRepresentation;
 
   // sgVec4 preCenterOfMass;
   sgVec4 weightedPosition;
@@ -80,8 +83,8 @@ class Quadrant : public Box
   inline void setMass( float mass ) { this->mass = mass; }
   inline void adjustMass ( float deltaMass ) { mass+= deltaMass; }
 
-  void getWeightedPosition(sgVec4 centerOfMass);
-  void setWeightedPosition(sgVec4 centerOfMass);
+  void getWeightedPosition(sgVec4 weightedPosition);
+  void setWeightedPosition(sgVec4 weightedPosition);
 
   void getCenterOfMass(sgVec4 centerOfMass);
   void setCenterOfMass( sgVec4 centerOfMass );

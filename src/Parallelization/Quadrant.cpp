@@ -15,6 +15,7 @@ Quadrant::~Quadrant()
 {
   // MyShape::removeShapeFromList( MyShape::shapes(0) );
   MyShape::removeShapeFromList( borders );
+  MyShape::removeShapeFromList( centerOfMassRepresentation );
   // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
 }
 
@@ -47,6 +48,22 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   borders->setSideLength( dimensions[0] );
 
   MyShape::addShapeToList( borders );
+
+  sgVec3 CoMColor;
+  CoMColor[0] = 0;
+  CoMColor[1] = 1;
+  CoMColor[2] = 0;
+
+  centerOfMassRepresentation = boost::make_shared<Circle>();
+  centerOfMassRepresentation->setPos( 0,0,0 );
+  centerOfMassRepresentation->setRadius( 1.0 );
+  centerOfMassRepresentation->setColor(CoMColor);
+
+  if ( level == 1 )
+  {
+    MyShape::addShapeToList( centerOfMassRepresentation );
+  }
+
 }
 
 boost::shared_ptr<Quadrant> Quadrant::getQuadrantFromCell( int x, int y, int z )
@@ -164,13 +181,13 @@ void Quadrant::subDivideAll( int levels, int numCells )
   }
 }
 
-void Quadrant::getWeightedPosition(sgVec4 centerOfMass)
+void Quadrant::getWeightedPosition(sgVec4 weightedPosition)
 {
-	sgCopyVec4(centerOfMass, this->weightedPosition);
+	sgCopyVec4(weightedPosition, this->weightedPosition);
 }
-void Quadrant::setWeightedPosition(sgVec4 centerOfMass)
+void Quadrant::setWeightedPosition(sgVec4 weightedPosition)
 {
-  sgCopyVec4(this->weightedPosition, centerOfMass);
+  sgCopyVec4(this->weightedPosition, weightedPosition);
 }
 
 void Quadrant::getCenterOfMass(sgVec4 centerOfMass)
@@ -246,6 +263,10 @@ void Quadrant::insertShape( shape_pointer insertedShape )
       targetQuadrantB->insertShape( shapeInQuadrant );
     }
   }
+
+  sgVec4 CoMPosition;
+  this->getCenterOfMass( CoMPosition );
+  centerOfMassRepresentation->setPos( CoMPosition );
 
 }
 

@@ -8,7 +8,6 @@
 #ifndef SIMULATIONS_H_
 #define SIMULATIONS_H_
 
-#include "../Parallelization/Quadrant.h"
 #include <iostream>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/ref.hpp>
@@ -17,6 +16,7 @@
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/Box.h"
 #include "../ShapeFiles/ShapeList.h"
+#include "../Parallelization/Quadrant.h"
 #include "Interactions.h"
 
 #define MASS_VAR 1e21
