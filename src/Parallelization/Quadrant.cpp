@@ -105,18 +105,12 @@ void Quadrant::subDivide( int x, int y, int z, int numCells )
   newDimensions[2] = dimensions[2]/2;
 
 
-  //sgVec4 off
   newPos[0]=pos[0]+(xFactor*dimensions[0]/4.0);
   newPos[1]=pos[1]+(yFactor*dimensions[1]/4.0);
   newPos[2]=pos[2]+(zFactor*dimensions[2]/4.0);
-  //newPos[3]=0;
 
   quad_pointer insertionQuadrant;
 
-
-  // Quadrant
-  //TODO Calculate new position
-  // quadOctree[x][y][z] = boost::make_shared<Quadrant>( Quadrant( numCells, this->level + 1, newPos, newDimensions ) );
   quadOctree[x][y][z] = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
 }
 
@@ -212,13 +206,11 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     sgVec4 pos;
     insertedShape->getPos(pos);
     this->setCenterOfMass( pos );
-    // cout << "Level " << level << " Mass: " << this->getMass() << endl;
   }
   else if ( ! isLeaf )
   {
     this->adjustMass( insertedShape->getMass() );
 
-    // TODO Update centerOfMass
     sgVec4 quadrantWeightedPosition;
     this->getWeightedPosition( quadrantWeightedPosition );
 
@@ -234,7 +226,6 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     {
       targetQuadrant->insertShape( insertedShape );
       this->adjustMass( insertedShape->getMass() );
-      // cout << "Level " << level << " Mass: " << this->getMass() << endl;
     }
   }
   else
@@ -242,9 +233,6 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     isLeaf = false;
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     quad_pointer targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
-    // this->adjustMass( insertedShape->getMass() );
-    // sgVec4 originalCenterOfMass;
-    // this->getCenterOfMass( originalCenterOfMass );
 
     sgVec4 quadrantWeightedPosition;
     this->getWeightedPosition( quadrantWeightedPosition );
@@ -256,7 +244,6 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     sgAddVec4(quadrantWeightedPosition, shapeWeightedPosition );
     this->setWeightedPosition( quadrantWeightedPosition );
 
-    // cout << "Level " << level << " Mass: " << this->getMass() << endl;
     if ( targetQuadrant != NULL && targetQuadrantB != NULL )
     {
       targetQuadrant->insertShape( insertedShape );

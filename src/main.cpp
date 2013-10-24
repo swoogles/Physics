@@ -89,6 +89,7 @@ int numStep = 0;
 float totalMass = 0;
 
 
+// boost::shared_ptr<Circle> globalCenterOfMassCircle;
 boost::shared_ptr<Quadrant> globalQuadrant;
 boost::numeric::ublas::vector<shape_pointer> physicalObjects; 
 
@@ -243,7 +244,6 @@ void init(char simulation) {
   }
   if ( simulation == '5' ) {
 	  physicalObjects = Simulations::billiards2_ArbitraryList(15).getShapes();
-    cout << "Good so far" << endl;
     MyShape::shapes = physicalObjects; 
   }
 
@@ -401,7 +401,9 @@ void idle() {
     }
     sgVec4 centerOfMass;
     globalQuadrant->getCenterOfMass( centerOfMass );
-    cout << "Center of Mass: " << centerOfMass << endl;
+    // cout << "Center of Mass: " << centerOfMass << endl;
+
+    // globalCenterOfMassCircle->setPos( centerOfMass );
 
     if (WorldSettings::isAutoScaling()) {
 
