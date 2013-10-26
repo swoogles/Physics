@@ -2,3 +2,7 @@
 *.out
 *.d
 *.swp
+ShapesLibrary
+*.gdb
+core
+*.files
