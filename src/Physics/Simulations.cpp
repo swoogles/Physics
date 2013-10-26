@@ -200,18 +200,18 @@ ShapeList Simulations::billiards2_ArbitraryList(int numRows) {
 
 	sgVec3 newColor;
 	newColor[0] = 1;
-	newColor[1] = 1;
+	newColor[1] = 0;
 	newColor[2] = 1;
     
   shape_pointer shapeForInsertion;
 
-	// shapeForInsertion = boost::make_shared<Circle>();
-	// shapeForInsertion->setPos(numRows, numRows*3, 0);
-	// shapeForInsertion->setMass(cueMass);
-	// shapeForInsertion->setRadius(ballRadius);
-	// shapeForInsertion->setVelocity(cueVelocity);
-	// shapeForInsertion->setColor(newColor);
-  // physicalObjects.addShapeToList( shapeForInsertion );
+	shapeForInsertion = boost::make_shared<Circle>();
+	shapeForInsertion->setPos(numRows, numRows*3, 0);
+	shapeForInsertion->setMass(cueMass);
+	shapeForInsertion->setRadius(ballRadius);
+	shapeForInsertion->setVelocity(cueVelocity);
+	shapeForInsertion->setColor(newColor);
+  physicalObjects.addShapeToList( shapeForInsertion );
 
 	// MyShape::shapes.resize(MyShape::shapes.size() + numPieces );
 

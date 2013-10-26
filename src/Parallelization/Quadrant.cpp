@@ -225,11 +225,12 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     if ( targetQuadrant != NULL )
     {
       targetQuadrant->insertShape( insertedShape );
-      this->adjustMass( insertedShape->getMass() );
+      // this->adjustMass( insertedShape->getMass() );
     }
   }
   else
   {
+    this->adjustMass( insertedShape->getMass() );
     isLeaf = false;
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     quad_pointer targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
