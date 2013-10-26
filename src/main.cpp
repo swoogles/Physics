@@ -258,7 +258,7 @@ void init(char simulation) {
     target[1]=0;
     target[2]=0;
     target[3]=1;
-	  Simulations::bodyFormationGeneric( 650, target, groupMomentum );
+	  // Simulations::bodyFormationGeneric( 650, target, groupMomentum );
     cout << "xpos: " << target[0] << endl;
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
 
@@ -268,7 +268,7 @@ void init(char simulation) {
     groupMomentum[2]=0;
 
     cout << "xpos: " << target[0] << endl;
-	  Simulations::bodyFormationGeneric( 650, target, groupMomentum );
+	  // Simulations::bodyFormationGeneric( 650, target, groupMomentum );
     cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
   if ( simulation == '7' ) {

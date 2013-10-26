@@ -94,15 +94,9 @@ class Simulations
 
     static ShapeList bodyFormation_ArbitraryList( int numPieces );
 
-    static void bodyFormationGeneric( int numPieces, sgVec4 target, sgVec4 groupMomentum );
-
     static ShapeList bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
-    static void billiards(int);
-
     static ShapeList billiardsReturningList(int);
-
-    static void billiards2(int);
 
     //VERY EXPERIMENTAL
     static ShapeList billiards2_ArbitraryList(int);
