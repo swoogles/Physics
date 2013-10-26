@@ -65,3 +65,4 @@ boost::numeric::ublas::vector<shape_pointer> ShapeList::getShapes()
 {
   return shapes;
 }
+

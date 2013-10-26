@@ -399,6 +399,15 @@ void idle() {
       // cout << "processing shape" << endl;
       globalQuadrant->insertShape( curShape );
     }
+    ShapeList shapeList = globalQuadrant->getShapesRecursive(2);
+    foreach_ ( shape_pointer curShape, shapeList.getShapes() )
+    {
+      sgVec4 curPos;
+      curShape->getPos( curPos );
+      cout << "CurShape.pos[0]: " << curPos[0] << endl;
+      cout << "CurShape.pos[1]: " << curPos[1] << endl;
+      cout << "CurShape.pos[2]: " << curPos[2] << endl;
+    }
     sgVec4 centerOfMass;
     globalQuadrant->getCenterOfMass( centerOfMass );
     // cout << "Center of Mass: " << centerOfMass << endl;

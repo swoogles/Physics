@@ -13,12 +13,14 @@
 #include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Box.h"
 #include "../ShapeFiles/Circle.h"
+#include "../ShapeFiles/ShapeList.h"
 // #include "../Physics/Interactions.h"
 
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/multi_array.hpp>
 #include <boost/current_function.hpp>
 #include <boost/ref.hpp>
+#include <boost/foreach.hpp>
 #include <cassert>
 
 //using namespace boost::numeric::ublas;
@@ -29,6 +31,7 @@ using namespace boost;
 //using namespace std;
 
 #define INVALID_OCTREE_INDEX -1
+#define foreach_  BOOST_FOREACH                                                                                              
 
 class Quadrant : public Box
 {
@@ -83,6 +86,8 @@ class Quadrant : public Box
   inline void setMass( float mass ) { this->mass = mass; }
   inline void adjustMass ( float deltaMass ) { mass+= deltaMass; }
 
+  boost::shared_ptr<MyShape> getShapeInQuadrant();
+
   void getWeightedPosition(sgVec4 weightedPosition);
   void setWeightedPosition(sgVec4 weightedPosition);
 
@@ -94,6 +99,8 @@ class Quadrant : public Box
 	void getPos(sgVec4 retVec);
 
   void calcForceOnShape( shape_pointer curShape, sgVec3 netForceFromQuadrant, float dt );
+
+  ShapeList getShapesRecursive( int curLevel );
 
 };
 
