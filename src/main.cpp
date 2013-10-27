@@ -329,7 +329,16 @@ void idle() {
 	if (! WorldSettings::isPaused() ) {
     numStep++;
 
-		calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
+		// calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
+    if ( physicalObjects.size() > 0 )
+    {
+      foreach_ ( shape_pointer curShape, physicalObjects )
+      {
+        calcForceOnObject_Octree(curShape, globalQuadrant, WorldSettings::getDT() );
+      }
+    }
+
+
 		WorldSettings::updateTimeElapsed();
 		main_window_UI::update();
 		//calcDrag(WorldSettings::getDT());

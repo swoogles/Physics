@@ -159,31 +159,105 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
   sgVec4 gravVec;
   boost::shared_ptr<MyShape> object1;
   boost::shared_ptr<MyShape> object2;
+  boost::shared_ptr<MyShape> shapeInQuadrant;
   float fGrav;
   SGfloat distance;
   SGfloat distanceSquared;
   SGfloat theta = 0.5;
+  typedef boost::shared_ptr<Quadrant> quad_pointer;
 
   sgVec4 gravField;
 
   sgVec4 totalFGrav;
 
   getVectorToObject2( curObject, curQuadrant, sepVec);
+  distance = sgLengthVec4( sepVec );
+  distanceSquared = sgLengthSquaredVec4( sepVec );
 
-  if ( curQuadrant->isExternal() )
+
+  //1. 
+    //a. If the current node is an external node 
+    //b. (and it is not body b), 
+    //c. calculate the force exerted by the current node on b
+    //d. add this amount to b’s net force.
+  //2. 
+    //a. Otherwise, calculate the ratio s/d. If s/d < θ, treat this internal node as a single body, and calculate the force it exerts on body b
+    //b. add this amount to b’s net force.
+  //3. Otherwise, run the procedure recursively on each of the current node’s children.
+
+
+  //1.
+  //a. 
+  if ( curQuadrant->isExternal() ) 
   {
-    if ( curObject != curQuadrant->getShapeInQuadrant() )
+    cout << "1" << endl;
+    shapeInQuadrant = curQuadrant->getShapeInQuadrant();
+
+    //b.
+    if ( curObject != shapeInQuadrant )
     {
+      cout << "1.a" << endl;
+      //c.
+      fGrav = calcForceGrav(curObject, shapeInQuadrant, distanceSquared);
+
+      sgNormaliseVec4(unitVec, sepVec);
+
+      sgScaleVec4(gravVec, unitVec, fGrav);
+      sgScaleVec4(gravVec, dt);
+
+      curObject->adjustMomentum(gravVec);
+      // Only used during the naive n^2 approach
+      // sgNegateVec4(gravVec);
+      // object2->adjustMomentum(gravVec);
 
     }
   }
   else
   {
-    distance = sgLengthVec4( sepVec );
-    distanceSquared = sgLengthSquaredVec4( sepVec );
+    //2.
+    //a.
+    cout << "2" << endl;
     if ( curQuadrant->getWidth() / distance < theta )
     {
+      fGrav = calcForceGrav(curObject, curQuadrant, distanceSquared);
+
+      sgNormaliseVec4(unitVec, sepVec);
+
+      sgScaleVec4(gravVec, unitVec, fGrav);
+      sgScaleVec4(gravVec, dt);
+
+      //b.
+      curObject->adjustMomentum(gravVec);
       
+    }
+    //3.
+    else
+    {
+      cout << "3" << endl;
+      quad_pointer targetQuadrant;
+      for ( int x = 0; x < 2; x++ )
+      {
+        for ( int y = 0; y < 2; y++ )
+        {
+          for ( int z = 0; z < 2; z++ )
+          {
+
+            targetQuadrant = curQuadrant->getQuadrantFromCell( x, y, z );
+            if ( targetQuadrant != NULL )
+            {
+              calcForceOnObject_Octree(curObject, targetQuadrant, dt);
+
+              // targetShapeList = targetQuadrant->getShapesRecursive( curLevel  );
+              // foreach_ ( shape_pointer curShape, targetShapeList.getShapes() )
+              // {
+              //   totalShapeList.addShapeToList( curShape );
+              // }
+
+            }
+
+          }
+        }
+      }
     }
   }
 

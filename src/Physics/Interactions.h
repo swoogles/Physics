@@ -39,6 +39,8 @@ typedef boost::shared_ptr<MyShape> shape_pointer;
  */
 void elasticCollision(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2);
 
+void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt);
+
 
 /*! \relates MyShape
  *  \brief Calculates forces on all current objects
