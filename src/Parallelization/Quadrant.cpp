@@ -255,6 +255,10 @@ void Quadrant::insertShape( shape_pointer insertedShape )
       targetQuadrant->insertShape( insertedShape );
       targetQuadrantB->insertShape( shapeInQuadrant );
     }
+    // cout << "reseting" << endl;
+    shapeInQuadrant.reset();
+    // cout << "reseted" << endl;
+
   }
 
   sgVec4 CoMPosition;
@@ -402,7 +406,6 @@ void Quadrant::calcForceOnShape( shape_pointer curShape, sgVec3 netForceFromQuad
 //Get all objects in octree and return them in list
 ShapeList Quadrant::getShapesRecursive( int curLevel )
 {
-  cout << "EEp!" << endl;
   typedef boost::shared_ptr<MyShape> shape_pointer;
   shape_pointer curShape;
   typedef boost::shared_ptr<Quadrant> quad_pointer;
@@ -410,58 +413,34 @@ ShapeList Quadrant::getShapesRecursive( int curLevel )
   ShapeList totalShapeList;
   ShapeList targetShapeList;
 
-  if ( this->level < curLevel )
+  if ( this->getShapeInQuadrant() )
   {
-    quad_pointer targetQuadrant;
+    totalShapeList.addShapeToList( this->getShapeInQuadrant() );
+  }
 
-    for ( int x = 0; x < 2; x++ )
+  quad_pointer targetQuadrant;
+
+  for ( int x = 0; x < 2; x++ )
+  {
+    for ( int y = 0; y < 2; y++ )
     {
-      for ( int y = 0; y < 2; y++ )
+      for ( int z = 0; z < 2; z++ )
       {
-        for ( int z = 0; z < 2; z++ )
+
+        targetQuadrant = this->getQuadrantFromCell( x, y, z );
+        if ( targetQuadrant != NULL )
         {
-          // newPos[0]=pos[0]+(xFactor*dimensions[0]/4.0);
-          // newPos[1]=pos[1]+(yFactor*dimensions[1]/4.0);
-          // newPos[2]=pos[2]+(zFactor*dimensions[2]/4.0);
-          // newPos[3]=1;
-
-          // newDimensions[0] = dimensions[0]/2;
-          // newDimensions[1] = dimensions[1]/2;
-          // newDimensions[2] = dimensions[2]/2;
-
-          targetQuadrant = this->getQuadrantFromCell( x, y, z );
-          if ( targetQuadrant != NULL )
+          targetShapeList = targetQuadrant->getShapesRecursive( curLevel  );
+          foreach_ ( shape_pointer curShape, targetShapeList.getShapes() )
           {
-            shape_pointer targetShape = this->getShapeInQuadrant();
-
-            totalShapeList.addShapeToList( targetShape );
-
-            targetShapeList = targetQuadrant->getShapesRecursive( curLevel  );
-            // for ( MyShape curShape : targetShapeList.getShapes() )
-            foreach_ ( shape_pointer curShape, targetShapeList.getShapes() )
-            {
-              totalShapeList.addShapeToList( curShape );
-            }
+            totalShapeList.addShapeToList( curShape );
           }
-          else
-          {
-            totalShapeList.addShapeToList( this->getShapeInQuadrant() );
-          }
-
-
-          // for ( MyShape curShape : targetShapeList.get
-          // totalShapeList.addShapeToList(targetQuadrant);
-
-
-          // quadOctree[x][y][z] = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
-          // targetQuadrant = quadOctree[x][y][z];
-          // targetQuadrant->subDivideAll(levels, 4);
-
         }
+
       }
     }
-
   }
+
   return totalShapeList;
 }
 

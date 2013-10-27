@@ -86,6 +86,7 @@ bool writtenImage = false;
 //void vecFileRead(ifstream & curFile, sgVec4 retVec);
 
 int numStep = 0;
+int numFrame = 0;
 float totalMass = 0;
 
 
@@ -399,15 +400,29 @@ void idle() {
       // cout << "processing shape" << endl;
       globalQuadrant->insertShape( curShape );
     }
+
+    // cout << "Getting shapes recursively" << endl;
     ShapeList shapeList = globalQuadrant->getShapesRecursive(2);
+    // cout << "Got shapes recursively" << endl;
+
+    if ( numFrame++ < 5 )
+    {
+      cout << "RecursiveShapes.size: " << shapeList.getShapes().size() <<endl;
+    }
+        
     foreach_ ( shape_pointer curShape, shapeList.getShapes() )
     {
+      // cout << "erg?" << endl;
       sgVec4 curPos;
       curShape->getPos( curPos );
-      cout << "CurShape.pos[0]: " << curPos[0] << endl;
-      cout << "CurShape.pos[1]: " << curPos[1] << endl;
-      cout << "CurShape.pos[2]: " << curPos[2] << endl;
+      // cout << "ergleFuck?" << endl;
+      // cout << "CurShape.pos[0]: " << curPos[0] << endl;
+      // cout << "CurShape.pos[1]: " << curPos[1] << endl;
+      // cout << "CurShape.pos[2]: " << curPos[2] << endl;
+      // cout << "Shape Address; " << *curShape << endl;
     }
+    // cout << endl << endl << endl;
+
     sgVec4 centerOfMass;
     globalQuadrant->getCenterOfMass( centerOfMass );
     // cout << "Center of Mass: " << centerOfMass << endl;
