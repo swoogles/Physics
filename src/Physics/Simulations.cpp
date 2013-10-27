@@ -532,6 +532,77 @@ ShapeList Simulations::disruption_ArbitraryList() {
   return physicalObjects;
 }
 
+ShapeList Simulations::bodyFormation_NonRandom() {
+	WorldSettings::setDT(1000);
+	WorldSettings::makeAllInelastic();
+	WorldSettings::setGravBetweenObjects(true);
+	WorldSettings::setConstGravField(false);
+	WorldSettings::setAutoScaling(true);
+	WorldSettings::setTimeElapsed(0);
+	WorldSettings::setTotalMass(0);
+
+  int numPieces = 2;
+
+  ShapeList physicalObjects;
+
+	float objectDensity = DENSITY_SUN;
+	float bodyVolume = (MASS_SUN * 10)/(objectDensity);
+	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+	sgVec4 startPlacement, startMomentum, target;
+
+  target[0]=-1000;
+  target[1]=0;
+  target[2]=0;
+  target[3]=1;
+
+	sgVec3 newColor;
+	newColor[0] = 1;
+	newColor[1] = 1;
+	newColor[2] = 1;
+
+	float pieceMass = pow(pieceRadius, 3.0);
+  pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
+
+  float totalMass = 0.0;
+
+  shape_pointer curShape;
+  float offset = 1e3;
+  startPlacement[0]= offset;
+  startPlacement[1]= offset;
+
+  curShape = make_shared<Circle>();
+  curShape = boost::make_shared<Circle>();
+  curShape->setPos( startPlacement );
+  curShape->setMass(pieceMass);
+  curShape->setRadius(pieceRadius);
+  curShape->setMomentum(startMomentum);
+  curShape->setDensity(objectDensity);
+  curShape->setColor(newColor);
+
+  physicalObjects.addShapeToList( curShape );
+  totalMass += curShape->getMass();
+
+  startPlacement[0]= -offset;
+  startPlacement[1]= -offset;
+
+  curShape = make_shared<Circle>();
+  curShape = boost::make_shared<Circle>();
+  curShape->setPos( startPlacement );
+  curShape->setMass(pieceMass);
+  curShape->setRadius(pieceRadius);
+  curShape->setMomentum(startMomentum);
+  curShape->setDensity(objectDensity);
+  curShape->setColor(newColor);
+
+  physicalObjects.addShapeToList( curShape );
+  totalMass += curShape->getMass();
+
+  WorldSettings::adjustTotalMass( totalMass );
+
+  cout << "Finishing sim setup" << endl;
+  return physicalObjects;
+}
+
 ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();
@@ -544,7 +615,7 @@ ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
-	float bodyVolume = (MASS_SUN * 3)/(objectDensity);
+	float bodyVolume = (MASS_SUN * 10)/(objectDensity);
 	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
 	sgVec4 startPlacement, startMomentum, target;
 
@@ -552,6 +623,11 @@ ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {
   target[1]=0;
   target[2]=0;
   target[3]=1;
+
+	sgVec3 newColor;
+	newColor[0] = 1;
+	newColor[1] = 1;
+	newColor[2] = 1;
 
 	float pieceMass = pow(pieceRadius, 3.0);
 	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
@@ -579,6 +655,7 @@ ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {
 		curShape->setRadius(pieceRadius);
 		curShape->setMomentum(startMomentum);
 		curShape->setDensity(objectDensity);
+    curShape->setColor(newColor);
 
     physicalObjects.addShapeToList( curShape );
 		//Check if being placed on previously created object

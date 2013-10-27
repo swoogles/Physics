@@ -226,7 +226,8 @@ void init(char simulation) {
     Simulations::largeGridAlternating();
   }
   if ( simulation == '1' ) {
-	  physicalObjects = Simulations::bodyFormation_ArbitraryList( 400 ).getShapes();
+	  // physicalObjects = Simulations::bodyFormation_ArbitraryList( 3 ).getShapes();
+	  physicalObjects = Simulations::bodyFormation_NonRandom().getShapes();
     MyShape::shapes = physicalObjects; 
     cout << "Done setting up sim." << endl;
   }
@@ -329,14 +330,15 @@ void idle() {
 	if (! WorldSettings::isPaused() ) {
     numStep++;
 
-		// calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
-    if ( physicalObjects.size() > 0 )
-    {
-      foreach_ ( shape_pointer curShape, physicalObjects )
-      {
-        calcForceOnObject_Octree(curShape, globalQuadrant, WorldSettings::getDT() );
-      }
-    }
+    cout << "physicalObjects.size(): " << physicalObjects.size() << endl;
+		calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
+    // if ( physicalObjects.size() > 0 )
+    // {
+    //   foreach_ ( shape_pointer curShape, physicalObjects )
+    //   {
+    //     calcForceOnObject_Octree(curShape, globalQuadrant, WorldSettings::getDT() );
+    //   }
+    // }
 
 
 		WorldSettings::updateTimeElapsed();
@@ -387,7 +389,7 @@ void idle() {
     pos[3] = 1;
 
     float side = 1e4; //Formation Value
-    side = 5e2;
+    side = 5e5;
     float width = side;
     float height = side;
     float depth = side;

@@ -101,12 +101,14 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
 			WorldSettings::getConstGravFieldVal(gravField);
 			sgScaleVec4(gravField, 1/dt);
 		}
+    cout << "Calc forces" << endl;
 
 		//sgVec4 * ob1mom;
     if ( physicalObjects.size() > 0 )
     {
       for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
       {
+        cout << "\tCalc forces for object: " << i << endl;
         if (killed) {
           // cout << "curI: " << i << endl;
         }
@@ -118,6 +120,7 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
 
         for (unsigned int j = i + 1; j < physicalObjects.size(); )
         {
+          cout << "\t\tCalc forces with object: " << j << endl;
           object2 = physicalObjects(j);
 
 
@@ -127,6 +130,7 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
 
           if (WorldSettings::isGravBetweenObjects() ) {
             fGrav = calcForceGrav(object1, object2, distanceSquared);
+            cout << "fGrav from Shape: " << fGrav << endl;
 
             sgNormaliseVec4(unitVec, sepVec);
 
@@ -194,21 +198,26 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
     shapeInQuadrant = curQuadrant->getShapeInQuadrant();
 
     //b.
-    if ( curObject != shapeInQuadrant )
+    if ( shapeInQuadrant != NULL & curObject != shapeInQuadrant )
     {
       cout << "1.a" << endl;
       //c.
       fGrav = calcForceGrav(curObject, shapeInQuadrant, distanceSquared);
+      cout << "fGrav from Shape: " << fGrav << endl;
+      cout << "1.b" << endl;
 
       sgNormaliseVec4(unitVec, sepVec);
 
       sgScaleVec4(gravVec, unitVec, fGrav);
       sgScaleVec4(gravVec, dt);
 
+      cout << "1.c" << endl;
       curObject->adjustMomentum(gravVec);
+      cout << "1.d" << endl;
       // Only used during the naive n^2 approach
       // sgNegateVec4(gravVec);
       // object2->adjustMomentum(gravVec);
+      cout << "1.end" << endl;
 
     }
   }
@@ -216,7 +225,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
   {
     //2.
     //a.
-    cout << "2" << endl;
+    // cout << "2" << endl;
     if ( curQuadrant->getWidth() / distance < theta )
     {
       fGrav = calcForceGrav(curObject, curQuadrant, distanceSquared);
@@ -227,13 +236,14 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
       sgScaleVec4(gravVec, dt);
 
       //b.
+      cout << "fGrav from Quad: " << fGrav << endl;
       curObject->adjustMomentum(gravVec);
       
     }
     //3.
     else
     {
-      cout << "3" << endl;
+      // cout << "3" << endl;
       quad_pointer targetQuadrant;
       for ( int x = 0; x < 2; x++ )
       {

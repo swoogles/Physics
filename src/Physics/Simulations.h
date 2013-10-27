@@ -92,6 +92,8 @@ class Simulations
 
     static ShapeList disruption_ArbitraryList();
 
+    static ShapeList bodyFormation_NonRandom();
+
     static ShapeList bodyFormation_ArbitraryList( int numPieces );
 
     static ShapeList bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
