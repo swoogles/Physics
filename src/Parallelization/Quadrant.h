@@ -1,6 +1,6 @@
 /*
  * Quadrant.h
-*  Author: brasure
+ *  Author: brasure
  */
 
 #ifndef QUADRANT_H_
@@ -86,6 +86,14 @@ class Quadrant : public Box
   inline void setMass( float mass ) { this->mass = mass; }
   inline void adjustMass ( float deltaMass ) { mass+= deltaMass; }
 
+  inline float getWidth() { return dimensions[0]; }
+
+  inline bool isExternal() { return isLeaf; }
+
+  inline void getPos( sgVec4 retVec ) {
+    getCenterOfMass( retVec );
+  }
+
   boost::shared_ptr<MyShape> getShapeInQuadrant();
 
   void getWeightedPosition(sgVec4 weightedPosition);
@@ -95,10 +103,6 @@ class Quadrant : public Box
   void setCenterOfMass( sgVec4 centerOfMass );
 
   quad_pointer determineShapeQuadrant( shape_pointer shapeToInsert );
-
-	void getPos(sgVec4 retVec);
-
-  void calcForceOnShape( shape_pointer curShape, sgVec3 netForceFromQuadrant, float dt );
 
   ShapeList getShapesRecursive( int curLevel );
 

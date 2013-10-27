@@ -153,6 +153,42 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
 
 }
 
+void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt) {
+  sgVec4 sepVec;
+  sgVec4 unitVec;
+  sgVec4 gravVec;
+  boost::shared_ptr<MyShape> object1;
+  boost::shared_ptr<MyShape> object2;
+  float fGrav;
+  SGfloat distance;
+  SGfloat distanceSquared;
+  SGfloat theta = 0.5;
+
+  sgVec4 gravField;
+
+  sgVec4 totalFGrav;
+
+  getVectorToObject2( curObject, curQuadrant, sepVec);
+
+  if ( curQuadrant->isExternal() )
+  {
+    if ( curObject != curQuadrant->getShapeInQuadrant() )
+    {
+
+    }
+  }
+  else
+  {
+    distance = sgLengthVec4( sepVec );
+    distanceSquared = sgLengthSquaredVec4( sepVec );
+    if ( curQuadrant->getWidth() / distance < theta )
+    {
+      
+    }
+  }
+
+}
+
 void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::vector<shape_pointer> physicalObjects, boost::shared_ptr<Quadrant> octree, float dt) {
 		sgVec4 sepVec;
 		sgVec4 unitVec;
@@ -177,8 +213,11 @@ void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::vector<shape_p
     foreach_ ( shape_pointer curShape, physicalObjects )
     {
       sgVec3 netForceFromQuadrant;
-      octree->calcForceOnShape( curShape, netForceFromQuadrant, dt );
+      // octree->calcForceOnShape( curShape, netForceFromQuadrant, dt );
       getVectorToObject2(object1, object2, sepVec);
+
+
+
     }
 
 
