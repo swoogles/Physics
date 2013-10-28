@@ -17,6 +17,11 @@
 #include <boost/foreach.hpp>
 #include <boost/ref.hpp>
 
+#include <fstream>
+#include <map>
+#include <string>
+#include <boost/property_map/property_map.hpp>
+
 #include "Parallelization/Quadrant.h"
 
 #include "ShapeFiles/Box.h"
@@ -93,6 +98,7 @@ float totalMass = 0;
 // boost::shared_ptr<Circle> globalCenterOfMassCircle;
 boost::shared_ptr<Quadrant> globalQuadrant;
 boost::numeric::ublas::vector<shape_pointer> physicalObjects; 
+std::map<std::string, std::string> globalProperties;
 
 void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > shapeList,
 						float &minX, float &minY, float &maxX, float &maxY) {
@@ -207,8 +213,45 @@ void init(char simulation) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  // PROPERTIES SECTION
+  string line;
+  string propName, propValue;
+  ifstream propertiesFile;
+  propertiesFile.open(".properties", ios::in);
+  int equalsPosition;
+  while( getline(propertiesFile, line) )
+  {
+    equalsPosition = line.find('=');
+    cout << "CurOption: " << line << endl;
+    cout << "EqualsPosition: " << equalsPosition << endl;
+    propName=line.substr(0,equalsPosition);
+    cout << "propName: " << propName << endl;
+    propValue=line.substr(equalsPosition+1);
+    cout << "propValue: " << propValue << endl;
+    globalProperties.insert( make_pair( propName, propValue ) );
+  }
+  propertiesFile.close();
+
+  std::map<std::string, std::string> name2address;
+  boost::associative_property_map< std::map<std::string, std::string> >
+    address_map(name2address);
+
+  name2address.insert(make_pair(std::string("Fred"), 
+        std::string("710 West 13th Street")));
+  name2address.insert(make_pair(std::string("Joe"), 
+        std::string("710 West 13th Street")));
+
+  // foo(address_map);
+
+  for (std::map<std::string, std::string>::iterator i = name2address.begin();
+      i != name2address.end(); ++i)
+  {
+    std::cout << i->first << ": " << i->second << "\n";
+  }
+      // PROPERTIES SECTION
 
 	WorldSettings::Pause();
 
@@ -331,14 +374,15 @@ void idle() {
     numStep++;
 
     cout << "physicalObjects.size(): " << physicalObjects.size() << endl;
-		calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
-    // if ( physicalObjects.size() > 0 )
-    // {
-    //   foreach_ ( shape_pointer curShape, physicalObjects )
-    //   {
-    //     calcForceOnObject_Octree(curShape, globalQuadrant, WorldSettings::getDT() );
-    //   }
-    // }
+
+		// calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
+    if ( physicalObjects.size() > 0 )
+    {
+      foreach_ ( shape_pointer curShape, physicalObjects )
+      {
+        calcForceOnObject_Octree(curShape, globalQuadrant, WorldSettings::getDT() );
+      }
+    }
 
 
 		WorldSettings::updateTimeElapsed();
