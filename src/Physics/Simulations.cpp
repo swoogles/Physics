@@ -8,6 +8,7 @@
 #include "Simulations.h"
 
 boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > Simulations::physicalObjects(0);
+int Simulations::curStep;
 
 using namespace std;
 

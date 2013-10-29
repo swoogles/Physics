@@ -100,6 +100,35 @@ boost::shared_ptr<Quadrant> globalQuadrant;
 boost::numeric::ublas::vector<shape_pointer> physicalObjects; 
 std::map<std::string, std::string> globalProperties;
 
+class BillProperties
+{
+  public:
+    // Using char * instead of string gets rid of heap allocation and dynamic initialization
+    static const char FORCE_CALCULATION_METHOD[];
+    static const char  SIMULATION_DT[];
+
+    bool static isValidProperty( string line );
+};
+const char BillProperties::FORCE_CALCULATION_METHOD[] = "forceCalculationMethod";
+const char BillProperties::SIMULATION_DT[] = "dt";
+
+bool BillProperties::isValidProperty( string line )
+{
+  bool valid = true;
+  if ( line[0] == '#' )
+  {
+    valid = false;
+  }
+
+  if ( line.find('=') == -1 )
+  {
+    valid = false;
+  }
+
+  return valid;
+}
+
+
 void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > shapeList,
 						float &minX, float &minY, float &maxX, float &maxY) {
 	sgVec4 curPos;
@@ -206,8 +235,7 @@ void controlDisplay(void) {
 
 
 void init(char simulation) {
-	cout << "Initializing!" << endl;
-  cout << "simulation: " << simulation << endl;
+  Simulations::setCurStep(0);
 	cout.flush();
 	glViewport(-WW,WW,-WH,WH);
 	glMatrixMode(GL_PROJECTION);
@@ -216,7 +244,6 @@ void init(char simulation) {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
-  // PROPERTIES SECTION
   string line;
   string propName, propValue;
   ifstream propertiesFile;
@@ -224,34 +251,15 @@ void init(char simulation) {
   int equalsPosition;
   while( getline(propertiesFile, line) )
   {
-    equalsPosition = line.find('=');
-    cout << "CurOption: " << line << endl;
-    cout << "EqualsPosition: " << equalsPosition << endl;
-    propName=line.substr(0,equalsPosition);
-    cout << "propName: " << propName << endl;
-    propValue=line.substr(equalsPosition+1);
-    cout << "propValue: " << propValue << endl;
-    globalProperties.insert( make_pair( propName, propValue ) );
+    if ( BillProperties::isValidProperty( line ) )
+    {
+      equalsPosition = line.find('=');
+      propName=line.substr(0,equalsPosition);
+      propValue=line.substr(equalsPosition+1);
+      globalProperties.insert( make_pair( propName, propValue ) );
+    }
   }
   propertiesFile.close();
-
-  std::map<std::string, std::string> name2address;
-  boost::associative_property_map< std::map<std::string, std::string> >
-    address_map(name2address);
-
-  name2address.insert(make_pair(std::string("Fred"), 
-        std::string("710 West 13th Street")));
-  name2address.insert(make_pair(std::string("Joe"), 
-        std::string("710 West 13th Street")));
-
-  // foo(address_map);
-
-  for (std::map<std::string, std::string>::iterator i = name2address.begin();
-      i != name2address.end(); ++i)
-  {
-    std::cout << i->first << ": " << i->second << "\n";
-  }
-      // PROPERTIES SECTION
 
 	WorldSettings::Pause();
 
@@ -304,21 +312,16 @@ void init(char simulation) {
     target[2]=0;
     target[3]=1;
 	  // Simulations::bodyFormationGeneric( 650, target, groupMomentum );
-    cout << "xpos: " << target[0] << endl;
-    cout << "NumShapes: " << MyShape::shapes.size() << endl;
 
     target[0]=-target[0];
     groupMomentum[0]=0;
     groupMomentum[1]=-2800;
     groupMomentum[2]=0;
 
-    cout << "xpos: " << target[0] << endl;
 	  // Simulations::bodyFormationGeneric( 650, target, groupMomentum );
-    cout << "NumShapes: " << MyShape::shapes.size() << endl;
   }
   if ( simulation == '7' ) {
     globalQuadrant = Simulations::octreeDemonstration(10);
-    cout << "Reset quadrant" << endl;
   }
 
   if ( simulation == '8' ) {
@@ -371,16 +374,25 @@ void idle() {
 
   // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
 	if (! WorldSettings::isPaused() ) {
-    numStep++;
 
-    cout << "physicalObjects.size(): " << physicalObjects.size() << endl;
+    // cout << "physicalObjects.size(): " << physicalObjects.size() << endl;
+    
+    // forceCalculations=octree
 
-		// calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
-    if ( physicalObjects.size() > 0 )
+    string forceCalculations = globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD );
+    
+    string USE_OCTREE = "octree";
+    if ( forceCalculations.compare( USE_OCTREE ) )
     {
-      foreach_ ( shape_pointer curShape, physicalObjects )
+      calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
+    }
+    else {
+      if ( physicalObjects.size() > 0 )
       {
-        calcForceOnObject_Octree(curShape, globalQuadrant, WorldSettings::getDT() );
+        foreach_ ( shape_pointer curShape, physicalObjects )
+        {
+          calcForceOnObject_Octree(curShape, globalQuadrant, WorldSettings::getDT() );
+        }
       }
     }
 
@@ -403,7 +415,7 @@ void idle() {
       foreach_ ( shape_pointer curShape, physicalObjects )
       // for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
       {
-        if ( numStep == 1 ) {
+        if ( Simulations::getCurStep() == 1 ) {
           totalMass += curShape->getMass();
         }
 
@@ -420,6 +432,7 @@ void idle() {
 
         calcCollisionsAll_ArbitraryList(physicalObjects);
       }
+      Simulations::incCurStep();
     }
 
     int curObserver = Observer::getCurObserver();

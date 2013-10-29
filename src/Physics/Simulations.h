@@ -83,9 +83,14 @@ class Simulations
      */
     typedef boost::shared_ptr<MyShape> shape_pointer;
     static boost::numeric::ublas::vector< shape_pointer > physicalObjects;
+    static int curStep;
 
 
   public:
+    inline static int getCurStep() { return curStep; };
+    inline static void setCurStep( int inCurStep ) { Simulations::curStep = inCurStep; };
+    inline static void incCurStep() { curStep+= 1; };
+
     static void largeGridAlternating();
 
     static void simpleOrbit();
