@@ -41,7 +41,7 @@ class Simulation
     // bool allInelastic;
 
     // bool constGravField;
-    // bool gravBetweenObjects;
+    bool gravBetweenObjects;
 
     // sgVec4 gravField;
 
@@ -64,6 +64,11 @@ class Simulation
     void Pause() { paused = true; };
     void unPause() { paused = false; };
     bool isPaused() { return paused; };
+
+
+inline bool isGravBetweenObjects() { return gravBetweenObjects; };
+
+inline void setGravBetweenObjects(bool newVal) { gravBetweenObjects = newVal; };
 
 } ;
 #endif 

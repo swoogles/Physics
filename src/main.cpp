@@ -156,7 +156,6 @@ void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape
 			maxY = curPos[1];
 
 	}
-  cout << "Calced maxes" << endl;
 }
 
 // You want to avoid passing argument to this method, because it would slow down every single
@@ -261,6 +260,7 @@ void init(char simulation) {
   propertiesFile.close();
 
 	WorldSettings::Pause();
+  globalSimulation.Pause();
 
 	Observer::init();
 
@@ -283,12 +283,6 @@ void init(char simulation) {
 	float minX, minY, maxX, maxY;
 	calcXYMinsAndMaxes(physicalObjects, minX, minY, maxX, maxY);
 
-	cout << "minX: " << minX << endl;
-	cout << "minY: " << minY << endl;
-	cout << "maxX: " << maxX << endl;
-	cout << "maxX: " << maxY << endl;
-
-
 	float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
 	Observer::observers(0)->setPos(0, 0, -pullBack*2);
@@ -308,13 +302,8 @@ void init(char simulation) {
 void idle() {
 	sgVec4 curPos;
 
-  // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
-	if (! WorldSettings::isPaused() ) {
-
-    // cout << "physicalObjects.size(): " << physicalObjects.size() << endl;
-    
-    // forceCalculations=octree
-
+	if (! WorldSettings::isPaused()  ) {
+    // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
     string forceCalculations = globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD );
     
     string USE_OCTREE = "octree";
@@ -334,6 +323,7 @@ void idle() {
 
 
 		WorldSettings::updateTimeElapsed();
+		globalSimulation.updateTimeElapsed();
 		main_window_UI::update();
 		//calcDrag(WorldSettings::getDT());
 
@@ -404,11 +394,6 @@ void idle() {
 
     ShapeList shapeList = globalQuadrant->getShapesRecursive(2);
 
-    if ( numFrame++ < 5 )
-    {
-      cout << "RecursiveShapes.size: " << shapeList.getShapes().size() <<endl;
-    }
-        
     foreach_ ( shape_pointer curShape, shapeList.getShapes() )
     {
       sgVec4 curPos;

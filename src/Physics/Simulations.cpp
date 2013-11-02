@@ -117,6 +117,7 @@ Simulation Simulations::billiards1(int numRows) {
 
   Simulation curSimulation;
   curSimulation.setDT(0);
+  curSimulation.setTimeElapsed(0);
   ShapeList physicalObjects;
 
 	sgVec4 gField;
@@ -185,6 +186,7 @@ Simulation Simulations::billiards2_ReturnSimulation(int numRows)
 
   Simulation curSimulation;
   curSimulation.setDT(.003);
+  curSimulation.setTimeElapsed(0);
   ShapeList physicalObjects;
   
 	sgVec4 gField;
@@ -255,6 +257,7 @@ Simulation Simulations::billiards3_ArbitraryList(int numRows) {
 
   Simulation curSimulation;
   curSimulation.setDT(.003);
+  curSimulation.setTimeElapsed(0);
   ShapeList physicalObjects;
 
 	sgVec4 gField;
@@ -428,6 +431,7 @@ Simulation Simulations::simpleCollision_ArbitraryList() {
 
   Simulation curSimulation;
   curSimulation.setDT( dt );
+  curSimulation.setTimeElapsed(0);
   shape_pointer curShape;
 
 	curShape = boost::make_shared<Circle>();
@@ -503,6 +507,7 @@ Simulation Simulations::bodyFormation_NonRandom() {
 
   Simulation curSimulation;
   curSimulation.setDT( dt );
+  curSimulation.setTimeElapsed(0);
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -575,7 +580,8 @@ Simulation Simulations::bodyFormation_ArbitraryList(int numPieces) {
 	WorldSettings::setTotalMass(0);
 
   Simulation curSimulation;
-  curSimulation.setDT(.003);
+  curSimulation.setDT(1000);
+  curSimulation.setTimeElapsed(0);
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -649,6 +655,7 @@ Simulation Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4
 
   Simulation curSimulation;
   curSimulation.setDT(.003);
+  curSimulation.setTimeElapsed(0);
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -730,7 +737,8 @@ Simulation Simulations::createSimulation( char simNumber )
     Simulations::largeGridAlternating();
   }
   if ( simNumber == '1' ) {
-	  newSimulation = Simulations::bodyFormation_NonRandom();
+	  // newSimulation = Simulations::bodyFormation_NonRandom();
+    newSimulation = Simulations::bodyFormation_ArbitraryList( 500 );
   }
   if ( simNumber == '2' ) {
 	  newSimulation = Simulations::disruption_ArbitraryList();
