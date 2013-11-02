@@ -17,6 +17,7 @@
 #include "../ShapeFiles/Box.h"
 #include "../ShapeFiles/ShapeList.h"
 #include "../Parallelization/Quadrant.h"
+#include "Simulation.h"
 #include "Interactions.h"
 
 #define MASS_VAR 1e21
@@ -95,25 +96,25 @@ class Simulations
 
     static void simpleOrbit();
 
-    static ShapeList disruption_ArbitraryList();
+    static Simulation disruption_ArbitraryList();
 
-    static ShapeList bodyFormation_NonRandom();
+    static Simulation bodyFormation_NonRandom();
 
-    static ShapeList bodyFormation_ArbitraryList( int numPieces );
+    static Simulation bodyFormation_ArbitraryList( int numPieces );
 
-    static ShapeList bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
+    static Simulation bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
-    static ShapeList billiardsReturningList(int);
+    static Simulation billiards1(int);
 
-    //VERY EXPERIMENTAL
-    static ShapeList billiards2_ArbitraryList(int);
+    static Simulation billiards2_ReturnSimulation(int);
 
-    static void billiards3(int);
-    static ShapeList billiards3_ArbitraryList(int);
+    static Simulation billiards3_ArbitraryList(int);
 
     static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
-    static ShapeList simpleCollision_ArbitraryList();
+    static Simulation simpleCollision_ArbitraryList();
+
+    static Simulation createSimulation( char simNumber );
 
     /*! \brief Returns a shape from the static list of objects that should be considered during
      * physical interactions.

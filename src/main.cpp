@@ -46,6 +46,7 @@
 
 //Physics
 #include "Physics/Interactions.h"
+#include "Physics/Simulation.h"
 #include "Physics/Simulations.h"
 #include "Physics/WorldSettings.h"
 
@@ -99,6 +100,7 @@ float totalMass = 0;
 boost::shared_ptr<Quadrant> globalQuadrant;
 boost::numeric::ublas::vector<shape_pointer> physicalObjects; 
 std::map<std::string, std::string> globalProperties;
+Simulation globalSimulation;
 
 class BillProperties
 {
@@ -189,9 +191,6 @@ void display(void)
   {
     foreach_ ( shape_pointer curShape, MyShape::shapes )
     {
-      // sgVec4 curPos;
-      // curShape->getPos(curPos);
-      // cout << "CurShape.pos: <" << curPos[0] << ", " << curPos[1] << ", " << curPos[2] << endl;
       curShape->draw();
     }
   }
@@ -272,77 +271,14 @@ void init(char simulation) {
 	Observer::setCurObserver(0);
 	//Observer::observers(0)->setAngVel(0, 0.2, 0);
 
-	//******CURRENT SIMULATION*****
-  if ( simulation == '0' ) {
-    Simulations::largeGridAlternating();
-  }
-  if ( simulation == '1' ) {
-	  // physicalObjects = Simulations::bodyFormation_ArbitraryList( 3 ).getShapes();
-	  physicalObjects = Simulations::bodyFormation_NonRandom().getShapes();
-    MyShape::shapes = physicalObjects; 
-    cout << "Done setting up sim." << endl;
-  }
-  if ( simulation == '2' ) {
-	  // Simulations::disruption();
-	  physicalObjects = Simulations::disruption_ArbitraryList().getShapes();
-    MyShape::shapes = physicalObjects; 
-  }
-  if ( simulation == '3' ) {
-	  physicalObjects = Simulations::simpleCollision_ArbitraryList().getShapes();
-    MyShape::shapes = physicalObjects; 
-  }
-  if ( simulation == '4' ) {
-    physicalObjects = Simulations::billiardsReturningList(5).getShapes() ;
-    MyShape::shapes = physicalObjects; 
-  }
-  if ( simulation == '5' ) {
-	  physicalObjects = Simulations::billiards2_ArbitraryList(15).getShapes();
-    MyShape::shapes = physicalObjects; 
-  }
-
-  if ( simulation == '6' ) {
-    sgVec4 groupMomentum;
-    groupMomentum[0]=0;
-    groupMomentum[1]=2800;
-    groupMomentum[2]=0;
-    groupMomentum[3]=1;
-    sgVec4 target;
-    target[0]=-2000;
-    target[1]=0;
-    target[2]=0;
-    target[3]=1;
-	  // Simulations::bodyFormationGeneric( 650, target, groupMomentum );
-
-    target[0]=-target[0];
-    groupMomentum[0]=0;
-    groupMomentum[1]=-2800;
-    groupMomentum[2]=0;
-
-	  // Simulations::bodyFormationGeneric( 650, target, groupMomentum );
-  }
-  if ( simulation == '7' ) {
-    globalQuadrant = Simulations::octreeDemonstration(10);
-  }
-
-  if ( simulation == '8' ) {
-    int numShapes = MyShape::shapes.size();
-    MyShape::shapes.resize(numShapes + 1);
-    MyShape::shapes(numShapes) = make_shared<Box>(); ;
-    
-  }
-
-  if ( simulation == '9' ) {
-    physicalObjects = Simulations::billiards3_ArbitraryList( 5 ).getShapes();
-    MyShape::shapes = physicalObjects; 
-  }
+  // Determine and create simulation
+  globalSimulation = Simulations::createSimulation( simulation );
+  physicalObjects = globalSimulation.getPhysicalObjects().getShapes();
+  MyShape::shapes = physicalObjects; 
   
 
 	char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
 	strcat(saveFileName, "output.dat");
-
-	//cout << "fileName: " << saveFileName << endl;
-	//saveShapes(saveFileName);
-
 
 	float minX, minY, maxX, maxY;
 	calcXYMinsAndMaxes(physicalObjects, minX, minY, maxX, maxY);
@@ -384,14 +320,14 @@ void idle() {
     string USE_OCTREE = "octree";
     if ( forceCalculations.compare( USE_OCTREE ) )
     {
-      calcForcesAll_ArbitraryList(physicalObjects, WorldSettings::getDT());
+      calcForcesAll_ArbitraryList(physicalObjects, globalSimulation.getDT());
     }
     else {
       if ( physicalObjects.size() > 0 )
       {
         foreach_ ( shape_pointer curShape, physicalObjects )
         {
-          calcForceOnObject_Octree(curShape, globalQuadrant, WorldSettings::getDT() );
+          calcForceOnObject_Octree(curShape, globalQuadrant, globalSimulation.getDT() );
         }
       }
     }
@@ -420,7 +356,7 @@ void idle() {
         }
 
         //MyShape::shapes(i)->adjustMomentum(gravity);
-        curShape->update(WorldSettings::getDT());
+        curShape->update( globalSimulation.getDT() );
         curShape->getPos(curPos);
 
         if (WorldSettings::isAutoScaling())
@@ -437,7 +373,7 @@ void idle() {
 
     int curObserver = Observer::getCurObserver();
 
-    Observer::observers(curObserver)->update(WorldSettings::getDT());
+    Observer::observers(curObserver)->update( globalSimulation.getDT() );
 
     sgVec4 pos;
     pos[0] = 0;
@@ -459,19 +395,14 @@ void idle() {
 
     globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
     // sleep(2);
-    // cout << "Idling!" << endl;
-    // cout << "Shapes size: " << MyShape::shapes.size() << endl;
     typedef boost::shared_ptr<MyShape> shape_pointer;
     boost::numeric::ublas::vector<shape_pointer> localShapeList = physicalObjects;
     foreach_ ( shape_pointer curShape, localShapeList )
     {
-      // cout << "processing shape" << endl;
       globalQuadrant->insertShape( curShape );
     }
 
-    // cout << "Getting shapes recursively" << endl;
     ShapeList shapeList = globalQuadrant->getShapesRecursive(2);
-    // cout << "Got shapes recursively" << endl;
 
     if ( numFrame++ < 5 )
     {
@@ -480,20 +411,12 @@ void idle() {
         
     foreach_ ( shape_pointer curShape, shapeList.getShapes() )
     {
-      // cout << "erg?" << endl;
       sgVec4 curPos;
       curShape->getPos( curPos );
-      // cout << "ergleFuck?" << endl;
-      // cout << "CurShape.pos[0]: " << curPos[0] << endl;
-      // cout << "CurShape.pos[1]: " << curPos[1] << endl;
-      // cout << "CurShape.pos[2]: " << curPos[2] << endl;
-      // cout << "Shape Address; " << *curShape << endl;
     }
-    // cout << endl << endl << endl;
 
     sgVec4 centerOfMass;
     globalQuadrant->getCenterOfMass( centerOfMass );
-    // cout << "Center of Mass: " << centerOfMass << endl;
 
     // globalCenterOfMassCircle->setPos( centerOfMass );
 

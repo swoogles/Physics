@@ -108,13 +108,15 @@ void Simulations::simpleOrbit() {
 	cout << "numBodies: " << MyShape::shapes.size() << endl;
 }
 
-ShapeList Simulations::billiardsReturningList(int numRows) {
+Simulation Simulations::billiards1(int numRows) {
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
 	WorldSettings::setGravBetweenObjects(false);
 	WorldSettings::setConstGravField(false);
 	WorldSettings::setTimeElapsed(0);
 
+  Simulation curSimulation;
+  curSimulation.setDT(0);
   ShapeList physicalObjects;
 
 	sgVec4 gField;
@@ -167,10 +169,13 @@ ShapeList Simulations::billiardsReturningList(int numRows) {
 
 	cout << "NumPieces: " << numPieces << endl;
 
-  return physicalObjects;
+  // return physicalObjects;
+  curSimulation.setPhysicalObjects( physicalObjects );
+  return curSimulation;
 }
 
-ShapeList Simulations::billiards2_ArbitraryList(int numRows) {
+Simulation Simulations::billiards2_ReturnSimulation(int numRows)
+{
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
 	//WorldSettings::makeAllInelastic();
@@ -178,6 +183,8 @@ ShapeList Simulations::billiards2_ArbitraryList(int numRows) {
 	WorldSettings::setConstGravField(false);
 	WorldSettings::setTimeElapsed(0);
 
+  Simulation curSimulation;
+  curSimulation.setDT(.003);
   ShapeList physicalObjects;
   
 	sgVec4 gField;
@@ -232,11 +239,13 @@ ShapeList Simulations::billiards2_ArbitraryList(int numRows) {
 
 	cout << "NumPieces: " << numPieces << endl;
 
-  return physicalObjects;
+  curSimulation.setPhysicalObjects( physicalObjects );
+  return curSimulation;
 
 }
 
-void Simulations::billiards3(int numRows) {
+
+Simulation Simulations::billiards3_ArbitraryList(int numRows) {
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
 	//WorldSettings::makeAllInelastic();
@@ -244,73 +253,8 @@ void Simulations::billiards3(int numRows) {
 	WorldSettings::setConstGravField(false);
 	WorldSettings::setTimeElapsed(0);
 
-	sgVec4 gField;
-	gField[0] = -.2; gField[1] = 0; gField[2] = 0;
-
-	WorldSettings::setConstGravFieldVal(gField);
-
-	int numPieces = 0;
-	float cueMass = 100.0;
-	float ballMass = 0.156;
-
-	float cueRadius = 4;
-	float ballRadius = .95;
-
-  numPieces= numRows*numRows*numRows;
-
-	sgVec4 cueVelocity;
-	cueVelocity[0] = 30;
-	cueVelocity[1] = -75;
-	cueVelocity[2] = 20;
-
-	sgVec3 newColor;
-	newColor[0] = 1;
-	newColor[1] = 1;
-	newColor[2] = 1;
-
-  shape_pointer shapeForInsertion;
-
-	shapeForInsertion = boost::make_shared<Circle>();
-	shapeForInsertion->setPos(numRows, numRows*5, 0);
-	shapeForInsertion->setMass(cueMass);
-	shapeForInsertion->setRadius(cueRadius);
-	shapeForInsertion->setVelocity(cueVelocity);
-	shapeForInsertion->setColor(newColor);
-  MyShape::addShapeToList( shapeForInsertion );
-
-	newColor[0] = 0;
-	newColor[2] = 0;
-
-	for (int i = 0; i < numRows; i++) {
-		for (int j = 0; j < numRows; j++) {
-      for (int z = 0; z < numRows; z++) {
-
-			shapeForInsertion = boost::make_shared<Circle>();
-			shapeForInsertion->setPos(j*4, i*4, z*4);
-			shapeForInsertion->setMass(ballMass);
-			shapeForInsertion->setRadius(ballRadius);
-      newColor[1] = -( ( -.5 + (z/float(numRows)) ) * ( -.5 + (z/float(numRows)) ) )+ 1.0;
-      shapeForInsertion->setColor(newColor);
-
-      MyShape::addShapeToList( shapeForInsertion );
-      }
-		}
-		cout << endl;
-	}
-
-	cout << "NumPieces: " << numPieces << endl;
-	cout << "Type: " << MyShape::shapes(0)->getType() << endl;
-
-}
-
-ShapeList Simulations::billiards3_ArbitraryList(int numRows) {
-	WorldSettings::setDT(.003);
-	WorldSettings::makeAllElastic();
-	//WorldSettings::makeAllInelastic();
-	WorldSettings::setGravBetweenObjects(false);
-	WorldSettings::setConstGravField(false);
-	WorldSettings::setTimeElapsed(0);
-
+  Simulation curSimulation;
+  curSimulation.setDT(.003);
   ShapeList physicalObjects;
 
 	sgVec4 gField;
@@ -369,7 +313,9 @@ ShapeList Simulations::billiards3_ArbitraryList(int numRows) {
 
 	cout << "NumPieces: " << numPieces << endl;
 
-  return physicalObjects;
+  // return physicalObjects;
+  curSimulation.setPhysicalObjects( physicalObjects );
+  return curSimulation;
 }
 
 boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows) 
@@ -456,8 +402,9 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
 }
 
 
-ShapeList Simulations::simpleCollision_ArbitraryList() {
-	WorldSettings::setDT(.01);
+Simulation Simulations::simpleCollision_ArbitraryList() {
+  float dt = .01;
+	WorldSettings::setDT( dt );
 
 	//float objectDensity = 5;
 	float aMass = 1;
@@ -479,6 +426,8 @@ ShapeList Simulations::simpleCollision_ArbitraryList() {
 
   ShapeList physicalObjects;
 
+  Simulation curSimulation;
+  curSimulation.setDT( dt );
   shape_pointer curShape;
 
 	curShape = boost::make_shared<Circle>();
@@ -504,13 +453,17 @@ ShapeList Simulations::simpleCollision_ArbitraryList() {
   // MyShape::addShapeToList( curShape );
   physicalObjects.addShapeToList( curShape );
 
-  return physicalObjects;
+  // return physicalObjects;
+  curSimulation.setPhysicalObjects( physicalObjects );
+  return curSimulation;
 
 }
 
-ShapeList Simulations::disruption_ArbitraryList() {
+Simulation Simulations::disruption_ArbitraryList() {
   
-  ShapeList physicalObjects = Simulations::bodyFormation_ArbitraryList( 1000 );
+  // ShapeList physicalObjects = Simulations::bodyFormation_ArbitraryList( 1000 );
+  Simulation curSimulation = Simulations::bodyFormation_ArbitraryList( 1000 );
+  // curSimulation.setPhysicalObjects( physicalObjects );
 
   int numPieces = 1;
 	float objectDensity = DENSITY_SUN;
@@ -528,13 +481,17 @@ ShapeList Simulations::disruption_ArbitraryList() {
   curShape->setRadius(pieceRadius);
   curShape->setMomentum(startMomentum);
   curShape->setDensity(objectDensity);
-  physicalObjects.addShapeToList( curShape );
 
-  return physicalObjects;
+  // physicalObjects.addShapeToList( curShape );
+
+  // return physicalObjects;
+  curSimulation.addPhysicalObjectToList( curShape );
+  return curSimulation;
 }
 
-ShapeList Simulations::bodyFormation_NonRandom() {
-	WorldSettings::setDT(1000);
+Simulation Simulations::bodyFormation_NonRandom() {
+  float dt = 1000;
+	WorldSettings::setDT( dt );
 	WorldSettings::makeAllInelastic();
 	WorldSettings::setGravBetweenObjects(true);
 	WorldSettings::setConstGravField(false);
@@ -544,6 +501,8 @@ ShapeList Simulations::bodyFormation_NonRandom() {
 
   int numPieces = 2;
 
+  Simulation curSimulation;
+  curSimulation.setDT( dt );
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -601,10 +560,12 @@ ShapeList Simulations::bodyFormation_NonRandom() {
   WorldSettings::adjustTotalMass( totalMass );
 
   cout << "Finishing sim setup" << endl;
-  return physicalObjects;
+  // return physicalObjects;
+  curSimulation.setPhysicalObjects( physicalObjects );
+  return curSimulation;
 }
 
-ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {
+Simulation Simulations::bodyFormation_ArbitraryList(int numPieces) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();
 	WorldSettings::setGravBetweenObjects(true);
@@ -613,6 +574,8 @@ ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {
 	WorldSettings::setTimeElapsed(0);
 	WorldSettings::setTotalMass(0);
 
+  Simulation curSimulation;
+  curSimulation.setDT(.003);
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -670,10 +633,12 @@ ShapeList Simulations::bodyFormation_ArbitraryList(int numPieces) {
   WorldSettings::adjustTotalMass( totalMass );
 
   cout << "Finishing sim setup" << endl;
-  return physicalObjects;
+  // return physicalObjects;
+  curSimulation.setPhysicalObjects( physicalObjects );
+  return curSimulation;
 }
 
-ShapeList Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) {
+Simulation Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();
 	WorldSettings::setGravBetweenObjects(true);
@@ -682,6 +647,8 @@ ShapeList Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 
 	WorldSettings::setTimeElapsed(0);
 	WorldSettings::setTotalMass(0);
 
+  Simulation curSimulation;
+  curSimulation.setDT(.003);
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -730,7 +697,9 @@ ShapeList Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 
 	}
   WorldSettings::adjustTotalMass( totalMass );
 
-  return physicalObjects;
+  // return physicalObjects;
+  curSimulation.setPhysicalObjects( physicalObjects );
+  return curSimulation;
 }
 
 boost::shared_ptr<MyShape> Simulations::getShapeFromList( unsigned int shapeIndex )
@@ -750,4 +719,65 @@ int Simulations::addShapeToList( shape_pointer insertShape )
   physicalObjects.resize(curSize + 1);
   physicalObjects(curSize) = insertShape;
   return curSize;
+}
+
+Simulation Simulations::createSimulation( char simNumber )
+{
+  Simulation newSimulation;
+
+	//******CURRENT SIMULATION*****
+  if ( simNumber == '0' ) {
+    Simulations::largeGridAlternating();
+  }
+  if ( simNumber == '1' ) {
+	  newSimulation = Simulations::bodyFormation_NonRandom();
+  }
+  if ( simNumber == '2' ) {
+	  newSimulation = Simulations::disruption_ArbitraryList();
+  }
+  if ( simNumber == '3' ) {
+	  newSimulation = Simulations::simpleCollision_ArbitraryList();
+  }
+  if ( simNumber == '4' ) {
+    newSimulation = Simulations::billiards1(15);
+  }
+  if ( simNumber == '5' ) {
+    newSimulation = Simulations::billiards2_ReturnSimulation(15);
+  }
+
+  if ( simNumber == '6' ) {
+    sgVec4 groupMomentum;
+    groupMomentum[0]=0;
+    groupMomentum[1]=2800;
+    groupMomentum[2]=0;
+    groupMomentum[3]=1;
+    sgVec4 target;
+    target[0]=-2000;
+    target[1]=0;
+    target[2]=0;
+    target[3]=1;
+	  // Simulations::bodyFormationGeneric( 650, target, groupMomentum );
+
+    target[0]=-target[0];
+    groupMomentum[0]=0;
+    groupMomentum[1]=-2800;
+    groupMomentum[2]=0;
+
+	  // Simulations::bodyFormationGeneric( 650, target, groupMomentum );
+  }
+  if ( simNumber == '7' ) {
+    // TODO see if this can just be deleted at this point
+    // globalQuadrant = Simulations::octreeDemonstration(10);
+  }
+
+  if ( simNumber == '8' ) {
+  }
+
+  if ( simNumber == '9' ) {
+    newSimulation = Simulations::billiards3_ArbitraryList( 5 );
+  }
+
+
+  return newSimulation;
+
 }

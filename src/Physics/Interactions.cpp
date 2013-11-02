@@ -101,14 +101,14 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
 			WorldSettings::getConstGravFieldVal(gravField);
 			sgScaleVec4(gravField, 1/dt);
 		}
-    cout << "Calc forces" << endl;
+    // cout << "Calc forces" << endl;
 
 		//sgVec4 * ob1mom;
     if ( physicalObjects.size() > 0 )
     {
       for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
       {
-        cout << "\tCalc forces for object: " << i << endl;
+        // cout << "\tCalc forces for object: " << i << endl;
         if (killed) {
           // cout << "curI: " << i << endl;
         }
@@ -120,7 +120,7 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
 
         for (unsigned int j = i + 1; j < physicalObjects.size(); )
         {
-          cout << "\t\tCalc forces with object: " << j << endl;
+          // cout << "\t\tCalc forces with object: " << j << endl;
           object2 = physicalObjects(j);
 
 
@@ -130,7 +130,7 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
 
           if (WorldSettings::isGravBetweenObjects() ) {
             fGrav = calcForceGrav(object1, object2, distanceSquared);
-            cout << "fGrav from Shape: " << fGrav << endl;
+            // cout << "fGrav from Shape: " << fGrav << endl;
 
             sgNormaliseVec4(unitVec, sepVec);
 
