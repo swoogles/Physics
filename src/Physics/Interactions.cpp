@@ -113,6 +113,9 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
           // cout << "curI: " << i << endl;
         }
         object1 = physicalObjects(i);
+        sgVec4 pos;
+        object1->getPos(pos);
+        // cout << "shape.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
 
         if (WorldSettings::isConstGravField() ) {
           object1->adjustMomentum(gravField);
@@ -122,11 +125,15 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
         {
           // cout << "\t\tCalc forces with object: " << j << endl;
           object2 = physicalObjects(j);
+          object2->getPos(pos);
+          // cout << "shape.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
 
 
           getVectorToObject2(object1, object2, sepVec);
+          // cout << "sepVec: " << sepVec[0] << "," << sepVec[1] << "," << sepVec[2] << endl;
 
           distanceSquared = sgLengthSquaredVec4(sepVec);
+          // cout <<"Distance Squared: " <<  distanceSquared << endl;;
 
           if (WorldSettings::isGravBetweenObjects() ) {
             fGrav = calcForceGrav(object1, object2, distanceSquared);
@@ -174,7 +181,25 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
 
   sgVec4 totalFGrav;
 
-  getVectorToObject2( curObject, curQuadrant, sepVec);
+  sgVec4 pos;
+  curObject->getPos(pos);
+  // cout << "curObject.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
+  curQuadrant->getPos(pos);
+  // cout << "Quad.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
+  // shapeInQuadrant = curQuadrant->getShapeInQuadrant();
+  // if ( shapeInQuadrant )
+  // {
+  // }
+
+
+  if ( curQuadrant->getShapeInQuadrant() )
+  {
+    getVectorToObject2( curObject, curQuadrant->getShapeInQuadrant(), sepVec);
+  }
+  else if ( curQuadrant )
+  {
+    getVectorToObject2( curObject, curQuadrant, sepVec);
+  }
   distance = sgLengthVec4( sepVec );
   distanceSquared = sgLengthSquaredVec4( sepVec );
 
@@ -194,30 +219,37 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
   //a. 
   if ( curQuadrant->isExternal() ) 
   {
-    cout << "1" << endl;
+    // cout << "1" << endl;
     shapeInQuadrant = curQuadrant->getShapeInQuadrant();
+
+    // sgVec4 pos;
+    // curQuadrant->getPos(pos);
+    // cout << "Quad.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
+    // shapeInQuadrant->getPos(pos);
+    // cout << "shape.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
 
     //b.
     if ( shapeInQuadrant != NULL & curObject != shapeInQuadrant )
     {
-      cout << "1.a" << endl;
+      // cout << "1.a" << endl;
       //c.
+      // cout <<"Distance Squared: " <<  distanceSquared << endl;;
       fGrav = calcForceGrav(curObject, shapeInQuadrant, distanceSquared);
-      cout << "fGrav from Shape: " << fGrav << endl;
-      cout << "1.b" << endl;
+      // cout << "fGrav from Shape: " << fGrav << endl;
+      // cout << "1.b" << endl;
 
       sgNormaliseVec4(unitVec, sepVec);
 
       sgScaleVec4(gravVec, unitVec, fGrav);
       sgScaleVec4(gravVec, dt);
 
-      cout << "1.c" << endl;
+      // cout << "1.c" << endl;
       curObject->adjustMomentum(gravVec);
-      cout << "1.d" << endl;
+      // cout << "1.d" << endl;
       // Only used during the naive n^2 approach
       // sgNegateVec4(gravVec);
       // object2->adjustMomentum(gravVec);
-      cout << "1.end" << endl;
+      // cout << "1.end" << endl;
 
     }
   }
@@ -236,7 +268,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
       sgScaleVec4(gravVec, dt);
 
       //b.
-      cout << "fGrav from Quad: " << fGrav << endl;
+      // cout << "fGrav from Quad: " << fGrav << endl;
       curObject->adjustMomentum(gravVec);
       
     }
@@ -548,6 +580,7 @@ float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShap
   {
     rSquared = .00001;
   }
+  // cout << "Obj1.mass" << object1->getMass() << "\t\tObj2.mass" << object2->getMass() << endl;
   return ( MyShape::G * object1->getMass() * object2->getMass()) / rSquared;
 }
 
@@ -555,6 +588,8 @@ void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<My
   sgVec4 pos1, pos2;
   object1->getPos(pos1 );
   object2->getPos(pos2 );
+  // cout << "--Subtracting " << pos1[0] << "," << pos1[1] << "," << pos1[2] << endl;
+  // cout << "--from        " << pos2[0] << "," << pos2[1] << "," << pos2[2] << endl;
   sgSubVec4(sepVector, pos2, pos1);
 }
 
