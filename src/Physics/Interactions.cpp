@@ -677,6 +677,8 @@ void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape>
   object1->getColor( color );
   object2->getColor( color );
 
+  cout << "Merging!" << endl;
+
   float newMass = object1->getMass() + object2->getMass();
   float density = object1->getDensity();
 

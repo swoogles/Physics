@@ -314,6 +314,7 @@ void idle() {
     else {
       if ( physicalObjects.size() > 0 )
       {
+        // cout << "NumShapes: " << physicalObjects.size() << endl; 
         foreach_ ( shape_pointer curShape, physicalObjects )
         {
           // sgVec4 pos;
