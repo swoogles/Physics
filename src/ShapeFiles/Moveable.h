@@ -111,6 +111,9 @@ public:
 	//! Alter position of object by <dPos>
 	void adjustPos(sgVec4 dPos);
 
+	//! Return address of new sgVec4 holding position of object
+	sgVec4 * getPos();
+
 	//! Return position of object in retVec
 	void getPos(sgVec4 retVec);
 
@@ -144,6 +147,8 @@ public:
 	void adjustMomentum(float dx, float dy, float dz);
 	//! Alters momentum by <dMomentum>
 	void adjustMomentum(sgVec4 dMomentum);
+	//! Return address of new sgVec4 holding momentum of object
+	sgVec4 * getMomentum();
 	//! Returns momentum of object in retVec
 	void getMomentum(sgVec4 retVec);
 
@@ -156,6 +161,8 @@ public:
 	void adjustVelocity(float dx, float dy, float dz);
 	//! Alters momentum of object by <dVel> * mass
 	void adjustVelocity(sgVec4 dVel);
+	//! Return address of new sgVec4 holding velocity of object
+	sgVec4 * getVelocity();
 	//! Returns velocity of object in retVec
 	void getVelocity(sgVec4 retVec);
 
