@@ -707,8 +707,7 @@ void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape>
   sgScaleVec4(COM, 1/(object1->getMass() + object2->getMass()) );
   // COM end
 
-  sgVec4 object2momentum;
-  object2->getMomentum(object2momentum);
+  sgVec4 * object2momentum = object2->getMomentum();
 
   sgVec4 object2AngMom;
 
@@ -716,7 +715,7 @@ void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape>
 
   object1->setMass(newMass);
   object1->setRadius(newRadius);
-  object1->adjustMomentum( object2momentum );
+  object1->adjustMomentum( (*object2momentum) );
 
   //object1->adjustAngMomentum(object2AngMom);
   object1->setAngMomentum(totalAngMom);

@@ -96,6 +96,12 @@ void Moveable::adjustPos(sgVec4 dPos) {
 }
 
 
+sgVec4 *  Moveable::getPos(){
+	sgVec4 * retPos = new sgVec4[1];
+	sgCopyVec4( (*retPos), pos);
+	return retPos;
+}
+
 void Moveable::getPos(sgVec4 retVec) {
 	sgCopyVec4(retVec, pos);
 }
@@ -170,9 +176,17 @@ void Moveable::adjustMomentum(sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
 }
 
+sgVec4 * Moveable::getMomentum() {
+	sgVec4 * retMomentum = new sgVec4[1];
+	sgCopyVec4( (*retMomentum), momentum);
+	return retMomentum;
+}
+
 void Moveable::getMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, momentum);
 }
+
+
 
 void Moveable::setVelocity(float inX, float inY, float inZ) {
 	momentum[0] = inX * mass;
@@ -200,6 +214,12 @@ void Moveable::adjustVelocity(sgVec4 dVel) {
 	sgScaleVec4(tempVec, momentum, 1/mass);
 	sgAddVec4(tempVec, dVel);
 	sgScaleVec4(momentum, tempVec, mass);
+}
+
+sgVec4 * Moveable::getVelocity() {
+	sgVec4 * velocity = new sgVec4[1];
+	sgScaleVec4( (*velocity), momentum, 1/mass);
+	return velocity;
 }
 
 void Moveable::getVelocity(sgVec4 retVec) {

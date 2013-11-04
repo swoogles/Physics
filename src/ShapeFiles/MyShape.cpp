@@ -137,7 +137,14 @@ void MyShape::adjustPos(sgVec4 dPos) {
 	pos[1] += dPos[2];
 }
 
-void MyShape::getPos(sgVec4 retVec) const {
+
+sgVec4 *  MyShape::getPos(){
+	sgVec4 * retPos = new sgVec4[1];
+	sgCopyVec4( (*retPos), pos);
+	return retPos;
+}
+
+void MyShape::getPos(sgVec4 retVec) {
 	sgCopyVec4(retVec, pos);
 }
 
@@ -158,6 +165,10 @@ void MyShape::vFlip() {
 float MyShape::getMarkerSize() {
 	return 0;
 }
+
+
+
+
 
 void MyShape::setAngle(float xAngle, float yAngle, float zAngle) {
 	sgMakeIdentQuat(orientationQuat);
@@ -204,7 +215,7 @@ void MyShape::setMomentum(sgVec4 newMomentum) {
 	sgCopyVec4(prevMomentum, momentum);
 }
 
-void MyShape::adjustMomentum(const float dx, const float dy, const float dz) {
+void MyShape::adjustMomentum(float dx, float dy, float dz) {
 	momentum[0] += dx;
 	momentum[1] += dy;
 	momentum[2] += dz;
@@ -214,9 +225,17 @@ void MyShape::adjustMomentum(sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
 }
 
-void MyShape::getMomentum(sgVec4 retVec) const{
+sgVec4 * MyShape::getMomentum() {
+	sgVec4 * retMomentum = new sgVec4[1];
+	sgCopyVec4( (*retMomentum), momentum);
+	return retMomentum;
+}
+
+void MyShape::getMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, momentum);
 }
+
+
 
 void MyShape::setVelocity(float inX, float inY, float inZ) {
 	momentum[0] = inX * mass;
@@ -244,6 +263,12 @@ void MyShape::adjustVelocity(sgVec4 dVel) {
 	sgScaleVec4(tempVec, momentum, 1/mass);
 	sgAddVec4(tempVec, dVel);
 	sgScaleVec4(momentum, tempVec, mass);
+}
+
+sgVec4 * MyShape::getVelocity() {
+	sgVec4 * velocity = new sgVec4[1];
+	sgScaleVec4( (*velocity), momentum, 1/mass);
+	return velocity;
 }
 
 void MyShape::getVelocity(sgVec4 retVec) {
@@ -323,16 +348,15 @@ float MyShape::getDensity() {
 bool MyShape::setKineticEnergy(float newKineticEnergy)
 {
   bool moving;
-  sgVec4 curVelocity;
-  getVelocity(curVelocity);
-  if ( sgLengthVec4( curVelocity ) == 0 )
+  sgVec4 * curVelocity = getVelocity();
+  if ( sgLengthVec4( *curVelocity ) == 0 )
   {
     moving = false;
   }
   else
   {
     sgVec4 newVelocity;
-    sgNormaliseVec4(newVelocity, curVelocity );
+    sgNormaliseVec4(newVelocity, *curVelocity );
 
 
     float totalVelocity = sqrt( newKineticEnergy ) / mass * 2;
