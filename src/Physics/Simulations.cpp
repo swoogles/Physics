@@ -522,8 +522,12 @@ Simulation Simulations::bodyFormation_NonRandom() {
 
 	sgVec3 newColor;
 	newColor[0] = 1;
-	newColor[1] = 1;
+	newColor[1] = 0;
 	newColor[2] = 1;
+
+  startMomentum[0] = 0;
+  startMomentum[1] = 0;
+  startMomentum[2] = 0;
 
 	float pieceMass = pow(pieceRadius, 3.0);
   pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
@@ -531,9 +535,11 @@ Simulation Simulations::bodyFormation_NonRandom() {
   float totalMass = 0.0;
 
   shape_pointer curShape;
-  float offset = 1e4;
+  float offset = 1e3;
   startPlacement[0]= offset;
   startPlacement[1]= offset;
+  startPlacement[2]= 0;
+  startPlacement[3]= 0;
 
   curShape = make_shared<Circle>();
   curShape = boost::make_shared<Circle>();
@@ -551,7 +557,7 @@ Simulation Simulations::bodyFormation_NonRandom() {
   startPlacement[1]= -offset;
 
   curShape = make_shared<Circle>();
-  curShape = boost::make_shared<Circle>();
+  // curShape = boost::make_shared<Circle>();
   curShape->setPos( startPlacement );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
@@ -619,7 +625,7 @@ Simulation Simulations::bodyFormation_ArbitraryList(int numPieces) {
 		}
 
     curShape = make_shared<Circle>();
-		curShape = boost::make_shared<Circle>();
+		// curShape = boost::make_shared<Circle>();
     curShape->setPos( startPlacement );
 		curShape->setMass(pieceMass);
 		curShape->setRadius(pieceRadius);
@@ -738,7 +744,7 @@ Simulation Simulations::createSimulation( char simNumber )
 	  newSimulation = Simulations::bodyFormation_NonRandom();
   }
   if ( simNumber == '1' ) {
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 500 );
+    newSimulation = Simulations::bodyFormation_ArbitraryList( 2 );
   }
   if ( simNumber == '2' ) {
 	  newSimulation = Simulations::disruption_ArbitraryList();

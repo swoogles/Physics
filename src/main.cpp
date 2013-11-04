@@ -316,6 +316,9 @@ void idle() {
       {
         foreach_ ( shape_pointer curShape, physicalObjects )
         {
+          // sgVec4 pos;
+          // curShape->getPos( pos );
+          // cout << "Shape.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
           calcForceOnObject_Octree(curShape, globalQuadrant, globalSimulation.getDT() );
         }
       }
