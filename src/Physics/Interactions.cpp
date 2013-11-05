@@ -244,7 +244,11 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
       sgScaleVec4(gravVec, dt);
 
       // cout << "1.c" << endl;
+      // sgVec3 curMomentum;
+      // curObject->getMomentum( curMomentum );
+      // cout << "iMomentum: " << curMomentum[0] << "," << curMomentum[1] << "," << curMomentum[2] << endl;
       curObject->adjustMomentum(gravVec);
+      // cout << "fMomentum: " << curMomentum[0] << "," << curMomentum[1] << "," << curMomentum[2] << endl;
       // cout << "1.d" << endl;
       // Only used during the naive n^2 approach
       // sgNegateVec4(gravVec);
@@ -509,6 +513,91 @@ void calcCollisionsAll() {
         j++;
       }
     }
+  }
+
+}
+
+void calcCollisionsAll_ShapeList( ShapeList & shapeList ) {
+  sgVec4 sepVec;
+  boost::shared_ptr<MyShape> object1;
+  boost::shared_ptr<MyShape> object2;
+  SGfloat distanceSquared, distance, minSep;
+
+  boost::numeric::ublas::vector<shape_pointer> physicalObjects = shapeList.getShapes();
+  boost::numeric::ublas::vector<shape_pointer> deleteList;
+
+  bool killed = false;
+
+  sgVec4 gravField;
+
+  for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
+  {
+    // cout << "Outter loop." << endl;
+    if (killed) {
+      // cout << "curI: " << i << endl;
+    }
+    object1 = physicalObjects(i);
+
+    if (WorldSettings::isConstGravField() ) {
+      object1->adjustMomentum(gravField);
+    }
+
+    for (unsigned int j = i + 1; j < physicalObjects.size(); j++)
+    {
+      // cout << "Stuck in inner loop " << endl;
+      // cout << "PhysicalObjects.size: " << physicalObjects.size() << endl;;
+      object2 = physicalObjects(j);
+
+      getVectorToObject2(object1, object2, sepVec);
+
+      distanceSquared = sgLengthSquaredVec4(sepVec);
+      distance = sqrt(distanceSquared);
+
+      minSep = object1->getRadius() + object2->getRadius();
+
+
+      if (distance < minSep) {
+
+        if (WorldSettings::isAllElastic() ) {
+          elasticCollision(object1,object2);
+          j++;
+        }
+
+        else if (WorldSettings::isAllInelastic() ){
+          mergeObjects(object1, object2);
+          deleteList.resize(deleteList.size()+1);
+          deleteList.insert_element(deleteList.size()-1, object2);
+          j++;
+
+          // object2->~MyShape();
+
+          // TODO You SHOULD be able to call this once you're finished refactoring
+          // physicalObjects.removeShapeFromList( object2 );
+          // shapeList.removeShapeFromList( object2 );
+          // physicalObjects.erase_element(j);
+          // for (unsigned int curPos = j; curPos < physicalObjects.size()-1; curPos++) {
+          //   physicalObjects(curPos) = physicalObjects(curPos+1);
+          // }
+          // physicalObjects.resize(physicalObjects.size()-1, true);
+        }
+
+      }
+      else {
+        j++;
+      }
+    }
+  }
+  if ( deleteList.size() > 0 )
+  {
+    // cout << "shapeList.sizeA: " << shapeList.getShapes().size() << endl; 
+    // cout << "MyShape.shapes.sizeA: " << MyShape::shapes.size() << endl; 
+    foreach_ ( shape_pointer curShape, deleteList )
+    {
+      shapeList.removeShapeFromList( curShape );
+      MyShape::removeShapeFromList( curShape );
+    }
+    // cout << "shapeList.sizeB: " << shapeList.getShapes().size() << endl; 
+    // cout << "MyShape.shapes.sizeB: " << MyShape::shapes.size() << endl; 
   }
 
 }
@@ -800,7 +889,7 @@ void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       if (switchB)
       {
         // Set the range of momenta, and have them be half positive/half negative
-        randMult = rand()%15;
+        randMult = rand()%5;
         if (randMult % 2 == 0)
           randMult *= -1;
 

@@ -77,6 +77,14 @@ void calcCollisionsAll();
  */
 void calcCollisionsAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects);
 
+/*! \relates MyShape
+ *  \brief Determines if any objects are colliding and responds appropriately.
+ *
+ *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
+ */
+void calcCollisionsAll_ShapeList( ShapeList & physicalObjects);
+
+
 
 /*! \relates MyShape
  *  \brief Calculates magnitude of the force of gravity between 2 objects

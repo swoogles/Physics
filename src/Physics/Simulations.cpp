@@ -535,7 +535,7 @@ Simulation Simulations::bodyFormation_NonRandom() {
   float totalMass = 0.0;
 
   shape_pointer curShape;
-  float offset = 1e3;
+  float offset = 5e2;
   startPlacement[0]= offset;
   startPlacement[1]= offset;
   startPlacement[2]= 0;
@@ -744,7 +744,7 @@ Simulation Simulations::createSimulation( char simNumber )
 	  newSimulation = Simulations::bodyFormation_NonRandom();
   }
   if ( simNumber == '1' ) {
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 2 );
+    newSimulation = Simulations::bodyFormation_ArbitraryList( 300 );
   }
   if ( simNumber == '2' ) {
 	  newSimulation = Simulations::disruption_ArbitraryList();
