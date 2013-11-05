@@ -558,6 +558,8 @@ void calcCollisionsAll_ArbitraryList( boost::numeric::ublas::vector<shape_pointe
           mergeObjects(object1, object2);
           // object2->~MyShape();
 
+          // TODO You SHOULD be able to call this once you're finished refactoring
+          // physicalObjects.removeShapeFromList( object2 );
           physicalObjects.erase_element(j);
           for (unsigned int curPos = j; curPos < physicalObjects.size()-1; curPos++) {
             physicalObjects(curPos) = physicalObjects(curPos+1);

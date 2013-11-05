@@ -274,7 +274,8 @@ void init(char simulation) {
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation );
   physicalObjects = globalSimulation.getPhysicalObjects().getShapes();
-  MyShape::shapes = physicalObjects; 
+  ShapeList shapeList = globalSimulation.getPhysicalObjects();
+  MyShape::shapes = shapeList.getShapes() ;
   
 
 	char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
