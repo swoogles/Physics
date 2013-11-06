@@ -863,7 +863,7 @@ void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 targe
   for (int i = 0; i < 3; i++)
   {
     //randMult = rand()%30; //Earth spacing
-    dimensionInteger = (int) volume[i];
+    dimensionInteger = (int) volume[i]/2;
 
     randMult = rand()%(dimensionInteger/2);
     if (randMult % 2 == 0) {

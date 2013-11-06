@@ -300,7 +300,7 @@ void init(char simulation) {
 }
 
 void idle() {
-	sgVec4 curPos;
+  sgVec4 curPos;
 
   if (! WorldSettings::isPaused()  ) {
     if (WorldSettings::isAutoScaling())
@@ -314,6 +314,24 @@ void idle() {
     if ( forceCalculations.compare( USE_OCTREE ) )
     {
       calcForcesAll_ArbitraryList(physicalObjects.getShapes(), globalSimulation.getDT());
+
+      foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
+      {
+        if ( Simulations::getCurStep() == 1 ) {
+          totalMass += curShape->getMass();
+        }
+
+        curShape->update( globalSimulation.getDT() );
+        curShape->getPos(curPos);
+
+        if (WorldSettings::isAutoScaling())
+        {
+          WorldSettings::updateXYMinsAndMaxes(curPos);
+        }
+
+      }
+
+      calcCollisionsAll_ArbitraryList( physicalObjects.getShapes() );
     }
     else {
       if ( physicalObjects.getShapes().size() > 0 )
@@ -322,22 +340,14 @@ void idle() {
         // int z=0;
         foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
         {
-          // cout << "shape[" << z++ << "]" << endl;
-          sgVec4 pos;
-          // curShape->getPos( pos );
-          // cout << "Shape.posA: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
           calcForceOnObject_Octree(curShape, globalQuadrant, globalSimulation.getDT() );
           curShape->update( globalSimulation.getDT() );
-          curShape->getPos(curPos);
-          /* cout << "Shape.posB: " << pos[0] << "," << pos[1] << "," << pos[2] << endl; */
           if (WorldSettings::isAutoScaling())
           {
             WorldSettings::updateXYMinsAndMaxes(curPos);
           }
         }
-        // cout << "Physical objects sizeA: " << physicalObjects.getShapes().size() << endl;
         calcCollisionsAll_ShapeList(physicalObjects);
-        // cout << "Physical objects sizeB: " << physicalObjects.getShapes().size() << endl;
       }
     }
 
@@ -352,95 +362,58 @@ void idle() {
     typedef boost::shared_ptr<MyShape> shape_pointer;
     // shape_pointer largest[10];
 
-    // if ( physicalObjects.size() > 0 )
-    // {
-    //   foreach_ ( shape_pointer curShape, physicalObjects )
-    //   // for (unsigned int i = 0; i < MyShape::shapes.size(); i++)
-    //   {
-    //     if ( Simulations::getCurStep() == 1 ) {
-    //       totalMass += curShape->getMass();
-    //     }
-
-    //     //MyShape::shapes(i)->adjustMomentum(gravity);
-    //     curShape->update( globalSimulation.getDT() );
-    //     curShape->getPos(curPos);
-
-    //     if (WorldSettings::isAutoScaling())
-    //     {
-    //       WorldSettings::updateXYMinsAndMaxes(curPos);
-    //     }
-
-    //     }
-
-    //     calcCollisionsAll_ArbitraryList(physicalObjects);
-    //   }
-
     Simulations::incCurStep();
-  }
-
-    int curObserver = Observer::getCurObserver();
-
-    Observer::observers(curObserver)->update( globalSimulation.getDT() );
-
-    sgVec4 pos;
-    pos[0] = 0;
-    pos[1] = 0;
-    pos[2] = 0;
-    pos[3] = 1;
-
-    float side = 1e4; //Formation Value
-    side = 5e4;
-    float width = side;
-    float height = side;
-    float depth = side;
-    sgVec3 dimensions;
-    dimensions[0] = width;
-    dimensions[1] = height;
-    dimensions[2] = depth;
-
-    // globalQuadrant.reset();
-
-    globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
-    // sleep(2);
-    typedef boost::shared_ptr<MyShape> shape_pointer;
-    boost::numeric::ublas::vector<shape_pointer> localShapeList = physicalObjects.getShapes();
-    foreach_ ( shape_pointer curShape, localShapeList )
+    if ( Simulations::getCurStep() == 30 )
     {
-      globalQuadrant->insertShape( curShape );
+      exit(0);
     }
-
-    // ShapeList shapeList = globalQuadrant->getShapesRecursive(2);
-
-    // foreach_ ( shape_pointer curShape, shapeList.getShapes() )
-    // {
-    //   sgVec4 curPos;
-    //   curShape->getPos( curPos );
-    // }
-
-    sgVec4 centerOfMass;
-    globalQuadrant->getCenterOfMass( centerOfMass );
-
-    // globalCenterOfMassCircle->setPos( centerOfMass );
-
-    if (WorldSettings::isAutoScaling()) {
-
-      float minX = WorldSettings::getMinX();
-      float minY = WorldSettings::getMinY();
-      float maxX = WorldSettings::getMaxX();
-      float maxY = WorldSettings::getMaxY();
-
-      float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
-
-      Observer::observers(curObserver)->setPos(0, 0, -pullBack * 2);
-    }
-
-    // MyShape::clearShapes();
-    // foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
-    // {
-    //   MyShape::addShapeToList( curShape );
-    // }
-
   }
+
+  int curObserver = Observer::getCurObserver();
+
+  Observer::observers(curObserver)->update( globalSimulation.getDT() );
+
+  sgVec4 pos;
+  pos[0] = 0;
+  pos[1] = 0;
+  pos[2] = 0;
+  pos[3] = 1;
+
+  float side = 1e4; //Formation Value
+  side = 5e4;
+  float width = side;
+  float height = side;
+  float depth = side;
+  sgVec3 dimensions;
+  dimensions[0] = width;
+  dimensions[1] = height;
+  dimensions[2] = depth;
+
+  globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
+  // sleep(2);
+  typedef boost::shared_ptr<MyShape> shape_pointer;
+  boost::numeric::ublas::vector<shape_pointer> localShapeList = physicalObjects.getShapes();
+  foreach_ ( shape_pointer curShape, localShapeList )
+  {
+    globalQuadrant->insertShape( curShape );
+  }
+
+  sgVec4 centerOfMass;
+  globalQuadrant->getCenterOfMass( centerOfMass );
+
+  if (WorldSettings::isAutoScaling()) {
+
+    float minX = WorldSettings::getMinX();
+    float minY = WorldSettings::getMinY();
+    float maxX = WorldSettings::getMaxX();
+    float maxY = WorldSettings::getMaxY();
+
+    float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
+
+    Observer::observers(curObserver)->setPos(0, 0, -pullBack * 2);
+  }
+
+}
 
 void dummyCallback(puObject * thisGuy) {
 	cout << "I do something! Really!";
