@@ -297,6 +297,16 @@ void init(char simulation) {
   int numShapes = MyShape::shapes.size();
   cout << "NumShapes in simulation: " << numShapes << endl;
 
+  sgVec4 curPos;
+  foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
+  {
+    curShape->getPos(curPos);
+    if (WorldSettings::isAutoScaling())
+    {
+      WorldSettings::updateXYMinsAndMaxes(curPos);
+    }
+  }
+
 }
 
 void idle() {
@@ -342,6 +352,7 @@ void idle() {
         {
           calcForceOnObject_Octree(curShape, globalQuadrant, globalSimulation.getDT() );
           curShape->update( globalSimulation.getDT() );
+          curShape->getPos(curPos);
           if (WorldSettings::isAutoScaling())
           {
             WorldSettings::updateXYMinsAndMaxes(curPos);
@@ -363,10 +374,10 @@ void idle() {
     // shape_pointer largest[10];
 
     Simulations::incCurStep();
-    if ( Simulations::getCurStep() == 30 )
-    {
-      exit(0);
-    }
+    // if ( Simulations::getCurStep() == 30 )
+    // {
+    //   exit(0);
+    // }
   }
 
   int curObserver = Observer::getCurObserver();
