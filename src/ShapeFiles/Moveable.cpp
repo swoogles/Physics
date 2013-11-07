@@ -14,7 +14,7 @@ using namespace std;
 using namespace boost::numeric::ublas;
 
 //TODO Make sure I'm supposed to actually be referencing the 0 here...
-boost::numeric::ublas::vector<Moveable *> Moveable::moveables(0);
+boost::numeric::ublas::compressed_vector<Moveable *> Moveable::moveables(0);
 
 
 Moveable::Moveable() {
@@ -357,12 +357,13 @@ int Moveable::addMoveableToList( Moveable * insertMoveable )
 void Moveable::removeMoveableFromList( int moveableIndex )
 {
   //
-  Moveable::moveables(moveableIndex)->~Moveable();
+  Moveable * moveableToremove = Moveable::moveables(moveableIndex);
+  moveableToremove->~Moveable();
   Moveable::moveables.erase_element(moveableIndex);
   // TODO Decide how to best erase/resize
-  // boost::numeric::ublas::vector<Moveable *> newListA;
+  // boost::numeric::ublas::compressed_vector<Moveable *> newListA;
   // newListA = moveables.subVector(0,i);
-  // boost::numeric::ublas::vector<Moveable *> newListB;
+  // boost::numeric::ublas::compressed_vector<Moveable *> newListB;
   // newListB = moveables.subVector(i, moveables.size() );
   // moveables = newListA + newListB;
 }
@@ -371,8 +372,9 @@ void Moveable::removeMoveableFromList( int moveableIndex )
 void Moveable::clearMoveables() {
 	for (int i = Moveable::moveables.size() - 1; i > -1; i--) {
       cout << "Moveable # " << i << endl;
-		Moveable::moveables(i)->~Moveable();
-		Moveable::moveables.erase_element(i);
+    Moveable * moveableToremove = Moveable::moveables(i);
+    moveableToremove->~Moveable();
+    Moveable::moveables.erase_element(i);
 	}
 	Moveable::moveables.resize(0);
 }

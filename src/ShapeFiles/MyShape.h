@@ -16,7 +16,7 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/make_shared.hpp> 
 #include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/foreach.hpp>
@@ -31,7 +31,7 @@
 #define foreach_  BOOST_FOREACH                                                                                              
 
 using namespace boost::numeric::ublas;
-using boost::numeric::ublas::vector;
+using boost::numeric::ublas::compressed_vector;
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -273,7 +273,7 @@ public:
 	// static vector<MyShape *> shapes;
   //PHYS-7
   typedef boost::shared_ptr<MyShape> shape_pointer;
-	static vector<shape_pointer> shapes;
+	static compressed_vector<shape_pointer> shapes;
 
 
 	//Get rid of this and store in WorldSettings instead

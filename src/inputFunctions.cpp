@@ -11,15 +11,15 @@ using namespace std;
 
 void myMouse(int button, int state, int x, int y) {
 	if (state == GLUT_UP) {
+    int curObserverIdx = Observer::getCurObserver();
+    Observer * curObserver =  Observer::observers(curObserverIdx);
 		if (button == GLUT_WHEEL_UP) {
-			int curObserver = Observer::getCurObserver();
-			Observer::observers(curObserver)->zoomIn();
+      curObserver->zoomIn();
 			control_center::uncheckAutoScaling();
 			WorldSettings::setAutoScaling(false);
 		}
 		if (button == GLUT_WHEEL_DOWN) {
-			int curObserver = Observer::getCurObserver();
-			Observer::observers(curObserver)->zoomOut();
+			curObserver->zoomOut();
 			control_center::uncheckAutoScaling();
 			WorldSettings::setAutoScaling(false);
 		}

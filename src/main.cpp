@@ -12,7 +12,7 @@
 #include <cmath>
 
 #include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/foreach.hpp>
 #include <boost/ref.hpp>
@@ -76,7 +76,7 @@
 
 using namespace std;
 using namespace boost::numeric::ublas;
-using boost::numeric::ublas::vector;
+using boost::numeric::ublas::compressed_vector;
 //using namespace mathglpp;
 
 float globalPullback;
@@ -131,7 +131,7 @@ bool BillProperties::isValidProperty( string line )
 }
 
 
-void calcXYMinsAndMaxes(boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > shapeList,
+void calcXYMinsAndMaxes(boost::numeric::ublas::compressed_vector< boost::shared_ptr<MyShape> > shapeList,
 						float &minX, float &minY, float &maxX, float &maxY) {
 	sgVec4 curPos;
 
@@ -173,9 +173,11 @@ void display(void)
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
-	int curObserver = Observer::getCurObserver();
-	Observer::observers(curObserver)->getView();
-	Observer::observers(curObserver)->getPos(curPos);
+
+	int curObserverIdx = Observer::getCurObserver();
+  Observer * curObserver =  Observer::observers(curObserverIdx);
+	curObserver->getView();
+	curObserver->getPos(curPos);
 
 	sgVec3 curColor;
 	curColor[0] = 1.0;
@@ -266,15 +268,17 @@ void init(char simulation) {
 
 	Observer::observers.resize(Observer::observers.size()+1);
 	Observer::observers(0) = new Observer;
-	Observer::observers(0)->setPos(0,0,0);
-	Observer::observers(0)->setAngle(0, 0, 0);
+  Observer * curObserver =  Observer::observers(0);
+	curObserver->setPos(0,0,0);
+	curObserver->setAngle(0, 0, 0);
 	Observer::setCurObserver(0);
 	//Observer::observers(0)->setAngVel(0, 0.2, 0);
 
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation );
   physicalObjects = globalSimulation.getPhysicalObjects();
-  MyShape::shapes = physicalObjects.getShapes() ;
+  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = physicalObjects.getShapes() ;
+  MyShape::shapes = localShapeList;
   
 
 	char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
@@ -285,7 +289,7 @@ void init(char simulation) {
 
 	float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
-	Observer::observers(0)->setPos(0, 0, -pullBack*2);
+	curObserver->setPos(0, 0, -pullBack*2);
 
 	Recorder::init();
   char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
@@ -380,9 +384,10 @@ void idle() {
     // }
   }
 
-  int curObserver = Observer::getCurObserver();
+  int curObserverIdx = Observer::getCurObserver();
+  Observer * curObserver =  Observer::observers(curObserverIdx);
 
-  Observer::observers(curObserver)->update( globalSimulation.getDT() );
+  curObserver->update( globalSimulation.getDT() );
 
   sgVec4 pos;
   pos[0] = 0;
@@ -403,7 +408,7 @@ void idle() {
   globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
   // sleep(2);
   typedef boost::shared_ptr<MyShape> shape_pointer;
-  boost::numeric::ublas::vector<shape_pointer> localShapeList = physicalObjects.getShapes();
+  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = physicalObjects.getShapes();
   foreach_ ( shape_pointer curShape, localShapeList )
   {
     globalQuadrant->insertShape( curShape );
@@ -421,7 +426,7 @@ void idle() {
 
     float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
-    Observer::observers(curObserver)->setPos(0, 0, -pullBack * 2);
+    curObserver->setPos(0, 0, -pullBack * 2);
   }
 
 }

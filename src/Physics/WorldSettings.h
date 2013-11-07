@@ -10,7 +10,7 @@
 
 #include <plib/sg.h>
 
-#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
 
 
 /*! \brief Handles values and settings used for various physical interactions

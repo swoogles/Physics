@@ -9,7 +9,7 @@
 #define SIMULATIONS_H_
 
 #include <iostream>
-#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
 #include <boost/ref.hpp>
 #include <plib/sg.h>
 //#include "../ShapeFiles/MyShape.h"
@@ -72,7 +72,7 @@ SGfloat massList[NUM_BODIES] = {
 */
 
 using namespace boost::numeric::ublas;
-using boost::numeric::ublas::vector;
+using boost::numeric::ublas::compressed_vector;
 
 class Simulations
 {
@@ -83,7 +83,7 @@ class Simulations
      *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
      */
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    static boost::numeric::ublas::vector< shape_pointer > physicalObjects;
+    static boost::numeric::ublas::compressed_vector< shape_pointer > physicalObjects;
     static int curStep;
 
 

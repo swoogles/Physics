@@ -82,7 +82,7 @@ bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> obje
 		return false;
 }
 
-void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects, float dt) {
+void calcForcesAll_ArbitraryList(boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects, float dt) {
 		sgVec4 sepVec;
 		sgVec4 unitVec;
 		sgVec4 gravVec;
@@ -309,7 +309,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
 
 }
 
-void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::vector<shape_pointer> physicalObjects, boost::shared_ptr<Quadrant> octree, float dt) {
+void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects, boost::shared_ptr<Quadrant> octree, float dt) {
 		sgVec4 sepVec;
 		sgVec4 unitVec;
 		sgVec4 gravVec;
@@ -426,7 +426,7 @@ bool isConflict(int newShape) {
   return conflict;
 }
 
-bool isConflict_ArbitraryList( boost::numeric::ublas::vector<shape_pointer> physicalObjects, int newShape) {
+bool isConflict_ArbitraryList( boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects, int newShape) {
   sgVec4 sepVec;
   SGfloat distanceSquared, distance, minSep;
   bool conflict = false;
@@ -523,8 +523,8 @@ void calcCollisionsAll_ShapeList( ShapeList & shapeList ) {
   boost::shared_ptr<MyShape> object2;
   SGfloat distanceSquared, distance, minSep;
 
-  boost::numeric::ublas::vector<shape_pointer> physicalObjects = shapeList.getShapes();
-  boost::numeric::ublas::vector<shape_pointer> deleteList;
+  boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects = shapeList.getShapes();
+  boost::numeric::ublas::compressed_vector<shape_pointer> deleteList;
 
   bool killed = false;
 
@@ -602,7 +602,7 @@ void calcCollisionsAll_ShapeList( ShapeList & shapeList ) {
 
 }
 
-void calcCollisionsAll_ArbitraryList( boost::numeric::ublas::vector<shape_pointer> physicalObjects ) {
+void calcCollisionsAll_ArbitraryList( boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects ) {
   sgVec4 sepVec;
   boost::shared_ptr<MyShape> object1;
   boost::shared_ptr<MyShape> object2;

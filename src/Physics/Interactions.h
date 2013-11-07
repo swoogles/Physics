@@ -13,7 +13,7 @@
 #include <time.h>
 
 
-#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
 #include <plib/sg.h>
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/Box.h"
@@ -50,7 +50,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
  *
  *  \param dt Determines time over which each force acts
  */
-void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects, float dt);
+void calcForcesAll_ArbitraryList(boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects, float dt);
 
 /*! \relates MyShape
  *  \brief Calculates forces on all current objects
@@ -60,7 +60,7 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> ph
  *
  *  \param dt Determines time over which each force acts
  */
-void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::vector<shape_pointer> physicalObjects, boost::shared_ptr<Quadrant> octree, float dt);
+void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects, boost::shared_ptr<Quadrant> octree, float dt);
 
 
 /*! \relates MyShape
@@ -75,7 +75,7 @@ void calcCollisionsAll();
  *
  *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
  */
-void calcCollisionsAll_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physicalObjects);
+void calcCollisionsAll_ArbitraryList(boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects);
 
 /*! \relates MyShape
  *  \brief Determines if any objects are colliding and responds appropriately.
@@ -213,7 +213,7 @@ bool isConflict(int newShape);
  *
  *  \returns True if new object causes a conflict
  */
-bool isConflict_ArbitraryList(boost::numeric::ublas::vector<shape_pointer> physiaclObjects, int newShape);
+bool isConflict_ArbitraryList(boost::numeric::ublas::compressed_vector<shape_pointer> physiaclObjects, int newShape);
 
 
 /*! \relates MyShape

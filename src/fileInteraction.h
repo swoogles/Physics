@@ -11,7 +11,7 @@
  #include <iostream>
 #include <fstream>
 
-#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
 #include <plib/sg.h>
 #include "ShapeFiles/Circle.h"
 #include "ShapeFiles/Box.h"

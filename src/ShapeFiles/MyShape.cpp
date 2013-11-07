@@ -15,7 +15,7 @@ using namespace boost::numeric::ublas;
 
 float MyShape::G = 6.67384e-11;
 
-boost::numeric::ublas::vector< boost::shared_ptr<MyShape> > MyShape::shapes(0);
+boost::numeric::ublas::compressed_vector< boost::shared_ptr<MyShape> > MyShape::shapes(0);
 
 
 
@@ -454,7 +454,7 @@ int MyShape::addShapeToList( shape_pointer insertShape )
 
 void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
 {
-  boost::numeric::ublas::vector<shape_pointer> newShapeVector;
+  boost::numeric::ublas::compressed_vector<shape_pointer> newShapeVector;
   int newSize =  shapes.size();
   newShapeVector.resize(newSize);
   bool removedShape = false;
@@ -475,6 +475,8 @@ void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
   }
   if ( removedShape )
   {
-    shapes = boost::numeric::ublas::vector<shape_pointer>( newShapeVector );
+    //TODO PHYS-17 Do a more appropriate vector copy
+    // boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList =  newShapeVector ;
+    shapes = newShapeVector;
   }
 }

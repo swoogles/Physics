@@ -9,7 +9,7 @@
 #define SIMULATION_H_
 
 #include <iostream>
-#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
 #include <boost/ref.hpp>
 #include <plib/sg.h>
 //#include "../ShapeFiles/MyShape.h"
@@ -20,13 +20,13 @@
 // #include "Interactions.h"
 
 using namespace boost::numeric::ublas;
-using boost::numeric::ublas::vector;
+using boost::numeric::ublas::compressed_vector;
 
 class Simulation
 {
   private:
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    // static boost::numeric::ublas::vector< shape_pointer > physicalObjects;
+    // static boost::numeric::ublas::compressed_vector< shape_pointer > physicalObjects;
     static int curStep;
     ShapeList physicalObjects;
 

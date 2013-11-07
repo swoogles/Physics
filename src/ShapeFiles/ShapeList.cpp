@@ -24,7 +24,7 @@ int ShapeList::addShapeToList( shape_pointer insertShape )
 
 int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
 {
-  boost::numeric::ublas::vector<shape_pointer> newShapeVector;
+  boost::numeric::ublas::compressed_vector<shape_pointer> newShapeVector;
   int newSize =  shapes.size();
   newShapeVector.resize(newSize);
   bool removedShape = false;
@@ -48,7 +48,7 @@ int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
   }
   if ( removedShape )
   {
-    shapes = boost::numeric::ublas::vector<shape_pointer>( newShapeVector );
+    shapes = boost::numeric::ublas::compressed_vector<shape_pointer>( newShapeVector );
   }
 
   return removedIndex;
@@ -61,7 +61,7 @@ int ShapeList::clearShapes() {
   return shapes.size();
 }
 
-boost::numeric::ublas::vector<shape_pointer> ShapeList::getShapes()
+boost::numeric::ublas::compressed_vector<shape_pointer> ShapeList::getShapes()
 {
   return shapes;
 }

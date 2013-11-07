@@ -16,7 +16,7 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/make_shared.hpp> 
 #include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/foreach.hpp>
@@ -33,7 +33,7 @@
 #define foreach_  BOOST_FOREACH                                                                                              
 
 using namespace boost::numeric::ublas;
-using boost::numeric::ublas::vector;
+using boost::numeric::ublas::compressed_vector;
 
 /*! \brief Holds the objects to be used in a Simulation
  *
@@ -41,13 +41,13 @@ using boost::numeric::ublas::vector;
 class ShapeList {
   private:
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    boost::numeric::ublas::vector<shape_pointer> shapes;
+    boost::numeric::ublas::compressed_vector<shape_pointer> shapes;
 
   public:
     int addShapeToList( shape_pointer insertShape );
     int removeShapeFromList( shape_pointer shapeToRemove );
     int clearShapes();
-    boost::numeric::ublas::vector<shape_pointer> getShapes();
+    boost::numeric::ublas::compressed_vector<shape_pointer> getShapes();
 
 };
 

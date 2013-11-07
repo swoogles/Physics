@@ -388,27 +388,27 @@ void control_center::pause_cb(puObject * caller) {
 }
 
 void control_center::rotRight(puObject *) {
-	int current = Observer::getCurObserver();
-	Observer::observers(current)->adjustAngVel(0,.5,0);
+  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+	curObserver->adjustAngVel(0,.5,0);
 }
 
 void control_center::rotLeft(puObject *) {
-	int current = Observer::getCurObserver();
-	Observer::observers(current)->adjustAngVel(0,-.5,0);
+  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+	curObserver->adjustAngVel(0,-.5,0);
 }
 
 void control_center::rotUp(puObject *) {
-	int current = Observer::getCurObserver();
-	Observer::observers(current)->adjustAngVel(.5,0,0);
+  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+	curObserver->adjustAngVel(.5,0,0);
 }
 void control_center::rotDown(puObject *) {
-	int current = Observer::getCurObserver();
-	Observer::observers(current)->adjustAngVel(-.5,0,0);
+  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+	curObserver->adjustAngVel(-.5,0,0);
 }
 
 void control_center::rotStop(puObject *) {
-	int current = Observer::getCurObserver();
-	Observer::observers(current)->setAngVel(0,0,0);
+  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+	curObserver->setAngVel(0,0,0);
 }
 
 /*

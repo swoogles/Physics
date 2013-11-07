@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-#include <boost/numeric/ublas/vector.hpp>
+#include <boost/numeric/ublas/vector_sparse.hpp>
 
 #include <GL/glut.h>
 
@@ -94,7 +94,7 @@ public:
 	static int getCurObserver();
 
 	//! Stores all created Observers
-	static boost::numeric::ublas::vector<Observer *> observers;
+	static boost::numeric::ublas::compressed_vector<Observer *> observers;
 
 };
 
