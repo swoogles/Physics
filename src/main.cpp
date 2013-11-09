@@ -302,9 +302,13 @@ void init(char simulation) {
   cout << "NumShapes in simulation: " << numShapes << endl;
 
   sgVec4 curPos;
+  sgVec4 curMomentum;
   foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
   {
     curShape->getPos(curPos);
+    curShape->getMomentum(curMomentum);
+    // cout << "CurShape.pos: " << curShape->getPosString() << endl;
+    // cout << "CurShape.mom: " << curShape->getMomentumString() << endl;
     if (WorldSettings::isAutoScaling())
     {
       WorldSettings::updateXYMinsAndMaxes(curPos);
@@ -351,6 +355,11 @@ void idle() {
       if ( physicalObjects.getShapes().size() > 0 )
       {
         ShapeList shapeList;
+
+        if ( Simulations::getCurStep() % 100 == 0 )
+        {
+          cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
+        }
         // int z=0;
         foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
         {
@@ -363,6 +372,7 @@ void idle() {
           }
         }
         calcCollisionsAll_ShapeList(physicalObjects);
+        
       }
     }
 

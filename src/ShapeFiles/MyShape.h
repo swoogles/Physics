@@ -20,7 +20,10 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp> 
+
 #include <iostream>
+#include <string>
 
 #include <plib/sg.h>
 
@@ -143,6 +146,8 @@ public:
 	//! Return position of object in retVec
 	void getPos(sgVec4 retVec);
 
+	//! Print position of object. Format: <##,##,##>
+  std::string getPosString();
 
 	/*! \brief Set orientation of object
 	 *
@@ -177,6 +182,9 @@ public:
 	sgVec4 * getMomentum();
 	//! Returns momentum of object in retVec
 	void getMomentum(sgVec4 retVec);
+
+	//! Print momentum of object. Format: <##,##,##>
+  std::string getMomentumString();
 
 
 	//! Sets momentum of object to <inX, inY, inZ> * mass

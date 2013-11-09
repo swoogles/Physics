@@ -148,6 +148,13 @@ void MyShape::getPos(sgVec4 retVec) {
 	sgCopyVec4(retVec, pos);
 }
 
+std::string MyShape::getPosString()
+{
+  string posString = "<" + boost::lexical_cast<std::string>( pos[0] )  + ", " + boost::lexical_cast<std::string>( pos[1] ) + ", " + boost::lexical_cast<std::string>( pos[2] ) + ">";
+  return posString;
+}
+
+
 /*
 void MyShape::hFlip() {
 	scaleMat(0,0) = -1;
@@ -235,6 +242,11 @@ void MyShape::getMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, momentum);
 }
 
+std::string MyShape::getMomentumString()
+{
+  string posString = "<" + boost::lexical_cast<std::string>( momentum[0] )  + ", " + boost::lexical_cast<std::string>( momentum[0] ) + ", " + boost::lexical_cast<std::string>( momentum[0] ) + ">";
+  return posString;
+}
 
 
 void MyShape::setVelocity(float inX, float inY, float inZ) {
