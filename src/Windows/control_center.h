@@ -16,6 +16,7 @@
 #include <plib/puAux.h>
 #include <plib/sg.h>
 #include <boost/make_shared.hpp> 
+#include <boost/shared_ptr.hpp>
 //#include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Box.h"
 #include "../ShapeFiles/Circle.h"

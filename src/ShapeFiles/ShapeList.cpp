@@ -12,7 +12,7 @@
 
 using namespace std;
 using namespace boost::numeric::ublas;
-    typedef boost::shared_ptr<MyShape> shape_pointer;
+typedef boost::shared_ptr<MyShape> shape_pointer;
 
 int ShapeList::addShapeToList( shape_pointer insertShape )
 {

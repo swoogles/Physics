@@ -100,11 +100,14 @@ void control_center::makeNewObject(puObject * caller) {
 	}
 
 
-	MyShape::shapes(newSpot) = boost::make_shared<Circle>();
-	MyShape::shapes(newSpot)->setPos(startPlacement);
-	MyShape::shapes(newSpot)->setMomentum(startMomentum);
-	MyShape::shapes(newSpot)->setMass(mass_in->getFloatValue());
+  typedef boost::shared_ptr<MyShape> shape_pointer;
 
+	shape_pointer newShape = boost::make_shared<Circle>();
+	newShape->setPos(startPlacement);
+	newShape->setMomentum(startMomentum);
+	newShape->setMass(mass_in->getFloatValue());
+
+  MyShape::shapes(newSpot) = newShape;
 
 	glutPostRedisplay();
 
@@ -129,9 +132,11 @@ void makeRandomObjectUp(puObject * caller) {
 	//Not actually using the user data field in caller, you dumb douchenozzle
 	sgVec3 * makeSpot = (sgVec3 *) control_center::userDat;
 
+  typedef boost::shared_ptr<MyShape> shape_pointer;
 	MyShape::shapes.resize(newSpot+1);
-	MyShape::shapes(newSpot) = boost::make_shared<Box>();
-	MyShape::shapes(newSpot)->setPos( (*makeSpot)[0],(*makeSpot)[1],0);
+	shape_pointer newShape = boost::make_shared<Box>();
+	newShape->setPos( (*makeSpot)[0],(*makeSpot)[1],0);
+  MyShape::shapes(newSpot) = newShape;
 }
 
 void control_center::switchViewNow(puObject * caller) {
