@@ -27,8 +27,9 @@ class Simulation
   private:
     typedef boost::shared_ptr<MyShape> shape_pointer;
     // static boost::numeric::ublas::compressed_vector< shape_pointer > physicalObjects;
-    static int curStep;
+    int curStep;
     ShapeList physicalObjects;
+    int forceCalcMethod;
 
     float DT;
     double timeElapsed;
@@ -46,9 +47,20 @@ class Simulation
     // sgVec4 gravField;
 
   public:
+    static const char FORCE_CALC_METHOD_NAIVE_STRING[];
+    static const char FORCE_CALC_METHOD_OCTREE_STRING[];
+    static const int FORCE_CALC_METHOD_NAIVE = 0;
+    static const int FORCE_CALC_METHOD_OCTREE = 1;
+
+    Simulation();
+
     inline int getCurStep() { return curStep; };
     inline void setCurStep( int curStep ) { this->curStep = curStep; };
     inline void incCurStep() { curStep+= 1; };
+
+    inline int getForceCalcMethod() { return forceCalcMethod; };
+    inline void setForceCalcMethod( const int forceCalcMethod ) { this->forceCalcMethod = forceCalcMethod; };
+    void setForceCalcMethodByString( const string& forceCalcMethod );
 
     inline ShapeList getPhysicalObjects() { return physicalObjects; };
     inline void setPhysicalObjects( ShapeList physicalObjects ) { this->physicalObjects = physicalObjects; };

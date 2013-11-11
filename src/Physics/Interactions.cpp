@@ -394,6 +394,60 @@ void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::compressed_vec
 
 }
 
+void calcForcesAll( Simulation& curSimulation, boost::shared_ptr<Quadrant> curQuadrant )
+{
+  // cout << "curSimulation: " << &curSimulation << endl;
+  // cout << "curSimulation.physicalObjects: " << curSimulation.getPhysicalObjects().getShapes() << endl;
+  ShapeList physicalObjects = curSimulation.getPhysicalObjects();
+  sgVec4 curPos;
+
+  if ( ! curSimulation.getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_NAIVE  )
+  {
+      calcForcesAll_ArbitraryList(physicalObjects.getShapes(), curSimulation.getDT());
+
+      foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
+      {
+        // if ( Simulations::getCurStep() == 1 ) {
+        //   totalMass += curShape->getMass();
+        // }
+
+        curShape->update( curSimulation.getDT() );
+        curShape->getPos(curPos);
+
+        if (WorldSettings::isAutoScaling())
+        {
+          WorldSettings::updateXYMinsAndMaxes(curPos);
+        }
+
+      }
+  }
+  else //Calculations with Octree
+  {
+      if ( physicalObjects.getShapes().size() > 0 )
+      {
+        ShapeList shapeList;
+
+        if ( curSimulation.getCurStep() % 100 == 0 )
+        {
+          cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
+        }
+        // int z=0;
+        foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
+        {
+          calcForceOnObject_Octree(curShape, curQuadrant, curSimulation.getDT() );
+          curShape->update( curSimulation.getDT() );
+          curShape->getPos(curPos);
+          if (WorldSettings::isAutoScaling())
+          {
+            WorldSettings::updateXYMinsAndMaxes(curPos);
+          }
+        }
+        
+      }
+  }
+
+}
+
 //void calcHitAndMerge
 
 bool isConflict(int newShape) {
@@ -456,64 +510,11 @@ bool isConflict_ArbitraryList( boost::numeric::ublas::compressed_vector<shape_po
   return conflict;
 }
 
-void calcCollisionsAll() {
-  sgVec4 sepVec;
-  boost::shared_ptr<MyShape> object1;
-  boost::shared_ptr<MyShape> object2;
-  SGfloat distanceSquared, distance, minSep;
+void calcCollisionsAll(Simulation& curSimulation) {
 
-  bool killed = false;
-
-  sgVec4 gravField;
-
-  for (unsigned int i = 0; i < MyShape::shapes.size()-1; i++)
-  {
-    if (killed) {
-      // cout << "curI: " << i << endl;
-    }
-    object1 = MyShape::shapes(i);
-
-    if (WorldSettings::isConstGravField() ) {
-      object1->adjustMomentum(gravField);
-    }
-
-    for (unsigned int j = i + 1; j < MyShape::shapes.size(); )
-    {
-      //cout << "Stuck in inner loop " << endl;
-      object2 = MyShape::shapes(j);
-
-      getVectorToObject2(object1, object2, sepVec);
-
-      distanceSquared = sgLengthSquaredVec4(sepVec);
-      distance = sqrt(distanceSquared);
-
-      minSep = object1->getRadius() + object2->getRadius();
-
-
-      if (distance < minSep) {
-
-        if (WorldSettings::isAllElastic() ) {
-          elasticCollision(object1,object2);
-          j++;
-        }
-
-        else if (WorldSettings::isAllInelastic() ){
-          mergeObjects(object1, object2);
-          // object2->~MyShape();
-
-          MyShape::shapes.erase_element(j);
-          for (unsigned int curPos = j; curPos < MyShape::shapes.size()-1; curPos++) {
-            MyShape::shapes(curPos) = MyShape::shapes(curPos+1);
-          }
-          MyShape::shapes.resize(MyShape::shapes.size()-1, true);
-        }
-
-      }
-      else {
-        j++;
-      }
-    }
-  }
+  ShapeList physicalObjects = curSimulation.getPhysicalObjects() ;
+  calcCollisionsAll_ShapeList( physicalObjects );
+  curSimulation.setPhysicalObjects( physicalObjects) ;
 
 }
 
@@ -569,16 +570,6 @@ void calcCollisionsAll_ShapeList( ShapeList & shapeList ) {
           deleteList.insert_element(deleteList.size()-1, object2);
           j++;
 
-          // object2->~MyShape();
-
-          // TODO You SHOULD be able to call this once you're finished refactoring
-          // physicalObjects.removeShapeFromList( object2 );
-          // shapeList.removeShapeFromList( object2 );
-          // physicalObjects.erase_element(j);
-          // for (unsigned int curPos = j; curPos < physicalObjects.size()-1; curPos++) {
-          //   physicalObjects(curPos) = physicalObjects(curPos+1);
-          // }
-          // physicalObjects.resize(physicalObjects.size()-1, true);
         }
 
       }
@@ -589,77 +580,10 @@ void calcCollisionsAll_ShapeList( ShapeList & shapeList ) {
   }
   if ( deleteList.size() > 0 )
   {
-    // cout << "shapeList.sizeA: " << shapeList.getShapes().size() << endl; 
-    // cout << "MyShape.shapes.sizeA: " << MyShape::shapes.size() << endl; 
     foreach_ ( shape_pointer curShape, deleteList )
     {
       shapeList.removeShapeFromList( curShape );
       MyShape::removeShapeFromList( curShape );
-    }
-    // cout << "shapeList.sizeB: " << shapeList.getShapes().size() << endl; 
-    // cout << "MyShape.shapes.sizeB: " << MyShape::shapes.size() << endl; 
-  }
-
-}
-
-void calcCollisionsAll_ArbitraryList( boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects ) {
-  sgVec4 sepVec;
-  boost::shared_ptr<MyShape> object1;
-  boost::shared_ptr<MyShape> object2;
-  SGfloat distanceSquared, distance, minSep;
-
-  bool killed = false;
-
-  sgVec4 gravField;
-
-  for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
-  {
-    if (killed) {
-      // cout << "curI: " << i << endl;
-    }
-    object1 = physicalObjects(i);
-
-    if (WorldSettings::isConstGravField() ) {
-      object1->adjustMomentum(gravField);
-    }
-
-    for (unsigned int j = i + 1; j < physicalObjects.size();)
-    {
-      //cout << "Stuck in inner loop " << endl;
-      object2 = physicalObjects(j);
-
-      getVectorToObject2(object1, object2, sepVec);
-
-      distanceSquared = sgLengthSquaredVec4(sepVec);
-      distance = sqrt(distanceSquared);
-
-      minSep = object1->getRadius() + object2->getRadius();
-
-
-      if (distance < minSep) {
-
-        if (WorldSettings::isAllElastic() ) {
-          elasticCollision(object1,object2);
-          j++;
-        }
-
-        else if (WorldSettings::isAllInelastic() ){
-          mergeObjects(object1, object2);
-          // object2->~MyShape();
-
-          // TODO You SHOULD be able to call this once you're finished refactoring
-          // physicalObjects.removeShapeFromList( object2 );
-          physicalObjects.erase_element(j);
-          for (unsigned int curPos = j; curPos < physicalObjects.size()-1; curPos++) {
-            physicalObjects(curPos) = physicalObjects(curPos+1);
-          }
-          physicalObjects.resize(physicalObjects.size()-1, true);
-        }
-
-      }
-      else {
-        j++;
-      }
     }
   }
 

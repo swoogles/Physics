@@ -374,7 +374,7 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
 }
 
 //Get all objects in octree and return them in list
-ShapeList Quadrant::getShapesRecursive( int curLevel )
+ShapeList Quadrant::getShapesRecursive()
 {
   typedef boost::shared_ptr<MyShape> shape_pointer;
   shape_pointer curShape;
@@ -400,7 +400,7 @@ ShapeList Quadrant::getShapesRecursive( int curLevel )
         targetQuadrant = this->getQuadrantFromCell( x, y, z );
         if ( targetQuadrant != NULL )
         {
-          targetShapeList = targetQuadrant->getShapesRecursive( curLevel  );
+          targetShapeList = targetQuadrant->getShapesRecursive();
           foreach_ ( shape_pointer curShape, targetShapeList.getShapes() )
           {
             totalShapeList.addShapeToList( curShape );

@@ -572,7 +572,6 @@ Simulation Simulations::bodyFormation_NonRandom() {
   startPlacement[1]= -offset;
 
   curShape = make_shared<Circle>();
-  // curShape = boost::make_shared<Circle>();
   curShape->setPos( startPlacement );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
@@ -580,7 +579,7 @@ Simulation Simulations::bodyFormation_NonRandom() {
   curShape->setDensity(objectDensity);
   curShape->setColor(newColor);
 
-  physicalObjects.addShapeToList( curShape );
+  // physicalObjects.addShapeToList( curShape );
   totalMass += curShape->getMass();
 
   WorldSettings::adjustTotalMass( totalMass );
@@ -631,8 +630,8 @@ Simulation Simulations::bodyFormation_ArbitraryList(int numPieces) {
     shape_pointer curShape;
 
 		if (i % 2 == 0) {
-      startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
-			// randomSplitBodyMomentum(startMomentum, pieceMass);
+      // startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
+			randomSplitBodyMomentum(startMomentum, pieceMass);
 			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
 		}
 		else {
@@ -760,7 +759,7 @@ Simulation Simulations::createSimulation( char simNumber )
 	  newSimulation = Simulations::bodyFormation_NonRandom();
   }
   if ( simNumber == '1' ) {
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 100 );
+    newSimulation = Simulations::bodyFormation_ArbitraryList( 500 );
   }
   if ( simNumber == '2' ) {
 	  newSimulation = Simulations::disruption_ArbitraryList();

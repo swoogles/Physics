@@ -104,7 +104,7 @@ class Quadrant : public Box
 
   quad_pointer determineShapeQuadrant( shape_pointer shapeToInsert );
 
-  ShapeList getShapesRecursive( int curLevel );
+  ShapeList getShapesRecursive();
 
 };
 

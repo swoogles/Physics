@@ -16,6 +16,7 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/foreach.hpp>
 #include <boost/ref.hpp>
+// #include <boost/timer/timer.hpp>
 
 #include <fstream>
 #include <map>
@@ -98,7 +99,7 @@ float totalMass = 0;
 
 // boost::shared_ptr<Circle> globalCenterOfMassCircle;
 boost::shared_ptr<Quadrant> globalQuadrant;
-ShapeList physicalObjects; 
+// ShapeList physicalObjects; 
 std::map<std::string, std::string> globalProperties;
 Simulation globalSimulation;
 
@@ -276,16 +277,17 @@ void init(char simulation) {
 
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation );
-  physicalObjects = globalSimulation.getPhysicalObjects();
-  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = physicalObjects.getShapes() ;
+  // physicalObjects = globalSimulation.getPhysicalObjects();
+  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation.getPhysicalObjects().getShapes() ;
   MyShape::shapes = localShapeList;
   
+  globalSimulation.setForceCalcMethodByString( globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD ) );
 
 	char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
 	strcat(saveFileName, "output.dat");
 
 	float minX, minY, maxX, maxY;
-	calcXYMinsAndMaxes(physicalObjects.getShapes(), minX, minY, maxX, maxY);
+	calcXYMinsAndMaxes(globalSimulation.getPhysicalObjects().getShapes(), minX, minY, maxX, maxY);
 
 	float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
@@ -303,12 +305,12 @@ void init(char simulation) {
 
   sgVec4 curPos;
   sgVec4 curMomentum;
-  foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
+  foreach_ ( shape_pointer curShape, globalSimulation.getPhysicalObjects().getShapes() )
   {
     curShape->getPos(curPos);
     curShape->getMomentum(curMomentum);
-    // cout << "CurShape.pos: " << curShape->getPosString() << endl;
-    // cout << "CurShape.mom: " << curShape->getMomentumString() << endl;
+    cout << "CurShape.pos: " << curShape->getPosString() << endl;
+    cout << "CurShape.mom: " << curShape->getMomentumString() << endl;
     if (WorldSettings::isAutoScaling())
     {
       WorldSettings::updateXYMinsAndMaxes(curPos);
@@ -321,6 +323,7 @@ void idle() {
   sgVec4 curPos;
 
   if (! WorldSettings::isPaused()  ) {
+    globalSimulation.setDT( WorldSettings::getDT() );
     if (WorldSettings::isAutoScaling())
     {
       WorldSettings::resetXYMinsAndMaxes();
@@ -328,57 +331,17 @@ void idle() {
     // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
     string forceCalculations = globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD );
 
-    string USE_OCTREE = "octree";
-    if ( forceCalculations.compare( USE_OCTREE ) )
-    {
-      calcForcesAll_ArbitraryList(physicalObjects.getShapes(), globalSimulation.getDT());
+    // cout << "gloSimulation: " << &globalSimulation << endl;
+    // cout << "gloSimulation.physicalObjects: " << globalSimulation.getPhysicalObjects().getShapes() << endl;
 
-      foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
-      {
-        if ( Simulations::getCurStep() == 1 ) {
-          totalMass += curShape->getMass();
-        }
-
-        curShape->update( globalSimulation.getDT() );
-        curShape->getPos(curPos);
-
-        if (WorldSettings::isAutoScaling())
-        {
-          WorldSettings::updateXYMinsAndMaxes(curPos);
-        }
-
-      }
-
-      calcCollisionsAll_ArbitraryList( physicalObjects.getShapes() );
-    }
-    else {
-      if ( physicalObjects.getShapes().size() > 0 )
-      {
-        ShapeList shapeList;
-
-        if ( Simulations::getCurStep() % 100 == 0 )
-        {
-          cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
-        }
-        // int z=0;
-        foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
-        {
-          calcForceOnObject_Octree(curShape, globalQuadrant, globalSimulation.getDT() );
-          curShape->update( globalSimulation.getDT() );
-          curShape->getPos(curPos);
-          if (WorldSettings::isAutoScaling())
-          {
-            WorldSettings::updateXYMinsAndMaxes(curPos);
-          }
-        }
-        calcCollisionsAll_ShapeList(physicalObjects);
-        
-      }
-    }
-
+    // cout << "Quadrant.shapelist.size: " << globalQuadrant->getShapesRecursive().getShapes().size() << endl;
+    // cout << "Simulati.shapelist.size: " << globalSimulation.getPhysicalObjects().getShapes().size() << endl;
+    calcForcesAll( globalSimulation, globalQuadrant );
+    calcCollisionsAll( globalSimulation );
+    // physicalObjects = globalSimulation.getPhysicalObjects(); //TODO Remove this line as soon as you purge the global physical objets from this file.
 
     WorldSettings::updateTimeElapsed();
-    globalSimulation.updateTimeElapsed();
+    // globalSimulation.updateTimeElapsed();
     main_window_UI::update();
     //calcDrag(WorldSettings::getDT());
 
@@ -388,10 +351,20 @@ void idle() {
     // shape_pointer largest[10];
 
     Simulations::incCurStep();
-    // if ( Simulations::getCurStep() == 30 )
-    // {
-    //   exit(0);
-    // }
+    globalSimulation.incCurStep();
+
+    sgVec4 curMomentum;
+    foreach_ ( shape_pointer curShape, globalSimulation.getPhysicalObjects().getShapes() )
+    {
+      curShape->getPos(curPos);
+      curShape->getMomentum(curMomentum);
+      cout << "CurShape.pos: " << curShape->getPosString() << endl;
+      cout << "CurShape.mom: " << curShape->getMomentumString() << endl;
+      if (WorldSettings::isAutoScaling())
+      {
+        WorldSettings::updateXYMinsAndMaxes(curPos);
+      }
+    }
   }
 
   int curObserverIdx = Observer::getCurObserver();
@@ -406,7 +379,7 @@ void idle() {
   pos[3] = 1;
 
   float side = 1e4; //Formation Value
-  side = 5e4;
+  side = 5e6;
   float width = side;
   float height = side;
   float depth = side;
@@ -418,7 +391,7 @@ void idle() {
   globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
   // sleep(2);
   typedef boost::shared_ptr<MyShape> shape_pointer;
-  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = physicalObjects.getShapes();
+  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation.getPhysicalObjects().getShapes();
   foreach_ ( shape_pointer curShape, localShapeList )
   {
     globalQuadrant->insertShape( curShape );
@@ -438,6 +411,7 @@ void idle() {
 
     curObserver->setPos(0, 0, -pullBack * 2);
   }
+
 
 }
 
