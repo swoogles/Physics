@@ -145,6 +145,11 @@ void control_center::switchViewNow(puObject * caller) {
 
 }
 
+void control_center::setSimulation( const Simulation& simulation )
+{
+  this->simulation = boost::make_shared<Simulation>( simulation );
+}
+
 void control_center::init() {
 
   showingRuntime = false;
@@ -267,7 +272,21 @@ void control_center::init() {
 	  dec_dt_button = new puOneShot(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
 	  curX += (placementWidth +gap);
 	  dec_dt_button->setLegend("Slower");
-	  dec_dt_button->setCallback(alterDT);
+	  dec_dt_button->setCallback( alterDT );
+
+	  // dec_dt_button->setCallback( alterDT_static(dec_dt_button, simulation) );
+	  // dec_dt_button->setCallback( alterDT_static(dec_dt_button, simulation) );
+	  // dec_dt_button->setCallback( static_cast<puCallback(void(*)(puObject*, boost::shared_ptr<Simulation>) )>(alterDT_static(dec_dt_button, simulation) ) );
+	  // dec_dt_button->setCallback( static_cast<void(void(control_center::*)(puObject*, boost::shared_ptr<Simulation>) )>(alterDT_static(dec_dt_button, simulation) ) );
+
+// void control_center::alterDT_static(puObject * caller, Simulation& curSimulation ) {
+
+	  // dec_dt_button->setCallback( (puCallback*)(puObject*)alterDT);
+	  // dec_dt_button->setCallback( static_cast<void(control_center::*)(puObject* )>(&control_center::alterDT), this );
+	  // dec_dt_button->setCallback( static_cast<void(void(*)(puObject*) )>(&control_center::alterDT), this );
+	  // dec_dt_button->setCallback( static_cast<void(puCallback )>(&control_center::alterDT) );
+
+    // ../src/Windows/control_center.cpp:277:87: error: invalid static_cast from type ‘void (control_center::*)(puObject*)’ to type ‘void(puCallback) {aka void(void (*)(puObject*))}’
 
 	  pause_dt_button = new puButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
 	  curX += (placementWidth +gap);
@@ -364,6 +383,20 @@ void control_center::flipAutoScaling(puObject * caller) {
 		cout << "AutoScaling On: " << WorldSettings::isAutoScaling() << endl;
 		//caller->setValue(1);
 	}
+}
+void control_center::alterDT_static(puObject * caller, boost::shared_ptr<Simulation> curSimulation ) {
+  //static float prevDT;
+
+  if (strcmp(caller->getLegend(), "Slower") == 0) {
+    curSimulation->setDT( curSimulation->getDT() / 2 );
+    // WorldSettings::setDT(WorldSettings::getDT() / 2);
+    cout << caller->getLegend() << endl;
+  }
+
+  if (strcmp(caller->getLegend(), "Faster") == 0) {
+    WorldSettings::setDT(WorldSettings::getDT() * 2);
+  }
+
 }
 
 

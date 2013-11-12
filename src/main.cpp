@@ -311,8 +311,8 @@ void init(char simulation) {
   {
     curShape->getPos(curPos);
     curShape->getMomentum(curMomentum);
-    cout << "CurShape.pos: " << curShape->getPosString() << endl;
-    cout << "CurShape.mom: " << curShape->getMomentumString() << endl;
+    // cout << "CurShape.pos: " << curShape->getPosString() << endl;
+    // cout << "CurShape.mom: " << curShape->getMomentumString() << endl;
     if (WorldSettings::isAutoScaling())
     {
       WorldSettings::updateXYMinsAndMaxes(curPos);
@@ -475,7 +475,8 @@ int main(int argcp, char **argv) {
   //Get the buttons laid out and what-not
 
   globalControlCenter.init();
-  // control_center::init();
+  globalControlCenter.setSimulation( globalSimulation );
+
 
   glutSetWindow(main_window);
 

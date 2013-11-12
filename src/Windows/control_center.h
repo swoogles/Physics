@@ -22,6 +22,7 @@
 #include "../ShapeFiles/Circle.h"
 
 #include "../Physics/WorldSettings.h"
+#include "../Physics/Simulation.h"
 
 #include "../Observation/Observer.h"
 
@@ -36,6 +37,7 @@
  */
 class control_center {
 private:
+  boost::shared_ptr<Simulation> simulation;
 	puGroup * placement_group;
 		puaSelectBox * pick_object;
 		puText * object_name_label;
@@ -76,6 +78,7 @@ private:
 
 public:
 	//! Creates all UI elements and sets their values, positions, and callbacks
+  void setSimulation( const Simulation& residentSimulation );
 	void init();
 	bool showingRuntime;
 
@@ -118,6 +121,7 @@ public:
 	 *
 	 *  Calls WorldSettings::setDT(float) using WorldSettings::getDT() divided or multiplied by 2 depending on whether simulation is being sped up or slowed down
 	 */
+  static void alterDT_static(puObject * caller, boost::shared_ptr<Simulation> curSimulation );
 	static void alterDT(puObject *);
 	//! Pauses simulation using WorldSettings::Pause()
 	static void pause_cb(puObject *);
