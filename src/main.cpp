@@ -103,6 +103,8 @@ boost::shared_ptr<Quadrant> globalQuadrant;
 std::map<std::string, std::string> globalProperties;
 Simulation globalSimulation;
 
+control_center globalControlCenter;
+
 class BillProperties
 {
   public:
@@ -471,7 +473,9 @@ int main(int argcp, char **argv) {
   glutKeyboardFunc(myKey);
 
   //Get the buttons laid out and what-not
-  control_center::init();
+
+  globalControlCenter.init();
+  // control_center::init();
 
   glutSetWindow(main_window);
 

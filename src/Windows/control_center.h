@@ -36,69 +36,70 @@
  */
 class control_center {
 private:
-	static puGroup * placement_group;
-		static puaSelectBox * pick_object;
-		static puText * object_name_label;
-		static puInput * object_name_input;
-		static puButton * make_object;
+	puGroup * placement_group;
+		puaSelectBox * pick_object;
+		puText * object_name_label;
+		puInput * object_name_input;
+		puButton * make_object;
 
-		static puText * placement_label;
-		static puText * placement_label2;
+		puText * placement_label;
+		puText * placement_label2;
 
-		static puText * momentum_label;
-		static puText * momentum_label2;
+		puText * momentum_label;
+		puText * momentum_label2;
 
-		static puText * mass_label;
+		puText * mass_label;
       
-      static puButton * clear_objects;
+    puButton * clear_objects;
 
 
-	static puGroup * runtime_group;
-		static puText * speed_c_label;
-		static puInput * speed_c_input;
-		static puButton * filler;
+	puGroup * runtime_group;
+		puText * speed_c_label;
+		puInput * speed_c_input;
+		puButton * filler;
 
-		static puOneShot * inc_dt_button;
-		static puOneShot * dec_dt_button;
-		static puButton * pause_dt_button;
+		puOneShot * inc_dt_button;
+		puOneShot * dec_dt_button;
+		puButton * pause_dt_button;
 
-		static puArrowButton * inc_rotSide_button;
-		static puArrowButton * dec_rotSide_button;
-		static puButton * pause_rotSide_button;
-		static puArrowButton * rotUp_button;
-		static puArrowButton * rotDown_button;
+		puArrowButton * inc_rotSide_button;
+		puArrowButton * dec_rotSide_button;
+		puButton * pause_rotSide_button;
+		puArrowButton * rotUp_button;
+		puArrowButton * rotDown_button;
 
-		static puButton * autoScale_button;
+		puButton * autoScale_button;
 
-	static puButton * viewSwitcher;
+	puButton * viewSwitcher;
 
 
 
 public:
 	//! Creates all UI elements and sets their values, positions, and callbacks
-	static void init();
-	static bool showingRuntime;
+	void init();
+	bool showingRuntime;
 
 	//! Switches from Object Creation view to View/Time manipulation view
-	static void switchViewNow(puObject *);
+	void switchViewNow(puObject *);
 
-	static sgVec3 userDat;
+	sgVec3 userDat;
 
 	/*! \brief Creates a new object based on UI text boxes
 	 *
 	 * The values for the new object are collecting from the placement*_in, momentum*_in, and mass_in puInput boxes.
 	 * Look into changing text boxes to private members with appropriate accessor/mutator functions
 	 */
-	static void makeNewObject(puObject *);
+	// static void makeNewObject(puObject *);
 
-	static puInput * placementX_in;
-	static puInput * placementY_in;
-	static puInput * placementZ_in;
+	puInput * placementX_in;
+	puInput * placementY_in;
+	puInput * placementZ_in;
 
-	static puInput * momentumX_in;
-	static puInput * momentumY_in;
-	static puInput * momentumZ_in;
+	puInput * momentumX_in;
+	puInput * momentumY_in;
+	puInput * momentumZ_in;
 
+	puInput * mass_in;
 
 	//static void alterRotSide(puObject *);
 
@@ -126,9 +127,6 @@ public:
 
 	//! Turn AutoScaling on or off
 	static void flipAutoScaling(puObject * caller);
-
-
-	static puInput * mass_in;
 };
 
 

@@ -8,136 +8,128 @@
 #include "control_center.h"
 
 //Group 1
-puGroup * control_center::placement_group;
-puaSelectBox * control_center::pick_object;
-puText * control_center::object_name_label;
-puInput * control_center::object_name_input;
-puButton * control_center::make_object;
-
-puText * control_center::placement_label;
-puText * control_center::placement_label2;
-puInput * control_center::placementX_in;
-puInput * control_center::placementY_in;
-puInput * control_center::placementZ_in;
-
-puText * control_center::momentum_label;
-puText * control_center::momentum_label2;
-puInput * control_center::momentumX_in;
-puInput * control_center::momentumY_in;
-puInput * control_center::momentumZ_in;
-
-puText * control_center::mass_label;
-puInput * control_center::mass_in;
-
-puButton * control_center::clear_objects;
+// puGroup * control_center::placement_group;
+// puaSelectBox * control_center::pick_object;
+// puText * control_center::object_name_label;
+// puInput * control_center::object_name_input;
+// puButton * control_center::make_object;
+// 
+// puText * control_center::placement_label;
+// puText * control_center::placement_label2;
+// puInput * control_center::placementX_in;
+// puInput * control_center::placementY_in;
+// puInput * control_center::placementZ_in;
+// 
+// puText * control_center::momentum_label;
+// puText * control_center::momentum_label2;
+// puInput * control_center::momentumX_in;
+// puInput * control_center::momentumY_in;
+// puInput * control_center::momentumZ_in;
+// 
+// puText * control_center::mass_label;
+// puInput * control_center::mass_in;
+// 
+// puButton * control_center::clear_objects;
 
 //Group 2
-puGroup * control_center::runtime_group;
-puText * control_center::speed_c_label;
-puInput * control_center::speed_c_input;
-puButton * control_center::filler;
+// puGroup * control_center::runtime_group;
+// puText * control_center::speed_c_label;
+// puInput * control_center::speed_c_input;
+// puButton * control_center::filler;
 
 //Control speed
-puOneShot * control_center::inc_dt_button;
-puOneShot * control_center::dec_dt_button;
-puButton * control_center::pause_dt_button;
+// puOneShot * control_center::inc_dt_button;
+// puOneShot * control_center::dec_dt_button;
+// puButton * control_center::pause_dt_button;
 
 //Control viewpoint
-puArrowButton * control_center::inc_rotSide_button;
-puArrowButton * control_center::dec_rotSide_button;
-puButton * control_center::pause_rotSide_button;
-puArrowButton * control_center::rotUp_button;
-puArrowButton * control_center::rotDown_button;
+// puArrowButton * control_center::inc_rotSide_button;
+// puArrowButton * control_center::dec_rotSide_button;
+// puButton * control_center::pause_rotSide_button;
+// puArrowButton * control_center::rotUp_button;
+// puArrowButton * control_center::rotDown_button;
 
 //Autoscale
-puButton * control_center::autoScale_button;
+// puButton * control_center::autoScale_button;
 
 
-bool control_center::showingRuntime = false;
+// bool control_center::showingRuntime = false;
 
-sgVec3 control_center::userDat = {2,-1,0};
+// sgVec3 control_center::userDat = {2,-1,0};
 
-puButton * control_center::viewSwitcher;
+// puButton * control_center::viewSwitcher;
 
 using namespace std;
 
 //TODO get this to add in objects correctly
-void control_center::makeNewObject(puObject * caller) {
-	int newSpot = MyShape::shapes.size();
-	//MyShape * newShape;
+// void control_center::makeNewObject(puObject * caller) {
+// 	int newSpot = MyShape::shapes.size();
+// 	//MyShape * newShape;
+// 
+// 	cout << "Calling legend: " << caller->getLegend() << endl;
+// 
+// 	sgVec4 startPlacement;
+// 	sgVec4 startMomentum;
+// 
+// 	startPlacement[0] = placementX_in->getFloatValue();
+// 	startPlacement[1] = placementY_in->getFloatValue();
+// 	startPlacement[2] = placementZ_in->getFloatValue();
+// 	startPlacement[3] = 1;
+// 
+// 	startMomentum[0] = momentumX_in->getFloatValue();
+// 	startMomentum[1] = momentumY_in->getFloatValue();
+// 	startMomentum[2] = momentumZ_in->getFloatValue();
+// 	startMomentum[3] = 0;
+// 
+// 	MyShape::shapes.resize(newSpot+1);
+// 
+// 	/*
+// 	// Potential Alternative, causes crash in current state
+// 	newShape = (MyShape::shapes(newSpot));
+// 	newShape = new Box;
+// 	newShape->setPos(startPlacement);
+// 	newShape->setMomentum(startMomentum);
+// 	newShape->setMass(mass_in->getFloatValue());
+// 	*/
+// 
+// 
+// 	cout << "Placement: ";
+// 	for (int i = 0; i < 4; i++)
+// 	{
+// 		cout << startPlacement[i] << "  ";
+// 	}
+// 
+// 
+//   typedef boost::shared_ptr<MyShape> shape_pointer;
+// 
+// 	shape_pointer newShape = boost::make_shared<Circle>();
+// 	newShape->setPos(startPlacement);
+// 	newShape->setMomentum(startMomentum);
+// 	newShape->setMass(mass_in->getFloatValue());
+// 
+//   MyShape::shapes(newSpot) = newShape;
+// 
+// 	glutPostRedisplay();
+// 
+// }
 
-	cout << "Calling legend: " << caller->getLegend() << endl;
-
-	sgVec4 startPlacement;
-	sgVec4 startMomentum;
-
-	startPlacement[0] = placementX_in->getFloatValue();
-	startPlacement[1] = placementY_in->getFloatValue();
-	startPlacement[2] = placementZ_in->getFloatValue();
-	startPlacement[3] = 1;
-
-	startMomentum[0] = momentumX_in->getFloatValue();
-	startMomentum[1] = momentumY_in->getFloatValue();
-	startMomentum[2] = momentumZ_in->getFloatValue();
-	startMomentum[3] = 0;
-
-	MyShape::shapes.resize(newSpot+1);
-
-	/*
-	// Potential Alternative, causes crash in current state
-	newShape = (MyShape::shapes(newSpot));
-	newShape = new Box;
-	newShape->setPos(startPlacement);
-	newShape->setMomentum(startMomentum);
-	newShape->setMass(mass_in->getFloatValue());
-	*/
-
-
-	cout << "Placement: ";
-	for (int i = 0; i < 4; i++)
-	{
-		cout << startPlacement[i] << "  ";
-	}
-
-
-  typedef boost::shared_ptr<MyShape> shape_pointer;
-
-	shape_pointer newShape = boost::make_shared<Circle>();
-	newShape->setPos(startPlacement);
-	newShape->setMomentum(startMomentum);
-	newShape->setMass(mass_in->getFloatValue());
-
-  MyShape::shapes(newSpot) = newShape;
-
-	glutPostRedisplay();
-
-}
-
-void clearShapes(puObject * caller) {
-	//int newSpot = MyShape::shapes.size();
-   MyShape::clearShapes();
-
-	//Not actually using the user data field in caller, you dumb douchenozzle
-	//sgVec3 * makeSpot = (sgVec3 *) control_center::userDat;
-
-	//MyShape::shapes.resize(newSpot+1);
-	//MyShape::shapes(newSpot) = new Box;
-	//MyShape::shapes(newSpot)->setPos( (*makeSpot)[0],(*makeSpot)[1],0);
-}
+// void control_center::clearShapes(puObject * caller) {
+//    MyShape::clearShapes();
+// }
 
 
-void makeRandomObjectUp(puObject * caller) {
-	int newSpot = MyShape::shapes.size();
-
-	//Not actually using the user data field in caller, you dumb douchenozzle
-	sgVec3 * makeSpot = (sgVec3 *) control_center::userDat;
-
-  typedef boost::shared_ptr<MyShape> shape_pointer;
-	MyShape::shapes.resize(newSpot+1);
-	shape_pointer newShape = boost::make_shared<Box>();
-	newShape->setPos( (*makeSpot)[0],(*makeSpot)[1],0);
-  MyShape::shapes(newSpot) = newShape;
-}
+// void control_center::makeRandomObjectUp(puObject * caller) {
+// 	int newSpot = MyShape::shapes.size();
+// 
+// 	//Not actually using the user data field in caller, you dumb douchenozzle
+// 	sgVec3 * makeSpot = (sgVec3 *) userDat;
+// 
+//   typedef boost::shared_ptr<MyShape> shape_pointer;
+// 	MyShape::shapes.resize(newSpot+1);
+// 	shape_pointer newShape = boost::make_shared<Box>();
+// 	newShape->setPos( (*makeSpot)[0],(*makeSpot)[1],0);
+//   MyShape::shapes(newSpot) = newShape;
+// }
 
 void control_center::switchViewNow(puObject * caller) {
 	if (showingRuntime) {
@@ -154,6 +146,12 @@ void control_center::switchViewNow(puObject * caller) {
 }
 
 void control_center::init() {
+
+  showingRuntime = false;
+  userDat[0]=2;
+  userDat[1]=-1;
+  userDat[2]=0;
+
 		int winHeight = glutGet(GLUT_WINDOW_HEIGHT);
 
 	  int curHeight = winHeight;
@@ -168,8 +166,8 @@ void control_center::init() {
 	  int vsHeight = 40;
 	  int vsWidth = 100;
 	  viewSwitcher = new puButton(vsXinit, vsYinit, vsXinit+vsWidth, vsYinit+vsHeight);
-	  viewSwitcher->setLegend("SwitchView");
-	  viewSwitcher->setCallback(switchViewNow);
+	  viewSwitcher->setLegend("SwitchView(x)");
+	  // viewSwitcher->setCallback(switchViewNow);
 
 	  placement_group = new puGroup(0,0);
 	  object_name_label = new puText(5, curHeight-elementHeight);
@@ -182,8 +180,8 @@ void control_center::init() {
 	  curHeight -= elementHeight;
 
 	  make_object = new puButton(5, curHeight-elementHeight, 115, curHeight);
-	  make_object->setLegend("Make Object!");
-	  make_object->setCallback(makeNewObject);
+	  make_object->setLegend("Make New Object(x)");
+	  // make_object->setCallback(makeNewObject);
 
 	  curHeight = 200;
 	  int startX = glutGet(GLUT_WINDOW_WIDTH)/2;
@@ -228,8 +226,8 @@ void control_center::init() {
 	  curHeight -= (elementHeight+gap);
 
      clear_objects = new puButton(curX, curHeight-elementHeight, curX+placementWidth, curHeight);
-     clear_objects->setLegend("Clear Objects");
-	  clear_objects->setCallback(clearShapes);
+     clear_objects->setLegend("Clear Objects(x)");
+	  // clear_objects->setCallback(clearShapes);
 
 	  //make_object = new puButton(5, curHeight-elementHeight, 115, curHeight);
 	  //make_object->setLegend("Make Object!");
@@ -237,6 +235,7 @@ void control_center::init() {
 
 
 	  placement_group->close();
+	  placement_group->hide();
 
 
 	  //Next button group
@@ -256,8 +255,8 @@ void control_center::init() {
 	  filler->setUserData(& userDat);
 	  //****Could definitely be useful
 
-	  filler->setLegend("MakeUpObject!");
-	  filler->setCallback(makeRandomObjectUp);
+	  filler->setLegend("MakeUpObject!(x)");
+	  // filler->setCallback(makeRandomObjectUp);
 	  curHeight -= elementHeight;
 
 	  curHeight = 200;
@@ -335,7 +334,7 @@ void control_center::init() {
 	  autoScale_button->setCallback(flipAutoScaling);
 
 	  runtime_group->close();
-	  runtime_group->hide();
+	  // runtime_group->hide();
 
 	  /*
 	  button = new puButton ( 90, 100, 90+16, 100+16, PUBUTTON_RADIO ) ;
@@ -348,7 +347,8 @@ void control_center::init() {
 }
 
 void control_center::uncheckAutoScaling() {
-	autoScale_button->setValue(0);
+  // TODO I gutted this function while making the class nonstatic. Reimplement eventually.
+	// autoScale_button->setValue(0);
 }
 
 void control_center::flipAutoScaling(puObject * caller) {
