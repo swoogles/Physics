@@ -403,47 +403,48 @@ void calcForcesAll( Simulation& curSimulation, boost::shared_ptr<Quadrant> curQu
 
   if ( ! curSimulation.getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
-      calcForcesAll_ArbitraryList(physicalObjects.getShapes(), curSimulation.getDT());
+    calcForcesAll_ArbitraryList(physicalObjects.getShapes(), curSimulation.getDT());
 
+    foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
+    {
+      // if ( Simulations::getCurStep() == 1 ) {
+      //   totalMass += curShape->getMass();
+      // }
+
+      curShape->update( curSimulation.getDT() );
+      curShape->getPos(curPos);
+
+      if (WorldSettings::isAutoScaling())
+      {
+        WorldSettings::updateXYMinsAndMaxes(curPos);
+      }
+
+    }
+  }
+  else //Calculations with Octree
+  {
+    // cout << "curDT: " << curSimulation.getDT() << endl;
+    if ( physicalObjects.getShapes().size() > 0 )
+    {
+      ShapeList shapeList;
+
+      if ( curSimulation.getCurStep() % 100 == 0 )
+      {
+        cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
+      }
+      // int z=0;
       foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
       {
-        // if ( Simulations::getCurStep() == 1 ) {
-        //   totalMass += curShape->getMass();
-        // }
-
+        calcForceOnObject_Octree(curShape, curQuadrant, curSimulation.getDT() );
         curShape->update( curSimulation.getDT() );
         curShape->getPos(curPos);
-
         if (WorldSettings::isAutoScaling())
         {
           WorldSettings::updateXYMinsAndMaxes(curPos);
         }
-
       }
-  }
-  else //Calculations with Octree
-  {
-      if ( physicalObjects.getShapes().size() > 0 )
-      {
-        ShapeList shapeList;
 
-        if ( curSimulation.getCurStep() % 100 == 0 )
-        {
-          cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
-        }
-        // int z=0;
-        foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
-        {
-          calcForceOnObject_Octree(curShape, curQuadrant, curSimulation.getDT() );
-          curShape->update( curSimulation.getDT() );
-          curShape->getPos(curPos);
-          if (WorldSettings::isAutoScaling())
-          {
-            WorldSettings::updateXYMinsAndMaxes(curPos);
-          }
-        }
-        
-      }
+    }
   }
 
 }

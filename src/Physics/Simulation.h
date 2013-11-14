@@ -67,7 +67,7 @@ class Simulation
     inline void addPhysicalObjectToList( shape_pointer newShape ) { physicalObjects.addShapeToList( newShape ); };
 
     inline void setDT(float newDT) { DT = newDT; };
-    inline float getDT() { return DT; };
+    inline float getDT() const { return DT; };
 
     void setTimeElapsed(double newTimeElapsed) { timeElapsed = newTimeElapsed; };
     void updateTimeElapsed() { timeElapsed += DT; };

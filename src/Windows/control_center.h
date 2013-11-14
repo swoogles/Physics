@@ -79,8 +79,9 @@ private:
 public:
 	//! Creates all UI elements and sets their values, positions, and callbacks
   void setSimulation( const Simulation& residentSimulation );
-	void init();
+	void init( boost::shared_ptr<Simulation> residentSimulation );
 	bool showingRuntime;
+  inline void printDec_dt_buttonAddress() { std::cout << "&dec_dt_button: " << dec_dt_button << endl; };
 
 	//! Switches from Object Creation view to View/Time manipulation view
 	void switchViewNow(puObject *);

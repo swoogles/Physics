@@ -147,10 +147,13 @@ void control_center::switchViewNow(puObject * caller) {
 
 void control_center::setSimulation( const Simulation& simulation )
 {
+  cout << "setSimulation.dt.prev: " << simulation.getDT() << endl;
   this->simulation = boost::make_shared<Simulation>( simulation );
+  cout << "setSimulation.dt.post: " << (this->simulation)->getDT() << endl;
 }
 
-void control_center::init() {
+void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
+  cout << "&control_center: " << this << endl;
 
   showingRuntime = false;
   userDat[0]=2;
@@ -272,7 +275,21 @@ void control_center::init() {
 	  dec_dt_button = new puOneShot(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
 	  curX += (placementWidth +gap);
 	  dec_dt_button->setLegend("Slower");
+    cout << "dec_dt_button address: " << dec_dt_button << endl;
+    // cout << "About to set user Data" << endl;
+    // cout << "residentSimulation: " << residentSimulation << endl;
+    // cout << "residentSimulation->dt: " << residentSimulation->getDT() << endl;
+    dec_dt_button->setUserData( &residentSimulation );
 	  dec_dt_button->setCallback( alterDT );
+
+    boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)dec_dt_button->getUserData();
+    // cout << "\nRetrieving user Data from dec_dt_button after setting callback" << endl;
+    // if ( spPointer == NULL )
+    // {
+    //   cout << "Retrievd a stupid null value from dec_dt_button!" << endl;
+    // }
+    // cout << "userData: " << *spPointer << endl;
+    // cout << "userData->dt: " << (*spPointer)->getDT() << endl;
 
 	  // dec_dt_button->setCallback( alterDT_static(dec_dt_button, simulation) );
 	  // dec_dt_button->setCallback( alterDT_static(dec_dt_button, simulation) );
@@ -298,6 +315,7 @@ void control_center::init() {
 	  inc_dt_button = new puOneShot(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
 	  curX += (placementWidth +gap);
 	  inc_dt_button->setLegend("Faster");
+    inc_dt_button->setUserData( &residentSimulation );
 	  inc_dt_button->setCallback(alterDT);
 
 	  curHeight -= elementHeight;
@@ -401,15 +419,36 @@ void control_center::alterDT_static(puObject * caller, boost::shared_ptr<Simulat
 
 
 void control_center::alterDT(puObject * caller) {
-	//static float prevDT;
+  cout << "Caller &: " << caller << endl;
+  cout << "\nRetrieving user Data from caller" << endl;
+  boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)caller->getUserData();
+  if ( spPointer == NULL )
+  {
+    cout << "Retrievd a stupid null value from puObject!" << endl;
+  }
+  // cout << "Control_center.simulation.dt: " << spPointer->getDT() << endl;
+  boost::shared_ptr<Simulation> curSimulation = boost::shared_ptr<Simulation>( *spPointer );
+    cout << "SCORE.dt: " << curSimulation->getDT() << endl;
+
+  // boost::shared_ptr<Simulation> curSimulation =  *spPointer ;
+  // if ( curSimulation != NULL )
+  // {
+  //   cout << "Ein?" << endl;
+  //   cout << "Control_center.simulation.dt: " << curSimulation->getDT() << endl;
+  // }
+
 
 	if (strcmp(caller->getLegend(), "Slower") == 0) {
-		WorldSettings::setDT(WorldSettings::getDT() / 2);
+    cout << "Alterdt.preDT: " << curSimulation->getDT() << endl;
+		curSimulation->setDT(curSimulation->getDT() / 2);
+    cout << "Alterdt.postDT: " << curSimulation->getDT() << endl;
+		// WorldSettings::setDT(WorldSettings::getDT() / 2);
 		cout << caller->getLegend() << endl;
 	}
 
 	if (strcmp(caller->getLegend(), "Faster") == 0) {
-		WorldSettings::setDT(WorldSettings::getDT() * 2);
+		curSimulation->setDT(curSimulation->getDT() * 2);
+		// WorldSettings::setDT(WorldSettings::getDT() * 2);
 	}
 
 }

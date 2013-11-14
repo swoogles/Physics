@@ -102,6 +102,7 @@ boost::shared_ptr<Quadrant> globalQuadrant;
 // ShapeList physicalObjects; 
 std::map<std::string, std::string> globalProperties;
 Simulation globalSimulation;
+boost::shared_ptr<Simulation> globalSimulationPointer;
 
 control_center globalControlCenter;
 
@@ -324,7 +325,15 @@ void init(char simulation) {
 void idle() {
   sgVec4 curPos;
 
+
   if (! WorldSettings::isPaused()  ) {
+    if ( globalSimulation.getCurStep() == 5 )
+    {
+      cout << "After 5 steps" << endl;
+      cout << "globalSimulation.getDT(): " <<  globalSimulation.getDT() << endl;
+      cout << "globalSimulationPointer->getDT(): " <<  globalSimulationPointer->getDT() << endl;
+    }
+
     globalSimulation.setDT( WorldSettings::getDT() );
     if (WorldSettings::isAutoScaling())
     {
@@ -358,10 +367,10 @@ void idle() {
     sgVec4 curMomentum;
     foreach_ ( shape_pointer curShape, globalSimulation.getPhysicalObjects().getShapes() )
     {
-      curShape->getPos(curPos);
-      curShape->getMomentum(curMomentum);
-      cout << "CurShape.pos: " << curShape->getPosString() << endl;
-      cout << "CurShape.mom: " << curShape->getMomentumString() << endl;
+      // curShape->getPos(curPos);
+      // curShape->getMomentum(curMomentum);
+      // cout << "CurShape.pos: " << curShape->getPosString() << endl;
+      // cout << "CurShape.mom: " << curShape->getMomentumString() << endl;
       if (WorldSettings::isAutoScaling())
       {
         WorldSettings::updateXYMinsAndMaxes(curPos);
@@ -422,6 +431,7 @@ void dummyCallback(puObject * thisGuy) {
 }
 
 int main(int argcp, char **argv) {
+  globalControlCenter.printDec_dt_buttonAddress();
 
   int mainWinPosX = 100;
   int mainWinPosY = 50;
@@ -474,8 +484,27 @@ int main(int argcp, char **argv) {
 
   //Get the buttons laid out and what-not
 
-  globalControlCenter.init();
-  globalControlCenter.setSimulation( globalSimulation );
+  // globalControlCenter.setSimulation( globalSimulation );
+
+  globalSimulationPointer =  boost::make_shared<Simulation>(&globalSimulation) ;
+  cout << "A" << endl;
+  cout << "globalSimulation.getDT(): " <<  globalSimulation.getDT() << endl;
+  cout << "globalSimulationPointer->getDT(): " <<  globalSimulationPointer->getDT() << endl;
+
+  globalSimulation.setDT( 30 );
+
+  cout << "B" << endl;
+  cout << "globalSimulation.getDT(): " <<  globalSimulation.getDT() << endl;
+  cout << "globalSimulationPointer->getDT(): " <<  globalSimulationPointer->getDT() << endl;
+
+  globalSimulationPointer->setDT( 50 );
+
+  cout << "C" << endl;
+  cout << "globalSimulation.getDT(): " <<  globalSimulation.getDT() << endl;
+  cout << "globalSimulationPointer->getDT(): " <<  globalSimulationPointer->getDT() << endl;
+
+  globalControlCenter.init( globalSimulationPointer );
+  globalControlCenter.printDec_dt_buttonAddress();
 
 
   glutSetWindow(main_window);
