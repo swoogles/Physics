@@ -11,6 +11,8 @@
 #include <iostream>
 #include <boost/numeric/ublas/vector_sparse.hpp>
 #include <boost/ref.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp> 
 #include <plib/sg.h>
 //#include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Circle.h"
@@ -98,7 +100,7 @@ class Simulations
 
     static Simulation disruption_ArbitraryList();
 
-    static Simulation bodyFormation_NonRandom();
+    static boost::shared_ptr<Simulation> bodyFormation_NonRandom();
 
     static Simulation bodyFormation_ArbitraryList( int numPieces );
 
@@ -114,7 +116,7 @@ class Simulations
 
     static Simulation simpleCollision_ArbitraryList();
 
-    static Simulation createSimulation( char simNumber );
+    static boost::shared_ptr<Simulation> createSimulation( char simNumber );
 
     /*! \brief Returns a shape from the static list of objects that should be considered during
      * physical interactions.

@@ -394,16 +394,16 @@ void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::compressed_vec
 
 }
 
-void calcForcesAll( Simulation& curSimulation, boost::shared_ptr<Quadrant> curQuadrant )
+void calcForcesAll( boost::shared_ptr<Simulation> curSimulation, boost::shared_ptr<Quadrant> curQuadrant )
 {
   // cout << "curSimulation: " << &curSimulation << endl;
   // cout << "curSimulation.physicalObjects: " << curSimulation.getPhysicalObjects().getShapes() << endl;
-  ShapeList physicalObjects = curSimulation.getPhysicalObjects();
+  ShapeList physicalObjects = curSimulation->getPhysicalObjects();
   sgVec4 curPos;
 
-  if ( ! curSimulation.getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_NAIVE  )
+  if ( ! curSimulation->getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
-    calcForcesAll_ArbitraryList(physicalObjects.getShapes(), curSimulation.getDT());
+    calcForcesAll_ArbitraryList(physicalObjects.getShapes(), curSimulation->getDT());
 
     foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
     {
@@ -411,7 +411,7 @@ void calcForcesAll( Simulation& curSimulation, boost::shared_ptr<Quadrant> curQu
       //   totalMass += curShape->getMass();
       // }
 
-      curShape->update( curSimulation.getDT() );
+      curShape->update( curSimulation->getDT() );
       curShape->getPos(curPos);
 
       if (WorldSettings::isAutoScaling())
@@ -428,15 +428,15 @@ void calcForcesAll( Simulation& curSimulation, boost::shared_ptr<Quadrant> curQu
     {
       ShapeList shapeList;
 
-      if ( curSimulation.getCurStep() % 100 == 0 )
+      if ( curSimulation->getCurStep() % 100 == 0 )
       {
         cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
       }
       // int z=0;
       foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
       {
-        calcForceOnObject_Octree(curShape, curQuadrant, curSimulation.getDT() );
-        curShape->update( curSimulation.getDT() );
+        calcForceOnObject_Octree(curShape, curQuadrant, curSimulation->getDT() );
+        curShape->update( curSimulation->getDT() );
         curShape->getPos(curPos);
         if (WorldSettings::isAutoScaling())
         {
@@ -511,11 +511,11 @@ bool isConflict_ArbitraryList( boost::numeric::ublas::compressed_vector<shape_po
   return conflict;
 }
 
-void calcCollisionsAll(Simulation& curSimulation) {
+void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation) {
 
-  ShapeList physicalObjects = curSimulation.getPhysicalObjects() ;
+  ShapeList physicalObjects = curSimulation->getPhysicalObjects() ;
   calcCollisionsAll_ShapeList( physicalObjects );
-  curSimulation.setPhysicalObjects( physicalObjects) ;
+  curSimulation->setPhysicalObjects( physicalObjects) ;
 
 }
 

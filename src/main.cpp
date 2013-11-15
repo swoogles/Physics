@@ -101,8 +101,8 @@ float totalMass = 0;
 boost::shared_ptr<Quadrant> globalQuadrant;
 // ShapeList physicalObjects; 
 std::map<std::string, std::string> globalProperties;
-Simulation globalSimulation;
-boost::shared_ptr<Simulation> globalSimulationPointer;
+boost::shared_ptr<Simulation> globalSimulation;
+// boost::shared_ptr<Simulation> globalSimulationPointer;
 
 control_center globalControlCenter;
 
@@ -266,7 +266,6 @@ void init(char simulation) {
   propertiesFile.close();
 
 	WorldSettings::Pause();
-  globalSimulation.Pause();
 
 	Observer::init();
 
@@ -279,18 +278,22 @@ void init(char simulation) {
 	//Observer::observers(0)->setAngVel(0, 0.2, 0);
 
   // Determine and create simulation
+  cout << "About to create" << endl;
   globalSimulation = Simulations::createSimulation( simulation );
-  // physicalObjects = globalSimulation.getPhysicalObjects();
-  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation.getPhysicalObjects().getShapes() ;
+  cout << "returned from creating" << endl;
+  globalSimulation->Pause();
+  // physicalObjects = globalSimulation->getPhysicalObjects();
+  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation->getPhysicalObjects().getShapes() ;
+  cout << "Hm?" << endl;
   MyShape::shapes = localShapeList;
   
-  globalSimulation.setForceCalcMethodByString( globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD ) );
+  globalSimulation->setForceCalcMethodByString( globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD ) );
 
 	char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
 	strcat(saveFileName, "output.dat");
 
 	float minX, minY, maxX, maxY;
-	calcXYMinsAndMaxes(globalSimulation.getPhysicalObjects().getShapes(), minX, minY, maxX, maxY);
+	calcXYMinsAndMaxes(globalSimulation->getPhysicalObjects().getShapes(), minX, minY, maxX, maxY);
 
 	float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
@@ -308,7 +311,7 @@ void init(char simulation) {
 
   sgVec4 curPos;
   sgVec4 curMomentum;
-  foreach_ ( shape_pointer curShape, globalSimulation.getPhysicalObjects().getShapes() )
+  foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
   {
     curShape->getPos(curPos);
     curShape->getMomentum(curMomentum);
@@ -327,14 +330,11 @@ void idle() {
 
 
   if (! WorldSettings::isPaused()  ) {
-    if ( globalSimulation.getCurStep() == 5 )
+    if ( globalSimulation->getCurStep() == 5 )
     {
-      cout << "After 5 steps" << endl;
-      cout << "globalSimulation.getDT(): " <<  globalSimulation.getDT() << endl;
-      cout << "globalSimulationPointer->getDT(): " <<  globalSimulationPointer->getDT() << endl;
+      // cout << "After 5 steps" << endl;
     }
 
-    globalSimulation.setDT( WorldSettings::getDT() );
     if (WorldSettings::isAutoScaling())
     {
       WorldSettings::resetXYMinsAndMaxes();
@@ -342,17 +342,11 @@ void idle() {
     // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
     string forceCalculations = globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD );
 
-    // cout << "gloSimulation: " << &globalSimulation << endl;
-    // cout << "gloSimulation.physicalObjects: " << globalSimulation.getPhysicalObjects().getShapes() << endl;
-
-    // cout << "Quadrant.shapelist.size: " << globalQuadrant->getShapesRecursive().getShapes().size() << endl;
-    // cout << "Simulati.shapelist.size: " << globalSimulation.getPhysicalObjects().getShapes().size() << endl;
     calcForcesAll( globalSimulation, globalQuadrant );
     calcCollisionsAll( globalSimulation );
-    // physicalObjects = globalSimulation.getPhysicalObjects(); //TODO Remove this line as soon as you purge the global physical objets from this file.
 
     WorldSettings::updateTimeElapsed();
-    // globalSimulation.updateTimeElapsed();
+    // globalSimulation->updateTimeElapsed();
     main_window_UI::update();
     //calcDrag(WorldSettings::getDT());
 
@@ -362,10 +356,10 @@ void idle() {
     // shape_pointer largest[10];
 
     Simulations::incCurStep();
-    globalSimulation.incCurStep();
+    globalSimulation->incCurStep();
 
     sgVec4 curMomentum;
-    foreach_ ( shape_pointer curShape, globalSimulation.getPhysicalObjects().getShapes() )
+    foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
     {
       // curShape->getPos(curPos);
       // curShape->getMomentum(curMomentum);
@@ -381,7 +375,7 @@ void idle() {
   int curObserverIdx = Observer::getCurObserver();
   Observer * curObserver =  Observer::observers(curObserverIdx);
 
-  curObserver->update( globalSimulation.getDT() );
+  curObserver->update( globalSimulation->getDT() );
 
   sgVec4 pos;
   pos[0] = 0;
@@ -402,7 +396,7 @@ void idle() {
   globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
   // sleep(2);
   typedef boost::shared_ptr<MyShape> shape_pointer;
-  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation.getPhysicalObjects().getShapes();
+  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation->getPhysicalObjects().getShapes();
   foreach_ ( shape_pointer curShape, localShapeList )
   {
     globalQuadrant->insertShape( curShape );
@@ -482,28 +476,7 @@ int main(int argcp, char **argv) {
   glutMouseFunc(myMouse);
   glutKeyboardFunc(myKey);
 
-  //Get the buttons laid out and what-not
-
-  // globalControlCenter.setSimulation( globalSimulation );
-
-  globalSimulationPointer =  boost::make_shared<Simulation>(&globalSimulation) ;
-  cout << "A" << endl;
-  cout << "globalSimulation.getDT(): " <<  globalSimulation.getDT() << endl;
-  cout << "globalSimulationPointer->getDT(): " <<  globalSimulationPointer->getDT() << endl;
-
-  globalSimulation.setDT( 30 );
-
-  cout << "B" << endl;
-  cout << "globalSimulation.getDT(): " <<  globalSimulation.getDT() << endl;
-  cout << "globalSimulationPointer->getDT(): " <<  globalSimulationPointer->getDT() << endl;
-
-  globalSimulationPointer->setDT( 50 );
-
-  cout << "C" << endl;
-  cout << "globalSimulation.getDT(): " <<  globalSimulation.getDT() << endl;
-  cout << "globalSimulationPointer->getDT(): " <<  globalSimulationPointer->getDT() << endl;
-
-  globalControlCenter.init( globalSimulationPointer );
+  globalControlCenter.init( globalSimulation );
   globalControlCenter.printDec_dt_buttonAddress();
 
 

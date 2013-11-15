@@ -42,7 +42,7 @@ void elasticCollision(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MySh
 void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt);
 
 
-void calcForcesAll( Simulation& curSimulation, boost::shared_ptr<Quadrant> curQuadrant );
+void calcForcesAll( boost::shared_ptr<Simulation> curSimulation, boost::shared_ptr<Quadrant> curQuadrant );
 
 /*! \relates MyShape
  *  \brief Calculates forces on all current objects
@@ -70,7 +70,7 @@ void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::compressed_vec
  *
  *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
  */
-void calcCollisionsAll( Simulation& curSimulation );
+void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation);
 
 /*! \relates MyShape
  *  \brief Determines if any objects are colliding and responds appropriately.

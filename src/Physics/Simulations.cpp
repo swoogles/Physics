@@ -493,7 +493,7 @@ Simulation Simulations::disruption_ArbitraryList() {
   return curSimulation;
 }
 
-Simulation Simulations::bodyFormation_NonRandom() {
+boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
   float dt = 1000;
 	WorldSettings::setDT( dt );
 	WorldSettings::makeAllInelastic();
@@ -505,9 +505,9 @@ Simulation Simulations::bodyFormation_NonRandom() {
 
   int numPieces = 2;
 
-  Simulation curSimulation;
-  curSimulation.setDT( dt );
-  curSimulation.setTimeElapsed(0);
+  boost::shared_ptr<Simulation> curSimulation = boost::make_shared<Simulation>();
+  curSimulation->setDT( dt );
+  curSimulation->setTimeElapsed(0);
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -586,7 +586,7 @@ Simulation Simulations::bodyFormation_NonRandom() {
 
   cout << "Finishing sim setup" << endl;
   // return physicalObjects;
-  curSimulation.setPhysicalObjects( physicalObjects );
+  curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
 
@@ -749,9 +749,11 @@ int Simulations::addShapeToList( shape_pointer insertShape )
   return curSize;
 }
 
-Simulation Simulations::createSimulation( char simNumber )
+boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
+// Simulation Simulations::createSimulation( char simNumber )
 {
-  Simulation newSimulation;
+  cout << "Starting to create simulation" << endl;
+  boost::shared_ptr<Simulation> newSimulation;
 
 	//******CURRENT SIMULATION*****
   if ( simNumber == '0' ) {
@@ -759,19 +761,19 @@ Simulation Simulations::createSimulation( char simNumber )
 	  newSimulation = Simulations::bodyFormation_NonRandom();
   }
   if ( simNumber == '1' ) {
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 500 );
+    // newSimulation = Simulations::bodyFormation_ArbitraryList( 500 );
   }
   if ( simNumber == '2' ) {
-	  newSimulation = Simulations::disruption_ArbitraryList();
+	  // newSimulation = Simulations::disruption_ArbitraryList();
   }
   if ( simNumber == '3' ) {
-	  newSimulation = Simulations::simpleCollision_ArbitraryList();
+	  // newSimulation = Simulations::simpleCollision_ArbitraryList();
   }
   if ( simNumber == '4' ) {
-    newSimulation = Simulations::billiards1(15);
+    // newSimulation = Simulations::billiards1(15);
   }
   if ( simNumber == '5' ) {
-    newSimulation = Simulations::billiards2_ReturnSimulation(15);
+    // newSimulation = Simulations::billiards2_ReturnSimulation(15);
   }
 
   if ( simNumber == '6' ) {
@@ -803,10 +805,11 @@ Simulation Simulations::createSimulation( char simNumber )
   }
 
   if ( simNumber == '9' ) {
-    newSimulation = Simulations::billiards3_ArbitraryList( 5 );
+    // newSimulation = Simulations::billiards3_ArbitraryList( 5 );
   }
 
 
   return newSimulation;
+  cout << "Returning simulation pointer" << endl;
 
 }

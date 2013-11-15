@@ -42,7 +42,6 @@ private:
 		puaSelectBox * pick_object;
 		puText * object_name_label;
 		puInput * object_name_input;
-		puButton * make_object;
 
 		puText * placement_label;
 		puText * placement_label2;
@@ -58,7 +57,6 @@ private:
 	puGroup * runtime_group;
 		puText * speed_c_label;
 		puInput * speed_c_input;
-		puButton * filler;
 
 		puOneShot * inc_dt_button;
 		puOneShot * dec_dt_button;
@@ -75,16 +73,24 @@ private:
 	puButton * viewSwitcher;
 
 
+	bool showingRunTime;
 
 public:
 	//! Creates all UI elements and sets their values, positions, and callbacks
-  void setSimulation( const Simulation& residentSimulation );
+  void setSimulation( boost::shared_ptr<Simulation> simulation );
 	void init( boost::shared_ptr<Simulation> residentSimulation );
-	bool showingRuntime;
+  inline bool isShowingRunTime() { return showingRunTime ; };
+  inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
   inline void printDec_dt_buttonAddress() { std::cout << "&dec_dt_button: " << dec_dt_button << endl; };
 
+  inline void showRunTimeGroup() { runtime_group->reveal(); };
+  inline void showPlacementGroup() { placement_group->reveal(); };
+
+  inline void hideRunTimeGroup() { runtime_group->hide(); };
+  inline void hidePlacementGroup() { placement_group->hide(); };
+
 	//! Switches from Object Creation view to View/Time manipulation view
-	void switchViewNow(puObject *);
+	static void switchViewNow(puObject *);
 
 	sgVec3 userDat;
 
@@ -122,10 +128,11 @@ public:
 	 *
 	 *  Calls WorldSettings::setDT(float) using WorldSettings::getDT() divided or multiplied by 2 depending on whether simulation is being sped up or slowed down
 	 */
-  static void alterDT_static(puObject * caller, boost::shared_ptr<Simulation> curSimulation );
 	static void alterDT(puObject *);
 	//! Pauses simulation using WorldSettings::Pause()
 	static void pause_cb(puObject *);
+
+  static void clearShapes(puObject * caller);
 
 	//!Turn AutoScaling off
 	static void uncheckAutoScaling();
