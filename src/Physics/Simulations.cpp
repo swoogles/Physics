@@ -108,16 +108,16 @@ void Simulations::simpleOrbit() {
 	cout << "numBodies: " << MyShape::shapes.size() << endl;
 }
 
-Simulation Simulations::billiards1(int numRows) {
+boost::shared_ptr<Simulation> Simulations::billiards1(int numRows) {
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
 	WorldSettings::setGravBetweenObjects(false);
 	WorldSettings::setConstGravField(false);
 	WorldSettings::setTimeElapsed(0);
 
-  Simulation curSimulation;
-  curSimulation.setDT(0);
-  curSimulation.setTimeElapsed(0);
+  boost::shared_ptr<Simulation> curSimulation = boost::make_shared<Simulation>();
+  curSimulation->setDT(0);
+  curSimulation->setTimeElapsed(0);
   ShapeList physicalObjects;
 
 	sgVec4 gField;
@@ -171,11 +171,11 @@ Simulation Simulations::billiards1(int numRows) {
 	cout << "NumPieces: " << numPieces << endl;
 
   // return physicalObjects;
-  curSimulation.setPhysicalObjects( physicalObjects );
+  curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
 
-Simulation Simulations::billiards2_ReturnSimulation(int numRows)
+boost::shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
 {
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
@@ -184,9 +184,9 @@ Simulation Simulations::billiards2_ReturnSimulation(int numRows)
 	WorldSettings::setConstGravField(false);
 	WorldSettings::setTimeElapsed(0);
 
-  Simulation curSimulation;
-  curSimulation.setDT(.003);
-  curSimulation.setTimeElapsed(0);
+  boost::shared_ptr<Simulation> curSimulation = boost::make_shared<Simulation>();
+  curSimulation->setDT(.003);
+  curSimulation->setTimeElapsed(0);
   ShapeList physicalObjects;
   
 	sgVec4 gField;
@@ -241,13 +241,13 @@ Simulation Simulations::billiards2_ReturnSimulation(int numRows)
 
 	cout << "NumPieces: " << numPieces << endl;
 
-  curSimulation.setPhysicalObjects( physicalObjects );
+  curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 
 }
 
 
-Simulation Simulations::billiards3_ArbitraryList(int numRows) {
+boost::shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
 	WorldSettings::setDT(.003);
 	WorldSettings::makeAllElastic();
 	//WorldSettings::makeAllInelastic();
@@ -255,9 +255,9 @@ Simulation Simulations::billiards3_ArbitraryList(int numRows) {
 	WorldSettings::setConstGravField(false);
 	WorldSettings::setTimeElapsed(0);
 
-  Simulation curSimulation;
-  curSimulation.setDT(.003);
-  curSimulation.setTimeElapsed(0);
+  boost::shared_ptr<Simulation> curSimulation = boost::make_shared<Simulation>();
+  curSimulation->setDT(.003);
+  curSimulation->setTimeElapsed(0);
   ShapeList physicalObjects;
 
 	sgVec4 gField;
@@ -317,7 +317,7 @@ Simulation Simulations::billiards3_ArbitraryList(int numRows) {
 	cout << "NumPieces: " << numPieces << endl;
 
   // return physicalObjects;
-  curSimulation.setPhysicalObjects( physicalObjects );
+  curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
 
@@ -405,7 +405,7 @@ boost::shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows)
 }
 
 
-Simulation Simulations::simpleCollision_ArbitraryList() {
+boost::shared_ptr<Simulation> Simulations::simpleCollision_ArbitraryList() {
   float dt = .01;
 	WorldSettings::setDT( dt );
 
@@ -429,9 +429,9 @@ Simulation Simulations::simpleCollision_ArbitraryList() {
 
   ShapeList physicalObjects;
 
-  Simulation curSimulation;
-  curSimulation.setDT( dt );
-  curSimulation.setTimeElapsed(0);
+  boost::shared_ptr<Simulation> curSimulation = boost::make_shared<Simulation>();
+  curSimulation->setDT( dt );
+  curSimulation->setTimeElapsed(0);
   shape_pointer curShape;
 
 	curShape = boost::make_shared<Circle>();
@@ -458,16 +458,16 @@ Simulation Simulations::simpleCollision_ArbitraryList() {
   physicalObjects.addShapeToList( curShape );
 
   // return physicalObjects;
-  curSimulation.setPhysicalObjects( physicalObjects );
+  curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 
 }
 
-Simulation Simulations::disruption_ArbitraryList() {
+boost::shared_ptr<Simulation> Simulations::disruption_ArbitraryList() {
   
   // ShapeList physicalObjects = Simulations::bodyFormation_ArbitraryList( 1000 );
-  Simulation curSimulation = Simulations::bodyFormation_ArbitraryList( 1000 );
-  // curSimulation.setPhysicalObjects( physicalObjects );
+  boost::shared_ptr<Simulation> curSimulation = Simulations::bodyFormation_ArbitraryList( 1000 );
+  // curSimulation->setPhysicalObjects( physicalObjects );
 
   int numPieces = 1;
 	float objectDensity = DENSITY_SUN;
@@ -489,7 +489,7 @@ Simulation Simulations::disruption_ArbitraryList() {
   // physicalObjects.addShapeToList( curShape );
 
   // return physicalObjects;
-  curSimulation.addPhysicalObjectToList( curShape );
+  curSimulation->addPhysicalObjectToList( curShape );
   return curSimulation;
 }
 
@@ -590,7 +590,7 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
   return curSimulation;
 }
 
-Simulation Simulations::bodyFormation_ArbitraryList(int numPieces) {
+boost::shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();
 	WorldSettings::setGravBetweenObjects(true);
@@ -599,9 +599,9 @@ Simulation Simulations::bodyFormation_ArbitraryList(int numPieces) {
 	WorldSettings::setTimeElapsed(0);
 	WorldSettings::setTotalMass(0);
 
-  Simulation curSimulation;
-  curSimulation.setDT(1000);
-  curSimulation.setTimeElapsed(0);
+  boost::shared_ptr<Simulation> curSimulation = boost::make_shared<Simulation>();
+  curSimulation->setDT(1000);
+  curSimulation->setTimeElapsed(0);
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -661,11 +661,11 @@ Simulation Simulations::bodyFormation_ArbitraryList(int numPieces) {
 
   cout << "Finishing sim setup" << endl;
   // return physicalObjects;
-  curSimulation.setPhysicalObjects( physicalObjects );
+  curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
 
-Simulation Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) {
+boost::shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();
 	WorldSettings::setGravBetweenObjects(true);
@@ -674,9 +674,9 @@ Simulation Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4
 	WorldSettings::setTimeElapsed(0);
 	WorldSettings::setTotalMass(0);
 
-  Simulation curSimulation;
-  curSimulation.setDT(.003);
-  curSimulation.setTimeElapsed(0);
+  boost::shared_ptr<Simulation> curSimulation = boost::make_shared<Simulation>();
+  curSimulation->setDT(.003);
+  curSimulation->setTimeElapsed(0);
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -726,7 +726,7 @@ Simulation Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4
   WorldSettings::adjustTotalMass( totalMass );
 
   // return physicalObjects;
-  curSimulation.setPhysicalObjects( physicalObjects );
+  curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
 
@@ -750,7 +750,7 @@ int Simulations::addShapeToList( shape_pointer insertShape )
 }
 
 boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
-// Simulation Simulations::createSimulation( char simNumber )
+// boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 {
   cout << "Starting to create simulation" << endl;
   boost::shared_ptr<Simulation> newSimulation;
@@ -761,19 +761,19 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 	  newSimulation = Simulations::bodyFormation_NonRandom();
   }
   if ( simNumber == '1' ) {
-    // newSimulation = Simulations::bodyFormation_ArbitraryList( 500 );
+    newSimulation = Simulations::bodyFormation_ArbitraryList( 500 );
   }
   if ( simNumber == '2' ) {
-	  // newSimulation = Simulations::disruption_ArbitraryList();
+	  newSimulation = Simulations::disruption_ArbitraryList();
   }
   if ( simNumber == '3' ) {
-	  // newSimulation = Simulations::simpleCollision_ArbitraryList();
+	  newSimulation = Simulations::simpleCollision_ArbitraryList();
   }
   if ( simNumber == '4' ) {
-    // newSimulation = Simulations::billiards1(15);
+    newSimulation = Simulations::billiards1(15);
   }
   if ( simNumber == '5' ) {
-    // newSimulation = Simulations::billiards2_ReturnSimulation(15);
+    newSimulation = Simulations::billiards2_ReturnSimulation(15);
   }
 
   if ( simNumber == '6' ) {
@@ -805,7 +805,7 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
   }
 
   if ( simNumber == '9' ) {
-    // newSimulation = Simulations::billiards3_ArbitraryList( 5 );
+    newSimulation = Simulations::billiards3_ArbitraryList( 5 );
   }
 
 

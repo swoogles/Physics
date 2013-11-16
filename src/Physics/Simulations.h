@@ -98,23 +98,23 @@ class Simulations
 
     static void simpleOrbit();
 
-    static Simulation disruption_ArbitraryList();
+    static boost::shared_ptr<Simulation> disruption_ArbitraryList();
 
     static boost::shared_ptr<Simulation> bodyFormation_NonRandom();
 
-    static Simulation bodyFormation_ArbitraryList( int numPieces );
+    static boost::shared_ptr<Simulation> bodyFormation_ArbitraryList( int numPieces );
 
-    static Simulation bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
+    static boost::shared_ptr<Simulation> bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
-    static Simulation billiards1(int);
+    static boost::shared_ptr<Simulation> billiards1(int);
 
-    static Simulation billiards2_ReturnSimulation(int);
+    static boost::shared_ptr<Simulation> billiards2_ReturnSimulation(int);
 
-    static Simulation billiards3_ArbitraryList(int);
+    static boost::shared_ptr<Simulation> billiards3_ArbitraryList(int);
 
     static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
-    static Simulation simpleCollision_ArbitraryList();
+    static boost::shared_ptr<Simulation> simpleCollision_ArbitraryList();
 
     static boost::shared_ptr<Simulation> createSimulation( char simNumber );
 
