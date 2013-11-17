@@ -7,32 +7,28 @@
 
 #include "Recording.h"
 
-char * Recorder::outFilePrefix;
-char * Recorder::outFileSuffix;
-char * Recorder::outFile;
-
-int Recorder::curFrame;
-int Recorder::skipFrames;
 int Recorder::curImage;
-bool Recorder::recording;
 
-
-void Recorder::init() {
+Recorder::Recorder()
+{
 	outFilePrefix = new char [80];
 	outFileSuffix = new char[7];
 	strcpy(outFileSuffix, ".jpg");
-
 	outFile = new char[100];
-
+	strcpy(outFilePrefix, outFile);
 	curFrame = 0;
 	skipFrames = 10;
+}
+
+
+void Recorder::init() {
+
+
 	curImage = 1;
 
-  recording = false;
 }
 
 void Recorder::setPath(char * outFile) {
-	strcpy(outFilePrefix, outFile);
 }
 
 int Recorder::getCurFrame() {

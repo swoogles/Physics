@@ -103,6 +103,7 @@ boost::shared_ptr<Quadrant> globalQuadrant;
 std::map<std::string, std::string> globalProperties;
 boost::shared_ptr<Simulation> globalSimulation;
 // boost::shared_ptr<Simulation> globalSimulationPointer;
+boost::shared_ptr<Recorder> globalRecorder;
 
 control_center globalControlCenter;
 
@@ -208,10 +209,12 @@ void display(void)
 
   // TODO A different version of this function should be called if I want to record, rather 
   // than a branch here.
-  if ( Recorder::getRecording() && Recorder::shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
-    Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+  if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
+
+    globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+    // Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
   }
-  Recorder::incCurFrame();
+  globalRecorder->incCurFrame();
 
 
 	puDisplay();
@@ -266,6 +269,7 @@ void init(char simulation) {
   propertiesFile.close();
 
 	WorldSettings::Pause();
+  globalRecorder = boost::make_shared<Recorder>();
 
 	Observer::init();
 
@@ -297,11 +301,9 @@ void init(char simulation) {
 	float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
 	curObserver->setPos(0, 0, -pullBack*2);
-
-	Recorder::init();
   char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
-	Recorder::setPath(pathName);
-	Recorder::setSkipFrames(1);
+	globalRecorder->setPath(pathName);
+	globalRecorder->setSkipFrames(1);
 
 	//openShapes(saveFileName);
 
@@ -459,7 +461,7 @@ int main(int argcp, char **argv) {
   cout << "argv[1]: " << simulation << endl;
 
   if ( record == 'r' ){
-    Recorder::setRecording(true);
+    globalRecorder->setRecording(true);
   }
 
 

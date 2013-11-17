@@ -32,53 +32,55 @@ bool screenshot(unsigned int width, unsigned int height, char *path, int quality
  */
 class Recorder {
 private:
-	static char * outFilePrefix;
-	static char * outFileSuffix;
-	static char * outFile;
+	char * outFilePrefix;
+	char * outFileSuffix;
+	char * outFile;
 
-	static int curFrame;
-	static int skipFrames;
+	int curFrame;
+	int skipFrames;
 	static int curImage;
 
-	static bool recording;
+	bool recording;
 
 public:
+  //! Constructor
+  Recorder();
 	//! Sets up default values for completely static class
-	static void init();
+	void init();
 	/*! \brief Set the file base name for frames to be stored
 	 *
 	 *  This won't be the full filename, but rather the base that frame numbers will be appended to when writing.
 	 */
-	static void setPath(char * outFile);
+	void setPath(char * outFile);
 
 	//! Returns the current frame number
-	static int getCurFrame();
+	int getCurFrame();
 	//! Set the current frame number to newFrameNum (Useful when loading new simulation)
-	static void setCurFrame(int newFrameNum);
+	void setCurFrame(int newFrameNum);
 	//! Increment current frame count (Called everytime display() is called)
-	static void incCurFrame();
+	void incCurFrame();
 
 	//! Return number of discarded frames between saved frames
-	static int getSkipFrames();
+	int getSkipFrames();
 	//! Set the number of discarded frames between saved frames
-	static void setSkipFrames(int );
+	void setSkipFrames(int );
 
   //! Determine if display frames are being output as images.
-  static bool getRecording();
+  bool getRecording();
   //! Decide if display frames should be output as images.
-  static void setRecording(bool recording);
+  void setRecording(bool recording);
 
 	/*! \brief Return true if appropriate number of have been skipped
 	 *
 	 *  \return (curFrame % skipFrames == 0)
 	 */
-	static bool shouldCaptureThisFrame();
+	bool shouldCaptureThisFrame();
 
 	/*! \brief Call whenever you want to save current frame
 	 *
 	 *  Pieces together the correct filename for output image, then calls screenshot()
 	 */
-	static bool captureThisFrame(unsigned int, unsigned int);
+	bool captureThisFrame(unsigned int, unsigned int);
 
 	/*! \brief Performs the actual writing of the image file
 	 *
