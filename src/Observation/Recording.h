@@ -38,7 +38,7 @@ private:
 
 	int curFrame;
 	int skipFrames;
-	static int curImage;
+	int curImage;
 
 	bool recording;
 

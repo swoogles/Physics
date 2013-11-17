@@ -7,8 +7,6 @@
 
 #include "Recording.h"
 
-int Recorder::curImage;
-
 Recorder::Recorder()
 {
 	outFilePrefix = new char [80];
@@ -18,14 +16,11 @@ Recorder::Recorder()
 	strcpy(outFilePrefix, outFile);
 	curFrame = 0;
 	skipFrames = 10;
+	curImage = 1;
 }
 
 
 void Recorder::init() {
-
-
-	curImage = 1;
-
 }
 
 void Recorder::setPath(char * outFile) {
