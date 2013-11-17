@@ -19,7 +19,10 @@ boost::numeric::ublas::compressed_vector< boost::shared_ptr<MyShape> > MyShape::
 
 
 
-MyShape::MyShape() {
+MyShape::MyShape()
+        :pos({0,0,0})
+        ,color({0.25,0.0,0.0})
+{
 	numPts = 16;
 	//pos.resize(4);
 	//toolVec.resize(4);

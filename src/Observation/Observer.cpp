@@ -17,25 +17,16 @@ void Observer::init() {
 	//Observer::setCurObserver(0);
 }
 
-Observer::Observer() {
-	pos[0] = 0;
-	pos[1] = 0;
-	pos[2] = 0;
-	pos[3] = 1;
+Observer::Observer() 
+          :id( curObserver++ )
+          , autoScale( true )
+          , angVel( { 0.0, 0.0, 0.0 } )
+
+{
 
 	sgMakeIdentQuat(orientationQuat);
 
 	sgQuatToMatrix(orientationMat, orientationQuat);
-
-	angVel[0] = 0;
-	angVel[1] = 0;
-	angVel[2] = 0;
-
-
-	id = curObserver++;
-
-	autoScale = true;
-
 
 	float fov=45.0f; // in degrees
 	float aspect= glutGet(GLUT_WINDOW_WIDTH);

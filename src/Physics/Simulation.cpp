@@ -11,8 +11,9 @@ const char Simulation::FORCE_CALC_METHOD_OCTREE_STRING[] = "octree";
 const char Simulation::FORCE_CALC_METHOD_NAIVE_STRING[] = "naive";
 
 Simulation::Simulation()
+            :forceCalcMethod(FORCE_CALC_METHOD_OCTREE)
 {
-  forceCalcMethod = 0;
+  // forceCalcMethod = 0;
 }
 
 void Simulation::setForceCalcMethodByString( const string& forceCalcMethod )

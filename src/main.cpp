@@ -275,7 +275,6 @@ void init(char simulation) {
 	curObserver->setPos(0,0,0);
 	curObserver->setAngle(0, 0, 0);
 	Observer::setCurObserver(0);
-	//Observer::observers(0)->setAngVel(0, 0.2, 0);
 
   // Determine and create simulation
   cout << "About to create" << endl;

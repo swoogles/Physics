@@ -17,14 +17,14 @@ using namespace boost::numeric::ublas;
 boost::numeric::ublas::compressed_vector<Moveable *> Moveable::moveables(0);
 
 
-Moveable::Moveable() {
-	pos[0] = 0; pos[1] = 0; pos[2] = 0; pos[3] = 1;
-	color[0] = 0.25; color[1] = 0.0; color[2] = 0.0;
-
-
+Moveable::Moveable()
+          :pos({0.0,0.0,0.0,1.0})
+          ,color({0.5,1.0,0.0})
+          ,mass(1)
+          ,density(1)
+          ,ptsHighlighted(true)
+{
 	sgMakeIdentQuat(orientationQuat);
-	mass = 1;
-	density = 1;
 
 	for (int i = 0; i < 4; i++) {
 		momentum[i] = 0;
@@ -39,7 +39,6 @@ Moveable::Moveable() {
 		}
 	}
 
-	ptsHighlighted = true;
 }
 
 Moveable::~Moveable() {

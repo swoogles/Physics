@@ -26,19 +26,20 @@ Quadrant::~Quadrant()
 
 
 Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
-  : quadOctree(boost::extents[2][2][2])
+  :quadOctree(boost::extents[2][2][2])
+  ,mass(0)
+  ,isLeaf(true)
+  ,containsBody(false)
+  ,level(level)
+  ,borders(make_shared<Box>() )
+  
 {
   // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
-  this->level = level;
-
-  isLeaf=true;
-  containsBody=false;
-  mass = 0;
 
   setPos( pos );
   sgCopyVec4( this->dimensions, dimensions );
 
-  borders = make_shared<Box>();
+  // borders = make_shared<Box>();
   borders->setPos(pos);
 
   sgVec3 newColor;
