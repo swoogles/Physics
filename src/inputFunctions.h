@@ -28,14 +28,13 @@ using namespace std;
 
 class inputFunctions {
   private:
-    boost::shared_ptr<Observer> observer;
+    static boost::shared_ptr<Observer> observer;
   public:
-    inline boost::shared_ptr<Observer> setObserver() { return observer ; };
-    inline void setObserver( boost::shared_ptr<Observer> observer ) { this->observer = observer; };
+    static inline boost::shared_ptr<Observer> getObserver() { return observer ; };
+    static inline void setObserver( boost::shared_ptr<Observer> newObserver ) { observer = newObserver; };
 
-static void myMouse(int button, int state, int x, int y );
-
-static void myKey(unsigned char, int x, int y);
+    static void myMouse(int button, int state, int x, int y );
+    static void myKey(unsigned char, int x, int y);
 };
 
 #endif /* INPUTFUNCTIONS_H_ */
