@@ -88,7 +88,7 @@ void control_center::setSimulation( boost::shared_ptr<Simulation> simulation )
   cout << "setSimulation.dt.post: " << (this->simulation)->getDT() << endl;
 }
 
-void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
+void control_center::init( boost::shared_ptr<Simulation> residentSimulation, boost::shared_ptr<Observer> observer ) {
   cout << "&control_center: " << this << endl;
 
   showingRunTime = false;
@@ -250,6 +250,7 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
   curX += (placementWidth + gap);
 
   rotUp_button = new puArrowButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight, PUARROW_UP);
+  rotUp_button->setUserData( &observer );
   rotUp_button->setCallback(rotUp);
 
   //Put +Y rotation here
@@ -263,11 +264,13 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
   dec_rotSide_button = new puArrowButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight, PUARROW_LEFT);
   curX += (placementWidth +gap);
   //dec_rotSide_button->setLegend("-X Rotation");
+  dec_rotSide_button->setUserData( &observer );
   dec_rotSide_button->setCallback(rotRight);
 
   pause_rotSide_button = new puButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
   curX += (placementWidth +gap);
   pause_rotSide_button->setLegend("Stop");
+  pause_rotSide_button->setUserData( &observer );
   pause_rotSide_button->setCallback(rotStop);
   pause_rotSide_button->setValue(0);
 
@@ -275,6 +278,7 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
   inc_rotSide_button = new puArrowButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight, PUARROW_RIGHT);
   curX += (placementWidth +gap);
   //inc_rotSide_button->setLegend("Faster");
+  inc_rotSide_button->setUserData( &observer );
   inc_rotSide_button->setCallback(rotLeft);
 
   curHeight -= elementHeight;
@@ -283,6 +287,7 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
   curX += (placementWidth + gap);
 
   rotDown_button = new puArrowButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight, PUARROW_DOWN);
+  rotDown_button->setUserData( &observer );
   rotDown_button->setCallback(rotDown);
 
 
@@ -361,27 +366,32 @@ void control_center::pause_cb(puObject * caller) {
   }
 }
 
-void control_center::rotRight(puObject *) {
-  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+void control_center::rotRight(puObject * caller) {
+  boost::shared_ptr<Observer> * spPointer = (boost::shared_ptr<Observer> *)caller->getUserData();
+  boost::shared_ptr<Observer> curObserver = boost::shared_ptr<Observer>( *spPointer );
   curObserver->adjustAngVel(0,.5,0);
 }
 
-void control_center::rotLeft(puObject *) {
-  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+void control_center::rotLeft(puObject * caller) {
+  boost::shared_ptr<Observer> * spPointer = (boost::shared_ptr<Observer> *)caller->getUserData();
+  boost::shared_ptr<Observer> curObserver = boost::shared_ptr<Observer>( *spPointer );
   curObserver->adjustAngVel(0,-.5,0);
 }
 
-void control_center::rotUp(puObject *) {
-  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+void control_center::rotUp(puObject * caller) {
+  boost::shared_ptr<Observer> * spPointer = (boost::shared_ptr<Observer> *)caller->getUserData();
+  boost::shared_ptr<Observer> curObserver = boost::shared_ptr<Observer>( *spPointer );
   curObserver->adjustAngVel(.5,0,0);
 }
-void control_center::rotDown(puObject *) {
-  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+void control_center::rotDown(puObject * caller) {
+  boost::shared_ptr<Observer> * spPointer = (boost::shared_ptr<Observer> *)caller->getUserData();
+  boost::shared_ptr<Observer> curObserver = boost::shared_ptr<Observer>( *spPointer );
   curObserver->adjustAngVel(-.5,0,0);
 }
 
-void control_center::rotStop(puObject *) {
-  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+void control_center::rotStop(puObject * caller) {
+  boost::shared_ptr<Observer> * spPointer = (boost::shared_ptr<Observer> *)caller->getUserData();
+  boost::shared_ptr<Observer> curObserver = boost::shared_ptr<Observer>( *spPointer );
   curObserver->setAngVel(0,0,0);
 }
 

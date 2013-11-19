@@ -42,12 +42,8 @@ private:
 
 	bool autoScale;
 
-	int id;
-	static int curObserver;
-
-
 public:
-	static void init();
+	void init();
 
 	//! Creates an Observer at the origin looking in the -Z direction
 	Observer();
@@ -83,15 +79,10 @@ public:
 	//! Returns true if Observer is currently set to autoscale with simulation
 	bool isAutoScaling();
 
-	//! Change ID number of observer to newId
-	void setId(int newId);
-	//! Returns ID number of observer
-	int getId();
-
 	//! Switches active Observer to newLooker
-	static void setCurObserver(int newLooker);
+	// static void setCurObserver(int newLooker);
 	//! Returns an integer indicating the active Observer
-	static int getCurObserver();
+	// static int getCurObserver();
 
 	//! Stores all created Observers
 	static boost::numeric::ublas::compressed_vector<Observer *> observers;

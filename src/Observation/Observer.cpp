@@ -10,16 +10,9 @@
 using namespace std;
 
 boost::numeric::ublas::compressed_vector<Observer *> Observer::observers(0);
-int Observer::curObserver;
-
-void Observer::init() {
-	curObserver = 0;
-	//Observer::setCurObserver(0);
-}
 
 Observer::Observer() 
-          :id( curObserver++ )
-          , autoScale( true )
+          : autoScale( true )
           , angVel( { 0.0, 0.0, 0.0 } )
 
 {
@@ -108,21 +101,4 @@ void Observer::setAutoScale(bool shouldScale) {
 
 bool Observer::isAutoScaling() {
 	return autoScale;
-}
-
-void Observer::setId(int newId) {
-	id = newId;
-}
-
-int Observer::getId() {
-	return id;
-}
-
-void Observer::setCurObserver(int newLooker) {
-	//TODO Make sure newLooker is a valid observer
-	curObserver = newLooker;
-}
-
-int Observer::getCurObserver() {
-	return curObserver;
 }

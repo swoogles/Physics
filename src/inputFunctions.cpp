@@ -7,42 +7,38 @@
 
 #include "inputFunctions.h"
 
-using namespace std;
+void inputFunctions::myMouse(int button, int state, int x, int y ) {
+  if (state == GLUT_UP) {
+    if (button == GLUT_WHEEL_UP) {
+      observer->zoomIn();
+      control_center::uncheckAutoScaling();
+      WorldSettings::setAutoScaling(false);
+    }
+    if (button == GLUT_WHEEL_DOWN) {
+      observer->zoomOut();
+      control_center::uncheckAutoScaling();
+      WorldSettings::setAutoScaling(false);
+    }
 
-void myMouse(int button, int state, int x, int y) {
-	if (state == GLUT_UP) {
-    int curObserverIdx = Observer::getCurObserver();
-    Observer * curObserver =  Observer::observers(curObserverIdx);
-		if (button == GLUT_WHEEL_UP) {
-      curObserver->zoomIn();
-			control_center::uncheckAutoScaling();
-			WorldSettings::setAutoScaling(false);
-		}
-		if (button == GLUT_WHEEL_DOWN) {
-			curObserver->zoomOut();
-			control_center::uncheckAutoScaling();
-			WorldSettings::setAutoScaling(false);
-		}
-
-	}
-	puMouse ( button, state, x, y ) ;
-	glutPostRedisplay ();
+  }
+  puMouse ( button, state, x, y ) ;
+  glutPostRedisplay ();
 }
 
-void myKey(unsigned char key, int x, int y) {
-	if (key == 'h') {
-		cout << "Hi!" << endl;
-	}
-	if (key == 'w') {
-		//MoveShapes(0,.5,0);
+void inputFunctions::myKey(unsigned char key, int x, int y) {
+  if (key == 'h') {
+    cout << "Hi!" << endl;
   }
-	if (key == 'a') {}
-		//moveShapes(-.5,0,0);
-	if (key == 's') {
-		//moveShapes(0,-.5,0);
-	}
-	if (key == 'd') {}
-		//moveShapes(.5,0,0);
+  if (key == 'w') {
+    //MoveShapes(0,.5,0);
+  }
+  if (key == 'a') {}
+  //moveShapes(-.5,0,0);
+  if (key == 's') {
+    //moveShapes(0,-.5,0);
+  }
+  if (key == 'd') {}
+  //moveShapes(.5,0,0);
 
-	puKeyboard(key, PU_DOWN);
+  puKeyboard(key, PU_DOWN);
 }

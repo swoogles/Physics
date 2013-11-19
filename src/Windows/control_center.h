@@ -37,6 +37,7 @@
  */
 class control_center {
 private:
+  boost::shared_ptr<Observer> observer;
   boost::shared_ptr<Simulation> simulation;
 	puGroup * placement_group;
 		puaSelectBox * pick_object;
@@ -78,10 +79,13 @@ private:
 public:
 	//! Creates all UI elements and sets their values, positions, and callbacks
   void setSimulation( boost::shared_ptr<Simulation> simulation );
-	void init( boost::shared_ptr<Simulation> residentSimulation );
+	void init( boost::shared_ptr<Simulation> residentSimulation, boost::shared_ptr<Observer> observer  );
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
   inline void printDec_dt_buttonAddress() { std::cout << "&dec_dt_button: " << dec_dt_button << endl; };
+
+  inline boost::shared_ptr<Observer> setObserver() { return observer ; };
+  inline void setObserver( boost::shared_ptr<Observer> observer ) { this->observer = observer; };
 
   inline void showRunTimeGroup() { runtime_group->reveal(); };
   inline void showPlacementGroup() { placement_group->reveal(); };
@@ -114,15 +118,15 @@ public:
 	//static void alterRotSide(puObject *);
 
 	//! Increases camera rotation around +Y axis
-	static void rotRight(puObject *);
+	static void rotRight(puObject * caller);
 	//! Increases camera rotation around -Y axis
-	static void rotLeft(puObject *);
+	static void rotLeft(puObject * caller);
 	//! Increases camera rotation around +X axis
-	static void rotUp(puObject *);
+	static void rotUp(puObject * caller);
 	//! Increases camera rotation around -X axis
-	static void rotDown(puObject *);
+	static void rotDown(puObject * caller);
 	//! Stops all camera rotation
-	static void rotStop(puObject *);
+	static void rotStop(puObject * caller);
 
 	/*! \brief Changes current timestep value for simulation
 	 *
