@@ -14,7 +14,6 @@
 #include "Observation/Observer.h"
 #include "Physics/WorldSettings.h"
 #include "Windows/control_center.h"
-#include <boost/shared_ptr.hpp>
 
 #include <plib/pu.h>
 #include <plib/puAux.h>
@@ -24,18 +23,8 @@
 # define GLUT_WHEEL_DOWN 4
 #endif
 
-using namespace std;
+void myMouse(int button, int state, int x, int y);
 
-class inputFunctions {
-  private:
-    boost::shared_ptr<Observer> observer;
-  public:
-    inline boost::shared_ptr<Observer> setObserver() { return observer ; };
-    inline void setObserver( boost::shared_ptr<Observer> observer ) { this->observer = observer; };
-
-static void myMouse(int button, int state, int x, int y );
-
-static void myKey(unsigned char, int x, int y);
-};
+void myKey(unsigned char, int x, int y);
 
 #endif /* INPUTFUNCTIONS_H_ */

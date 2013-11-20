@@ -104,8 +104,6 @@ std::map<std::string, std::string> globalProperties;
 boost::shared_ptr<Simulation> globalSimulation;
 // boost::shared_ptr<Simulation> globalSimulationPointer;
 boost::shared_ptr<Recorder> globalRecorder;
-boost::shared_ptr<Observer> globalObserver;
-boost::shared_ptr<inputFunctions> globalinputFunctions;
 
 control_center globalControlCenter;
 
@@ -181,8 +179,10 @@ void display(void)
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 
-	globalObserver->getView();
-	globalObserver->getPos(curPos);
+	int curObserverIdx = Observer::getCurObserver();
+  Observer * curObserver =  Observer::observers(curObserverIdx);
+	curObserver->getView();
+	curObserver->getPos(curPos);
 
 	sgVec3 curColor;
 	curColor[0] = 1.0;
@@ -209,7 +209,7 @@ void display(void)
 
   // TODO A different version of this function should be called if I want to record, rather 
   // than a branch here.
-  if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame() && ! globalSimulation->isPaused() ) {
+  if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
 
     globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
     // Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
@@ -268,11 +268,17 @@ void init(char simulation) {
   }
   propertiesFile.close();
 
-	globalSimulation->Pause();
+	WorldSettings::Pause();
   globalRecorder = boost::make_shared<Recorder>();
 
-	globalObserver->setPos(0,0,0);
-	globalObserver->setAngle(0, 0, 0);
+	Observer::init();
+
+	Observer::observers.resize(Observer::observers.size()+1);
+	Observer::observers(0) = new Observer;
+  Observer * curObserver =  Observer::observers(0);
+	curObserver->setPos(0,0,0);
+	curObserver->setAngle(0, 0, 0);
+	Observer::setCurObserver(0);
 
   // Determine and create simulation
   cout << "About to create" << endl;
@@ -294,7 +300,7 @@ void init(char simulation) {
 
 	float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
-	globalObserver->setPos(0, 0, -pullBack*2);
+	curObserver->setPos(0, 0, -pullBack*2);
   char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
 	globalRecorder->setPath(pathName);
 	globalRecorder->setSkipFrames(1);
@@ -367,6 +373,10 @@ void idle() {
     }
   }
 
+  int curObserverIdx = Observer::getCurObserver();
+  Observer * curObserver =  Observer::observers(curObserverIdx);
+
+  curObserver->update( globalSimulation->getDT() );
 
   sgVec4 pos;
   pos[0] = 0;
@@ -405,7 +415,7 @@ void idle() {
 
     float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
-    globalObserver->setPos(0, 0, -pullBack * 2);
+    curObserver->setPos(0, 0, -pullBack * 2);
   }
 
 
@@ -428,6 +438,7 @@ int main(int argcp, char **argv) {
   int controlWinWidth = mainWinWidth;
   int controlWinHeight = 200;
 
+
   glutInit(&argcp, argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowPosition(mainWinPosX,mainWinPosY);
@@ -435,6 +446,9 @@ int main(int argcp, char **argv) {
   main_window = glutCreateWindow("Center Stage");
   glutSetWindow(main_window);
   glutDisplayFunc(display);
+
+  glutMouseFunc(myMouse);
+  glutKeyboardFunc(myKey);
 
   glutIdleFunc(idle);
   glutTimerFunc(1000, myTimer, FPS);
@@ -460,10 +474,10 @@ int main(int argcp, char **argv) {
   control_center_num = glutCreateWindow("Control Center");
 
   glutDisplayFunc(controlDisplay);
-  glutMouseFunc( &(globalinputFunctions->myMouse) );
-  glutKeyboardFunc( &(globalinputFunctions->myKey ));
+  glutMouseFunc(myMouse);
+  glutKeyboardFunc(myKey);
 
-  globalControlCenter.init( globalSimulation, globalObserver );
+  globalControlCenter.init( globalSimulation );
   globalControlCenter.printDec_dt_buttonAddress();
 
 
