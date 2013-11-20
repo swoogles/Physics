@@ -105,7 +105,7 @@ boost::shared_ptr<Simulation> globalSimulation;
 // boost::shared_ptr<Simulation> globalSimulationPointer;
 boost::shared_ptr<Recorder> globalRecorder;
 boost::shared_ptr<Observer> globalObserver;
-// boost::shared_ptr<inputFunctions> globalinputFunctions;
+boost::shared_ptr<inputFunctions> globalinputFunctions;
 
 control_center globalControlCenter;
 
@@ -460,9 +460,8 @@ int main(int argcp, char **argv) {
   control_center_num = glutCreateWindow("Control Center");
 
   glutDisplayFunc(controlDisplay);
-  inputFunctions::setObserver( globalObserver );
-  glutMouseFunc( inputFunctions::myMouse );
-  glutKeyboardFunc( inputFunctions::myKey );
+  glutMouseFunc( &(globalinputFunctions->myMouse) );
+  glutKeyboardFunc( &(globalinputFunctions->myKey ));
 
   globalControlCenter.init( globalSimulation, globalObserver );
   globalControlCenter.printDec_dt_buttonAddress();
