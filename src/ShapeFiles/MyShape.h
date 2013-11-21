@@ -53,31 +53,29 @@ using boost::numeric::ublas::compressed_vector;
 class MyShape : public Moveable {
 // class MyShape {
 protected:
-	//vector<double> pos;
 	GLint numPts;
 	matrix<double> pts;
-	//vector<double> color;
 	bool ptsHighlighted;
 
 	//matrix<double> scaleMat;
 	//matrix<double> rotMat;
 	//vector<double> toolVec;
 
-	sgVec4 pos;
-	sgQuat orientationQuat;
-	sgMat4 orientationMat;
+	// sgVec4 pos;
+	// sgQuat orientationQuat;
+	// sgMat4 orientationMat;
 
-	sgVec4 angMomentum;
-	sgVec4 angVelocity;
-	sgVec4 prevAngVelocity;
+	// sgVec4 angMomentum;
+	// sgVec4 angVelocity;
+	// sgVec4 prevAngVelocity;
 
-	sgVec4 momentum;
-	sgVec4 prevMomentum;
-	float mass;
-	float density;
+	// sgVec4 momentum;
+	// sgVec4 prevMomentum;
+	// float mass;
+	// float density;
   float kineticEnergy;
 
-	sgVec3 color;
+	// sgVec3 color;
 
 
 public:
@@ -129,42 +127,14 @@ public:
 	virtual void scaleMembers(float, float);
 	*/
 
+	//! Purely virtual method used by Circle
+	virtual void setRadius(float );
+	//! Purely virtual method used by Circle
+	virtual float getRadius();
 
-	//! Set position of object to <inX, inY, inZ>
-	void setPos(float inX, float inY, float inZ);
-
-	//! Set position of object to <newPos>
-	void setPos(sgVec4 newPos);
-
-	//! Alter position of object by <dx, dy, dz>
-	void adjustPos(float dx, float dy, float dz);
-
-	//! Alter position of object by <dPos>
-	void adjustPos(sgVec4 dPos);
-
-	//! Return position of object in retVec
-	void getPos(sgVec4 retVec);
 
 	//! Print position of object. Format: <##,##,##>
   std::string getPosString();
-
-	/*! \brief Set orientation of object
-	 *
-	 *  /param xAngle Degrees from X-axis
-	 *  /param yAngle Degrees from Y-axis
-	 *  /param zAngle Degrees from Z-axis
-	 */
-	void setAngle(float xAngle, float yAngle, float zAngle);
-
-
-	/*! \brief Rotate object around a specified axis
-	 *
-	 *  Parameters are turned into a quaternion then applied to orientationQuat using sgPostMultQuat()
-	 *  \param dAngle Amount to be rotated
-	 *  \param rotAxis Axis to rotate around
-	 */
-	void adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis);
-
 
 	//! Calculates orientationMat based on orientationQuat
 	void calcRotMat();
@@ -173,27 +143,17 @@ public:
 	void setMomentum(float inX, float inY, float inZ);
 	//! Sets momentum of object to <newMomentum>
 	void setMomentum(sgVec4 newMomentum);
+
 	//! Alters momentum by <dx, dy, dz>
 	void adjustMomentum(float dx, float dy, float dz);
 	//! Alters momentum by <dMomentum>
 	void adjustMomentum(sgVec4 dMomentum);
+
 	//! Returns momentum of object in retVec
 	void getMomentum(sgVec4 retVec);
 
 	//! Print momentum of object. Format: <##,##,##>
   std::string getMomentumString();
-
-
-	//! Sets momentum of object to <inX, inY, inZ> * mass
-	void setVelocity(float inX, float inY, float inZ);
-	//! Sets momentum of object to <newVel> * mass
-	void setVelocity(sgVec4 newVel);
-	//! Alters momentum of object by <dx, dy, dy> * mass
-	void adjustVelocity(float dx, float dy, float dz);
-	//! Alters momentum of object by <dVel> * mass
-	void adjustVelocity(sgVec4 dVel);
-	//! Returns velocity of object in retVec
-	void getVelocity(sgVec4 retVec);
 
 	/*! \brief Calculates the moment of inertia for the object
 	 *
@@ -208,13 +168,6 @@ public:
 	void adjustAngMomentum(sgVec4 dAngMomentum);
 	//! Returns angular momentum of object in retVec
 	void getAngMomentum(sgVec4 retVec);
-
-	//! Sets angular velocity of object to <newAngVelocity>
-	void setAngVelocity(sgVec4 newAngVelocity);
-	//! Alters angular velocity of object by <dAngVelocity>
-	void adjustAngVelocity(sgVec4 dangVelocity);
-	//! Returns angular velocity of object in retVec
-	void getAngVelocity(sgVec4 retVec);
 
 	//! Sets mass of object to newMass
 	void setMass(float newMass);
@@ -244,9 +197,6 @@ public:
 	 */
 	void calcColor();
 
-	//! Moves object based on current normal and angular momentum
-	void update(float);
-
 	/*
 	void hFlip();
 	void vFlip();
@@ -254,11 +204,6 @@ public:
 
 	//! Another relic from figuring out the linear algebra, keeping around just in case
 	virtual float getMarkerSize();
-
-	//! Purely virtual method used by Circle
-	virtual void setRadius(float );
-	//! Purely virtual method used by Circle
-	virtual float getRadius();
 
 	/*! \brief Returns an integer indicating the type of shape
 	 *
@@ -294,9 +239,4 @@ public:
   static void removeShapeFromList( shape_pointer shapeToRemove );
 
 };
-
-
 #endif /* MYSHAPE_H_ */
-
-//******Non-Class Functions*****
-

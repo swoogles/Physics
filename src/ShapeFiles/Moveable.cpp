@@ -41,37 +41,10 @@ Moveable::~Moveable() {
 	//cout << "Killing Moveable" << endl;
 }
 
-
-void Moveable::draw() {
-	glPushMatrix();
-
-	//Translate
-	glTranslatef(pos[0], pos[1], pos[2]);
-
-	//Rotate
-	glMultMatrixf( (const GLfloat*)orientationMat);
-
-
-	//Scale
-	drawScale();
-
-	glColor3fv(color);
-
-	drawUnit();
-
-	glPopMatrix();
-
-}
-
-
-void Moveable::drawScale() {}
-void Moveable::drawUnit() {}
-
 void Moveable::setPos(float inX, float inY, float inZ) {
 	pos[0] = inX;
 	pos[1] = inY;
 	pos[2] = inZ;
-
 }
 
 void Moveable::setPos(sgVec4 newPos) {
@@ -94,21 +67,6 @@ void Moveable::adjustPos(sgVec4 dPos) {
 void Moveable::getPos(sgVec4 retVec) {
 	sgCopyVec4(retVec, pos);
 }
-
-/*
-void Moveable::hFlip() {
-	scaleMat(0,0) = -1;
-	scaleMat(1,1) = 1;
-
-}
-
-void Moveable::vFlip() {
-	scaleMat(0,0) = 1;
-	scaleMat(1,1) = -1;
-
-}
-*/
-
 
 void Moveable::setAngle(float xAngle, float yAngle, float zAngle) {
 	sgMakeIdentQuat(orientationQuat);
@@ -140,36 +98,6 @@ void Moveable::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
 	sgQuatToMatrix(orientationMat, orientationQuat);
 
 }
-
-
-void Moveable::setMomentum(float inX, float inY, float inZ) {
-	momentum[0] = inX;
-	momentum[1] = inY;
-	momentum[2] = inZ;
-	momentum[3] = 0;
-	sgCopyVec4(prevMomentum, momentum);
-}
-
-void Moveable::setMomentum(sgVec4 newMomentum) {
-	sgCopyVec4(momentum, newMomentum);
-	sgCopyVec4(prevMomentum, momentum);
-}
-
-void Moveable::adjustMomentum(float dx, float dy, float dz) {
-	momentum[0] += dx;
-	momentum[1] += dy;
-	momentum[2] += dz;
-}
-
-void Moveable::adjustMomentum(sgVec4 dMomentum) {
-	sgAddVec4(momentum, dMomentum);
-}
-
-void Moveable::getMomentum(sgVec4 retVec) {
-	sgCopyVec4(retVec, momentum);
-}
-
-
 
 void Moveable::setVelocity(float inX, float inY, float inZ) {
 	momentum[0] = inX * mass;
@@ -209,28 +137,6 @@ void Moveable::getVelocity(sgVec4 retVec) {
 // Angular Momentum and Velocity
 float Moveable::getMomentOfInertia() { return 1;}
 
-void Moveable::setAngMomentum(sgVec4 newAngMomentum) {
-	float I = getMomentOfInertia();
-	sgCopyVec4(angMomentum, newAngMomentum);
-	sgCopyVec4(angVelocity, angMomentum);
-	sgScaleVec4(angVelocity, 1.0/I);
-	sgCopyVec4(prevAngVelocity, angVelocity);
-
-}
-
-void Moveable::adjustAngMomentum(sgVec4 dAngMomentum) {
-	//TODO generalize for other shapes
-	float I = getMomentOfInertia();
-
-	sgAddVec4(angMomentum, dAngMomentum);
-	sgCopyVec4(angVelocity, angMomentum);
-	sgScaleVec4(angVelocity, 1.0/I);
-}
-
-void Moveable::getAngMomentum(sgVec4 retVec) {
-	sgCopyVec4(retVec, angMomentum);
-}
-
 void Moveable::setAngVelocity(sgVec4 newAngVelocity) {
 	float I = getMomentOfInertia();
 	sgCopyVec4(angVelocity, newAngVelocity);
@@ -250,35 +156,8 @@ void Moveable::getAngVelocity(sgVec4 retAngVelocity) {
 	sgCopyVec4(retAngVelocity, angVelocity);
 }
 
-
-
-void Moveable::setMass(float newMass) {
-	mass = newMass;
-}
-
-void Moveable::adjustMass(float dMass) {
-	mass += dMass;
-}
-
 float Moveable::getMass() {
 	return mass;
-}
-
-
-void Moveable::setDensity(float newDensity) {
-	density = newDensity;
-}
-
-float Moveable::getDensity() {
-	return density;
-}
-
-void Moveable::setColor(sgVec3 newColor) {
-	sgCopyVec3(color, newColor);
-
-}
-void Moveable::getColor(sgVec3 retVec) {
-	sgCopyVec3(retVec, color);
 }
 
 void Moveable::update(float dt) {

@@ -102,7 +102,6 @@ void Simulations::simpleOrbit() {
 	curShape->setDensity(earthDensity);
 	curShape->setMass(earthMass);
 
-	cout << "earthMom: " << curShape->getMomentum() << endl;
 	cout << "earthMass: " << curShape->getMass() << endl;
 
 	cout << "numBodies: " << MyShape::shapes.size() << endl;

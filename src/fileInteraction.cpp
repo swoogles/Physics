@@ -32,9 +32,6 @@ void saveShapes(char * fileName) {
 		//myfile << "  Mass: ";
 		myfile << curShape->getMass() << endl;
 
-		//myfile << "  Radius: ";
-		myfile << curShape->getRadius() << endl;
-
 		curShape->getMomentum(curField);
 		//myfile << "  Momentum: ";
 		vecFilePrint(myfile, curField);
@@ -90,10 +87,6 @@ void openShapes(char * fileName) {
 			//Set start mass
 			curFile >> curVar;
 			curShape->setMass(curVar);
-
-			//Set start radius
-			curFile >> curVar;
-			curShape->setRadius(curVar);
 
 			//Set start momentum
 			vecFileRead(curFile, curVec);
