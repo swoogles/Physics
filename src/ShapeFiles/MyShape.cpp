@@ -141,12 +141,6 @@ void MyShape::adjustPos(sgVec4 dPos) {
 }
 
 
-sgVec4 *  MyShape::getPos(){
-	sgVec4 * retPos = new sgVec4[1];
-	sgCopyVec4( (*retPos), pos);
-	return retPos;
-}
-
 void MyShape::getPos(sgVec4 retVec) {
 	sgCopyVec4(retVec, pos);
 }
@@ -158,27 +152,9 @@ std::string MyShape::getPosString()
 }
 
 
-/*
-void MyShape::hFlip() {
-	scaleMat(0,0) = -1;
-	scaleMat(1,1) = 1;
-
-}
-
-void MyShape::vFlip() {
-	scaleMat(0,0) = 1;
-	scaleMat(1,1) = -1;
-
-}
-*/
-
 float MyShape::getMarkerSize() {
 	return 0;
 }
-
-
-
-
 
 void MyShape::setAngle(float xAngle, float yAngle, float zAngle) {
 	sgMakeIdentQuat(orientationQuat);

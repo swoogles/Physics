@@ -111,9 +111,6 @@ public:
 	//! Alter position of object by <dPos>
 	void adjustPos(sgVec4 dPos);
 
-	//! Return address of new sgVec4 holding position of object
-	sgVec4 * getPos();
-
 	//! Return position of object in retVec
 	void getPos(sgVec4 retVec);
 
@@ -147,8 +144,6 @@ public:
 	void adjustMomentum(float dx, float dy, float dz);
 	//! Alters momentum by <dMomentum>
 	void adjustMomentum(sgVec4 dMomentum);
-	//! Return address of new sgVec4 holding momentum of object
-	sgVec4 * getMomentum();
 	//! Returns momentum of object in retVec
 	void getMomentum(sgVec4 retVec);
 
@@ -161,8 +156,6 @@ public:
 	void adjustVelocity(float dx, float dy, float dz);
 	//! Alters momentum of object by <dVel> * mass
 	void adjustVelocity(sgVec4 dVel);
-	//! Return address of new sgVec4 holding velocity of object
-	sgVec4 * getVelocity();
 	//! Returns velocity of object in retVec
 	void getVelocity(sgVec4 retVec);
 
@@ -208,36 +201,6 @@ public:
 	//! Returns color of object in retVec
 	void getColor(sgVec3 retVec);
 
-  // TODO make generic versions of these variables and methods.
-  // Eg. Observers::getObserverFromList, Quadrant
-	/*! \brief Vector that holds all currently active moveables
-	 *
-	 *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
-	 */
-	static boost::numeric::ublas::compressed_vector<Moveable *> moveables;
-
-	/*! \brief Returns a moveable from the main moveables list
-	 *
-	 *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
-	 *  \return Pointer to desired moveable
-	 */
-  static Moveable * getMoveableFromList( unsigned int moveableIndex );
-
-	/*! \brief Returns a moveable from the main moveables list
-	 *
-	 *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
-	 *  \return Pointer to desired moveable
-	 */
-  static int addMoveableToList( Moveable * insertMoveable );
-
-	/*! \brief Removes a moveable from the main moveables list
-	 *
-	 *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
-	 *  \return Pointer to desired moveable
-	 */
-  static void removeMoveableFromList( int moveableIndex );
-
-  static void clearMoveables();
 
 };
 

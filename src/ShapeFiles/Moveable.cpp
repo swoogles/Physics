@@ -13,10 +13,6 @@
 using namespace std;
 using namespace boost::numeric::ublas;
 
-//TODO Make sure I'm supposed to actually be referencing the 0 here...
-boost::numeric::ublas::compressed_vector<Moveable *> Moveable::moveables(0);
-
-
 Moveable::Moveable()
           :pos({0.0,0.0,0.0,1.0})
           ,color({0.5,1.0,0.0})
@@ -95,12 +91,6 @@ void Moveable::adjustPos(sgVec4 dPos) {
 }
 
 
-sgVec4 *  Moveable::getPos(){
-	sgVec4 * retPos = new sgVec4[1];
-	sgCopyVec4( (*retPos), pos);
-	return retPos;
-}
-
 void Moveable::getPos(sgVec4 retVec) {
 	sgCopyVec4(retVec, pos);
 }
@@ -175,12 +165,6 @@ void Moveable::adjustMomentum(sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
 }
 
-sgVec4 * Moveable::getMomentum() {
-	sgVec4 * retMomentum = new sgVec4[1];
-	sgCopyVec4( (*retMomentum), momentum);
-	return retMomentum;
-}
-
 void Moveable::getMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, momentum);
 }
@@ -213,12 +197,6 @@ void Moveable::adjustVelocity(sgVec4 dVel) {
 	sgScaleVec4(tempVec, momentum, 1/mass);
 	sgAddVec4(tempVec, dVel);
 	sgScaleVec4(momentum, tempVec, mass);
-}
-
-sgVec4 * Moveable::getVelocity() {
-	sgVec4 * velocity = new sgVec4[1];
-	sgScaleVec4( (*velocity), momentum, 1/mass);
-	return velocity;
 }
 
 void Moveable::getVelocity(sgVec4 retVec) {
@@ -333,48 +311,3 @@ void Moveable::getUnitVecTo(Moveable * destination, sgVec4 unitv) {
 	sgNormaliseVec4(unitv);
 }
 */
-
-Moveable * Moveable::getMoveableFromList( unsigned int moveableIndex )
-{
-  Moveable * returnMoveable = NULL;
-  if ( moveables.size() > moveableIndex )
-  {
-    returnMoveable = moveables(moveableIndex);
-  }
-
-  return returnMoveable;
-}
-
-int Moveable::addMoveableToList( Moveable * insertMoveable )
-{
-  int curSize = moveables.size();
-  moveables.resize(curSize + 1);
-  moveables(curSize) = insertMoveable;
-  return curSize;
-}
-
-void Moveable::removeMoveableFromList( int moveableIndex )
-{
-  //
-  Moveable * moveableToremove = Moveable::moveables(moveableIndex);
-  moveableToremove->~Moveable();
-  Moveable::moveables.erase_element(moveableIndex);
-  // TODO Decide how to best erase/resize
-  // boost::numeric::ublas::compressed_vector<Moveable *> newListA;
-  // newListA = moveables.subVector(0,i);
-  // boost::numeric::ublas::compressed_vector<Moveable *> newListB;
-  // newListB = moveables.subVector(i, moveables.size() );
-  // moveables = newListA + newListB;
-}
-
-
-void Moveable::clearMoveables() {
-	for (int i = Moveable::moveables.size() - 1; i > -1; i--) {
-      cout << "Moveable # " << i << endl;
-    Moveable * moveableToremove = Moveable::moveables(i);
-    moveableToremove->~Moveable();
-    Moveable::moveables.erase_element(i);
-	}
-	Moveable::moveables.resize(0);
-}
-
