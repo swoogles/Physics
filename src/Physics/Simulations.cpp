@@ -589,6 +589,150 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
   return curSimulation;
 }
 
+boost::shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom() {
+	WorldSettings::setDT(1000);
+	WorldSettings::makeAllInelastic();
+	WorldSettings::setGravBetweenObjects(true);
+	WorldSettings::setConstGravField(false);
+	WorldSettings::setAutoScaling(true);
+	WorldSettings::setTimeElapsed(0);
+	WorldSettings::setTotalMass(0);
+
+  boost::shared_ptr<Simulation> curSimulation = boost::make_shared<Simulation>();
+  curSimulation->setDT(1000);
+  curSimulation->setTimeElapsed(0);
+  ShapeList physicalObjects;
+
+  int numPieces=5;
+	float objectDensity = DENSITY_SUN;
+	float bodyVolume = (MASS_SUN)/(objectDensity);
+	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+	sgVec4 startPlacement, startMomentum, target;
+  startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
+
+  target[0]=-1000;
+  target[1]=0;
+  target[2]=0;
+  target[3]=1;
+
+	sgVec3 newColor;
+	newColor[0] = 1;
+	newColor[1] = 1;
+	newColor[2] = 1;
+
+	float pieceMass = pow(pieceRadius, 3.0);
+	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
+
+	float totalMass = 0.0;
+
+  shape_pointer curShape;
+  float d= 1e5;
+  // startPlacement[0]= offset;
+  // startPlacement[1]= offset;
+  // startPlacement[2]= 0;
+  // startPlacement[3]= 0;
+
+  //#0
+  curShape = make_shared<Circle>();
+  curShape->setPos( -(7/8.0 * d), +(3/8.0 * d), 1 );
+  curShape->setMass(pieceMass);
+  curShape->setRadius(pieceRadius);
+  curShape->setMomentum(startMomentum);
+  curShape->setDensity(objectDensity);
+  curShape->setColor(newColor);
+
+  physicalObjects.addShapeToList( curShape );
+  totalMass += curShape->getMass();
+
+  //#1
+  curShape = make_shared<Circle>();
+  curShape->setPos( +(5/8.0 * d), +(7/8.0 * d), 1 );
+  curShape->setMass(pieceMass);
+  curShape->setRadius(pieceRadius);
+  curShape->setMomentum(startMomentum);
+  curShape->setDensity(objectDensity);
+  curShape->setColor(newColor);
+
+  physicalObjects.addShapeToList( curShape );
+  totalMass += curShape->getMass();
+
+  //#2
+  curShape = make_shared<Circle>();
+  curShape->setPos( +(7/8.0 * d), +(7/8.0 * d), 1 );
+  curShape->setMass(pieceMass);
+  curShape->setRadius(pieceRadius);
+  curShape->setMomentum(startMomentum);
+  curShape->setDensity(objectDensity);
+  curShape->setColor(newColor);
+
+  physicalObjects.addShapeToList( curShape );
+  totalMass += curShape->getMass();
+
+  //#3
+  curShape = make_shared<Circle>();
+  curShape->setPos( +(7/8.0 * d), +(5/8.0 * d), 1 );
+  curShape->setMass(pieceMass);
+  curShape->setRadius(pieceRadius);
+  curShape->setMomentum(startMomentum);
+  curShape->setDensity(objectDensity);
+  curShape->setColor(newColor);
+
+  physicalObjects.addShapeToList( curShape );
+  totalMass += curShape->getMass();
+
+  //#4
+  curShape = make_shared<Circle>();
+  curShape->setPos( -(5/8.0 * d), +(1/8.0 * d), 1 );
+  curShape->setMass(pieceMass);
+  curShape->setRadius(pieceRadius);
+  curShape->setMomentum(startMomentum);
+  curShape->setDensity(objectDensity);
+  curShape->setColor(newColor);
+
+  physicalObjects.addShapeToList( curShape );
+  totalMass += curShape->getMass();
+
+	// srand ( time(NULL) );
+
+	// for (int i = 0; i < numPieces; i++) {
+    // shape_pointer curShape;
+
+	// 	if (i % 2 == 0) {
+      // startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
+	// 		randomSplitBodyMomentum(startMomentum, pieceMass);
+	// 		randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+	// 	}
+	// 	else {
+	// 		sgNegateVec4(startMomentum);
+	// 		sgNegateVec4(startPlacement);
+	// 	}
+
+    // curShape = make_shared<Circle>();
+	// 	// curShape = boost::make_shared<Circle>();
+    // curShape->setPos( startPlacement );
+	// 	curShape->setMass(pieceMass);
+	// 	curShape->setRadius(pieceRadius);
+	// 	curShape->setMomentum(startMomentum);
+	// 	curShape->setDensity(objectDensity);
+    // curShape->setColor(newColor);
+
+    // physicalObjects.addShapeToList( curShape );
+	// 	//Check if being placed on previously created object
+	// 	while ( isConflict_ArbitraryList(physicalObjects.getShapes(), i) ) {
+	// 		randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+      // curShape->setPos( startPlacement );
+	// 	}
+
+	// 	totalMass += curShape->getMass();
+	// }
+  WorldSettings::adjustTotalMass( totalMass );
+
+  cout << "Finishing sim setup" << endl;
+  // return physicalObjects;
+  curSimulation->setPhysicalObjects( physicalObjects );
+  return curSimulation;
+}
+
 boost::shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces) {
 	WorldSettings::setDT(1000);
 	WorldSettings::makeAllInelastic();
@@ -766,7 +910,7 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 	  newSimulation = Simulations::disruption_ArbitraryList();
   }
   if ( simNumber == '3' ) {
-	  newSimulation = Simulations::simpleCollision_ArbitraryList();
+    newSimulation = Simulations::QuadrantTestingNonRandom();
   }
   if ( simNumber == '4' ) {
     newSimulation = Simulations::billiards1(15);

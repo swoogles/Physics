@@ -101,6 +101,7 @@ class Simulations
     static boost::shared_ptr<Simulation> disruption_ArbitraryList();
 
     static boost::shared_ptr<Simulation> bodyFormation_NonRandom();
+    static boost::shared_ptr<Simulation> QuadrantTestingNonRandom();
 
     static boost::shared_ptr<Simulation> bodyFormation_ArbitraryList( int numPieces );
 
