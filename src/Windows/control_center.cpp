@@ -362,7 +362,7 @@ void control_center::pause_cb(puObject * caller) {
 }
 
 void control_center::rotRight(puObject *) {
-  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+  Moveable * curObserver =  Observer::observers(Observer::getCurObserver());
   curObserver->adjustAngVel(0,.5,0);
 }
 

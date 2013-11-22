@@ -32,19 +32,13 @@
  */
 class Observer:public Moveable {
 private:
-	sgQuat orientationQuat;
-	sgMat4 orientationMat;
-
 	Moveable * target;
 	float * perspectiveMat;
-
-	sgVec3 angVel;
 
 	bool autoScale;
 
 	int id;
 	static int curObserver;
-
 
 public:
 	static void init();
@@ -65,19 +59,6 @@ public:
 	//! Move observer further from target
 	void zoomOut();
 
-	//! Same as MyShape::adjustAngle(const SGfloat, const sgVec3);
-	void adjustAngle(const SGfloat, const sgVec3);
-
-	//! Same as MyShape::setAngVel(float, float, float)
-	void setAngVel(float, float, float);
-	//! Same as MyShape::getAngVel(sgVec3)
-	void getAngVel(sgVec3);
-	//! Same as MyShape::adjustAngVel(float, float, float)
-	void adjustAngVel(float, float, float);
-
-	//! Similar as MyShape::update(float), except only uses angular velocity right now
-	void update(float);
-
 	//! Set to true to autoscale with simulation
 	void setAutoScale(bool shouldScale);
 	//! Returns true if Observer is currently set to autoscale with simulation
@@ -95,7 +76,5 @@ public:
 
 	//! Stores all created Observers
 	static boost::numeric::ublas::compressed_vector<Observer *> observers;
-
 };
-
 #endif /* OBSERVER_H_ */
