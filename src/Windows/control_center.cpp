@@ -363,40 +363,30 @@ void control_center::pause_cb(puObject * caller) {
 
 void control_center::rotRight(puObject *) {
   Moveable * curObserver =  Observer::observers(Observer::getCurObserver());
-  curObserver->adjustAngVel(0,.5,0);
+  sgVec3 angVelocity = {0,.5,0};
+  curObserver->adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotLeft(puObject *) {
   Observer * curObserver =  Observer::observers(Observer::getCurObserver());
-  curObserver->adjustAngVel(0,-.5,0);
+  sgVec3 angVelocity = {0,-.5,0};
+  curObserver->adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotUp(puObject *) {
   Observer * curObserver =  Observer::observers(Observer::getCurObserver());
-  curObserver->adjustAngVel(.5,0,0);
+  sgVec3 angVelocity = {+.5,0,0};
+  curObserver->adjustAngVelocity(angVelocity);
 }
 void control_center::rotDown(puObject *) {
   Observer * curObserver =  Observer::observers(Observer::getCurObserver());
-  curObserver->adjustAngVel(-.5,0,0);
+  sgVec3 angVelocity = {-.5,0,0};
+  curObserver->adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotStop(puObject *) {
   Observer * curObserver =  Observer::observers(Observer::getCurObserver());
-  curObserver->setAngVel(0,0,0);
+  sgVec3 angVelocity = {0,0,0};
+  curObserver->setAngVelocity(angVelocity);
 }
 
-/*
-   void control_center::alterRotSide(puObject * caller) {
-
-   int type =  caller->getArrowType();
-
-   if (type ==  PUARROW_LEFT)
-   Observer::observers(current)->adjustAngVel(0,-10,0);
-   if (type ==  PUARROW_RIGHT)
-   Observer::observers(current)->adjustAngVel(0,10,0);
-   if (type ==  PUARROW_UP)
-   Observer::observers(current)->adjustAngVel(10,0,0);
-   if (type ==  PUARROW_DOWN)
-   Observer::observers(current)->adjustAngVel(-10,0,0);
-   }
-   */

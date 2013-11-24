@@ -126,11 +126,6 @@ public:
 	//! Returns angular velocity of object in retVec
 	void getAngVelocity(sgVec4 retVec);
 
-  void adjustAngVel(float dxAngVel, float dyAngVel, float dzAngVel);
-  void getAngVel(sgVec3 retVec);
-
-  void setAngVel(float xAngVel, float yAngVel, float zAngVel);
-
 	//! Moves object based on current normal and angular momentum
 	void update(float);
 

@@ -156,22 +156,6 @@ void Moveable::getAngVelocity(sgVec4 retAngVelocity) {
 	sgCopyVec4(retAngVelocity, angVelocity);
 }
 
-void Moveable::adjustAngVel(float dxAngVel, float dyAngVel, float dzAngVel) {
-	angVel[0] = angVel[0] + dxAngVel;
-	angVel[1] = angVel[1] + dyAngVel;
-	angVel[2] = angVel[2] + dzAngVel;
-}
-
-void Moveable::setAngVel(float xAngVel, float yAngVel, float zAngVel) {
-	angVel[0] = xAngVel;
-	angVel[1] = yAngVel;
-	angVel[2] = zAngVel;
-}
-
-void Moveable::getAngVel(sgVec3 retVec) {
-	sgCopyVec3(retVec, angVel);
-}
-
 float Moveable::getMass() {
 	return mass;
 }
