@@ -90,19 +90,14 @@ static int control_center_num;
 
 bool writtenImage = false;
 
-//void vecFileRead(ifstream & curFile, sgVec4 retVec);
-
 int numStep = 0;
 int numFrame = 0;
 float totalMass = 0;
 
 
-// boost::shared_ptr<Circle> globalCenterOfMassCircle;
 boost::shared_ptr<Quadrant> globalQuadrant;
-// ShapeList physicalObjects; 
 std::map<std::string, std::string> globalProperties;
 boost::shared_ptr<Simulation> globalSimulation;
-// boost::shared_ptr<Simulation> globalSimulationPointer;
 boost::shared_ptr<Recorder> globalRecorder;
 
 control_center globalControlCenter;
@@ -135,7 +130,6 @@ bool BillProperties::isValidProperty( string line )
   return valid;
 }
 
-
 void calcXYMinsAndMaxes(ShapeList physicalObjects,
 						float &minX, float &minY, float &maxX, float &maxY) {
   boost::numeric::ublas::compressed_vector< boost::shared_ptr<MyShape> > shapeList = physicalObjects.getShapes();
@@ -160,7 +154,6 @@ void calcXYMinsAndMaxes(ShapeList physicalObjects,
 			minY = curPos[1];
 		if (curPos[1] > maxY)
 			maxY = curPos[1];
-
 	}
 }
 
@@ -174,7 +167,6 @@ void display(void)
 	glClearColor(0,0,0,0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-
 	sgVec4 curPos;
 
 	glMatrixMode(GL_PROJECTION);
@@ -185,12 +177,8 @@ void display(void)
 	curObserver->getView();
 	curObserver->getPos(curPos);
 
-	sgVec3 curColor;
-	curColor[0] = 1.0;
-	curColor[1] = 0.0;
-	curColor[2] = 0.0;
+	sgVec3 curColor = { 1.0, 0.0, 0.0 };
 	glColor3fv(curColor);
-
 
 	glMatrixMode(GL_MODELVIEW);
   typedef boost::shared_ptr<MyShape> shape_pointer;
@@ -205,15 +193,12 @@ void display(void)
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
-
 	//Recording section
-
   // TODO A different version of this function should be called if I want to record, rather 
   // than a branch here.
   if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
 
     globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-    // Recorder::captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
   }
   globalRecorder->incCurFrame();
 
@@ -222,8 +207,6 @@ void display(void)
 
 	glutSwapBuffers();
 	glutPostRedisplay();
-
-  // sleep(1);
 }
 
 void controlDisplay(void) {
@@ -277,18 +260,12 @@ void init(char simulation) {
 	Observer::observers.resize(Observer::observers.size()+1);
 	Observer::observers(0) = new Observer;
   Observer * curObserver =  Observer::observers(0);
-	curObserver->setPos(0,0,0);
-	curObserver->setAngle(0, 0, 0);
 	Observer::setCurObserver(0);
 
   // Determine and create simulation
-  cout << "About to create" << endl;
   globalSimulation = Simulations::createSimulation( simulation );
-  cout << "returned from creating" << endl;
   globalSimulation->Pause();
-  // physicalObjects = globalSimulation->getPhysicalObjects();
   boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation->getPhysicalObjects().getShapes() ;
-  cout << "Hm?" << endl;
   MyShape::shapes = localShapeList;
   
   globalSimulation->setForceCalcMethodByString( globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD ) );
@@ -299,9 +276,6 @@ void init(char simulation) {
 	float minX, minY, maxX, maxY;
 	calcXYMinsAndMaxes(globalSimulation->getPhysicalObjects(), minX, minY, maxX, maxY);
 
-	// float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
-
-	// curObserver->setPos(0, 0, -pullBack*2);
   curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 
   char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
@@ -310,17 +284,12 @@ void init(char simulation) {
 
 	//openShapes(saveFileName);
 
-  int numShapes = MyShape::shapes.size();
-  cout << "NumShapes in simulation: " << numShapes << endl;
-
   sgVec4 curPos;
   sgVec4 curMomentum;
   foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
   {
     curShape->getPos(curPos);
     curShape->getMomentum(curMomentum);
-    // cout << "CurShape.pos: " << curShape->getPosString() << endl;
-    // cout << "CurShape.mom: " << curShape->getMomentumString() << endl;
     if (WorldSettings::isAutoScaling())
     {
       WorldSettings::updateXYMinsAndMaxes(curPos);
@@ -332,13 +301,7 @@ void init(char simulation) {
 void idle() {
   sgVec4 curPos;
 
-
   if (! WorldSettings::isPaused()  ) {
-    if ( globalSimulation->getCurStep() == 5 )
-    {
-      // cout << "After 5 steps" << endl;
-    }
-
     if (WorldSettings::isAutoScaling())
     {
       WorldSettings::resetXYMinsAndMaxes();
@@ -352,12 +315,8 @@ void idle() {
     WorldSettings::updateTimeElapsed();
     // globalSimulation->updateTimeElapsed();
     main_window_UI::update();
-    //calcDrag(WorldSettings::getDT());
-
-
 
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    // shape_pointer largest[10];
 
     Simulations::incCurStep();
     globalSimulation->incCurStep();
@@ -365,10 +324,6 @@ void idle() {
     sgVec4 curMomentum;
     foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
     {
-      // curShape->getPos(curPos);
-      // curShape->getMomentum(curMomentum);
-      // cout << "CurShape.pos: " << curShape->getPosString() << endl;
-      // cout << "CurShape.mom: " << curShape->getMomentumString() << endl;
       if (WorldSettings::isAutoScaling())
       {
         WorldSettings::updateXYMinsAndMaxes(curPos);
@@ -381,24 +336,12 @@ void idle() {
 
   curObserver->update( globalSimulation->getDT() );
 
-  sgVec4 pos;
-  pos[0] = 0;
-  pos[1] = 0;
-  pos[2] = 0;
-  pos[3] = 1;
+  sgVec4 pos = {0,0,0,1};
 
   float side = 1e4; //Formation Value
-  side = 5e6;
-  float width = side;
-  float height = side;
-  float depth = side;
-  sgVec3 dimensions;
-  dimensions[0] = width;
-  dimensions[1] = height;
-  dimensions[2] = depth;
+  sgVec3 dimensions = { side, side, side };
 
   globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
-  // sleep(2);
   typedef boost::shared_ptr<MyShape> shape_pointer;
   boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation->getPhysicalObjects().getShapes();
   foreach_ ( shape_pointer curShape, localShapeList )
@@ -419,11 +362,6 @@ void idle() {
     curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
   }
 
-
-}
-
-void dummyCallback(puObject * thisGuy) {
-	cout << "I do something! Really!";
 }
 
 int main(int argcp, char **argv) {
@@ -464,7 +402,6 @@ int main(int argcp, char **argv) {
   if ( record == 'r' ){
     globalRecorder->setRecording(true);
   }
-
 
   //Creates main menu bar
   main_window_UI::init();
