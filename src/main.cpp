@@ -136,8 +136,9 @@ bool BillProperties::isValidProperty( string line )
 }
 
 
-void calcXYMinsAndMaxes(boost::numeric::ublas::compressed_vector< boost::shared_ptr<MyShape> > shapeList,
+void calcXYMinsAndMaxes(ShapeList physicalObjects,
 						float &minX, float &minY, float &maxX, float &maxY) {
+  boost::numeric::ublas::compressed_vector< boost::shared_ptr<MyShape> > shapeList = physicalObjects.getShapes();
 	sgVec4 curPos;
 
 	minX = FLT_MAX;
@@ -296,11 +297,13 @@ void init(char simulation) {
 	strcat(saveFileName, "output.dat");
 
 	float minX, minY, maxX, maxY;
-	calcXYMinsAndMaxes(globalSimulation->getPhysicalObjects().getShapes(), minX, minY, maxX, maxY);
+	calcXYMinsAndMaxes(globalSimulation->getPhysicalObjects(), minX, minY, maxX, maxY);
 
-	float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
+	// float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
 
-	curObserver->setPos(0, 0, -pullBack*2);
+	// curObserver->setPos(0, 0, -pullBack*2);
+  curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
+
   char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
 	globalRecorder->setPath(pathName);
 	globalRecorder->setSkipFrames(1);
@@ -413,9 +416,7 @@ void idle() {
     float maxX = WorldSettings::getMaxX();
     float maxY = WorldSettings::getMaxY();
 
-    float pullBack = calcMinPullback(45.0, minX, minY, maxX, maxY);
-
-    curObserver->setPos(0, 0, -pullBack * 2);
+    curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
   }
 
 

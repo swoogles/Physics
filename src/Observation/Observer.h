@@ -77,7 +77,10 @@ public:
 	//! Stores all created Observers
 	static boost::numeric::ublas::compressed_vector<Observer *> observers;
 
+  void calcMinPullback(float fov, float minX, float minY, float maxX, float maxY);
+
   //! Similar as MyShape::update(float), except only uses angular velocity right now
   void update(float);
+
 };
 #endif /* OBSERVER_H_ */

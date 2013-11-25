@@ -87,3 +87,34 @@ void Observer::update(float dt) {
   rotVec[0] = 0; rotVec[1] = 0; rotVec[2] = 1;
   adjustAngle(angVelocity[2], rotVec);
 }
+
+// void Observer::setCurObserver(int newLooker) {
+void Observer::calcMinPullback(float fov, float minX, float minY, float maxX, float maxY)
+{
+	  float absMaxX;
+	  float absMaxY;
+	  float pullBack;
+
+	  if (abs(minX) > maxX)
+		  absMaxX = abs(minX);
+	  else
+		  absMaxX = maxX;
+
+	  if (abs(minY) > maxY)
+		  absMaxY = abs(minY);
+	  else
+		  absMaxY = maxY;
+
+
+	  if (absMaxY > absMaxX) {
+		  pullBack = absMaxY / tan(fov * M_PI / 360);
+	  }
+	  else {
+		  pullBack = absMaxX / tan(fov * M_PI / 360);
+	  }
+
+	  //cout << "pullBack Distance: " << pullBack << endl;
+
+    setPos(0,0,-pullBack*2);
+	  // return pullBack;
+}

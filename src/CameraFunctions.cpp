@@ -83,33 +83,3 @@ float znear, float zfar)
   m[15] = 0;
 }
 
-float calcMinPullback(float fov,
-		float minX, float minY, float maxX, float maxY)
-{
-	  float absMaxX;
-	  float absMaxY;
-	  float pullBack;
-
-	  if (abs(minX) > maxX)
-		  absMaxX = abs(minX);
-	  else
-		  absMaxX = maxX;
-
-	  if (abs(minY) > maxY)
-		  absMaxY = abs(minY);
-	  else
-		  absMaxY = maxY;
-
-
-	  if (absMaxY > absMaxX) {
-		  pullBack = absMaxY / tan(fov * M_PI / 360);
-	  }
-	  else {
-		  pullBack = absMaxX / tan(fov * M_PI / 360);
-	  }
-
-	  //cout << "pullBack Distance: " << pullBack << endl;
-
-	  return pullBack;
-}
-

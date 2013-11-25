@@ -24,7 +24,4 @@ void glhFrustrumf2(matrix<double> & matrix, float left, float right, float botto
 
 void BuildPerspProjMat(float *m, float fov, float aspect, float znear, float zfar);
 
-float calcMinPullback(float fov,
-		float minX, float minY, float maxX, float maxY);
-
 #endif /* CAMERAFUNCTIONS_H_ */
