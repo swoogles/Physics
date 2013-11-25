@@ -29,6 +29,7 @@ class Simulation
     // static boost::numeric::ublas::compressed_vector< shape_pointer > physicalObjects;
     int curStep;
     ShapeList physicalObjects;
+    float minX, minY, maxX, maxY;
     int forceCalcMethod;
 
     float DT;
@@ -78,9 +79,17 @@ class Simulation
     bool isPaused() { return paused; };
 
 
-inline bool isGravBetweenObjects() { return gravBetweenObjects; };
+    inline bool isGravBetweenObjects() { return gravBetweenObjects; };
 
-inline void setGravBetweenObjects(bool newVal) { gravBetweenObjects = newVal; };
+    inline void setGravBetweenObjects(bool newVal) { gravBetweenObjects = newVal; };
+
+    void resetXYMinsAndMaxes();
+    void updateXYMinsAndMaxes(sgVec4 curPos);
+
+    inline float getMinX() { return minX; }
+    inline float getMinY() { return minY; }
+    inline float getMaxX() { return maxX; }
+    inline float getMaxY() { return maxY; }
 
 } ;
 #endif 

@@ -226,7 +226,9 @@ void controlDisplay(void) {
 
 
 void init(char simulation) {
-  Simulations::setCurStep(0);
+  // Simulations::setCurStep(0);
+  // globalSimulation->setCurStep(0);
+
 	cout.flush();
 	glViewport(-WW,WW,-WH,WH);
 	glMatrixMode(GL_PROJECTION);
@@ -274,8 +276,22 @@ void init(char simulation) {
 	strcat(saveFileName, "output.dat");
 
 	float minX, minY, maxX, maxY;
-	calcXYMinsAndMaxes(globalSimulation->getPhysicalObjects(), minX, minY, maxX, maxY);
+	// calcXYMinsAndMaxes(globalSimulation->getPhysicalObjects(), minX, minY, maxX, maxY);
+  sgVec4 curPos;
+    foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
+    {
+      if (WorldSettings::isAutoScaling())
+      {
+        curShape->getPos(curPos);
 
+        WorldSettings::updateXYMinsAndMaxes(curPos);
+        globalSimulation->updateXYMinsAndMaxes(curPos);
+      }
+    }
+    minX = WorldSettings::getMinX();
+    maxX = WorldSettings::getMaxX();
+    minY = WorldSettings::getMinY();
+    maxY = WorldSettings::getMaxY();
   curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 
   char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
@@ -284,80 +300,72 @@ void init(char simulation) {
 
 	//openShapes(saveFileName);
 
-  sgVec4 curPos;
-  sgVec4 curMomentum;
+  sgVec4 pos = {0,0,0,1};
+  float side = 1e4; //Formation Value
+  sgVec3 dimensions = { side, side, side };
+
+  globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
   foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
   {
-    curShape->getPos(curPos);
-    curShape->getMomentum(curMomentum);
-    if (WorldSettings::isAutoScaling())
-    {
-      WorldSettings::updateXYMinsAndMaxes(curPos);
-    }
+    globalQuadrant->insertShape( curShape );
   }
 
 }
 
 void idle() {
+  typedef boost::shared_ptr<MyShape> shape_pointer;
   sgVec4 curPos;
 
   if (! WorldSettings::isPaused()  ) {
     if (WorldSettings::isAutoScaling())
     {
       WorldSettings::resetXYMinsAndMaxes();
+      globalSimulation->resetXYMinsAndMaxes();
     }
     // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
     string forceCalculations = globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD );
 
-    calcForcesAll( globalSimulation, globalQuadrant );
     calcCollisionsAll( globalSimulation );
+    calcForcesAll( globalSimulation, globalQuadrant );
 
     WorldSettings::updateTimeElapsed();
-    // globalSimulation->updateTimeElapsed();
+    globalSimulation->updateTimeElapsed();
     main_window_UI::update();
 
-    typedef boost::shared_ptr<MyShape> shape_pointer;
-
-    Simulations::incCurStep();
+    // Simulations::incCurStep();
     globalSimulation->incCurStep();
 
-    sgVec4 curMomentum;
+    sgVec4 pos = {0,0,0,1};
+    float side = 1e4; //Formation Value
+    sgVec3 dimensions = { side, side, side };
+
+    globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
+
     foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
     {
       if (WorldSettings::isAutoScaling())
       {
-        WorldSettings::updateXYMinsAndMaxes(curPos);
+        curShape->getPos(curPos);
+        globalSimulation->updateXYMinsAndMaxes(curPos);
       }
+      globalQuadrant->insertShape( curShape );
     }
+    // cout << "World Settings boundaries- minX: " << WorldSettings::getMinX() << "\t maxX: " << WorldSettings::getMaxX() << endl;
+    // cout << "global simu    boundaries- minX: " << globalSimulation->getMinX() << "\t maxX: " << globalSimulation->getMaxX() << endl;
+
   }
 
   int curObserverIdx = Observer::getCurObserver();
   Observer * curObserver =  Observer::observers(curObserverIdx);
-
   curObserver->update( globalSimulation->getDT() );
 
-  sgVec4 pos = {0,0,0,1};
-
-  float side = 1e4; //Formation Value
-  sgVec3 dimensions = { side, side, side };
-
-  globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
-  typedef boost::shared_ptr<MyShape> shape_pointer;
-  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation->getPhysicalObjects().getShapes();
-  foreach_ ( shape_pointer curShape, localShapeList )
-  {
-    globalQuadrant->insertShape( curShape );
-  }
-
-  sgVec4 centerOfMass;
-  globalQuadrant->getCenterOfMass( centerOfMass );
-
+  // Not sure if I can use Observer the way that I want to here, due to the constaints of the input methods
   if (WorldSettings::isAutoScaling()) {
 
-    float minX = WorldSettings::getMinX();
-    float minY = WorldSettings::getMinY();
-    float maxX = WorldSettings::getMaxX();
-    float maxY = WorldSettings::getMaxY();
+    float minX = globalSimulation->getMinX();
+    float minY = globalSimulation->getMinY();
+    float maxX = globalSimulation->getMaxX();
+    float maxY = globalSimulation->getMaxY();
 
     curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
   }
