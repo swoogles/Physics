@@ -35,8 +35,6 @@ private:
 
 	static sgVec4 gravField;
 
-	static float minX, minY, maxX, maxY;
-
 	static bool autoScaling;
 
 public:
@@ -100,14 +98,6 @@ public:
 	static bool isGravBetweenObjects();
 	//! Set to true to calculate gravity between objects
 	static void setGravBetweenObjects(bool);
-
-	static void resetXYMinsAndMaxes();
-	static void updateXYMinsAndMaxes(sgVec4 curPos);
-
-	static float getMinX();
-	static float getMinY();
-	static float getMaxX();
-	static float getMaxY();
 
 	//! Turn AutoScaling on or off
 	static void setAutoScaling(bool);

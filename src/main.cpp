@@ -130,57 +130,30 @@ bool BillProperties::isValidProperty( string line )
   return valid;
 }
 
-void calcXYMinsAndMaxes(ShapeList physicalObjects,
-						float &minX, float &minY, float &maxX, float &maxY) {
-  boost::numeric::ublas::compressed_vector< boost::shared_ptr<MyShape> > shapeList = physicalObjects.getShapes();
-	sgVec4 curPos;
-
-	minX = FLT_MAX;
-	minY = FLT_MAX;
-
-	maxX = -(FLT_MAX-1);
-	maxY = -(FLT_MAX-1);
-
-  typedef boost::shared_ptr<MyShape> shape_pointer;
-  foreach_ ( shape_pointer curShape, shapeList )
-  {
-    curShape->getPos(curPos);
-
-		if (curPos[0] < minX)
-			minX = curPos[0];
-		if (curPos[0] > maxX)
-			maxX = curPos[0];
-		if (curPos[1] < minY)
-			minY = curPos[1];
-		if (curPos[1] > maxY)
-			maxY = curPos[1];
-	}
-}
-
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
 // TODO Allow an arbitrary list of objects to be displayed
 void display(void)
 {
-	glutSetWindow(main_window);
+  glutSetWindow(main_window);
 
-	glClearColor(0,0,0,0);
-	glClear(GL_COLOR_BUFFER_BIT);
+  glClearColor(0,0,0,0);
+  glClear(GL_COLOR_BUFFER_BIT);
 
-	sgVec4 curPos;
+  sgVec4 curPos;
 
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
 
-	int curObserverIdx = Observer::getCurObserver();
+  int curObserverIdx = Observer::getCurObserver();
   Observer * curObserver =  Observer::observers(curObserverIdx);
-	curObserver->getView();
-	curObserver->getPos(curPos);
+  curObserver->getView();
+  curObserver->getPos(curPos);
 
-	sgVec3 curColor = { 1.0, 0.0, 0.0 };
-	glColor3fv(curColor);
+  sgVec3 curColor = { 1.0, 0.0, 0.0 };
+  glColor3fv(curColor);
 
-	glMatrixMode(GL_MODELVIEW);
+  glMatrixMode(GL_MODELVIEW);
   typedef boost::shared_ptr<MyShape> shape_pointer;
   if ( MyShape::shapes.size() > 0 )
   {
@@ -190,10 +163,10 @@ void display(void)
     }
   }
 
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
 
-	//Recording section
+  //Recording section
   // TODO A different version of this function should be called if I want to record, rather 
   // than a branch here.
   if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
@@ -203,25 +176,25 @@ void display(void)
   globalRecorder->incCurFrame();
 
 
-	puDisplay();
+  puDisplay();
 
-	glutSwapBuffers();
-	glutPostRedisplay();
+  glutSwapBuffers();
+  glutPostRedisplay();
 }
 
 void controlDisplay(void) {
 
-	glutSetWindow(control_center_num);
-	glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glutSetWindow(control_center_num);
+  glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
+  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	puDisplay(control_center_num);
+  puDisplay(control_center_num);
 
-	//puDisplay();
-	glutSwapBuffers();
-	glutPostRedisplay();
+  //puDisplay();
+  glutSwapBuffers();
+  glutPostRedisplay();
 
-	//glutSetWindow(main_window);
+  //glutSetWindow(main_window);
 }
 
 
@@ -229,10 +202,10 @@ void init(char simulation) {
   // Simulations::setCurStep(0);
   // globalSimulation->setCurStep(0);
 
-	cout.flush();
-	glViewport(-WW,WW,-WH,WH);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+  cout.flush();
+  glViewport(-WW,WW,-WH,WH);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -254,51 +227,48 @@ void init(char simulation) {
   }
   propertiesFile.close();
 
-	WorldSettings::Pause();
+  WorldSettings::Pause();
   globalRecorder = boost::make_shared<Recorder>();
 
-	Observer::init();
+  Observer::init();
 
-	Observer::observers.resize(Observer::observers.size()+1);
-	Observer::observers(0) = new Observer;
+  Observer::observers.resize(Observer::observers.size()+1);
+  Observer::observers(0) = new Observer;
   Observer * curObserver =  Observer::observers(0);
-	Observer::setCurObserver(0);
+  Observer::setCurObserver(0);
 
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation );
   globalSimulation->Pause();
   boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation->getPhysicalObjects().getShapes() ;
   MyShape::shapes = localShapeList;
-  
+
   globalSimulation->setForceCalcMethodByString( globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD ) );
 
-	char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
-	strcat(saveFileName, "output.dat");
+  char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
+  strcat(saveFileName, "output.dat");
 
-	float minX, minY, maxX, maxY;
-	// calcXYMinsAndMaxes(globalSimulation->getPhysicalObjects(), minX, minY, maxX, maxY);
+  float minX, minY, maxX, maxY;
   sgVec4 curPos;
-    foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
+  foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
+  {
+    if (WorldSettings::isAutoScaling())
     {
-      if (WorldSettings::isAutoScaling())
-      {
-        curShape->getPos(curPos);
-
-        WorldSettings::updateXYMinsAndMaxes(curPos);
-        globalSimulation->updateXYMinsAndMaxes(curPos);
-      }
+      curShape->getPos(curPos);
+      globalSimulation->updateXYMinsAndMaxes(curPos);
     }
-    minX = WorldSettings::getMinX();
-    maxX = WorldSettings::getMaxX();
-    minY = WorldSettings::getMinY();
-    maxY = WorldSettings::getMaxY();
+  }
+  minX = globalSimulation->getMinX();
+  maxX = globalSimulation->getMaxX();
+  minY = globalSimulation->getMinY();
+  maxY = globalSimulation->getMaxY();
   curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 
   char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
-	globalRecorder->setPath(pathName);
-	globalRecorder->setSkipFrames(1);
+  globalRecorder->setPath(pathName);
+  globalRecorder->setSkipFrames(1);
 
-	//openShapes(saveFileName);
+  //openShapes(saveFileName);
 
   sgVec4 pos = {0,0,0,1};
   float side = 1e4; //Formation Value
@@ -319,7 +289,6 @@ void idle() {
   if (! WorldSettings::isPaused()  ) {
     if (WorldSettings::isAutoScaling())
     {
-      WorldSettings::resetXYMinsAndMaxes();
       globalSimulation->resetXYMinsAndMaxes();
     }
     // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
@@ -435,63 +404,63 @@ int main(int argcp, char **argv) {
 }
 
 void myTimer(int v) {
-	glutPostRedisplay();
-	glutTimerFunc(1000/FPS, myTimer, v);
+  glutPostRedisplay();
+  glutTimerFunc(1000/FPS, myTimer, v);
 }
 
 void calcLargest()
 {
 
-        //Largest Objects
-        // if ( numStep % 50 == 0 ) {
-        //   cout << endl << endl;
-        //   for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-        //     cout << "Shape.2" << endl;
-        //     if ( largest[j] != NULL ) {
-        //       cout << "Shape.3" << endl;
+  //Largest Objects
+  // if ( numStep % 50 == 0 ) {
+  //   cout << endl << endl;
+  //   for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+  //     cout << "Shape.2" << endl;
+  //     if ( largest[j] != NULL ) {
+  //       cout << "Shape.3" << endl;
 
-        //       if ( curShape->getMass() > largest[j]->getMass() ) {
-        //         cout << "Shape.4" << endl;
-        //         if ( j < 10 -1 ) {
-        //           cout << "Shape.5" << endl;
-        //           largest[j+1] = largest[j];
-        //         }
-        //           cout << "Shape.6" << endl;
-        //         largest[j] = curShape;
-        //           cout << "Shape.7" << endl;
-        //       }
-        //     }
-        //       else {
+  //       if ( curShape->getMass() > largest[j]->getMass() ) {
+  //         cout << "Shape.4" << endl;
+  //         if ( j < 10 -1 ) {
+  //           cout << "Shape.5" << endl;
+  //           largest[j+1] = largest[j];
+  //         }
+  //           cout << "Shape.6" << endl;
+  //         largest[j] = curShape;
+  //           cout << "Shape.7" << endl;
+  //       }
+  //     }
+  //       else {
 
-        //           cout << "index: " << j << endl;
+  //           cout << "index: " << j << endl;
 
-        //           shape_pointer x = largest[j];
+  //           shape_pointer x = largest[j];
 
-        //           cout << "index: " << j+1 << endl;
-        //           x = largest[j+1];
+  //           cout << "index: " << j+1 << endl;
+  //           x = largest[j+1];
 
 
-        //         largest[j+1] = largest[j];
-        //           cout << "Shape.9" << endl;
-        //         largest[j] = curShape;
-        //           cout << "Shape.10" << endl;
-        //       }
-        //       cout << "Um..." << endl;
-        //     }
+  //         largest[j+1] = largest[j];
+  //           cout << "Shape.9" << endl;
+  //         largest[j] = curShape;
+  //           cout << "Shape.10" << endl;
+  //       }
+  //       cout << "Um..." << endl;
+  //     }
 
-        //   }
+  //   }
 
-        // }
-        // cout << "Going to output largest" << endl;
-        // sgVec3 color;
-        // for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-        //   if ( largest[j] != NULL ) {
-        //     largest[j]->getColor( color );
-        //     cout << "largest[" << j << "]: " << largest[j]->getMass() 
-        //       << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
-        //       << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
-        //   }
-        // }
-        // if ( numStep % 50 == 0 ) {
-        //   cout << endl << endl;
+  // }
+  // cout << "Going to output largest" << endl;
+  // sgVec3 color;
+  // for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
+  //   if ( largest[j] != NULL ) {
+  //     largest[j]->getColor( color );
+  //     cout << "largest[" << j << "]: " << largest[j]->getMass() 
+  //       << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
+  //       << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
+  //   }
+  // }
+  // if ( numStep % 50 == 0 ) {
+  //   cout << endl << endl;
 }

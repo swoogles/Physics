@@ -20,11 +20,6 @@ bool WorldSettings::gravBetweenObjects;
 
 sgVec4 WorldSettings::gravField;
 
-float WorldSettings::minX;
-float WorldSettings::minY;
-float WorldSettings::maxX;
-float WorldSettings::maxY;
-
 bool WorldSettings::autoScaling;
 
 void WorldSettings::setAutoScaling(bool shouldAutoScale) {
@@ -130,39 +125,4 @@ bool WorldSettings::isGravBetweenObjects() {
 
 void WorldSettings::setGravBetweenObjects(bool newVal) {
 	gravBetweenObjects = newVal;
-}
-
-void WorldSettings::resetXYMinsAndMaxes() {
-	minX = FLT_MAX;
-	minY = FLT_MAX;
-
-	maxX = -(FLT_MAX-1);
-	maxY = -(FLT_MAX-1);
-}
-
-void WorldSettings::updateXYMinsAndMaxes(sgVec4 curPos) {
-	if (curPos[0] < minX)
-		minX = curPos[0];
-	if (curPos[0] > maxX)
-		maxX = curPos[0];
-	if (curPos[1] < minY)
-		minY = curPos[1];
-	if (curPos[1] > maxY)
-		maxY = curPos[1];
-}
-
-float WorldSettings::getMinX() {
-	return minX;
-}
-
-float WorldSettings::getMinY() {
-	return minY;
-}
-
-float WorldSettings::getMaxX() {
-	return maxX;
-}
-
-float WorldSettings::getMaxY() {
-	return maxY;
 }

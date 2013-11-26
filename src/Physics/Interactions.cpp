@@ -412,12 +412,13 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation, boost::shared_p
       // }
 
       curShape->update( curSimulation->getDT() );
-      curShape->getPos(curPos);
 
-      if (WorldSettings::isAutoScaling())
-      {
-        WorldSettings::updateXYMinsAndMaxes(curPos);
-      }
+      // TODO this should be taking advantage of a passed in Observer, rather than the static worldsettings junk
+      // if (WorldSettings::isAutoScaling())
+      // {
+      //   curShape->getPos(curPos);
+      //   WorldSettings::updateXYMinsAndMaxes(curPos);
+      // }
 
     }
   }
@@ -437,11 +438,11 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation, boost::shared_p
       {
         calcForceOnObject_Octree(curShape, curQuadrant, curSimulation->getDT() );
         curShape->update( curSimulation->getDT() );
-        curShape->getPos(curPos);
-        if (WorldSettings::isAutoScaling())
-        {
-          WorldSettings::updateXYMinsAndMaxes(curPos);
-        }
+        // TODO this should be taking advantage of a passed in Observer, rather than the static worldsettings junk
+        // if (WorldSettings::isAutoScaling())
+        // {
+        //   curShape->getPos(curPos);
+        // }
       }
 
     }
