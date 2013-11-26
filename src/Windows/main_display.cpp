@@ -7,37 +7,12 @@
 
 #include "main_display.h"
 
-puMenuBar * main_window_UI::main_menu;
-
-puaFileSelector * main_window_UI::open_selector;
-puaFileSelector * main_window_UI::save_selector;
-
-puDialogBox * main_window_UI::dialog_box;
-puText * main_window_UI::dialog_box_message;
-puOneShot * main_window_UI::dialog_box_ok_button;
-
-puGroup * main_window_UI::astronomicalTimeGroup;
-puText * main_window_UI::milleniaElapsed_label;
-puInput * main_window_UI::milleniaElapsed_value;
-puText * main_window_UI::centuriesElapsed_label;
-puInput * main_window_UI::centuriesElapsed_value;
-puText * main_window_UI::decadesElapsed_label;
-puInput * main_window_UI::decadesElapsed_value;
-puText * main_window_UI::yearsElapsed_label;
-puInput * main_window_UI::yearsElapsed_value;
-puText * main_window_UI::daysElapsed_label;
-puInput * main_window_UI::daysElapsed_value;
-puText * main_window_UI::hoursElapsed_label;
-puInput * main_window_UI::hoursElapsed_value;
-
 using namespace std;
-
 
 main_window_UI::main_window_UI() {
 	/*
 	main_menu = new puMenuBar();
 	//glutGet(GLUT_WINDOW_HEIGHT);
-
 
 	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
 	puCallback file_submenu_cb [] = { exit_cb,  NULL,      save_cb, open_cb, NULL};
@@ -53,7 +28,7 @@ main_window_UI::main_window_UI() {
 	*/
 }
 
-void main_window_UI::init() {
+void main_window_UI::init( boost::shared_ptr<Simulation> simulation ) {
 	main_menu = new puMenuBar();
 	int winWidth = glutGet(GLUT_WINDOW_WIDTH);
 
@@ -64,6 +39,7 @@ void main_window_UI::init() {
 
 	main_menu->close();
 
+  this->simulation = simulation ;
 
 	int curX = winWidth;
 	int timeHeight = 5;
@@ -106,7 +82,8 @@ void main_window_UI::init() {
 }
 
 void main_window_UI::update() {
-	double curTime = WorldSettings::getTimeElapsed();
+  // cout << "Updating." << endl;
+	double curTime = simulation->getTimeElapsed();
 	double intPart;
 	double fracPart;
 	float curDiv;
@@ -119,12 +96,15 @@ void main_window_UI::update() {
 	modf(curTime, &intPart);
 	curTime = intPart;
 
+  // cout << "A." << endl;
 
 	curDiv = 24;
 	curTime /= curDiv;
 	fracPart = modf(curTime, &intPart);
+  // cout << "B." << endl;
 	curVal = fracPart*curDiv;
 	hoursElapsed_value->setValue(curVal);
+  // cout << "C." << endl;
 	curTime = intPart;
 
 
@@ -145,48 +125,49 @@ void main_window_UI::update() {
 	curVal = curTime;
 	milleniaElapsed_value->setValue(curVal);
 
+  // cout << "Done Updating." << endl;
 }
 
 void main_window_UI::open_cb(puObject * caller) {
-	open_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
-	open_selector->setCallback( openFile_cb );
-	open_selector->setInitialValue("lastRun.phys");
+	// open_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
+	// open_selector->setCallback( openFile_cb );
+	// open_selector->setInitialValue("lastRun.phys");
 
 }
 
 void main_window_UI::openFile_cb(puObject * caller) {
-	char fileName[150];
-	open_selector->getValue (fileName);
+	// char fileName[150];
+	// open_selector->getValue (fileName);
 
-	cout << "Filename: " << fileName << endl;
+	// cout << "Filename: " << fileName << endl;
 
-	// Must nest interface creation/deletion, else stack will be messed up
-	puDeleteObject( open_selector );
-	open_selector = 0;
+	// // Must nest interface creation/deletion, else stack will be messed up
+	// puDeleteObject( open_selector );
+	// open_selector = 0;
 
-  MyShape::clearShapes();
-	WorldSettings::Pause();
-	openShapes(fileName);
+  // MyShape::clearShapes();
+	// WorldSettings::Pause();
+	// openShapes(fileName);
 
 }
 
 void main_window_UI::save_cb(puObject * caller) {
-	save_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
-	save_selector->setCallback( saveFile_cb );
-	save_selector->setInitialValue("lastRun.phys");
+	// save_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
+	// save_selector->setCallback( saveFile_cb );
+	// save_selector->setInitialValue("lastRun.phys");
 
 }
 
 void main_window_UI::saveFile_cb(puObject * caller) {
-	char fileName[150];
-	save_selector->getValue(fileName);
+	// char fileName[150];
+	// save_selector->getValue(fileName);
 
-	cout << "Save Location: " << fileName << endl;
+	// cout << "Save Location: " << fileName << endl;
 
-	puDeleteObject( save_selector );
-	save_selector = 0;
+	// puDeleteObject( save_selector );
+	// save_selector = 0;
 
-	saveShapes(fileName);
+	// saveShapes(fileName);
 }
 
 void main_window_UI::exit_cb(puObject * caller) {
@@ -194,28 +175,33 @@ void main_window_UI::exit_cb(puObject * caller) {
 	exit(1);
 }
 
-void main_window_UI::mk_dialog(char * dialogText) {
-	dialog_box = new puDialogBox(150, 50);
-	{
-		new puFrame( 0, 0, 400, 100);
-		dialog_box_message = new puText (10, 70) ;
-		dialog_box_message->setLabel(dialogText);
-
-		//TODO need dialog box to display correct dialog, rather than fucked up string
-		cout << "mk_dialog text: " << dialogText << endl;
-
-
-		dialog_box_ok_button = new puOneShot(180, 10, 240, 50);
-		dialog_box_ok_button->setLegend("OK");
-		dialog_box_ok_button->makeReturnDefault(TRUE);
-		dialog_box_ok_button->setCallback(close_dialog_cb);
-	}
-	dialog_box->close();
-	dialog_box->reveal();
+void main_window_UI::setSimulation( boost::shared_ptr<Simulation> simulation )
+{
+  this->simulation =  simulation ;
 }
 
-void main_window_UI::close_dialog_cb(puObject * caller) {
-	puDeleteObject (dialog_box);
-	dialog_box = NULL;
-}
+// void main_window_UI::mk_dialog(char * dialogText) {
+// 	dialog_box = new puDialogBox(150, 50);
+// 	{
+// 		new puFrame( 0, 0, 400, 100);
+// 		dialog_box_message = new puText (10, 70) ;
+// 		dialog_box_message->setLabel(dialogText);
+// 
+// 		//TODO need dialog box to display correct dialog, rather than fucked up string
+// 		cout << "mk_dialog text: " << dialogText << endl;
+// 
+// 
+// 		dialog_box_ok_button = new puOneShot(180, 10, 240, 50);
+// 		dialog_box_ok_button->setLegend("OK");
+// 		dialog_box_ok_button->makeReturnDefault(TRUE);
+// 		dialog_box_ok_button->setCallback(close_dialog_cb);
+// 	}
+// 	dialog_box->close();
+// 	dialog_box->reveal();
+// }
+// 
+// void main_window_UI::close_dialog_cb(puObject * caller) {
+// 	puDeleteObject (dialog_box);
+// 	dialog_box = NULL;
+// }
 

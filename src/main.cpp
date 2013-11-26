@@ -101,6 +101,7 @@ boost::shared_ptr<Simulation> globalSimulation;
 boost::shared_ptr<Recorder> globalRecorder;
 
 control_center globalControlCenter;
+main_window_UI globalMainDisplay;
 
 class BillProperties
 {
@@ -298,7 +299,7 @@ void idle() {
 
     // WorldSettings::updateTimeElapsed();
     globalSimulation->updateTimeElapsed();
-    main_window_UI::update();
+    globalMainDisplay.update();
 
     // Simulations::incCurStep();
     globalSimulation->incCurStep();
@@ -341,8 +342,6 @@ void idle() {
 }
 
 int main(int argcp, char **argv) {
-  globalControlCenter.printDec_dt_buttonAddress();
-
   int mainWinPosX = 100;
   int mainWinPosY = 50;
   int mainWinHeight = 720;
@@ -380,7 +379,7 @@ int main(int argcp, char **argv) {
   }
 
   //Creates main menu bar
-  main_window_UI::init();
+  globalMainDisplay.init( globalSimulation );
 
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowPosition(controlWinPosX,controlWinPosY);
@@ -392,8 +391,6 @@ int main(int argcp, char **argv) {
   glutKeyboardFunc(myKey);
 
   globalControlCenter.init( globalSimulation );
-  globalControlCenter.printDec_dt_buttonAddress();
-
 
   glutSetWindow(main_window);
 

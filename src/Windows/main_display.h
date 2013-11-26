@@ -36,38 +36,42 @@
  */
 class main_window_UI {
 private:
-	static puMenuBar * main_menu;
-	static puaFileSelector * open_selector;
-	static puaFileSelector * save_selector;
+  boost::shared_ptr<Simulation> simulation;
 
-	static puDialogBox * dialog_box;
-	static puText * dialog_box_message;
-	static puOneShot * dialog_box_ok_button;
+	puMenuBar * main_menu;
+	puaFileSelector * open_selector;
+	puaFileSelector * save_selector;
 
-	static puGroup * astronomicalTimeGroup;
-	static puText * milleniaElapsed_label;
-	static puInput * milleniaElapsed_value;
-	static puText * centuriesElapsed_label;
-	static puInput * centuriesElapsed_value;
-	static puText * decadesElapsed_label;
-	static puInput * decadesElapsed_value;
-	static puText * yearsElapsed_label;
-	static puInput * yearsElapsed_value;
-	static puText * daysElapsed_label;
-	static puInput * daysElapsed_value;
-	static puText * hoursElapsed_label;
-	static puInput * hoursElapsed_value;
+	puDialogBox * dialog_box;
+	puText * dialog_box_message;
+	puOneShot * dialog_box_ok_button;
+
+	puGroup * astronomicalTimeGroup;
+	puText * milleniaElapsed_label;
+	puInput * milleniaElapsed_value;
+	puText * centuriesElapsed_label;
+	puInput * centuriesElapsed_value;
+	puText * decadesElapsed_label;
+	puInput * decadesElapsed_value;
+	puText * yearsElapsed_label;
+	puInput * yearsElapsed_value;
+	puText * daysElapsed_label;
+	puInput * daysElapsed_value;
+	puText * hoursElapsed_label;
+	puInput * hoursElapsed_value;
 
 
 public:
 	//! Unnecessary constructor for entirely static class
 	main_window_UI();
 
+  void setSimulation( boost::shared_ptr<Simulation> simulation );
+
 	/*! \brief Initializes values for the Main Window interface
 	 *
 	 *  Creates the Main Menu puMenuBar and populates it with open, save, etc. funcitnos
 	 */
-	static void init();
+	void init( boost::shared_ptr<Simulation> residentSimulation );
 
 	/*! \brief Updates the time values
 	 *
@@ -76,7 +80,7 @@ public:
 	 *  elapsed. Once calculated, it sets the appropriate labels to
 	 *  these values.
 	 */
-	static void update();
+	void update();
 
 	//! Opens a file picker when Open is selected in Main Menu
 	static void open_cb(puObject *);
@@ -103,11 +107,9 @@ public:
 	static void exit_cb(puObject *);
 
 	//! Displays file being saved in saveFile_cb
-	static void mk_dialog(char *);
+	// static void mk_dialog(char *);
 	//! Deletes current dialogue box and sets dialog_box to NULL
-	static void close_dialog_cb(puObject * caller);
+	// static void close_dialog_cb(puObject * caller);
 
 };
-
-
 #endif /* MAIN_DISPLAY_H_ */

@@ -39,6 +39,7 @@
 class control_center {
 private:
   boost::shared_ptr<Simulation> simulation;
+
 	puGroup * placement_group;
 		puaSelectBox * pick_object;
 		puText * object_name_label;
