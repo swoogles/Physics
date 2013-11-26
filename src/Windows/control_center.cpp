@@ -234,6 +234,7 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
   pause_dt_button = new puButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
   curX += (placementWidth +gap);
   pause_dt_button->setLegend("Pause");
+  pause_dt_button->setUserData( &residentSimulation );
   pause_dt_button->setCallback(pause_cb);
   pause_dt_button->setValue(0);
 
@@ -351,12 +352,14 @@ void control_center::alterDT(puObject * caller) {
 }
 
 void control_center::pause_cb(puObject * caller) {
+  boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)caller->getUserData();
+  boost::shared_ptr<Simulation> curSimulation = boost::shared_ptr<Simulation>( *spPointer );
   if (caller->getIntegerValue() == 0) {
-    WorldSettings::Pause();
+    curSimulation->Pause();
     cout << "Pausing! " << endl;
   }
   else {
-    WorldSettings::unPause();
+    curSimulation->unPause();
     cout << "unPausing! " << endl;
   }
 }

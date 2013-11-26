@@ -169,7 +169,7 @@ void display(void)
   //Recording section
   // TODO A different version of this function should be called if I want to record, rather 
   // than a branch here.
-  if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame() && ! WorldSettings::isPaused() ) {
+  if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame() && ! globalSimulation->isPaused() ) {
 
     globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
   }
@@ -227,7 +227,6 @@ void init(char simulation) {
   }
   propertiesFile.close();
 
-  WorldSettings::Pause();
   globalRecorder = boost::make_shared<Recorder>();
 
   Observer::init();
@@ -286,7 +285,7 @@ void idle() {
   typedef boost::shared_ptr<MyShape> shape_pointer;
   sgVec4 curPos;
 
-  if (! WorldSettings::isPaused()  ) {
+  if (! globalSimulation->isPaused()  ) {
     if (WorldSettings::isAutoScaling())
     {
       globalSimulation->resetXYMinsAndMaxes();
@@ -297,7 +296,7 @@ void idle() {
     calcCollisionsAll( globalSimulation );
     calcForcesAll( globalSimulation, globalQuadrant );
 
-    WorldSettings::updateTimeElapsed();
+    // WorldSettings::updateTimeElapsed();
     globalSimulation->updateTimeElapsed();
     main_window_UI::update();
 
