@@ -43,7 +43,7 @@
 //Output
 //#include "ImageOutput.h"
 #include <jpeglib.h>
-#include "Observation/Recording.h"
+#include "Observation/Recorder.h"
 
 //File interaction
 #include "fileInteraction.h"
@@ -80,7 +80,7 @@ int numFrame = 0;
 float totalMass = 0;
 
 
-std::map<std::string, std::string> globalProperties;
+// std::map<std::string, std::string> globalProperties;
 boost::shared_ptr<Simulation> globalSimulation;
 boost::shared_ptr<Recorder> globalRecorder;
 
@@ -89,15 +89,23 @@ main_window_UI globalMainDisplay;
 
 class BillProperties
 {
+    std::map<std::string, std::string> properties;
   public:
     // Using char * instead of string gets rid of heap allocation and dynamic initialization
     static const char FORCE_CALCULATION_METHOD[];
     static const char  SIMULATION_DT[];
 
     bool static isValidProperty( string line );
+    void readProperties();
+    std::string at( const char target[] );
 };
 const char BillProperties::FORCE_CALCULATION_METHOD[] = "forceCalculationMethod";
 const char BillProperties::SIMULATION_DT[] = "dt";
+
+std::string BillProperties::at( const char target[]  )
+{
+  return properties.at( target );
+}
 
 bool BillProperties::isValidProperty( string line )
 {
@@ -114,6 +122,28 @@ bool BillProperties::isValidProperty( string line )
 
   return valid;
 }
+
+void BillProperties::readProperties()
+{
+  string line;
+  string propName, propValue;
+  ifstream propertiesFile;
+  propertiesFile.open(".properties", ios::in);
+  int equalsPosition;
+  while( getline(propertiesFile, line) )
+  {
+    if ( BillProperties::isValidProperty( line ) )
+    {
+      equalsPosition = line.find('=');
+      propName=line.substr(0,equalsPosition);
+      propValue=line.substr(equalsPosition+1);
+      properties.insert( make_pair( propName, propValue ) );
+    }
+  }
+  propertiesFile.close();
+}
+
+boost::shared_ptr<BillProperties> globalProperties;
 
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
@@ -181,33 +211,31 @@ void controlDisplay(void) {
 
 
 void init(char simulation) {
-  // Simulations::setCurStep(0);
-  // globalSimulation->setCurStep(0);
-
   cout.flush();
   glViewport(-WW,WW,-WH,WH);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
-  string line;
-  string propName, propValue;
-  ifstream propertiesFile;
-  propertiesFile.open(".properties", ios::in);
-  int equalsPosition;
-  while( getline(propertiesFile, line) )
-  {
-    if ( BillProperties::isValidProperty( line ) )
-    {
-      equalsPosition = line.find('=');
-      propName=line.substr(0,equalsPosition);
-      propValue=line.substr(equalsPosition+1);
-      globalProperties.insert( make_pair( propName, propValue ) );
-    }
-  }
-  propertiesFile.close();
+  globalProperties = boost::make_shared<BillProperties>();
+  globalProperties->readProperties();
+
+  // string line;
+  // string propName, propValue;
+  // ifstream propertiesFile;
+  // propertiesFile.open(".properties", ios::in);
+  // int equalsPosition;
+  // while( getline(propertiesFile, line) )
+  // {
+  //   if ( BillProperties::isValidProperty( line ) )
+  //   {
+  //     equalsPosition = line.find('=');
+  //     propName=line.substr(0,equalsPosition);
+  //     propValue=line.substr(equalsPosition+1);
+  //     globalProperties.insert( make_pair( propName, propValue ) );
+  //   }
+  // }
+  // propertiesFile.close();
 
   globalRecorder = boost::make_shared<Recorder>();
 
@@ -222,7 +250,7 @@ void init(char simulation) {
   globalSimulation = Simulations::createSimulation( simulation );
   MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
-  globalSimulation->setForceCalcMethodByString( globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD ) );
+  globalSimulation->setForceCalcMethodByString( globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD ) );
 
   char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
   strcat(saveFileName, "output.dat");
@@ -262,7 +290,7 @@ void idle() {
       globalSimulation->resetXYMinsAndMaxes();
     }
     // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
-    string forceCalculations = globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD );
+    string forceCalculations = globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD );
 
     calcCollisionsAll( globalSimulation );
     calcForcesAll( globalSimulation );

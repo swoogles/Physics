@@ -5,7 +5,7 @@
  *      Author: brasure
  */
 
-#include "Recording.h"
+#include "Recorder.h"
 
 Recorder::Recorder()
           :skipFrames(1),
