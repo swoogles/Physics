@@ -16,7 +16,7 @@
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/Box.h"
 #include "../ShapeFiles/ShapeList.h"
-// #include "../Parallelization/Quadrant.h"
+#include "../Parallelization/Quadrant.h"
 // #include "Interactions.h"
 
 using namespace boost::numeric::ublas;
@@ -26,26 +26,24 @@ class Simulation
 {
   private:
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    // static boost::numeric::ublas::compressed_vector< shape_pointer > physicalObjects;
-    int curStep;
-    ShapeList physicalObjects;
-    float minX, minY, maxX, maxY;
     int forceCalcMethod;
+    ShapeList physicalObjects;
 
+    int curStep;
     float DT;
     double timeElapsed;
-
     bool paused;
 
-    // float totalMass;
+    float minX, minY, maxX, maxY;
 
     // bool allElastic;
     // bool allInelastic;
 
     // bool constGravField;
+    // sgVec4 gravField;
     bool gravBetweenObjects;
 
-    // sgVec4 gravField;
+    boost::shared_ptr<Quadrant> quadrant;
 
   public:
     static const char FORCE_CALC_METHOD_NAIVE_STRING[];
@@ -91,5 +89,7 @@ class Simulation
     inline float getMaxX() { return maxX; }
     inline float getMaxY() { return maxY; }
 
+    void refreshQuadrant();
+    inline boost::shared_ptr<Quadrant> getQuadrant() { return quadrant; }
 } ;
 #endif 

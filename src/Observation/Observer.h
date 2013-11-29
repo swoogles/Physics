@@ -35,9 +35,8 @@ private:
 	Moveable * target;
 	float * perspectiveMat;
 
-	bool autoScale;
-
 	int id;
+	bool autoScale;
 	static int curObserver;
 
 public:

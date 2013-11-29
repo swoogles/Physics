@@ -36,8 +36,8 @@ private:
 	char * outFileSuffix;
 	char * outFile;
 
-	int curFrame;
 	int skipFrames;
+	int curFrame;
 	int curImage;
 
 	bool recording;

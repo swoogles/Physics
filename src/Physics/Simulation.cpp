@@ -13,13 +13,49 @@ const char Simulation::FORCE_CALC_METHOD_NAIVE_STRING[] = "naive";
 Simulation::Simulation()
             :forceCalcMethod(FORCE_CALC_METHOD_OCTREE),
             curStep(0),
+            DT(1),
+            timeElapsed(0),
             paused(true),
             minX(FLT_MAX),
             maxX(FLT_MIN),
             minY(FLT_MAX),
             maxY(FLT_MIN)
 {
-  // forceCalcMethod = 0;
+}
+
+void Simulation::refreshQuadrant()
+{
+  int magnitude;
+  magnitude = maxX;
+  if ( minX < 0 )
+  {
+    if ( -minX > magnitude )
+    {
+      magnitude = -minX;
+    }
+  }
+
+  if ( maxY > magnitude )
+  {
+    magnitude = maxY;
+    if ( minY < 0 )
+    {
+      if ( -minY > magnitude )
+      {
+        magnitude = -minY;
+      }
+    }
+  }
+
+  sgVec4 pos = {0,0,0,1};
+  float side = magnitude * 5; //Formation Value
+  sgVec3 dimensions = { side, side, side };
+  quadrant = boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
+
+  foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
+  {
+    quadrant->insertShape( curShape );
+  }
 }
 
 void Simulation::setForceCalcMethodByString( const string& forceCalcMethod )

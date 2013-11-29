@@ -95,7 +95,6 @@ int numFrame = 0;
 float totalMass = 0;
 
 
-boost::shared_ptr<Quadrant> globalQuadrant;
 std::map<std::string, std::string> globalProperties;
 boost::shared_ptr<Simulation> globalSimulation;
 boost::shared_ptr<Recorder> globalRecorder;
@@ -123,7 +122,7 @@ bool BillProperties::isValidProperty( string line )
     valid = false;
   }
 
-  if ( line.find('=') == -1 )
+  if ( line.find('=') == string::npos )
   {
     valid = false;
   }
@@ -176,15 +175,12 @@ void display(void)
   }
   globalRecorder->incCurFrame();
 
-
   puDisplay();
-
   glutSwapBuffers();
   glutPostRedisplay();
 }
 
 void controlDisplay(void) {
-
   glutSetWindow(control_center_num);
   glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -272,11 +268,7 @@ void init(char simulation) {
   float side = 1e4; //Formation Value
   sgVec3 dimensions = { side, side, side };
 
-  globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
-  foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
-  {
-    globalQuadrant->insertShape( curShape );
-  }
+  globalSimulation->refreshQuadrant();
 
 }
 
@@ -293,7 +285,7 @@ void idle() {
     string forceCalculations = globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD );
 
     calcCollisionsAll( globalSimulation );
-    calcForcesAll( globalSimulation, globalQuadrant );
+    calcForcesAll( globalSimulation );
 
     globalSimulation->updateTimeElapsed();
     globalMainDisplay.update();
@@ -304,8 +296,6 @@ void idle() {
     float side = 1e4; //Formation Value
     sgVec3 dimensions = { side, side, side };
 
-    globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
-
     foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
     {
       if (WorldSettings::isAutoScaling())
@@ -313,8 +303,9 @@ void idle() {
         curShape->getPos(curPos);
         globalSimulation->updateXYMinsAndMaxes(curPos);
       }
-      globalQuadrant->insertShape( curShape );
     }
+
+    globalSimulation->refreshQuadrant();
   }
 
   int curObserverIdx = Observer::getCurObserver();
@@ -323,7 +314,6 @@ void idle() {
 
   // Not sure if I can use Observer the way that I want to here, due to the constaints of the input methods
   if (WorldSettings::isAutoScaling()) {
-
     float minX = globalSimulation->getMinX();
     float minY = globalSimulation->getMinY();
     float maxX = globalSimulation->getMaxX();

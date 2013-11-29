@@ -43,7 +43,6 @@ using boost::numeric::ublas::compressed_vector;
  */
 class Moveable {
 protected:
-	bool ptsHighlighted;
 
 	sgVec4 pos;
 	sgQuat orientationQuat;
@@ -61,6 +60,8 @@ protected:
 	float density;
 
 	sgVec3 color;
+
+	bool ptsHighlighted;
 
 public:
 	/*! \brief Sets default values of members common to all shapes
