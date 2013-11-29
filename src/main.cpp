@@ -11,26 +11,16 @@
 #include <GL/glu.h>
 #include <cmath>
 
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/vector_sparse.hpp>
-#include <boost/numeric/ublas/io.hpp>
 #include <boost/foreach.hpp>
 #include <boost/ref.hpp>
-// #include <boost/timer/timer.hpp>
 
+#include <float.h>
+#include <unistd.h>
 #include <fstream>
 #include <map>
 #include <string>
-#include <boost/property_map/property_map.hpp>
-
-#include "Parallelization/Quadrant.h"
-
-#include "ShapeFiles/Box.h"
-#include "ShapeFiles/Circle.h"
-#include "ShapeFiles/MyEllipse.h"
 
 #include "inputFunctions.h"
-#include "menus.h"
 #include "CameraFunctions.h"
 
 //GUI stuff
@@ -47,7 +37,6 @@
 
 //Physics
 #include "Physics/Interactions.h"
-#include "Physics/Simulation.h"
 #include "Physics/Simulations.h"
 #include "Physics/WorldSettings.h"
 
@@ -58,10 +47,6 @@
 
 //File interaction
 #include "fileInteraction.h"
-
-#include <float.h>
-
-#include <unistd.h>
 
 #define WW 5
 #define WH 5
@@ -268,16 +253,7 @@ void init(char simulation) {
 
   //openShapes(saveFileName);
 
-  sgVec4 pos = {0,0,0,1};
-  float side = 1e4; //Formation Value
-  sgVec3 dimensions = { side, side, side };
-
-  globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
-  foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
-  {
-    globalQuadrant->insertShape( curShape );
-  }
-
+  globalSimulation->refreshQuadrant();
 }
 
 void idle() {
@@ -299,12 +275,6 @@ void idle() {
     globalMainDisplay.update();
 
     globalSimulation->incCurStep();
-
-    sgVec4 pos = {0,0,0,1};
-    float side = 1e4; //Formation Value
-    sgVec3 dimensions = { side, side, side };
-
-    globalQuadrant= boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
 
     foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
     {
