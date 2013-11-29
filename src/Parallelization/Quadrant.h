@@ -35,76 +35,62 @@ using namespace boost;
 
 class Quadrant : public Box
 {
-  // Octree<Quadrant> quadOctree(); /* Create 4096x4096x4096 octree containing doubles. */
+  private:
+    float mass;
+    bool isLeaf;
+    bool containsBody;
+    int level;
 
-  // string label;
+    sgVec4 weightedPosition;
 
-  // Quadrant * nextQuadrant;
-  boost::shared_ptr<Box> borders;
+    boost::shared_ptr<Box> borders;
+    boost::shared_ptr<Circle> centerOfMassRepresentation;
 
-  boost::shared_ptr<Circle> centerOfMassRepresentation;
-
-  // sgVec4 preCenterOfMass;
-  sgVec4 weightedPosition;
-
-  float mass;
-
-  typedef boost::shared_ptr<MyShape> shape_pointer;
-
-  typedef boost::shared_ptr<Quadrant> quad_pointer;
-  typedef multi_array< quad_pointer, 3> array_typeNew;
-  array_typeNew  quadOctree;
-
-  typedef multi_array<Quadrant *, 3> array_type;
-  typedef array_type::index index;
-  array_type  quadOctreeMine;
-
-  bool isLeaf;
-  bool containsBody;
+    typedef boost::shared_ptr<MyShape> shape_pointer;
+    typedef boost::shared_ptr<Quadrant> quad_pointer;
+    typedef multi_array< quad_pointer, 3> array_typeNew;
+    array_typeNew  quadOctree;
 
   public:
-  int level;
-  // Octree<Quadrant *> * quadOctree; /* Create 4096x4096x4096 octree containing doubles. */
-  Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions );
-  ~Quadrant();
-  void subDivide( int x, int y, int z, int numCells );
-  void subDivideAll( int levels, int numCells );
-  quad_pointer getQuadrantFromCell( int x, int y, int z );
+    // Octree<Quadrant *> * quadOctree; /* Create 4096x4096x4096 octree containing doubles. */
+    Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions );
+    ~Quadrant();
+    void subDivide( int x, int y, int z, int numCells );
+    void subDivideAll( int levels, int numCells );
+    quad_pointer getQuadrantFromCell( int x, int y, int z );
 
-  void printCorners();
+    void printCorners();
 
-  shape_pointer shapeInQuadrant;
-  boost::shared_ptr<MyShape> shapeInQuadrantNew;
+    shape_pointer shapeInQuadrant;
+    boost::shared_ptr<MyShape> shapeInQuadrantNew;
 
-  sgVec4 dimensions;
+    sgVec4 dimensions;
 
-  //sgVec4 pos;
+    //sgVec4 pos;
 
-  void insertShape( shape_pointer newShape );
+    void insertShape( shape_pointer newShape );
 
-  inline float getMass() { return mass; }
-  inline void setMass( float mass ) { this->mass = mass; }
-  inline void adjustMass ( float deltaMass ) { mass+= deltaMass; }
+    inline float getMass() { return mass; }
+    inline void setMass( float mass ) { this->mass = mass; }
+    inline void adjustMass ( float deltaMass ) { mass+= deltaMass; }
 
-  inline float getWidth() { return dimensions[0]; }
+    inline float getWidth() { return dimensions[0]; }
 
-  inline bool isExternal() { return isLeaf; }
+    inline bool isExternal() { return isLeaf; }
 
-  inline void getPos( sgVec4 retVec ) {
-    getCenterOfMass( retVec );
-  }
+    inline void getPos( sgVec4 retVec ) { getCenterOfMass( retVec ); }
 
-  boost::shared_ptr<MyShape> getShapeInQuadrant();
+    boost::shared_ptr<MyShape> getShapeInQuadrant();
 
-  void getWeightedPosition(sgVec4 weightedPosition);
-  void setWeightedPosition(sgVec4 weightedPosition);
+    void getWeightedPosition(sgVec4 weightedPosition);
+    void setWeightedPosition(sgVec4 weightedPosition);
 
-  void getCenterOfMass(sgVec4 centerOfMass);
-  void setCenterOfMass( sgVec4 centerOfMass );
+    void getCenterOfMass(sgVec4 centerOfMass);
+    void setCenterOfMass( sgVec4 centerOfMass );
 
-  quad_pointer determineShapeQuadrant( shape_pointer shapeToInsert );
+    quad_pointer determineShapeQuadrant( shape_pointer shapeToInsert );
 
-  ShapeList getShapesRecursive();
+    ShapeList getShapesRecursive();
 
 };
 

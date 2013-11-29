@@ -13,6 +13,8 @@ const char Simulation::FORCE_CALC_METHOD_NAIVE_STRING[] = "naive";
 Simulation::Simulation()
             :forceCalcMethod(FORCE_CALC_METHOD_OCTREE),
             curStep(0),
+            DT(1),
+            timeElapsed(0),
             paused(true),
             minX(FLT_MAX),
             maxX(FLT_MIN),

@@ -26,12 +26,12 @@ Quadrant::~Quadrant()
 
 
 Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
-  :quadOctree(boost::extents[2][2][2])
-  ,mass(0)
+  :mass(0)
   ,isLeaf(true)
   ,containsBody(false)
   ,level(level)
   ,borders(make_shared<Box>() )
+  ,quadOctree(boost::extents[2][2][2])
   
 {
   // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;

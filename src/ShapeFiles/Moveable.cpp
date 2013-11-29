@@ -15,9 +15,9 @@ using namespace boost::numeric::ublas;
 
 Moveable::Moveable()
           :pos({0.0,0.0,0.0,1.0})
-          ,color({0.5,1.0,0.0})
           ,mass(1)
           ,density(1)
+          ,color({0.5,1.0,0.0})
           ,ptsHighlighted(true)
 {
 	sgMakeIdentQuat(orientationQuat);

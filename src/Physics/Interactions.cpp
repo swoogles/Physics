@@ -177,10 +177,6 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
   SGfloat theta = 0.5;
   typedef boost::shared_ptr<Quadrant> quad_pointer;
 
-  sgVec4 gravField;
-
-  sgVec4 totalFGrav;
-
   sgVec4 pos;
   curObject->getPos(pos);
   // cout << "curObject.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
@@ -229,7 +225,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
     // cout << "shape.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
 
     //b.
-    if ( shapeInQuadrant != NULL & curObject != shapeInQuadrant )
+    if ( shapeInQuadrant != NULL && curObject != shapeInQuadrant )
     {
       // cout << "1.a" << endl;
       //c.
@@ -322,28 +318,16 @@ void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::compressed_vec
 
 		bool killed = false;
 
-		//bool constGravField = WorldSettings::isConstGravField();
-
 		if (WorldSettings::isConstGravField() ) {
 			WorldSettings::getConstGravFieldVal(gravField);
 			sgScaleVec4(gravField, 1/dt);
 		}
 
-
     foreach_ ( shape_pointer curShape, physicalObjects )
     {
-      sgVec3 netForceFromQuadrant;
-      // octree->calcForceOnShape( curShape, netForceFromQuadrant, dt );
       getVectorToObject2(object1, object2, sepVec);
-
-
-
     }
 
-
-
-
-		//sgVec4 * ob1mom;
     if ( physicalObjects.size() > 0 )
     {
       for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
@@ -394,12 +378,9 @@ void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::compressed_vec
 
 }
 
-void calcForcesAll( boost::shared_ptr<Simulation> curSimulation, boost::shared_ptr<Quadrant> curQuadrant )
+void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
 {
-  // cout << "curSimulation: " << &curSimulation << endl;
-  // cout << "curSimulation.physicalObjects: " << curSimulation.getPhysicalObjects().getShapes() << endl;
   ShapeList physicalObjects = curSimulation->getPhysicalObjects();
-  sgVec4 curPos;
 
   if ( ! curSimulation->getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
@@ -407,13 +388,10 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation, boost::shared_p
 
     foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
     {
-      // if ( Simulations::getCurStep() == 1 ) {
-      //   totalMass += curShape->getMass();
-      // }
-
       curShape->update( curSimulation->getDT() );
 
       // TODO this should be taking advantage of a passed in Observer, rather than the static worldsettings junk
+      // sgVec4 curPos;
       // if (WorldSettings::isAutoScaling())
       // {
       //   curShape->getPos(curPos);
@@ -424,7 +402,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation, boost::shared_p
   }
   else //Calculations with Octree
   {
-    // cout << "curDT: " << curSimulation.getDT() << endl;
     if ( physicalObjects.getShapes().size() > 0 )
     {
       ShapeList shapeList;
@@ -436,7 +413,7 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation, boost::shared_p
       // int z=0;
       foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
       {
-        calcForceOnObject_Octree(curShape, curQuadrant, curSimulation->getDT() );
+        calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() );
         curShape->update( curSimulation->getDT() );
         // TODO this should be taking advantage of a passed in Observer, rather than the static worldsettings junk
         // if (WorldSettings::isAutoScaling())
@@ -449,8 +426,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation, boost::shared_p
   }
 
 }
-
-//void calcHitAndMerge
 
 bool isConflict(int newShape) {
   sgVec4 sepVec;
