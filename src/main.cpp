@@ -239,9 +239,7 @@ void init(char simulation) {
 
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation );
-  globalSimulation->Pause();
-  boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList = globalSimulation->getPhysicalObjects().getShapes() ;
-  MyShape::shapes = localShapeList;
+  MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
   globalSimulation->setForceCalcMethodByString( globalProperties.at( BillProperties::FORCE_CALCULATION_METHOD ) );
 
@@ -297,11 +295,9 @@ void idle() {
     calcCollisionsAll( globalSimulation );
     calcForcesAll( globalSimulation, globalQuadrant );
 
-    // WorldSettings::updateTimeElapsed();
     globalSimulation->updateTimeElapsed();
     globalMainDisplay.update();
 
-    // Simulations::incCurStep();
     globalSimulation->incCurStep();
 
     sgVec4 pos = {0,0,0,1};
@@ -319,9 +315,6 @@ void idle() {
       }
       globalQuadrant->insertShape( curShape );
     }
-    // cout << "World Settings boundaries- minX: " << WorldSettings::getMinX() << "\t maxX: " << WorldSettings::getMaxX() << endl;
-    // cout << "global simu    boundaries- minX: " << globalSimulation->getMinX() << "\t maxX: " << globalSimulation->getMaxX() << endl;
-
   }
 
   int curObserverIdx = Observer::getCurObserver();

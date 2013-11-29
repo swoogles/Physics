@@ -8,15 +8,15 @@
 #include "Recording.h"
 
 Recorder::Recorder()
+          :skipFrames(1),
+          curFrame(0),
+          curImage(1)
 {
 	outFilePrefix = new char [80];
 	outFileSuffix = new char[7];
 	strcpy(outFileSuffix, ".jpg");
 	outFile = new char[100];
 	strcpy(outFilePrefix, outFile);
-	curFrame = 0;
-	skipFrames = 10;
-	curImage = 1;
 }
 
 
