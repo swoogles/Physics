@@ -60,8 +60,8 @@
 using namespace std;
 
 void control_center::clearShapes(puObject * caller) {
-  boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)caller->getUserData();
-  boost::shared_ptr<Simulation> curSimulation = boost::shared_ptr<Simulation>( *spPointer );
+  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
+  shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
   curSimulation->getPhysicalObjects().clearShapes();
 }
 
@@ -80,7 +80,7 @@ void control_center::switchViewNow(puObject * caller) {
 
 }
 
-void control_center::setSimulation( boost::shared_ptr<Simulation> simulation )
+void control_center::setSimulation( shared_ptr<Simulation> simulation )
 {
   cout << "setSimulation.dt.prev: " << simulation->getDT() << endl;
   // this->simulation = boost::make_shared<Simulation>( simulation );
@@ -88,7 +88,7 @@ void control_center::setSimulation( boost::shared_ptr<Simulation> simulation )
   cout << "setSimulation.dt.post: " << (this->simulation)->getDT() << endl;
 }
 
-void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
+void control_center::init( shared_ptr<Simulation> residentSimulation ) {
   cout << "&control_center: " << this << endl;
 
   showingRunTime = false;
@@ -208,7 +208,7 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
   dec_dt_button->setUserData( &residentSimulation );
   dec_dt_button->setCallback( alterDT );
 
-  boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)dec_dt_button->getUserData();
+  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)dec_dt_button->getUserData();
   // cout << "\nRetrieving user Data from dec_dt_button after setting callback" << endl;
   // if ( spPointer == NULL )
   // {
@@ -219,8 +219,8 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
 
   // dec_dt_button->setCallback( alterDT_static(dec_dt_button, simulation) );
   // dec_dt_button->setCallback( alterDT_static(dec_dt_button, simulation) );
-  // dec_dt_button->setCallback( static_cast<puCallback(void(*)(puObject*, boost::shared_ptr<Simulation>) )>(alterDT_static(dec_dt_button, simulation) ) );
-  // dec_dt_button->setCallback( static_cast<void(void(control_center::*)(puObject*, boost::shared_ptr<Simulation>) )>(alterDT_static(dec_dt_button, simulation) ) );
+  // dec_dt_button->setCallback( static_cast<puCallback(void(*)(puObject*, shared_ptr<Simulation>) )>(alterDT_static(dec_dt_button, simulation) ) );
+  // dec_dt_button->setCallback( static_cast<void(void(control_center::*)(puObject*, shared_ptr<Simulation>) )>(alterDT_static(dec_dt_button, simulation) ) );
 
   // void control_center::alterDT_static(puObject * caller, Simulation& curSimulation ) {
 
@@ -332,8 +332,8 @@ void control_center::flipAutoScaling(puObject * caller) {
 
 void control_center::alterDT(puObject * caller) {
   cout << "Altering DT..." << endl;
-  boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)caller->getUserData();
-  boost::shared_ptr<Simulation> curSimulation = boost::shared_ptr<Simulation>( *spPointer );
+  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
+  shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
 
 
   cout << "Alterdt.preDT: " << curSimulation->getDT() << endl;
@@ -352,8 +352,8 @@ void control_center::alterDT(puObject * caller) {
 }
 
 void control_center::pause_cb(puObject * caller) {
-  boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)caller->getUserData();
-  boost::shared_ptr<Simulation> curSimulation = boost::shared_ptr<Simulation>( *spPointer );
+  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
+  shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
   if (caller->getIntegerValue() == 0) {
     curSimulation->Pause();
     cout << "Pausing! " << endl;

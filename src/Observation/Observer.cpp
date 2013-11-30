@@ -9,7 +9,7 @@
 
 using namespace std;
 
-boost::numeric::ublas::compressed_vector<Observer *> Observer::observers(0);
+compressed_vector<Observer *> Observer::observers(0);
 int Observer::curObserver;
 
 void Observer::init() {

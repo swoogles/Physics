@@ -75,6 +75,8 @@ SGfloat massList[NUM_BODIES] = {
 
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
+using boost::shared_ptr;
+using boost::make_shared;
 
 class Simulations
 {
@@ -84,8 +86,8 @@ class Simulations
      *
      *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
      */
-    typedef boost::shared_ptr<MyShape> shape_pointer;
-    static boost::numeric::ublas::compressed_vector< shape_pointer > physicalObjects;
+    typedef shared_ptr<MyShape> shape_pointer;
+    static compressed_vector< shape_pointer > physicalObjects;
     static int curStep;
 
 
@@ -98,26 +100,26 @@ class Simulations
 
     static void simpleOrbit();
 
-    static boost::shared_ptr<Simulation> disruption_ArbitraryList();
+    static shared_ptr<Simulation> disruption_ArbitraryList();
 
-    static boost::shared_ptr<Simulation> bodyFormation_NonRandom();
-    static boost::shared_ptr<Simulation> QuadrantTestingNonRandom();
+    static shared_ptr<Simulation> bodyFormation_NonRandom();
+    static shared_ptr<Simulation> QuadrantTestingNonRandom();
 
-    static boost::shared_ptr<Simulation> bodyFormation_ArbitraryList( int numPieces );
+    static shared_ptr<Simulation> bodyFormation_ArbitraryList( int numPieces );
 
-    static boost::shared_ptr<Simulation> bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
+    static shared_ptr<Simulation> bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
-    static boost::shared_ptr<Simulation> billiards1(int);
+    static shared_ptr<Simulation> billiards1(int);
 
-    static boost::shared_ptr<Simulation> billiards2_ReturnSimulation(int);
+    static shared_ptr<Simulation> billiards2_ReturnSimulation(int);
 
-    static boost::shared_ptr<Simulation> billiards3_ArbitraryList(int);
+    static shared_ptr<Simulation> billiards3_ArbitraryList(int);
 
-    static boost::shared_ptr<Quadrant> octreeDemonstration(int);
+    static shared_ptr<Quadrant> octreeDemonstration(int);
 
-    static boost::shared_ptr<Simulation> simpleCollision_ArbitraryList();
+    static shared_ptr<Simulation> simpleCollision_ArbitraryList();
 
-    static boost::shared_ptr<Simulation> createSimulation( char simNumber );
+    static shared_ptr<Simulation> createSimulation( char simNumber );
 
     /*! \brief Returns a shape from the static list of objects that should be considered during
      * physical interactions.

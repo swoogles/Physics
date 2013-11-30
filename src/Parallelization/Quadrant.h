@@ -14,8 +14,8 @@
 #include "../ShapeFiles/Box.h"
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/ShapeList.h"
-// #include "../Physics/Interactions.h"
 
+#include <boost/multi_array/multi_array_ref.hpp>
 #include <boost/numeric/ublas/vector_sparse.hpp>
 #include <boost/multi_array.hpp>
 #include <boost/current_function.hpp>
@@ -23,16 +23,13 @@
 #include <boost/foreach.hpp>
 #include <cassert>
 
-//using namespace boost::numeric::ublas;
-//using boost::numeric::ublas::compressed_vector;
+using boost::shared_ptr;
+using boost::make_shared;
+using boost::extents;
+using boost::multi_array;
 
-using namespace boost;
-
-//using namespace std;
 
 #define INVALID_OCTREE_INDEX -1
-#define foreach_  BOOST_FOREACH                                                                                              
-
 class Quadrant : public Box
 {
   private:
@@ -43,11 +40,11 @@ class Quadrant : public Box
 
     sgVec4 weightedPosition;
 
-    boost::shared_ptr<Box> borders;
-    boost::shared_ptr<Circle> centerOfMassRepresentation;
+    shared_ptr<Box> borders;
+    shared_ptr<Circle> centerOfMassRepresentation;
 
-    typedef boost::shared_ptr<MyShape> shape_pointer;
-    typedef boost::shared_ptr<Quadrant> quad_pointer;
+    typedef shared_ptr<MyShape> shape_pointer;
+    typedef shared_ptr<Quadrant> quad_pointer;
     typedef multi_array< quad_pointer, 3> array_typeNew;
     array_typeNew  quadOctree;
 
@@ -62,7 +59,7 @@ class Quadrant : public Box
     void printCorners();
 
     shape_pointer shapeInQuadrant;
-    boost::shared_ptr<MyShape> shapeInQuadrantNew;
+    shared_ptr<MyShape> shapeInQuadrantNew;
 
     sgVec4 dimensions;
 
@@ -80,7 +77,7 @@ class Quadrant : public Box
 
     inline void getPos( sgVec4 retVec ) { getCenterOfMass( retVec ); }
 
-    boost::shared_ptr<MyShape> getShapeInQuadrant();
+    shared_ptr<MyShape> getShapeInQuadrant();
 
     void getWeightedPosition(sgVec4 weightedPosition);
     void setWeightedPosition(sgVec4 weightedPosition);

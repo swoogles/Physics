@@ -29,6 +29,8 @@
 
 #include <string>
 
+using boost::shared_ptr;
+
 /*! \brief Main UI for making objects and controlling simulation
  *
  *  This class provides the ability to:
@@ -38,7 +40,7 @@
  */
 class control_center {
 private:
-  boost::shared_ptr<Simulation> simulation;
+  shared_ptr<Simulation> simulation;
 
 	puGroup * placement_group;
 		puaSelectBox * pick_object;
@@ -79,8 +81,8 @@ private:
 
 public:
 	//! Creates all UI elements and sets their values, positions, and callbacks
-  void setSimulation( boost::shared_ptr<Simulation> simulation );
-	void init( boost::shared_ptr<Simulation> residentSimulation );
+  void setSimulation( shared_ptr<Simulation> simulation );
+	void init( shared_ptr<Simulation> residentSimulation );
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
   inline void printDec_dt_buttonAddress() { std::cout << "&dec_dt_button: " << dec_dt_button << endl; };

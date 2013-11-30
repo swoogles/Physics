@@ -63,6 +63,10 @@
 using namespace std;
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
+using boost::shared_ptr;
+using boost::make_shared;
+
+typedef shared_ptr<MyShape> shape_pointer;
 //using namespace mathglpp;
 
 float globalPullback;
@@ -81,15 +85,15 @@ float totalMass = 0;
 
 
 // std::map<std::string, std::string> globalProperties;
-boost::shared_ptr<Simulation> globalSimulation;
-boost::shared_ptr<Recorder> globalRecorder;
+shared_ptr<Simulation> globalSimulation;
+shared_ptr<Recorder> globalRecorder;
 
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
 class BillProperties
 {
-    std::map<std::string, std::string> properties;
+    map<string, string> properties;
   public:
     // Using char * instead of string gets rid of heap allocation and dynamic initialization
     static const char FORCE_CALCULATION_METHOD[];
@@ -97,12 +101,12 @@ class BillProperties
 
     bool static isValidProperty( string line );
     void readProperties();
-    std::string at( const char target[] );
+    string at( const char target[] );
 };
 const char BillProperties::FORCE_CALCULATION_METHOD[] = "forceCalculationMethod";
 const char BillProperties::SIMULATION_DT[] = "dt";
 
-std::string BillProperties::at( const char target[]  )
+string BillProperties::at( const char target[]  )
 {
   return properties.at( target );
 }
@@ -143,7 +147,7 @@ void BillProperties::readProperties()
   propertiesFile.close();
 }
 
-boost::shared_ptr<BillProperties> globalProperties;
+shared_ptr<BillProperties> globalProperties;
 
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
@@ -169,7 +173,6 @@ void display(void)
   glColor3fv(curColor);
 
   glMatrixMode(GL_MODELVIEW);
-  typedef boost::shared_ptr<MyShape> shape_pointer;
   if ( MyShape::shapes.size() > 0 )
   {
     foreach_ ( shape_pointer curShape, MyShape::shapes )
@@ -217,27 +220,10 @@ void init(char simulation) {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
-  globalProperties = boost::make_shared<BillProperties>();
+  globalProperties = make_shared<BillProperties>();
   globalProperties->readProperties();
 
-  // string line;
-  // string propName, propValue;
-  // ifstream propertiesFile;
-  // propertiesFile.open(".properties", ios::in);
-  // int equalsPosition;
-  // while( getline(propertiesFile, line) )
-  // {
-  //   if ( BillProperties::isValidProperty( line ) )
-  //   {
-  //     equalsPosition = line.find('=');
-  //     propName=line.substr(0,equalsPosition);
-  //     propValue=line.substr(equalsPosition+1);
-  //     globalProperties.insert( make_pair( propName, propValue ) );
-  //   }
-  // }
-  // propertiesFile.close();
-
-  globalRecorder = boost::make_shared<Recorder>();
+  globalRecorder = make_shared<Recorder>();
 
   Observer::init();
 
@@ -281,7 +267,7 @@ void init(char simulation) {
 }
 
 void idle() {
-  typedef boost::shared_ptr<MyShape> shape_pointer;
+  typedef shared_ptr<MyShape> shape_pointer;
   sgVec4 curPos;
 
   if (! globalSimulation->isPaused()  ) {

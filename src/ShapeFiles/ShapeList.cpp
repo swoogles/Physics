@@ -11,8 +11,7 @@
 #include <iostream>
 
 using namespace std;
-using namespace boost::numeric::ublas;
-typedef boost::shared_ptr<MyShape> shape_pointer;
+// typedef boost::shared_ptr<MyShape> shape_pointer;
 
 int ShapeList::addShapeToList( shape_pointer insertShape )
 {
@@ -24,7 +23,7 @@ int ShapeList::addShapeToList( shape_pointer insertShape )
 
 int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
 {
-  boost::numeric::ublas::compressed_vector<shape_pointer> newShapeVector;
+  compressed_vector<shape_pointer> newShapeVector;
   int newSize =  shapes.size();
   newShapeVector.resize(newSize);
   bool removedShape = false;
@@ -48,7 +47,7 @@ int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
   }
   if ( removedShape )
   {
-    shapes = boost::numeric::ublas::compressed_vector<shape_pointer>( newShapeVector );
+    shapes = compressed_vector<shape_pointer>( newShapeVector );
   }
 
   return removedIndex;
@@ -61,7 +60,7 @@ int ShapeList::clearShapes() {
   return shapes.size();
 }
 
-boost::numeric::ublas::compressed_vector<shape_pointer> ShapeList::getShapes()
+compressed_vector<shape_pointer> ShapeList::getShapes()
 {
   return shapes;
 }

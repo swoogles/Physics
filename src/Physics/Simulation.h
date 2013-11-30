@@ -19,13 +19,15 @@
 #include "../Parallelization/Quadrant.h"
 // #include "Interactions.h"
 
-using namespace boost::numeric::ublas;
+// using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
+using boost::shared_ptr;
+using boost::make_shared;
 
 class Simulation
 {
   private:
-    typedef boost::shared_ptr<MyShape> shape_pointer;
+    typedef shared_ptr<MyShape> shape_pointer;
     int forceCalcMethod;
     ShapeList physicalObjects;
 
@@ -34,7 +36,7 @@ class Simulation
     double timeElapsed;
     bool paused;
 
-    float minX, minY, maxX, maxY;
+    float minX, maxX, minY, maxY;
 
     // bool allElastic;
     // bool allInelastic;
@@ -43,7 +45,7 @@ class Simulation
     // sgVec4 gravField;
     bool gravBetweenObjects;
 
-    boost::shared_ptr<Quadrant> quadrant;
+    shared_ptr<Quadrant> quadrant;
 
   public:
     static const char FORCE_CALC_METHOD_NAIVE_STRING[];
@@ -90,6 +92,6 @@ class Simulation
     inline float getMaxY() { return maxY; }
 
     void refreshQuadrant();
-    inline boost::shared_ptr<Quadrant> getQuadrant() { return quadrant; }
+    inline shared_ptr<Quadrant> getQuadrant() { return quadrant; }
 } ;
 #endif 

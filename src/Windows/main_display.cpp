@@ -28,7 +28,7 @@ main_window_UI::main_window_UI() {
 	*/
 }
 
-void main_window_UI::init( boost::shared_ptr<Simulation> simulation ) {
+void main_window_UI::init( shared_ptr<Simulation> simulation ) {
 	main_menu = new puMenuBar();
 	int winWidth = glutGet(GLUT_WINDOW_WIDTH);
 
@@ -175,7 +175,7 @@ void main_window_UI::exit_cb(puObject * caller) {
 	exit(1);
 }
 
-void main_window_UI::setSimulation( boost::shared_ptr<Simulation> simulation )
+void main_window_UI::setSimulation( shared_ptr<Simulation> simulation )
 {
   this->simulation =  simulation ;
 }

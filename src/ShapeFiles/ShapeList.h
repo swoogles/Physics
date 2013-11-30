@@ -32,22 +32,22 @@
 #define PI 3.14159265
 #define foreach_  BOOST_FOREACH                                                                                              
 
-using namespace boost::numeric::ublas;
+using boost::shared_ptr;
 using boost::numeric::ublas::compressed_vector;
+typedef shared_ptr<MyShape> shape_pointer;
 
 /*! \brief Holds the objects to be used in a Simulation
  *
  */
 class ShapeList {
   private:
-    typedef boost::shared_ptr<MyShape> shape_pointer;
-    boost::numeric::ublas::compressed_vector<shape_pointer> shapes;
+    compressed_vector<shape_pointer> shapes;
 
   public:
     int addShapeToList( shape_pointer insertShape );
     int removeShapeFromList( shape_pointer shapeToRemove );
     int clearShapes();
-    boost::numeric::ublas::compressed_vector<shape_pointer> getShapes();
+    compressed_vector<shape_pointer> getShapes();
 
 };
 

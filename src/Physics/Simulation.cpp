@@ -50,7 +50,7 @@ void Simulation::refreshQuadrant()
   sgVec4 pos = {0,0,0,1};
   float side = magnitude * 10; //Formation Value
   sgVec3 dimensions = { side, side, side };
-  quadrant = boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
+  quadrant = make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
 
   foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
   {

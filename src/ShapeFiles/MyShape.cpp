@@ -10,13 +10,10 @@
 
 #include <iostream>
 
-using namespace std;
-using namespace boost::numeric::ublas;
-
 //TODO (re)Move this. It's terrible.
 float MyShape::G = 6.67384e-11;
 
-boost::numeric::ublas::compressed_vector< boost::shared_ptr<MyShape> > MyShape::shapes(0);
+compressed_vector< shared_ptr<MyShape> > MyShape::shapes(0);
 
 MyShape::MyShape()
 {
@@ -78,7 +75,7 @@ void MyShape::scaleMembers(float xFac, float yFac) {
 
 std::string MyShape::getPosString()
 {
-  string posString = "<" + boost::lexical_cast<std::string>( pos[0] )  + ", " + boost::lexical_cast<std::string>( pos[1] ) + ", " + boost::lexical_cast<std::string>( pos[2] ) + ">";
+  string posString = "<" + lexical_cast<std::string>( pos[0] )  + ", " + lexical_cast<std::string>( pos[1] ) + ", " + lexical_cast<std::string>( pos[2] ) + ">";
   return posString;
 }
 
@@ -116,7 +113,7 @@ void MyShape::getMomentum(sgVec4 retVec) {
 
 std::string MyShape::getMomentumString()
 {
-  string posString = "<" + boost::lexical_cast<std::string>( momentum[0] )  + ", " + boost::lexical_cast<std::string>( momentum[0] ) + ", " + boost::lexical_cast<std::string>( momentum[0] ) + ">";
+  string posString = "<" + lexical_cast<std::string>( momentum[0] )  + ", " + lexical_cast<std::string>( momentum[0] ) + ", " + lexical_cast<std::string>( momentum[0] ) + ">";
   return posString;
 }
 
@@ -236,7 +233,7 @@ int MyShape::addShapeToList( shape_pointer insertShape )
 
 void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
 {
-  boost::numeric::ublas::compressed_vector<shape_pointer> newShapeVector;
+  compressed_vector<shape_pointer> newShapeVector;
   int newSize =  shapes.size();
   newShapeVector.resize(newSize);
   bool removedShape = false;
@@ -258,7 +255,7 @@ void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
   if ( removedShape )
   {
     //TODO PHYS-17 Do a more appropriate vector copy
-    // boost::numeric::ublas::compressed_vector<shape_pointer> localShapeList =  newShapeVector ;
+    // compressed_vector<shape_pointer> localShapeList =  newShapeVector ;
     shapes = newShapeVector;
   }
 }

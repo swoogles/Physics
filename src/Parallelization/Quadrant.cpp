@@ -11,7 +11,7 @@ ostream& operator<<(ostream& os, sgVec4 outputVec) {
 //{
 //}
 
-boost::shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
+shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
 {
   return shapeInQuadrant;
 }
@@ -31,7 +31,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   ,containsBody(false)
   ,level(level)
   ,borders(make_shared<Box>() )
-  ,quadOctree(boost::extents[2][2][2])
+  ,quadOctree(extents[2][2][2])
   
 {
   // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
@@ -60,7 +60,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   CoMColor[1] = 1;
   CoMColor[2] = 0;
 
-  centerOfMassRepresentation = boost::make_shared<Circle>();
+  centerOfMassRepresentation = make_shared<Circle>();
   centerOfMassRepresentation->setPos( 0,0,0 );
   centerOfMassRepresentation->setRadius( 1.0 );
   centerOfMassRepresentation->setColor(CoMColor);
@@ -72,7 +72,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
 }
 
-boost::shared_ptr<Quadrant> Quadrant::getQuadrantFromCell( int x, int y, int z )
+shared_ptr<Quadrant> Quadrant::getQuadrantFromCell( int x, int y, int z )
 {
   return quadOctree[x][y][z];
 }
@@ -117,7 +117,7 @@ void Quadrant::subDivide( int x, int y, int z, int numCells )
 
   quad_pointer insertionQuadrant;
 
-  quadOctree[x][y][z] = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
+  quadOctree[x][y][z] = make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
 }
 
 void Quadrant::subDivideAll( int levels, int numCells )
@@ -170,7 +170,7 @@ void Quadrant::subDivideAll( int levels, int numCells )
           newDimensions[2] = dimensions[2]/2;
 
           quad_pointer insertionQuadrant;
-          quadOctree[x][y][z] = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
+          quadOctree[x][y][z] = make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
           targetQuadrant = quadOctree[x][y][z];
           targetQuadrant->subDivideAll(levels, 4);
 
@@ -270,7 +270,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
 
 
 // Guaranteed to hand back an instantiated Quadrant
-boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
+shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
   sgVec4 insertPos;
   shapeToInsert->getPos( insertPos ); 
@@ -377,7 +377,6 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
 //Get all objects in octree and return them in list
 ShapeList Quadrant::getShapesRecursive()
 {
-  typedef boost::shared_ptr<MyShape> shape_pointer;
   shape_pointer curShape;
   typedef boost::shared_ptr<Quadrant> quad_pointer;
 

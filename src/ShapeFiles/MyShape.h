@@ -34,8 +34,11 @@
 #define PI 3.14159265
 #define foreach_  BOOST_FOREACH                                                                                              
 
+using namespace std;
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
+using boost::shared_ptr;
+using boost::lexical_cast;
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -220,7 +223,7 @@ public:
 	 */
 	// static vector<MyShape *> shapes;
   //PHYS-7
-  typedef boost::shared_ptr<MyShape> shape_pointer;
+  typedef shared_ptr<MyShape> shape_pointer;
 	static compressed_vector<shape_pointer> shapes;
 
 

@@ -25,7 +25,10 @@
 
 using namespace std;
 
-typedef boost::shared_ptr<MyShape> shape_pointer;
+using boost::shared_ptr;
+using boost::numeric::ublas::compressed_vector;
+// void calcForcesAll( boost::shared_ptr<Simulation> curSimulation );
+typedef shared_ptr<MyShape> shape_pointer;
 
 //void inelasticCollisions(float dt);
 //void elasticCollisions(float dt);
@@ -37,22 +40,12 @@ typedef boost::shared_ptr<MyShape> shape_pointer;
  *  both objects have their elastic bools on.
  *
  */
-void elasticCollision(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2);
+void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2);
 
-void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt);
+void calcForceOnObject_Octree( shape_pointer curObject, shared_ptr<Quadrant> curQuadrant, float dt);
 
 
-void calcForcesAll( boost::shared_ptr<Simulation> curSimulation );
-
-/*! \relates MyShape
- *  \brief Calculates forces on all current objects
- *
- *  Loops through the shapes vector, calculating all currently active forces on and between each object. Can include drag, a constant gravity field,  and
- *  gravity between objects.
- *
- *  \param dt Determines time over which each force acts
- */
-void calcForcesAll_ArbitraryList(boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects, float dt);
+void calcForcesAll( shared_ptr<Simulation> curSimulation );
 
 /*! \relates MyShape
  *  \brief Calculates forces on all current objects
@@ -62,7 +55,17 @@ void calcForcesAll_ArbitraryList(boost::numeric::ublas::compressed_vector<shape_
  *
  *  \param dt Determines time over which each force acts
  */
-void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::compressed_vector<shape_pointer> physicalObjects, boost::shared_ptr<Quadrant> octree, float dt);
+void calcForcesAll_ArbitraryList(compressed_vector<shape_pointer> physicalObjects, float dt);
+
+/*! \relates MyShape
+ *  \brief Calculates forces on all current objects
+ *
+ *  Loops through the shapes vector, calculating all currently active forces on and between each object. Can include drag, a constant gravity field,  and
+ *  gravity between objects.
+ *
+ *  \param dt Determines time over which each force acts
+ */
+void calcForcesAll_ArbitraryListWithOctree(compressed_vector<shape_pointer> physicalObjects, shared_ptr<Quadrant> octree, float dt);
 
 
 /*! \relates MyShape
@@ -70,7 +73,7 @@ void calcForcesAll_ArbitraryListWithOctree(boost::numeric::ublas::compressed_vec
  *
  *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
  */
-void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation);
+void calcCollisionsAll(shared_ptr<Simulation> curSimulation);
 
 /*! \relates MyShape
  *  \brief Determines if any objects are colliding and responds appropriately.
@@ -86,7 +89,7 @@ void calcCollisionsAll_ShapeList( ShapeList & physicalObjects);
  *
  *
  */
-float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, SGfloat rSquared);
+float calcForceGrav(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, SGfloat rSquared);
 
 
 /*! \relates MyShape
@@ -96,7 +99,7 @@ float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShap
  *  \param object2 End Object
  *  \param sepVector Calculated separation vector
  */
-void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 sepVector);
+void getVectorToObject2(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, sgVec4 sepVector);
 
 
 /*! \relates MyShape
@@ -115,7 +118,7 @@ void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<My
  *
  *	\return The angular momentum to be assigned to the merged object
  */
-void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 retAngMomentum);
+void calcMergedAngMomentum(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, sgVec4 retAngMomentum);
 
 
 /*! \relates Circle
@@ -136,7 +139,7 @@ float calcMergedRadius(float massBoth, float density);
  *
  *  Note: This function does NOT delete the second object, currently that must be handled outside
  */
-void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2);
+void mergeObjects(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2);
 
 
 /*! \relates Circle
@@ -184,7 +187,7 @@ void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass);
  *  \brief Returns true if objects are touching eachother
  *
  */
-bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2);
+bool contact(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2);
 
 /*! \relates MyShape
  *  \brief Returns true if new shape is placed on top of a previously created shape
@@ -208,7 +211,7 @@ bool isConflict(int newShape);
  *
  *  \returns True if new object causes a conflict
  */
-bool isConflict_ArbitraryList(boost::numeric::ublas::compressed_vector<shape_pointer> physiaclObjects, int newShape);
+bool isConflict_ArbitraryList(compressed_vector<shape_pointer> physiaclObjects, int newShape);
 
 
 /*! \relates MyShape

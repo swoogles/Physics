@@ -20,6 +20,7 @@
 
 #include "../CameraFunctions.h"
 
+using boost::numeric::ublas::compressed_vector;
 
 /*! \brief Moveable "camera" entities that can give views from different frames of reference
  *
@@ -74,7 +75,7 @@ public:
 	static int getCurObserver();
 
 	//! Stores all created Observers
-	static boost::numeric::ublas::compressed_vector<Observer *> observers;
+	static compressed_vector<Observer *> observers;
 
   void calcMinPullback(float fov, float minX, float minY, float maxX, float maxY);
 
