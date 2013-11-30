@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/BillProperties.cpp \
 ../src/CameraFunctions.cpp \
 ../src/MaybeUseful.cpp \
 ../src/fileInteraction.cpp \
@@ -12,6 +13,7 @@ CPP_SRCS += \
 ../src/menus.cpp 
 
 OBJS += \
+./src/BillProperties.o \
 ./src/CameraFunctions.o \
 ./src/MaybeUseful.o \
 ./src/fileInteraction.o \
@@ -20,6 +22,7 @@ OBJS += \
 ./src/menus.o 
 
 CPP_DEPS += \
+./src/BillProperties.d \
 ./src/CameraFunctions.d \
 ./src/MaybeUseful.d \
 ./src/fileInteraction.d \

@@ -20,6 +20,7 @@
 #include <map>
 #include <string>
 
+#include "BillProperties.h"
 #include "inputFunctions.h"
 #include "CameraFunctions.h"
 
@@ -83,71 +84,14 @@ int numStep = 0;
 int numFrame = 0;
 float totalMass = 0;
 
-
-// std::map<std::string, std::string> globalProperties;
+// GLOBALS
 shared_ptr<Simulation> globalSimulation;
 shared_ptr<Recorder> globalRecorder;
+shared_ptr<BillProperties> globalProperties;
 
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
-class BillProperties
-{
-    map<string, string> properties;
-  public:
-    // Using char * instead of string gets rid of heap allocation and dynamic initialization
-    static const char FORCE_CALCULATION_METHOD[];
-    static const char  SIMULATION_DT[];
-
-    bool static isValidProperty( string line );
-    void readProperties();
-    string at( const char target[] );
-};
-const char BillProperties::FORCE_CALCULATION_METHOD[] = "forceCalculationMethod";
-const char BillProperties::SIMULATION_DT[] = "dt";
-
-string BillProperties::at( const char target[]  )
-{
-  return properties.at( target );
-}
-
-bool BillProperties::isValidProperty( string line )
-{
-  bool valid = true;
-  if ( line[0] == '#' )
-  {
-    valid = false;
-  }
-
-  if ( line.find('=') == string::npos )
-  {
-    valid = false;
-  }
-
-  return valid;
-}
-
-void BillProperties::readProperties()
-{
-  string line;
-  string propName, propValue;
-  ifstream propertiesFile;
-  propertiesFile.open(".properties", ios::in);
-  int equalsPosition;
-  while( getline(propertiesFile, line) )
-  {
-    if ( BillProperties::isValidProperty( line ) )
-    {
-      equalsPosition = line.find('=');
-      propName=line.substr(0,equalsPosition);
-      propValue=line.substr(equalsPosition+1);
-      properties.insert( make_pair( propName, propValue ) );
-    }
-  }
-  propertiesFile.close();
-}
-
-shared_ptr<BillProperties> globalProperties;
 
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
