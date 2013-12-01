@@ -9,15 +9,11 @@
 
 #include <GL/glut.h>
 #include <GL/glu.h>
-#include <cmath>
 
 #include <boost/foreach.hpp>
 #include <boost/ref.hpp>
 
 #include <float.h>
-#include <unistd.h>
-#include <fstream>
-#include <map>
 #include <string>
 
 #include "BillProperties.h"
@@ -31,7 +27,6 @@
 //All PLIB includes (What a great library)
 #include <plib/sg.h>
 #include <plib/pu.h>
-#include <plib/puAux.h>
 
 //Observers
 #include "Observation/Observer.h"
@@ -42,8 +37,6 @@
 #include "Physics/WorldSettings.h"
 
 //Output
-//#include "ImageOutput.h"
-#include <jpeglib.h>
 #include "Observation/Recorder.h"
 
 //File interaction
@@ -55,12 +48,6 @@
 
 #define foreach_  BOOST_FOREACH                                                                                              
 
-//#define DT .04
-//#define DT 4000  //Formation DT
-//#define DT 1.81e5  //Formation DT
-//#define DT 4e10 //Simple orbit DT
-//#define DT 4
-
 using namespace std;
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
@@ -68,21 +55,15 @@ using boost::shared_ptr;
 using boost::make_shared;
 
 typedef shared_ptr<MyShape> shape_pointer;
-//using namespace mathglpp;
 
-float globalPullback;
-
-void myTimer(int v);
+void myTimer(int v) {
+  glutPostRedisplay();
+  glutTimerFunc(1000/FPS, myTimer, v);
+}
 
 static int main_window;
 
 static int control_center_num;
-
-bool writtenImage = false;
-
-int numStep = 0;
-int numFrame = 0;
-float totalMass = 0;
 
 // GLOBALS
 shared_ptr<Simulation> globalSimulation;
@@ -91,7 +72,6 @@ shared_ptr<BillProperties> globalProperties;
 
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
-
 
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
@@ -156,7 +136,6 @@ void controlDisplay(void) {
   //glutSetWindow(main_window);
 }
 
-
 void init(char simulation) {
   cout.flush();
   glViewport(-WW,WW,-WH,WH);
@@ -189,16 +168,10 @@ void init(char simulation) {
   sgVec4 curPos;
   foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
   {
-    // if (WorldSettings::isAutoScaling())
-    // {
-      curShape->getPos(curPos);
-      globalSimulation->updateXYMinsAndMaxes(curPos);
-    // }
+    curShape->getPos(curPos);
+    globalSimulation->updateXYMinsAndMaxes(curPos);
   }
-  minX = globalSimulation->getMinX();
-  maxX = globalSimulation->getMaxX();
-  minY = globalSimulation->getMinY();
-  maxY = globalSimulation->getMaxY();
+  globalSimulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
   curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 
   char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
@@ -222,7 +195,6 @@ void idle() {
     // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
     string forceCalculations = globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD );
 
-
     calcCollisionsAll( globalSimulation );
     // if ( globalSimulation->getCurStep() == 0 )
     // {
@@ -236,18 +208,14 @@ void idle() {
 
     foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
     {
-      // if (WorldSettings::isAutoScaling())
-      // {
-        curShape->getPos(curPos);
-        globalSimulation->updateXYMinsAndMaxes(curPos);
-      // }
+      curShape->getPos(curPos);
+      globalSimulation->updateXYMinsAndMaxes(curPos);
     }
 
     // if ( globalSimulation->getCurStep() == 0 )
     // {
       globalSimulation->refreshQuadrant();
     // }
-
   }
 
   int curObserverIdx = Observer::getCurObserver();
@@ -256,11 +224,8 @@ void idle() {
 
   // Not sure if I can use Observer the way that I want to here, due to the constaints of the input methods
   if (WorldSettings::isAutoScaling()) {
-    float minX = globalSimulation->getMinX();
-    float minY = globalSimulation->getMinY();
-    float maxX = globalSimulation->getMaxX();
-    float maxY = globalSimulation->getMaxY();
-
+    float minX, maxX, minY, maxY;
+    globalSimulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
     curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
   }
 
@@ -321,66 +286,4 @@ int main(int argcp, char **argv) {
   glutMainLoop();
 
   return 0;
-}
-
-void myTimer(int v) {
-  glutPostRedisplay();
-  glutTimerFunc(1000/FPS, myTimer, v);
-}
-
-void calcLargest()
-{
-
-  //Largest Objects
-  // if ( numStep % 50 == 0 ) {
-  //   cout << endl << endl;
-  //   for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-  //     cout << "Shape.2" << endl;
-  //     if ( largest[j] != NULL ) {
-  //       cout << "Shape.3" << endl;
-
-  //       if ( curShape->getMass() > largest[j]->getMass() ) {
-  //         cout << "Shape.4" << endl;
-  //         if ( j < 10 -1 ) {
-  //           cout << "Shape.5" << endl;
-  //           largest[j+1] = largest[j];
-  //         }
-  //           cout << "Shape.6" << endl;
-  //         largest[j] = curShape;
-  //           cout << "Shape.7" << endl;
-  //       }
-  //     }
-  //       else {
-
-  //           cout << "index: " << j << endl;
-
-  //           shape_pointer x = largest[j];
-
-  //           cout << "index: " << j+1 << endl;
-  //           x = largest[j+1];
-
-
-  //         largest[j+1] = largest[j];
-  //           cout << "Shape.9" << endl;
-  //         largest[j] = curShape;
-  //           cout << "Shape.10" << endl;
-  //       }
-  //       cout << "Um..." << endl;
-  //     }
-
-  //   }
-
-  // }
-  // cout << "Going to output largest" << endl;
-  // sgVec3 color;
-  // for (unsigned int j = 10 -1 ; j > 0 ; j-- ) {
-  //   if ( largest[j] != NULL ) {
-  //     largest[j]->getColor( color );
-  //     cout << "largest[" << j << "]: " << largest[j]->getMass() 
-  //       << "( "  <<largest[j]->getMass() / totalMass * 100 << "% of the total mass)" 
-  //       << " color:[" << color[0] << "\t" << color[1] << "\t"<< color[2] << endl;
-  //   }
-  // }
-  // if ( numStep % 50 == 0 ) {
-  //   cout << endl << endl;
 }

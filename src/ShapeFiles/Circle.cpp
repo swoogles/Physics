@@ -9,7 +9,6 @@
 
 Circle::Circle() {
 	radius = 1;
-
 }
 
 Circle::~Circle() {
@@ -26,7 +25,6 @@ void Circle::scaleMembers(float scalarFac) {
 matrix<double> Circle::getPts() {
 	int curPt = 0;
 
-
 	for (float i = 0; i <= 2*PI; i += 2*PI/numPts)
 	{
 		pts(curPt, 0) = cos(i) * radius;
@@ -34,18 +32,14 @@ matrix<double> Circle::getPts() {
 		pts(curPt, 2) = 0;
 		pts(curPt, 3) = 1;
 
-		//row(pts,curPt) = prod(rotMat, row(pts,curPt));
-
 		curPt++;
 	}
-
 
 	return pts;
 }
 
 void Circle::drawScale() {
 	glScalef(radius, radius, radius);
-	//glScalef(1,1,1);
 }
 
 void Circle::drawUnit() {
@@ -60,7 +54,6 @@ float Circle::getRadius() {
 void Circle::setRadius(float inRadius) {
 	radius = inRadius;
 }
-
 
 int Circle::getType() {
 	return 2;

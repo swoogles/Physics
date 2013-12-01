@@ -6,7 +6,6 @@
 CPP_SRCS += \
 ../src/BillProperties.cpp \
 ../src/CameraFunctions.cpp \
-../src/MaybeUseful.cpp \
 ../src/fileInteraction.cpp \
 ../src/inputFunctions.cpp \
 ../src/main.cpp \
@@ -15,7 +14,6 @@ CPP_SRCS += \
 OBJS += \
 ./src/BillProperties.o \
 ./src/CameraFunctions.o \
-./src/MaybeUseful.o \
 ./src/fileInteraction.o \
 ./src/inputFunctions.o \
 ./src/main.o \
@@ -24,7 +22,6 @@ OBJS += \
 CPP_DEPS += \
 ./src/BillProperties.d \
 ./src/CameraFunctions.d \
-./src/MaybeUseful.d \
 ./src/fileInteraction.d \
 ./src/inputFunctions.d \
 ./src/main.d \

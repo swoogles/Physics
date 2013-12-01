@@ -8,16 +8,12 @@
 #ifndef OBSERVER_H_
 #define OBSERVER_H_
 
-#include <iostream>
-
 #include <boost/numeric/ublas/vector_sparse.hpp>
-
 #include <GL/glut.h>
-
+#include <iostream>
 #include <plib/sg.h>
 
 #include "../ShapeFiles/Moveable.h"
-
 #include "../CameraFunctions.h"
 
 using boost::numeric::ublas::compressed_vector;
@@ -27,9 +23,6 @@ using boost::numeric::ublas::compressed_vector;
  *  This class allows normal simulations to be observed from different positions and orientations, but was really created for eventually helping to
  *  demonstrate different aspects of relativity.
  *
- *  One of the larger reworkings to be done on the project is getting rid of the large amount of overlap between the Observer and MyShape functions.
- *  I believe this will be relatively straightforward, but I want to make sure that the new hierarchy of classes will be suitable for the project's
- *  potential future classes.
  */
 class Observer:public Moveable {
 private:
@@ -81,6 +74,5 @@ public:
 
   //! Similar as MyShape::update(float), except only uses angular velocity right now
   void update(float);
-
 };
 #endif /* OBSERVER_H_ */

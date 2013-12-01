@@ -11,27 +11,25 @@
 #include "RoundShape.h"
 
 class Circle: public RoundShape {
-private:
-	GLdouble radius;
-public:
-	Circle();
-	virtual ~Circle();
+  private:
+    GLdouble radius;
+  public:
+    Circle();
+    virtual ~Circle();
 
-	matrix<double> getPts();
+    matrix<double> getPts();
 
-	float getMarkerSize();
-	void scaleMembers(float);
+    float getMarkerSize();
+    void scaleMembers(float);
 
-	void drawScale();
-	void drawUnit();
+    void drawScale();
+    void drawUnit();
 
-	float getRadius();
-	void setRadius(float);
+    float getRadius();
+    void setRadius(float);
 
-	float getMomentOfInertia();
+    float getMomentOfInertia();
 
-	int getType();
-
+    int getType();
 };
-
 #endif /* CIRCLE_H_ */

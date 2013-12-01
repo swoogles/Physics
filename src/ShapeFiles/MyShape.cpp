@@ -6,9 +6,6 @@
  */
 
 #include "MyShape.h"
-#include "../Physics/WorldSettings.h"
-
-#include <iostream>
 
 //TODO (re)Move this. It's terrible.
 float MyShape::G = 6.67384e-11;
@@ -19,7 +16,6 @@ MyShape::MyShape()
 {
 	numPts = 16;
 	pts.resize(numPts, 4);
-
 
 	ptsHighlighted = true;
 }
@@ -32,10 +28,6 @@ matrix<double> MyShape::getPts() {
 	return pts;
 }
 
-void MyShape::printPts() {
-	cout << pts << endl;
-}
-
 void MyShape::draw() {
 	glPushMatrix();
 
@@ -46,33 +38,17 @@ void MyShape::draw() {
   // TODO TURN THIS BACK ON. YOU ARE NOT ROTATING ANYTHING RIGHT NOW
 	// glMultMatrixf( (const GLfloat*)orientationMat);
 
-
 	//Scale
 	drawScale();
 
 	glColor3fv(color);
 
 	drawUnit();
-
 	glPopMatrix();
-
 }
 
 void MyShape::drawScale() {}
 void MyShape::drawUnit() {}
-
-/*
-void MyShape::scale(float sizeFactor) {
-
-}
-
-void MyShape::scaleMembers(float) {
-};
-
-void MyShape::scaleMembers(float xFac, float yFac) {
-};
-*/
-
 
 float MyShape::getMarkerSize() {
 	return 0;
@@ -169,7 +145,6 @@ bool MyShape::setKineticEnergy(float newKineticEnergy)
     sgVec4 newVelocity;
     sgNormaliseVec4(newVelocity, curVelocity );
 
-
     float totalVelocity = sqrt( newKineticEnergy ) / mass * 2;
     sgScaleVec4( newVelocity, totalVelocity );
     setVelocity( newVelocity );
@@ -187,8 +162,8 @@ float MyShape::getKineticEnergy()
 
 void MyShape::setColor(sgVec3 newColor) {
 	sgCopyVec3(color, newColor);
-
 }
+
 void MyShape::getColor(sgVec3 retVec) {
 	sgCopyVec3(retVec, color);
 }
@@ -256,4 +231,3 @@ void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
 
 void MyShape::setRadius(float) {}
 float MyShape::getRadius() { return 1;}
-

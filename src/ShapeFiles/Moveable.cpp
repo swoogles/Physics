@@ -6,9 +6,6 @@
  */
 
 #include "Moveable.h"
-#include "../Physics/WorldSettings.h"
-
-#include <iostream>
 
 using namespace std;
 using namespace boost::numeric::ublas;

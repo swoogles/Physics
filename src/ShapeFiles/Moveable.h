@@ -8,23 +8,11 @@
 #ifndef MOVEABLE_H_
 #define MOVEABLE_H_
 
-#include <GL/gl.h>
-#include <GL/glut.h>
-#include <cmath>
-
 #include <boost/lexical_cast.hpp> 
 #include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/vector_sparse.hpp>
-#include <boost/numeric/ublas/io.hpp>
-#include <boost/numeric/ublas/lu.hpp>
+#include <cmath>
 #include <iostream>
-
 #include <plib/sg.h>
-
-//#include "../Physics/Simulations.h"
-
-
-#define PI 3.14159265
 
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;

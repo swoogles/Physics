@@ -494,13 +494,10 @@ shared_ptr<Simulation> Simulations::disruption_ArbitraryList() {
 
 shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
   float dt = 1000;
-	WorldSettings::setDT( dt );
 	WorldSettings::makeAllInelastic();
 	WorldSettings::setGravBetweenObjects(true);
 	WorldSettings::setConstGravField(false);
 	WorldSettings::setAutoScaling(true);
-	WorldSettings::setTimeElapsed(0);
-	WorldSettings::setTotalMass(0);
 
   int numPieces = 2;
 

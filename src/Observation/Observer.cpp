@@ -51,7 +51,6 @@ void Observer::zoomOut() {
 	pos[2] *= 1.05;
 }
 
-
 void Observer::setAutoScale(bool shouldScale) {
 	autoScale = shouldScale;
 }
@@ -96,15 +95,22 @@ void Observer::calcMinPullback(float fov, float minX, float minY, float maxX, fl
 	  float pullBack;
 
 	  if (abs(minX) > maxX)
+    {
 		  absMaxX = abs(minX);
+    }
 	  else
+    {
 		  absMaxX = maxX;
+    }
 
 	  if (abs(minY) > maxY)
+    {
 		  absMaxY = abs(minY);
+    }
 	  else
+    {
 		  absMaxY = maxY;
-
+    }
 
 	  if (absMaxY > absMaxX) {
 		  pullBack = absMaxY / tan(fov * M_PI / 360);
@@ -113,8 +119,5 @@ void Observer::calcMinPullback(float fov, float minX, float minY, float maxX, fl
 		  pullBack = absMaxX / tan(fov * M_PI / 360);
 	  }
 
-	  //cout << "pullBack Distance: " << pullBack << endl;
-
     setPos(0,0,-pullBack*2);
-	  // return pullBack;
 }

@@ -11,15 +11,17 @@ const char Simulation::FORCE_CALC_METHOD_OCTREE_STRING[] = "octree";
 const char Simulation::FORCE_CALC_METHOD_NAIVE_STRING[] = "naive";
 
 Simulation::Simulation()
-            :forceCalcMethod(FORCE_CALC_METHOD_OCTREE),
-            curStep(0),
-            DT(1),
-            timeElapsed(0),
-            paused(true),
-            minX(FLT_MAX),
-            maxX(FLT_MIN),
-            minY(FLT_MAX),
-            maxY(FLT_MIN)
+            :forceCalcMethod(FORCE_CALC_METHOD_OCTREE)
+            ,curStep(0)
+            ,DT(1)
+            ,timeElapsed(0)
+            ,paused(true)
+            ,minX(FLT_MAX)
+            ,maxX(FLT_MIN)
+            ,minY(FLT_MAX)
+            ,maxY(FLT_MIN)
+            ,constGravField(false)
+            ,gravBetweenObjects(true)
 {
 }
 
@@ -50,7 +52,6 @@ void Simulation::refreshQuadrant()
   sgVec4 pos = {0,0,0,1};
   float side = magnitude * 2; //Formation Value
   sgVec3 dimensions = { side, side, side };
-  // cout << "side: " << side << endl;
   quadrant = make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
 
   foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
@@ -94,6 +95,14 @@ void Simulation::updateXYMinsAndMaxes(sgVec4 curPos) {
   }
 }
 
+void Simulation::getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY ) {
+  minX = this->minX;
+  maxX = this->maxX;
+  minY = this->minY;
+  maxY = this->maxY;
+}
+
+
 void Simulation::resetXYMinsAndMaxes() {
 	minX = FLT_MAX;
 	maxX = FLT_MIN;
@@ -101,4 +110,28 @@ void Simulation::resetXYMinsAndMaxes() {
   // TODO Figure out wtf is going wrong when I enable this line....
 	// minY = FLT_MAX;
 	maxY = FLT_MIN;
+}
+
+bool Simulation::isConstGravField() {
+	return constGravField;
+}
+
+void Simulation::setConstGravField(bool useGravField) {
+	constGravField = useGravField;
+}
+
+void Simulation::setConstGravFieldVal(sgVec4 newGravField) {
+	sgCopyVec4(gravField, newGravField);
+}
+
+void Simulation::getConstGravFieldVal(sgVec4 retGravField) {
+	sgCopyVec4(retGravField, gravField);
+}
+
+bool Simulation::isGravBetweenObjects() {
+	return gravBetweenObjects;
+}
+
+void Simulation::setGravBetweenObjects(bool newVal) {
+	gravBetweenObjects = newVal;
 }

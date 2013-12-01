@@ -8,30 +8,22 @@
 #ifndef INTERACTIONS_H_
 #define INTERACTIONS_H_
 
-#include <iostream>
-#include <fstream>
-#include <time.h>
-
-
 #include <boost/numeric/ublas/vector_sparse.hpp>
+#include <iostream>
 #include <plib/sg.h>
-#include "../ShapeFiles/Circle.h"
-#include "../ShapeFiles/Box.h"
-#include "../ShapeFiles/ShapeList.h"
-#include "../Parallelization/Quadrant.h"
 
-#include "WorldSettings.h"
+#include "../Parallelization/Quadrant.h"
+#include "../ShapeFiles/Box.h"
+#include "../ShapeFiles/Circle.h"
+#include "../ShapeFiles/ShapeList.h"
 #include "Simulations.h"
+#include "WorldSettings.h"
 
 using namespace std;
 
 using boost::shared_ptr;
 using boost::numeric::ublas::compressed_vector;
-// void calcForcesAll( boost::shared_ptr<Simulation> curSimulation );
 typedef shared_ptr<MyShape> shape_pointer;
-
-//void inelasticCollisions(float dt);
-//void elasticCollisions(float dt);
 
 /*! \relates MyShape
  *  \brief Calculates new velocities after a collision
@@ -55,17 +47,7 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation );
  *
  *  \param dt Determines time over which each force acts
  */
-void calcForcesAll_ArbitraryList(compressed_vector<shape_pointer> physicalObjects, float dt);
-
-/*! \relates MyShape
- *  \brief Calculates forces on all current objects
- *
- *  Loops through the shapes vector, calculating all currently active forces on and between each object. Can include drag, a constant gravity field,  and
- *  gravity between objects.
- *
- *  \param dt Determines time over which each force acts
- */
-void calcForcesAll_ArbitraryListWithOctree(compressed_vector<shape_pointer> physicalObjects, shared_ptr<Quadrant> octree, float dt);
+void calcForcesAll_Naive( shared_ptr<Simulation> curSimulation );
 
 
 /*! \relates MyShape
@@ -81,8 +63,6 @@ void calcCollisionsAll(shared_ptr<Simulation> curSimulation);
  *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
  */
 void calcCollisionsAll_ShapeList( ShapeList & physicalObjects);
-
-
 
 /*! \relates MyShape
  *  \brief Calculates magnitude of the force of gravity between 2 objects

@@ -66,7 +66,6 @@ void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2)
 bool contact(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2) {
 	sgVec4 sepVec;
 	float minSep;
-
 	SGfloat distance, distanceSquared;
 
 	getVectorToObject2(object1, object2, sepVec);
@@ -82,95 +81,82 @@ bool contact(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2) {
 		return false;
 }
 
-void calcForcesAll_ArbitraryList(compressed_vector<shape_pointer> physicalObjects, float dt) {
-		sgVec4 sepVec;
-		sgVec4 unitVec;
-		sgVec4 gravVec;
-    shared_ptr<MyShape> object1;
-    shared_ptr<MyShape> object2;
-		float fGrav;
-		SGfloat distanceSquared;
+void calcForcesAll_Naive( shared_ptr<Simulation> curSimulation ) {
 
-		sgVec4 gravField;
+  compressed_vector<shape_pointer> physicalObjects = curSimulation->getPhysicalObjects().getShapes();
+  float dt = curSimulation->getDT();
+  sgVec4 sepVec;
+  sgVec4 unitVec;
+  sgVec4 gravVec;
+  shared_ptr<MyShape> object1, object2;
+  float fGrav;
+  SGfloat distanceSquared;
 
-		bool killed = false;
+  sgVec4 gravField;
 
-    int curObjectIdx = 0;
-    int actingObjectIdx = 0;
-    cout << "Forces on Object 0: " << endl;
+  bool killed = false;
 
-		//bool constGravField = WorldSettings::isConstGravField();
+  int curObjectIdx = 0;
+  int actingObjectIdx = 0;
 
-		if (WorldSettings::isConstGravField() ) {
-			WorldSettings::getConstGravFieldVal(gravField);
-			sgScaleVec4(gravField, 1/dt);
-		}
-    // cout << "Calc forces" << endl;
-
-		//sgVec4 * ob1mom;
-    if ( physicalObjects.size() > 0 )
+  if (curSimulation->isConstGravField() ) {
+    curSimulation->getConstGravFieldVal(gravField);
+    sgScaleVec4(gravField, 1/dt);
+  }
+  
+  if ( physicalObjects.size() > 0 )
+  {
+    for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
     {
-      for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
-      {
-        // cout << "\tCalc forces for object: " << i << endl;
-        if (killed) {
-          // cout << "curI: " << i << endl;
-        }
-        object1 = physicalObjects(i);
-        sgVec4 pos;
-        object1->getPos(pos);
-        // cout << "shape.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
-
-        if (WorldSettings::isConstGravField() ) {
-          object1->adjustMomentum(gravField);
-        }
-
-        for (unsigned int j = i + 1; j < physicalObjects.size(); )
-        {
-          // cout << "\t\tCalc forces with object: " << j << endl;
-          object2 = physicalObjects(j);
-          object2->getPos(pos);
-          // cout << "shape.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
-
-
-          getVectorToObject2(object1, object2, sepVec);
-          // cout << "sepVec: " << sepVec[0] << "," << sepVec[1] << "," << sepVec[2] << endl;
-
-          distanceSquared = sgLengthSquaredVec4(sepVec);
-          // cout <<"Distance Squared: " <<  distanceSquared << endl;;
-
-          if (WorldSettings::isGravBetweenObjects() ) {
-            fGrav = calcForceGrav(object1, object2, distanceSquared);
-            if ( curObjectIdx == 0 )
-            {
-              cout << "fGrav from Shape[" << actingObjectIdx << "]: " << fGrav << endl;
-              cout << "distanceSquared: " << distanceSquared << endl;
-              cout << "mass of Shape: " << object2->getMass() << endl << endl;
-            }
-
-            sgNormaliseVec4(unitVec, sepVec);
-
-            sgScaleVec4(gravVec, unitVec, fGrav);
-            sgScaleVec4(gravVec, dt);
-
-            object1->adjustMomentum(gravVec);
-            sgNegateVec4(gravVec);
-            object2->adjustMomentum(gravVec);
-          }
-
-          j++;
-          actingObjectIdx++;
-        }
-        curObjectIdx++;
-      }
-
-      // Add unary forces to last object
-      object1 = physicalObjects(physicalObjects.size()-1);
+      object1 = physicalObjects(i);
+      sgVec4 pos;
+      object1->getPos(pos);
 
       if (WorldSettings::isConstGravField() ) {
         object1->adjustMomentum(gravField);
       }
+
+      for (unsigned int j = i + 1; j < physicalObjects.size(); )
+      {
+        object2 = physicalObjects(j);
+        object2->getPos(pos);
+
+        getVectorToObject2(object1, object2, sepVec);
+
+        distanceSquared = sgLengthSquaredVec4(sepVec);
+
+        if (curSimulation->isGravBetweenObjects() ) {
+          fGrav = calcForceGrav(object1, object2, distanceSquared);
+          if ( curObjectIdx == 0 )
+          {
+            cout << "fGrav from Shape[" << actingObjectIdx << "]: " << fGrav << endl;
+            cout << "distanceSquared: " << distanceSquared << endl;
+            cout << "mass of Shape: " << object2->getMass() << endl << endl;
+          }
+
+          sgNormaliseVec4(unitVec, sepVec);
+
+          sgScaleVec4(gravVec, unitVec, fGrav);
+          sgScaleVec4(gravVec, dt);
+
+          object1->adjustMomentum(gravVec);
+          sgNegateVec4(gravVec);
+          object2->adjustMomentum(gravVec);
+        }
+
+        j++;
+        actingObjectIdx++;
+      }
+      curObjectIdx++;
     }
+
+    // Add unary forces to last object
+    object1 = physicalObjects(physicalObjects.size()-1);
+
+    if (curSimulation->isConstGravField() ) {
+      object1->adjustMomentum(gravField);
+    }
+  }
 
 }
 
@@ -178,12 +164,9 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
   sgVec4 sepVec;
   sgVec4 unitVec;
   sgVec4 gravVec;
-  shared_ptr<MyShape> object1;
-  shared_ptr<MyShape> object2;
-  shared_ptr<MyShape> shapeInQuadrant;
+  shared_ptr<MyShape> object1, object2, shapeInQuadrant;
   float fGrav;
-  SGfloat distance;
-  SGfloat distanceSquared;
+  SGfloat distance, distanceSquared;
   SGfloat theta = 0.5;
   typedef shared_ptr<Quadrant> quad_pointer;
 
@@ -202,15 +185,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
   //a. 
   if ( curQuadrant->isExternal() ) 
   {
-    // cout << "1" << endl;
     shapeInQuadrant = curQuadrant->getShapeInQuadrant();
-    // cout << "External" << endl;
-
-    // sgVec4 pos;
-    // curQuadrant->getPos(pos);
-    // cout << "Quad.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
-    // shapeInQuadrant->getPos(pos);
-    // cout << "shape.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
 
     //b.
     if ( shapeInQuadrant != NULL && curObject != shapeInQuadrant )
@@ -218,7 +193,6 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
       getVectorToObject2( curObject, curQuadrant->getShapeInQuadrant(), sepVec);
       distance = sgLengthVec4( sepVec );
       distanceSquared = sgLengthSquaredVec4( sepVec );
-      // cout << "1.a" << endl;
       //c.
       // cout <<"Distance Squared: " <<  distanceSquared << endl;;
       fGrav = calcForceGrav(curObject, shapeInQuadrant, distanceSquared);
@@ -264,12 +238,10 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
 
       //b.
       curObject->adjustMomentum(gravVec);
-
     }
     //3.
     else
     {
-      // cout << "3" << endl;
       quad_pointer targetQuadrant;
       for ( int x = 0; x < 2; x++ )
       {
@@ -282,13 +254,6 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
             if ( targetQuadrant != NULL )
             {
               calcForceOnObject_Octree(curObject, targetQuadrant, dt);
-
-              // targetShapeList = targetQuadrant->getShapesRecursive( curLevel  );
-              // foreach_ ( shape_pointer curShape, targetShapeList.getShapes() )
-              // {
-              //   totalShapeList.addShapeToList( curShape );
-              // }
-
             }
 
           }
@@ -299,86 +264,13 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
 
 }
 
-void calcForcesAll_ArbitraryListWithOctree(compressed_vector<shape_pointer> physicalObjects, shared_ptr<Quadrant> octree, float dt) {
-		sgVec4 sepVec;
-		sgVec4 unitVec;
-		sgVec4 gravVec;
-    shared_ptr<MyShape> object1;
-    shared_ptr<MyShape> object2;
-		float fGrav;
-		SGfloat distanceSquared;
-
-		sgVec4 gravField;
-
-		bool killed = false;
-
-		if (WorldSettings::isConstGravField() ) {
-			WorldSettings::getConstGravFieldVal(gravField);
-			sgScaleVec4(gravField, 1/dt);
-		}
-
-    foreach_ ( shape_pointer curShape, physicalObjects )
-    {
-      getVectorToObject2(object1, object2, sepVec);
-    }
-
-    if ( physicalObjects.size() > 0 )
-    {
-      for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
-      {
-        if (killed) {
-          // cout << "curI: " << i << endl;
-        }
-        object1 = physicalObjects(i);
-
-        if (WorldSettings::isConstGravField() ) {
-          object1->adjustMomentum(gravField);
-        }
-
-        for (unsigned int j = i + 1; j < physicalObjects.size(); )
-        {
-          object2 = physicalObjects(j);
-
-
-          getVectorToObject2(object1, object2, sepVec);
-
-          distanceSquared = sgLengthSquaredVec4(sepVec);
-
-          if (WorldSettings::isGravBetweenObjects() ) {
-            fGrav = calcForceGrav(object1, object2, distanceSquared);
-
-            sgNormaliseVec4(unitVec, sepVec);
-
-            sgScaleVec4(gravVec, unitVec, fGrav);
-            sgScaleVec4(gravVec, dt);
-
-            object1->adjustMomentum(gravVec);
-            sgNegateVec4(gravVec);
-            object2->adjustMomentum(gravVec);
-          }
-
-          j++;
-        }
-
-      }
-
-      // Add unary forces to last object
-      object1 = physicalObjects(physicalObjects.size()-1);
-
-      if (WorldSettings::isConstGravField() ) {
-        object1->adjustMomentum(gravField);
-      }
-    }
-
-}
-
 void calcForcesAll( shared_ptr<Simulation> curSimulation )
 {
   ShapeList physicalObjects = curSimulation->getPhysicalObjects();
 
   if ( ! curSimulation->getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
-    calcForcesAll_ArbitraryList(physicalObjects.getShapes(), curSimulation->getDT());
+    calcForcesAll_Naive( curSimulation );
 
     foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
     {
@@ -433,8 +325,7 @@ bool isConflict(int newShape) {
   SGfloat distanceSquared, distance, minSep;
   bool conflict = false;
 
-  shared_ptr<MyShape> object1;
-  shared_ptr<MyShape> object2;
+  shared_ptr<MyShape> object1, object2;
 
   object2 = MyShape::shapes(newShape);
 
