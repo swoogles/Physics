@@ -809,7 +809,7 @@ void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       if (switchB)
       {
         // Set the range of momenta, and have them be half positive/half negative
-        randMult = rand()%5;
+        randMult = rand()%15;
         if (randMult % 2 == 0)
           randMult *= -1;
 

@@ -189,11 +189,11 @@ void init(char simulation) {
   sgVec4 curPos;
   foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
   {
-    if (WorldSettings::isAutoScaling())
-    {
+    // if (WorldSettings::isAutoScaling())
+    // {
       curShape->getPos(curPos);
       globalSimulation->updateXYMinsAndMaxes(curPos);
-    }
+    // }
   }
   minX = globalSimulation->getMinX();
   maxX = globalSimulation->getMaxX();
@@ -236,11 +236,11 @@ void idle() {
 
     foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
     {
-      if (WorldSettings::isAutoScaling())
-      {
+      // if (WorldSettings::isAutoScaling())
+      // {
         curShape->getPos(curPos);
         globalSimulation->updateXYMinsAndMaxes(curPos);
-      }
+      // }
     }
 
     // if ( globalSimulation->getCurStep() == 0 )

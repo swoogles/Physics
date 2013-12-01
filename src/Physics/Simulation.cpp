@@ -48,8 +48,9 @@ void Simulation::refreshQuadrant()
   }
 
   sgVec4 pos = {0,0,0,1};
-  float side = magnitude * 10; //Formation Value
+  float side = magnitude * 2; //Formation Value
   sgVec3 dimensions = { side, side, side };
+  // cout << "side: " << side << endl;
   quadrant = make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
 
   foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
@@ -76,13 +77,21 @@ void Simulation::setForceCalcMethodByString( const string& forceCalcMethod )
 
 void Simulation::updateXYMinsAndMaxes(sgVec4 curPos) {
 	if (curPos[0] < minX)
+  {
 		minX = curPos[0];
+  }
 	if (curPos[0] > maxX)
+  {
 		maxX = curPos[0];
+  }
 	if (curPos[1] < minY)
+  {
 		minY = curPos[1];
+  }
 	if (curPos[1] > maxY)
+  {
 		maxY = curPos[1];
+  }
 }
 
 void Simulation::resetXYMinsAndMaxes() {
