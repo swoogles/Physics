@@ -13,21 +13,15 @@
 #include <cmath>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/make_shared.hpp> 
-#include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector_sparse.hpp>
-#include <boost/numeric/ublas/io.hpp>
-#include <boost/numeric/ublas/lu.hpp>
 #include <boost/foreach.hpp>
 #include <iostream>
 
 #include <plib/sg.h>
 
 #include "MyShape.h"
-
-//#include "../Physics/Simulations.h"
-
+#include "../Physics/WorldSettings.h"
 
 #define PI 3.14159265
 #define foreach_  BOOST_FOREACH                                                                                              
@@ -48,7 +42,5 @@ class ShapeList {
     int removeShapeFromList( shape_pointer shapeToRemove );
     int clearShapes();
     compressed_vector<shape_pointer> getShapes();
-
 };
-
 #endif /* SHAPE_LIST_H */

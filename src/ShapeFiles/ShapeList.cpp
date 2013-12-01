@@ -6,12 +6,8 @@
  */
 
 #include "ShapeList.h"
-#include "../Physics/WorldSettings.h"
-
-#include <iostream>
 
 using namespace std;
-// typedef boost::shared_ptr<MyShape> shape_pointer;
 
 int ShapeList::addShapeToList( shape_pointer insertShape )
 {
@@ -51,7 +47,6 @@ int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
   }
 
   return removedIndex;
-
 }
 
 int ShapeList::clearShapes() {
@@ -64,4 +59,3 @@ compressed_vector<shape_pointer> ShapeList::getShapes()
 {
   return shapes;
 }
-
