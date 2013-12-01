@@ -73,12 +73,6 @@ void MyShape::scaleMembers(float xFac, float yFac) {
 };
 */
 
-std::string MyShape::getPosString()
-{
-  string posString = "<" + lexical_cast<std::string>( pos[0] )  + ", " + lexical_cast<std::string>( pos[1] ) + ", " + lexical_cast<std::string>( pos[2] ) + ">";
-  return posString;
-}
-
 
 float MyShape::getMarkerSize() {
 	return 0;

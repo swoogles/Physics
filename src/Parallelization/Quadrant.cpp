@@ -2,11 +2,6 @@
 
 using namespace std;
 
-ostream& operator<<(ostream& os, sgVec4 outputVec) {
-	cout << "<" << outputVec[0] << ", " << outputVec[1] << ", " << outputVec[2] << ">";
-	return os;
-}
-
 //void Quadrant::calcForcesForAll()
 //{
 //}
@@ -26,12 +21,12 @@ Quadrant::~Quadrant()
 
 
 Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
-  :mass(0)
-  ,isLeaf(true)
+  :isLeaf(true)
   ,containsBody(false)
   ,level(level)
   ,borders(make_shared<Box>() )
   ,quadOctree(extents[2][2][2])
+  ,weightedPosition({0,0,0})
   
 {
   // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
@@ -192,6 +187,7 @@ void Quadrant::setWeightedPosition(sgVec4 weightedPosition)
 
 void Quadrant::getCenterOfMass(sgVec4 centerOfMass)
 {
+  // cout << "MASS: " << this->mass << endl;
 	sgCopyVec4(centerOfMass, this->weightedPosition);
   sgScaleVec4( centerOfMass, 1.0/mass );
 }
@@ -256,14 +252,19 @@ void Quadrant::insertShape( shape_pointer insertedShape )
       targetQuadrant->insertShape( insertedShape );
       targetQuadrantB->insertShape( shapeInQuadrant );
     }
-    // cout << "reseting" << endl;
     shapeInQuadrant.reset();
-    // cout << "reseted" << endl;
-
   }
 
+  // cout << "mass before retrievals: " << this->getMass() << endl;
   sgVec4 CoMPosition;
   this->getCenterOfMass( CoMPosition );
+  // cout << "CoMPosition: <" << CoMPosition[0] << ", " << CoMPosition[1] << ", " << CoMPosition[2] << endl;
+
+  // sgVec4 quadrantWeightedPosition;
+  // this->getWeightedPosition( CoMPosition );
+  // cout << "WeightedPosition: <" << quadrantWeightedPosition[0] << ", " << quadrantWeightedPosition[1] << ", " << quadrantWeightedPosition[2] << endl;
+
+  // 
   centerOfMassRepresentation->setPos( CoMPosition );
 
 }

@@ -222,8 +222,12 @@ void idle() {
     // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
     string forceCalculations = globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD );
 
+
     calcCollisionsAll( globalSimulation );
-    calcForcesAll( globalSimulation );
+    // if ( globalSimulation->getCurStep() == 0 )
+    // {
+      calcForcesAll( globalSimulation );
+    // }
 
     globalSimulation->updateTimeElapsed();
     globalMainDisplay.update();
@@ -239,7 +243,11 @@ void idle() {
       }
     }
 
-    globalSimulation->refreshQuadrant();
+    // if ( globalSimulation->getCurStep() == 0 )
+    // {
+      globalSimulation->refreshQuadrant();
+    // }
+
   }
 
   int curObserverIdx = Observer::getCurObserver();
@@ -289,7 +297,6 @@ int main(int argcp, char **argv) {
   char simulation = argv[2][0];
 
   init( simulation );
-  cout << "argv[1]: " << simulation << endl;
 
   if ( record == 'r' ){
     globalRecorder->setRecording(true);

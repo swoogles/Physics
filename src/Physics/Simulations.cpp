@@ -578,8 +578,6 @@ shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
 
   WorldSettings::adjustTotalMass( totalMass );
 
-  cout << "Finishing sim setup" << endl;
-  // return physicalObjects;
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
@@ -679,8 +677,6 @@ shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom() {
   totalMass += curShape->getMass();
   WorldSettings::adjustTotalMass( totalMass );
 
-  cout << "Finishing sim setup" << endl;
-  // return physicalObjects;
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
@@ -725,7 +721,7 @@ shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces) {
     shape_pointer curShape;
 
 		if (i % 2 == 0) {
-      // startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
+      startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
 			randomSplitBodyMomentum(startMomentum, pieceMass);
 			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
 		}
@@ -754,8 +750,6 @@ shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces) {
 	}
   WorldSettings::adjustTotalMass( totalMass );
 
-  cout << "Finishing sim setup" << endl;
-  // return physicalObjects;
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
@@ -847,7 +841,6 @@ int Simulations::addShapeToList( shape_pointer insertShape )
 shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 // shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 {
-  cout << "Starting to create simulation" << endl;
   shared_ptr<Simulation> newSimulation;
 
 	//******CURRENT SIMULATION*****
@@ -905,6 +898,5 @@ shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 
 
   return newSimulation;
-  cout << "Returning simulation pointer" << endl;
 
 }

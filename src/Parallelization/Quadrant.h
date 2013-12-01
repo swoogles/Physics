@@ -33,7 +33,6 @@ using boost::multi_array;
 class Quadrant : public Box
 {
   private:
-    float mass;
     bool isLeaf;
     bool containsBody;
     int level;
@@ -63,13 +62,7 @@ class Quadrant : public Box
 
     sgVec4 dimensions;
 
-    //sgVec4 pos;
-
     void insertShape( shape_pointer newShape );
-
-    inline float getMass() { return mass; }
-    inline void setMass( float mass ) { this->mass = mass; }
-    inline void adjustMass ( float deltaMass ) { mass+= deltaMass; }
 
     inline float getWidth() { return dimensions[0]; }
 

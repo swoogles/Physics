@@ -20,7 +20,6 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/foreach.hpp>
-#include <boost/lexical_cast.hpp> 
 #include "../ShapeFiles/Moveable.h"
 
 #include <iostream>
@@ -38,7 +37,6 @@ using namespace std;
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
 using boost::shared_ptr;
-using boost::lexical_cast;
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -135,9 +133,6 @@ public:
 	//! Purely virtual method used by Circle
 	virtual float getRadius();
 
-
-	//! Print position of object. Format: <##,##,##>
-  std::string getPosString();
 
 	//! Calculates orientationMat based on orientationQuat
 	void calcRotMat();

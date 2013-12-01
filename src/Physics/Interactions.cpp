@@ -95,6 +95,10 @@ void calcForcesAll_ArbitraryList(compressed_vector<shape_pointer> physicalObject
 
 		bool killed = false;
 
+    int curObjectIdx = 0;
+    int actingObjectIdx = 0;
+    cout << "Forces on Object 0: " << endl;
+
 		//bool constGravField = WorldSettings::isConstGravField();
 
 		if (WorldSettings::isConstGravField() ) {
@@ -137,7 +141,12 @@ void calcForcesAll_ArbitraryList(compressed_vector<shape_pointer> physicalObject
 
           if (WorldSettings::isGravBetweenObjects() ) {
             fGrav = calcForceGrav(object1, object2, distanceSquared);
-            // cout << "fGrav from Shape: " << fGrav << endl;
+            if ( curObjectIdx == 0 )
+            {
+              cout << "fGrav from Shape[" << actingObjectIdx << "]: " << fGrav << endl;
+              cout << "distanceSquared: " << distanceSquared << endl;
+              cout << "mass of Shape: " << object2->getMass() << endl << endl;
+            }
 
             sgNormaliseVec4(unitVec, sepVec);
 
@@ -150,8 +159,9 @@ void calcForcesAll_ArbitraryList(compressed_vector<shape_pointer> physicalObject
           }
 
           j++;
+          actingObjectIdx++;
         }
-
+        curObjectIdx++;
       }
 
       // Add unary forces to last object
@@ -177,29 +187,6 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
   SGfloat theta = 0.5;
   typedef shared_ptr<Quadrant> quad_pointer;
 
-  sgVec4 pos;
-  curObject->getPos(pos);
-  // cout << "curObject.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
-  curQuadrant->getPos(pos);
-  // cout << "Quad.pos: " << pos[0] << "," << pos[1] << "," << pos[2] << endl;
-  // shapeInQuadrant = curQuadrant->getShapeInQuadrant();
-  // if ( shapeInQuadrant )
-  // {
-  // }
-
-
-  if ( curQuadrant->getShapeInQuadrant() )
-  {
-    getVectorToObject2( curObject, curQuadrant->getShapeInQuadrant(), sepVec);
-  }
-  else if ( curQuadrant )
-  {
-    getVectorToObject2( curObject, curQuadrant, sepVec);
-  }
-  distance = sgLengthVec4( sepVec );
-  distanceSquared = sgLengthSquaredVec4( sepVec );
-
-
   //1. 
     //a. If the current node is an external node 
     //b. (and it is not body b), 
@@ -217,6 +204,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
   {
     // cout << "1" << endl;
     shapeInQuadrant = curQuadrant->getShapeInQuadrant();
+    // cout << "External" << endl;
 
     // sgVec4 pos;
     // curQuadrant->getPos(pos);
@@ -227,11 +215,14 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
     //b.
     if ( shapeInQuadrant != NULL && curObject != shapeInQuadrant )
     {
+      getVectorToObject2( curObject, curQuadrant->getShapeInQuadrant(), sepVec);
+      distance = sgLengthVec4( sepVec );
+      distanceSquared = sgLengthSquaredVec4( sepVec );
       // cout << "1.a" << endl;
       //c.
       // cout <<"Distance Squared: " <<  distanceSquared << endl;;
       fGrav = calcForceGrav(curObject, shapeInQuadrant, distanceSquared);
-      // cout << "fGrav from Shape: " << fGrav << endl;
+      // cout << "fGrav from Shape: " << fGrav << endl << endl;
       // cout << "1.b" << endl;
 
       sgNormaliseVec4(unitVec, sepVec);
@@ -239,28 +230,32 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
       sgScaleVec4(gravVec, unitVec, fGrav);
       sgScaleVec4(gravVec, dt);
 
-      // cout << "1.c" << endl;
-      // sgVec3 curMomentum;
-      // curObject->getMomentum( curMomentum );
-      // cout << "iMomentum: " << curMomentum[0] << "," << curMomentum[1] << "," << curMomentum[2] << endl;
       curObject->adjustMomentum(gravVec);
-      // cout << "fMomentum: " << curMomentum[0] << "," << curMomentum[1] << "," << curMomentum[2] << endl;
-      // cout << "1.d" << endl;
-      // Only used during the naive n^2 approach
-      // sgNegateVec4(gravVec);
-      // object2->adjustMomentum(gravVec);
-      // cout << "1.end" << endl;
 
     }
   }
   else
   {
+    sgVec4 com;
+    // cout << "Non external" << endl;
+    curQuadrant->getCenterOfMass( com );
+    // cout << "Quadrant com: " << com << endl;
+    getVectorToQuadrant( curObject, curQuadrant, sepVec);
+    distance = sgLengthVec4( sepVec );
+    distanceSquared = sgLengthSquaredVec4( sepVec );
+    // cout << "curQuadrant distance: " << distance << endl;
+    // cout << "curQuadrant width: " << curQuadrant->getWidth() << endl;
     //2.
     //a.
     // cout << "2" << endl;
     if ( curQuadrant->getWidth() / distance < theta )
     {
+      // sgVec4 com;
+      // curQuadrant->getCenterOfMass(com);
+      // cout << "distanceSquared: " << distanceSquared << endl;
+      // cout << "mass of Quad: " << curQuadrant->getMass() << endl;
       fGrav = calcForceGrav(curObject, curQuadrant, distanceSquared);
+      // cout << "fGrav from Quad: " << fGrav << endl << endl;
 
       sgNormaliseVec4(unitVec, sepVec);
 
@@ -268,9 +263,8 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
       sgScaleVec4(gravVec, dt);
 
       //b.
-      // cout << "fGrav from Quad: " << fGrav << endl;
       curObject->adjustMomentum(gravVec);
-      
+
     }
     //3.
     else
@@ -410,16 +404,23 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation )
       {
         cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
       }
+
+      // int curObjectIdx = 0;
+      // int actingObjectIdx = 0;
       // int z=0;
       foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
       {
-        calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() );
-        curShape->update( curSimulation->getDT() );
+        // if ( curObjectIdx == 0 )
+        // {
+          calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() );
+          curShape->update( curSimulation->getDT() );
+        // }
         // TODO this should be taking advantage of a passed in Observer, rather than the static worldsettings junk
         // if (WorldSettings::isAutoScaling())
         // {
         //   curShape->getPos(curPos);
         // }
+        // curObjectIdx++;
       }
 
     }
@@ -572,7 +573,8 @@ float calcForceGrav(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, SG
   {
     rSquared = .00001;
   }
-  // cout << "Obj1.mass" << object1->getMass() << "\t\tObj2.mass" << object2->getMass() << endl;
+  // cout << "Obj1.mass: " << object1->getMass() << "\t\tObj2.mass: " << object2->getMass() << endl;
+  // cout << "G: " << MyShape::G << endl;
   return ( MyShape::G * object1->getMass() * object2->getMass()) / rSquared;
 }
 
@@ -583,6 +585,22 @@ void getVectorToObject2(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2
   // cout << "--Subtracting " << pos1[0] << "," << pos1[1] << "," << pos1[2] << endl;
   // cout << "--from        " << pos2[0] << "," << pos2[1] << "," << pos2[2] << endl;
   sgSubVec4(sepVector, pos2, pos1);
+}
+
+void getVectorToQuadrant(shared_ptr<MyShape> object1, shared_ptr<Quadrant> quadrant, sgVec4 sepVector) {
+  sgVec4 pos1, pos2;
+  object1->getPos(pos1 );
+  quadrant->getCenterOfMass(pos2 );
+  if ( ! sgCompareVec4( pos1, pos2, .0001 ) )
+  {
+    sgSubVec4(sepVector, pos2, pos1);
+  }
+  else
+  {
+    sepVector[0]=0;
+    sepVector[1]=0;
+    sepVector[2]=0;
+  }
 }
 
 float calcMergedRadius(float massBoth, float density) {

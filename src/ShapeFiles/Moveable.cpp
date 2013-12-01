@@ -13,6 +13,11 @@
 using namespace std;
 using namespace boost::numeric::ublas;
 
+ostream& operator<<(ostream& os, sgVec4 outputVec) {
+	cout << "<" << outputVec[0] << ", " << outputVec[1] << ", " << outputVec[2] << ">";
+	return os;
+}
+
 Moveable::Moveable()
           :pos({0.0,0.0,0.0,1.0})
           ,mass(1)
@@ -183,6 +188,13 @@ void Moveable::update(float dt) {
 	sgCopyVec4(prevAngVelocity, angVelocity);
 
 }
+
+std::string Moveable::getPosString()
+{
+  string posString = "<" + lexical_cast<std::string>( pos[0] )  + ", " + lexical_cast<std::string>( pos[1] ) + ", " + lexical_cast<std::string>( pos[2] ) + ">";
+  return posString;
+}
+
 
 /*
 void Moveable::getUnitVecTo(Moveable * destination, sgVec4 unitv) {

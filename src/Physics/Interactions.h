@@ -101,6 +101,15 @@ float calcForceGrav(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, SG
  */
 void getVectorToObject2(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, sgVec4 sepVector);
 
+/*! \relates MyShape
+ *  \brief Finds a vector pointing from object1 to object2
+ *
+ *  \param object1 Start Object
+ *  \param object2 End Object
+ *  \param sepVector Calculated separation vector
+ */
+void getVectorToQuadrant(shared_ptr<MyShape> object1, shared_ptr<Quadrant> quadrant, sgVec4 sepVector);
+
 
 /*! \relates MyShape
  *  \brief Determines the final angular momentum after 2 objects collide in a completely inelastic collision

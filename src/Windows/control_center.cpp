@@ -82,15 +82,12 @@ void control_center::switchViewNow(puObject * caller) {
 
 void control_center::setSimulation( shared_ptr<Simulation> simulation )
 {
-  cout << "setSimulation.dt.prev: " << simulation->getDT() << endl;
   // this->simulation = boost::make_shared<Simulation>( simulation );
   this->simulation =  simulation ;
   cout << "setSimulation.dt.post: " << (this->simulation)->getDT() << endl;
 }
 
 void control_center::init( shared_ptr<Simulation> residentSimulation ) {
-  cout << "&control_center: " << this << endl;
-
   showingRunTime = false;
   userDat[0]=2;
   userDat[1]=-1;
@@ -201,35 +198,10 @@ void control_center::init( shared_ptr<Simulation> residentSimulation ) {
   dec_dt_button = new puOneShot(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
   curX += (placementWidth +gap);
   dec_dt_button->setLegend("Slower");
-  cout << "dec_dt_button address: " << dec_dt_button << endl;
-  // cout << "About to set user Data" << endl;
-  // cout << "residentSimulation: " << residentSimulation << endl;
-  // cout << "residentSimulation->dt: " << residentSimulation->getDT() << endl;
   dec_dt_button->setUserData( &residentSimulation );
   dec_dt_button->setCallback( alterDT );
 
   shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)dec_dt_button->getUserData();
-  // cout << "\nRetrieving user Data from dec_dt_button after setting callback" << endl;
-  // if ( spPointer == NULL )
-  // {
-  //   cout << "Retrievd a stupid null value from dec_dt_button!" << endl;
-  // }
-  // cout << "userData: " << *spPointer << endl;
-  // cout << "userData->dt: " << (*spPointer)->getDT() << endl;
-
-  // dec_dt_button->setCallback( alterDT_static(dec_dt_button, simulation) );
-  // dec_dt_button->setCallback( alterDT_static(dec_dt_button, simulation) );
-  // dec_dt_button->setCallback( static_cast<puCallback(void(*)(puObject*, shared_ptr<Simulation>) )>(alterDT_static(dec_dt_button, simulation) ) );
-  // dec_dt_button->setCallback( static_cast<void(void(control_center::*)(puObject*, shared_ptr<Simulation>) )>(alterDT_static(dec_dt_button, simulation) ) );
-
-  // void control_center::alterDT_static(puObject * caller, Simulation& curSimulation ) {
-
-  // dec_dt_button->setCallback( (puCallback*)(puObject*)alterDT);
-  // dec_dt_button->setCallback( static_cast<void(control_center::*)(puObject* )>(&control_center::alterDT), this );
-  // dec_dt_button->setCallback( static_cast<void(void(*)(puObject*) )>(&control_center::alterDT), this );
-  // dec_dt_button->setCallback( static_cast<void(puCallback )>(&control_center::alterDT) );
-
-  // ../src/Windows/control_center.cpp:277:87: error: invalid static_cast from type ‘void (control_center::*)(puObject*)’ to type ‘void(puCallback) {aka void(void (*)(puObject*))}’
 
   pause_dt_button = new puButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
   curX += (placementWidth +gap);
@@ -356,11 +328,9 @@ void control_center::pause_cb(puObject * caller) {
   shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
   if (caller->getIntegerValue() == 0) {
     curSimulation->Pause();
-    cout << "Pausing! " << endl;
   }
   else {
     curSimulation->unPause();
-    cout << "unPausing! " << endl;
   }
 }
 

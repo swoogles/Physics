@@ -12,6 +12,7 @@
 #include <GL/glut.h>
 #include <cmath>
 
+#include <boost/lexical_cast.hpp> 
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector_sparse.hpp>
 #include <boost/numeric/ublas/io.hpp>
@@ -27,6 +28,7 @@
 
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
+using boost::lexical_cast;
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -81,6 +83,10 @@ public:
 
 	//! Return position of object in retVec
 	void getPos(sgVec4 retVec);
+
+	//! Print position of object. Format: <##,##,##>
+  std::string getPosString();
+
 
 	/*! \brief Set orientation of object
 	 *
