@@ -10,6 +10,8 @@
 
 #include "MyShape.h"
 
+#define PI 3.14159265
+
 class RoundShape: public MyShape {
 public:
 	RoundShape();

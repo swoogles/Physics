@@ -16,10 +16,13 @@ Simulation::Simulation()
             ,DT(1)
             ,timeElapsed(0)
             ,paused(true)
+            ,totalMass(0)
             ,minX(FLT_MAX)
             ,maxX(FLT_MIN)
             ,minY(FLT_MAX)
             ,maxY(FLT_MIN)
+            ,allElastic(false)
+            ,allInelastic(true)
             ,constGravField(false)
             ,gravBetweenObjects(true)
 {
@@ -134,4 +137,43 @@ bool Simulation::isGravBetweenObjects() {
 
 void Simulation::setGravBetweenObjects(bool newVal) {
 	gravBetweenObjects = newVal;
+}
+
+bool Simulation::isAllElastic() {
+	return allElastic;
+}
+
+bool Simulation::isAllInelastic() {
+	return allInelastic;
+}
+
+bool Simulation::isMixedElasticity() {
+	return !(allElastic || allInelastic);
+}
+
+void Simulation::makeAllElastic() {
+	allElastic = true;
+	allInelastic = false;
+}
+
+void Simulation::makeAllInelastic() {
+	allInelastic = true;
+	allElastic = false;
+}
+
+void Simulation::makeMixedElasticity() {
+	allElastic = false;
+	allInelastic = false;
+}
+
+void Simulation::adjustTotalMass(float dMass) {
+	totalMass += dMass;
+}
+
+float Simulation::getTotalMass() {
+	return totalMass;
+}
+
+void Simulation::setTotalMass(float newMass) {
+	totalMass=newMass;
 }

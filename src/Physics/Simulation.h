@@ -29,11 +29,12 @@ class Simulation
     float DT;
     double timeElapsed;
     bool paused;
+    float totalMass;
 
     float minX, maxX, minY, maxY;
 
-    // bool allElastic;
-    // bool allInelastic;
+    bool allElastic;
+    bool allInelastic;
 
     bool constGravField;
     sgVec4 gravField;
@@ -97,5 +98,34 @@ class Simulation
 	bool isGravBetweenObjects();
 	//! Set to true to calculate gravity between objects
 	void setGravBetweenObjects(bool);
+
+	//! Returns true if every collision is treated as completely elastic
+	bool isAllElastic();
+	//! Returns true if every collision is treated as competely inelastic
+	bool isAllInelastic();
+	/*! \brief Returns true if if isAllElastic() and isAllInelastic both return false
+	 *
+	 *  Indicates if collision action must be determined on a case-by-case basis
+	 */
+	bool isMixedElasticity();
+
+	//! Makes simulation treat all collisions as completely elastic
+	void makeAllElastic();
+	//! Makes simulation treat all collisions as completely inelastic
+	void makeAllInelastic();
+	//! Makes simulation treat collisions based on their characteristics
+	void makeMixedElasticity();
+
+	//TODO set up relavent mass functions and color-coding
+	/*! \brief Alters the total mass in the system
+	 *
+	 * Normally used when adding/deleting objects
+	 */
+	void adjustTotalMass(float dMass);
+	//! Returns total amount of mass in current system
+	float getTotalMass();
+	//! sets total amount of mass in current system
+	void setTotalMass(float newMass);
+
 } ;
 #endif 

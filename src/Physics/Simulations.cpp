@@ -108,21 +108,14 @@ void Simulations::simpleOrbit() {
 }
 
   shared_ptr<Simulation> Simulations::billiards1(int numRows) {
-	WorldSettings::setDT(.003);
-	WorldSettings::makeAllElastic();
-	WorldSettings::setGravBetweenObjects(false);
-	WorldSettings::setConstGravField(false);
-	WorldSettings::setTimeElapsed(0);
 
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(0);
   curSimulation->setTimeElapsed(0);
+	curSimulation->makeAllElastic();
+	curSimulation->setGravBetweenObjects(false);
+	curSimulation->setConstGravField(false);
   ShapeList physicalObjects;
-
-	sgVec4 gField;
-	gField[0] = -.2; gField[1] = 0; gField[2] = 0;
-
-	WorldSettings::setConstGravFieldVal(gField);
 
 	int numPieces = 0;
 	float cueMass = 100.0;
@@ -176,22 +169,13 @@ void Simulations::simpleOrbit() {
 
 shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
 {
-	WorldSettings::setDT(.003);
-	WorldSettings::makeAllElastic();
-	//WorldSettings::makeAllInelastic();
-	WorldSettings::setGravBetweenObjects(false);
-	WorldSettings::setConstGravField(false);
-	WorldSettings::setTimeElapsed(0);
-
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(.003);
   curSimulation->setTimeElapsed(0);
+	curSimulation->makeAllElastic();
+	curSimulation->setGravBetweenObjects(false);
+	curSimulation->setConstGravField(false);
   ShapeList physicalObjects;
-  
-	sgVec4 gField;
-	gField[0] = -.2; gField[1] = 0; gField[2] = 0;
-
-	WorldSettings::setConstGravFieldVal(gField);
 
 	int numPieces = 0;
 	float cueMass = 100.0;
@@ -246,23 +230,13 @@ shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
 }
 
 
-  shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
-	WorldSettings::setDT(.003);
-	WorldSettings::makeAllElastic();
-	//WorldSettings::makeAllInelastic();
-	WorldSettings::setGravBetweenObjects(false);
-	WorldSettings::setConstGravField(false);
-	WorldSettings::setTimeElapsed(0);
-
+shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(.003);
   curSimulation->setTimeElapsed(0);
+	curSimulation->makeAllElastic();
+	curSimulation->setGravBetweenObjects(false);
   ShapeList physicalObjects;
-
-	sgVec4 gField;
-	gField[0] = -.2; gField[1] = 0; gField[2] = 0;
-
-	WorldSettings::setConstGravFieldVal(gField);
 
 	int numPieces = 0;
 	float cueMass = 100.0;
@@ -320,93 +294,8 @@ shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
   return curSimulation;
 }
 
-shared_ptr<Quadrant> Simulations::octreeDemonstration(int numRows) 
-{
-  WorldSettings::setDT(1000);
-  WorldSettings::makeAllElastic();
-  //WorldSettings::makeAllInelastic();
-  WorldSettings::setGravBetweenObjects(true);
-  WorldSettings::setConstGravField(false);
-	// WorldSettings::setAutoScaling(true);
-	WorldSettings::setTimeElapsed(0);
-	WorldSettings::setTotalMass(0);
-
-  sgVec4 gField;
-  gField[0] = -.2; gField[1] = 0; gField[2] = 0;
-
-  WorldSettings::setConstGravFieldVal(gField);
-
-  float width = 250;
-  float height = 250;
-  float depth = 250;
-
-  sgVec4 pos;
-  pos[0] = 0;
-  pos[1] = 0;
-  pos[2] = 0;
-  pos[3] = 1;
-
-  sgVec4 target;
-  target[0]=0;
-  target[1]=0;
-  target[2]=0;
-  target[3]=1;
-
-  sgVec3 dimensions;
-  dimensions[0] = width;
-  dimensions[1] = height;
-  dimensions[2] = depth;
-
-  shared_ptr<Quadrant> mainQuadrant = make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
-
-	sgVec4 startPlacement;
-  startPlacement[0] = 15;
-  startPlacement[1] = 20;
-  startPlacement[0] = 15;
-
-  int curShapeIdx;
-  shape_pointer curShapeInsert;
-
-	float totalMass = 0.0;
-
-  sgVec3 curShapeColor;
-  curShapeColor[0]=1.0;
-  curShapeColor[1]=1.0;
-  curShapeColor[2]=1.0;
-
-  for (int i = 0; i < 15; i++)
-  {
-    curShapeIdx = MyShape::shapes.size();
-    randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
-    curShapeInsert = make_shared<Circle>();
-    curShapeInsert->setPos( startPlacement );
-    curShapeInsert->setColor( curShapeColor );
-    curShapeInsert->setMass(1);
-    curShapeInsert->setRadius(.5);
-
-    MyShape::addShapeToList( curShapeInsert );
-    while ( isConflict( curShapeIdx ) )
-    {
-      randomSplitBodyPlacementInZone(startPlacement, dimensions, target);
-      curShapeInsert->setPos( startPlacement );
-    }
-    mainQuadrant->insertShape( curShapeInsert );
-  }
-
-  WorldSettings::adjustTotalMass( totalMass );
-
-  dimensions[0] = width*2;
-  dimensions[1] = height*2;
-  dimensions[2] = depth*2;
-  // mainQuadrant = make_shared<Quadrant>( Quadrant(4, 1, pos, dimensions) );
-
-  return mainQuadrant;
-}
-
-
 shared_ptr<Simulation> Simulations::simpleCollision_ArbitraryList() {
   float dt = .01;
-	WorldSettings::setDT( dt );
 
 	//float objectDensity = 5;
 	float aMass = 1;
@@ -494,16 +383,14 @@ shared_ptr<Simulation> Simulations::disruption_ArbitraryList() {
 
 shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
   float dt = 1000;
-	WorldSettings::makeAllInelastic();
-	WorldSettings::setGravBetweenObjects(true);
-	WorldSettings::setConstGravField(false);
-	WorldSettings::setAutoScaling(true);
-
   int numPieces = 2;
 
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT( dt );
   curSimulation->setTimeElapsed(0);
+	curSimulation->makeAllInelastic();
+	curSimulation->setGravBetweenObjects(true);
+
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -573,24 +460,18 @@ shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
   // physicalObjects.addShapeToList( curShape );
   totalMass += curShape->getMass();
 
-  WorldSettings::adjustTotalMass( totalMass );
+  curSimulation->adjustTotalMass( totalMass );
 
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom() {
-	WorldSettings::setDT(1000);
-	WorldSettings::makeAllInelastic();
-	WorldSettings::setGravBetweenObjects(true);
-	WorldSettings::setConstGravField(false);
-	WorldSettings::setAutoScaling(true);
-	WorldSettings::setTimeElapsed(0);
-	WorldSettings::setTotalMass(0);
-
+shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom() 
+{
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(1000);
   curSimulation->setTimeElapsed(0);
+	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
 
   int numPieces=5;
@@ -672,24 +553,18 @@ shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom() {
 
   physicalObjects.addShapeToList( curShape );
   totalMass += curShape->getMass();
-  WorldSettings::adjustTotalMass( totalMass );
+  curSimulation->adjustTotalMass( totalMass );
 
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces) {
-	WorldSettings::setDT(1000);
-	WorldSettings::makeAllInelastic();
-	WorldSettings::setGravBetweenObjects(true);
-	WorldSettings::setConstGravField(false);
-	WorldSettings::setAutoScaling(true);
-	WorldSettings::setTimeElapsed(0);
-	WorldSettings::setTotalMass(0);
-
+shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces) 
+{
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(1000);
   curSimulation->setTimeElapsed(0);
+	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -745,24 +620,18 @@ shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces) {
 
 		totalMass += curShape->getMass();
 	}
-  WorldSettings::adjustTotalMass( totalMass );
+  curSimulation->adjustTotalMass( totalMass );
 
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) {
-	WorldSettings::setDT(1000);
-	WorldSettings::makeAllInelastic();
-	WorldSettings::setGravBetweenObjects(true);
-	WorldSettings::setConstGravField(false);
-	WorldSettings::setAutoScaling(true);
-	WorldSettings::setTimeElapsed(0);
-	WorldSettings::setTotalMass(0);
-
+shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) 
+{
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
-  curSimulation->setDT(.003);
+	curSimulation->setDT(1000);
   curSimulation->setTimeElapsed(0);
+	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -809,7 +678,7 @@ shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(int numPi
 		}
 		totalMass += pieceMass;
 	}
-  WorldSettings::adjustTotalMass( totalMass );
+  curSimulation->adjustTotalMass( totalMass );
 
   // return physicalObjects;
   curSimulation->setPhysicalObjects( physicalObjects );
@@ -882,8 +751,6 @@ shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 	  Simulations::bodyFormationGeneric_ArbitraryList( 650, target, groupMomentum );
   }
   if ( simNumber == '7' ) {
-    // TODO see if this can just be deleted at this point
-    // globalQuadrant = Simulations::octreeDemonstration(10);
   }
 
   if ( simNumber == '8' ) {

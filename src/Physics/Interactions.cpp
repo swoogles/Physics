@@ -55,6 +55,7 @@ void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2)
 
 	object2->adjustVelocity(tempVec);
 
+  // TODO Figure out how necessary these lines are.
 	while (contact(object1, object2)) {
 		object1->update(WorldSettings::getDT()/30);
 		object2->update(WorldSettings::getDT()/30);
@@ -112,7 +113,7 @@ void calcForcesAll_Naive( shared_ptr<Simulation> curSimulation ) {
       sgVec4 pos;
       object1->getPos(pos);
 
-      if (WorldSettings::isConstGravField() ) {
+      if (curSimulation->isConstGravField() ) {
         object1->adjustMomentum(gravField);
       }
 
@@ -380,14 +381,7 @@ bool isConflict_ArbitraryList( compressed_vector<shape_pointer> physicalObjects,
 }
 
 void calcCollisionsAll(shared_ptr<Simulation> curSimulation) {
-
-  ShapeList physicalObjects = curSimulation->getPhysicalObjects() ;
-  calcCollisionsAll_ShapeList( physicalObjects );
-  curSimulation->setPhysicalObjects( physicalObjects) ;
-
-}
-
-void calcCollisionsAll_ShapeList( ShapeList & shapeList ) {
+  ShapeList shapeList = curSimulation->getPhysicalObjects() ;
   sgVec4 sepVec;
   shared_ptr<MyShape> object1;
   shared_ptr<MyShape> object2;
@@ -408,14 +402,12 @@ void calcCollisionsAll_ShapeList( ShapeList & shapeList ) {
     }
     object1 = physicalObjects(i);
 
-    if (WorldSettings::isConstGravField() ) {
+    if (curSimulation->isConstGravField() ) {
       object1->adjustMomentum(gravField);
     }
 
     for (unsigned int j = i + 1; j < physicalObjects.size(); j++)
     {
-      // cout << "Stuck in inner loop " << endl;
-      // cout << "PhysicalObjects.size: " << physicalObjects.size() << endl;;
       object2 = physicalObjects(j);
 
       getVectorToObject2(object1, object2, sepVec);
@@ -428,12 +420,12 @@ void calcCollisionsAll_ShapeList( ShapeList & shapeList ) {
 
       if (distance < minSep) {
 
-        if (WorldSettings::isAllElastic() ) {
+        if (curSimulation->isAllElastic() ) {
           elasticCollision(object1,object2);
           j++;
         }
 
-        else if (WorldSettings::isAllInelastic() ){
+        else if (curSimulation->isAllInelastic() ){
           mergeObjects(object1, object2);
           deleteList.resize(deleteList.size()+1);
           deleteList.insert_element(deleteList.size()-1, object2);
@@ -456,6 +448,7 @@ void calcCollisionsAll_ShapeList( ShapeList & shapeList ) {
     }
   }
 
+  curSimulation->setPhysicalObjects( shapeList ) ;
 }
 
 //setting rSquared to a constant value with a grid can make some awesome effects

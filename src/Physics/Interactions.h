@@ -49,20 +49,12 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation );
  */
 void calcForcesAll_Naive( shared_ptr<Simulation> curSimulation );
 
-
 /*! \relates MyShape
  *  \brief Determines if any objects are colliding and responds appropriately.
  *
  *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
  */
 void calcCollisionsAll(shared_ptr<Simulation> curSimulation);
-
-/*! \relates MyShape
- *  \brief Determines if any objects are colliding and responds appropriately.
- *
- *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
- */
-void calcCollisionsAll_ShapeList( ShapeList & physicalObjects);
 
 /*! \relates MyShape
  *  \brief Calculates magnitude of the force of gravity between 2 objects
