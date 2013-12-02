@@ -32,7 +32,7 @@ typedef shared_ptr<MyShape> shape_pointer;
  *  both objects have their elastic bools on.
  *
  */
-void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2);
+void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, float dt);
 
 void calcForceOnObject_Octree( shape_pointer curObject, shared_ptr<Quadrant> curQuadrant, float dt);
 

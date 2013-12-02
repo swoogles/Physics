@@ -17,14 +17,10 @@ ostream& operator<<(ostream& os, sgVec3 outputVec) {
 }
 */
 
-void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2) {
+void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, float dt) {
 	sgVec4 sepVec;
 	sgVec4 sepVecUnit;
 
-	//SGfloat distance, distanceSquared;
-
-	//sgVec4 aPos, bPos;
-	//sgVec4 aMomentum, bMomentum;
 	sgVec4 aVel, bVel;
 	sgVec4 tempVec, n, vdiff;
 
@@ -32,9 +28,7 @@ void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2)
 
 	float c;
 
-
 	getVectorToObject2(object1, object2, sepVec);
-
 	sgNormaliseVec4(sepVecUnit, sepVec);
 
 	object1->getVelocity(aVel);
@@ -57,8 +51,8 @@ void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2)
 
   // TODO Figure out how necessary these lines are.
 	while (contact(object1, object2)) {
-		object1->update(WorldSettings::getDT()/30);
-		object2->update(WorldSettings::getDT()/30);
+		object1->update(dt/30);
+		object2->update(dt/30);
 	}
 
 
@@ -276,15 +270,6 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation )
     foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
     {
       curShape->update( curSimulation->getDT() );
-
-      // TODO this should be taking advantage of a passed in Observer, rather than the static worldsettings junk
-      // sgVec4 curPos;
-      // if (WorldSettings::isAutoScaling())
-      // {
-      //   curShape->getPos(curPos);
-      //   WorldSettings::updateXYMinsAndMaxes(curPos);
-      // }
-
     }
   }
   else //Calculations with Octree
@@ -308,12 +293,6 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation )
           calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() );
           curShape->update( curSimulation->getDT() );
         // }
-        // TODO this should be taking advantage of a passed in Observer, rather than the static worldsettings junk
-        // if (WorldSettings::isAutoScaling())
-        // {
-        //   curShape->getPos(curPos);
-        // }
-        // curObjectIdx++;
       }
 
     }
@@ -421,7 +400,7 @@ void calcCollisionsAll(shared_ptr<Simulation> curSimulation) {
       if (distance < minSep) {
 
         if (curSimulation->isAllElastic() ) {
-          elasticCollision(object1,object2);
+          elasticCollision( object1, object2, curSimulation->getDT() );
           j++;
         }
 

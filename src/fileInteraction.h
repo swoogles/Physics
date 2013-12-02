@@ -16,7 +16,6 @@
 #include "ShapeFiles/Circle.h"
 #include "ShapeFiles/Box.h"
 
-#include "Physics/WorldSettings.h"
 #include "Physics/Simulations.h"
 
 typedef boost::shared_ptr<MyShape> shape_pointer;

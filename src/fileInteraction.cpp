@@ -14,7 +14,6 @@ void saveShapes(char * fileName) {
 	ofstream myfile;
 	myfile.open (fileName);
 	//myfile << "Writing this to a file.\n";
-	myfile << WorldSettings::getDT() << endl;
 	myfile << MyShape::shapes.size() << endl;
 	for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
 		curShape = MyShape::shapes(i);
@@ -64,7 +63,6 @@ void openShapes(char * fileName) {
 	curFile.open(fileName);
 
 	curFile >> newDT;
-	WorldSettings::setDT(newDT);
 
 	curFile >> numShapes;
 

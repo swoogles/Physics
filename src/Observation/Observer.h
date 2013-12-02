@@ -53,7 +53,7 @@ public:
 	void zoomOut();
 
 	//! Set to true to autoscale with simulation
-	void setAutoScale(bool shouldScale);
+	void setAutoScaling(bool shouldScale);
 	//! Returns true if Observer is currently set to autoscale with simulation
 	bool isAutoScaling();
 

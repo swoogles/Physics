@@ -288,16 +288,19 @@ void control_center::uncheckAutoScaling() {
 }
 
 void control_center::flipAutoScaling(puObject * caller) {
-  //int isAutoScaling = caller->getValue();
-  bool isAutoScaling = WorldSettings::isAutoScaling();
+  // TODO Get this actually working. Don't think it's doing anything right now.
+  int curObserverIdx = Observer::getCurObserver();
+  Observer * curObserver =  Observer::observers(curObserverIdx);
+
+  bool isAutoScaling = curObserver->isAutoScaling();
   if (isAutoScaling) {
-    WorldSettings::setAutoScaling(false);
-    cout << "AutoScaling Off: " << WorldSettings::isAutoScaling() << endl;
+    curObserver->setAutoScaling(false);
+    cout << "AutoScaling Off: " << curObserver->isAutoScaling() << endl;
     //caller->setValue(0);
   }
   else {
-    WorldSettings::setAutoScaling(true);
-    cout << "AutoScaling On: " << WorldSettings::isAutoScaling() << endl;
+    curObserver->setAutoScaling(true);
+    cout << "AutoScaling On: " << curObserver->isAutoScaling() << endl;
     //caller->setValue(1);
   }
 }
@@ -311,13 +314,11 @@ void control_center::alterDT(puObject * caller) {
   cout << "Alterdt.preDT: " << curSimulation->getDT() << endl;
   if (strcmp(caller->getLegend(), "Slower") == 0) {
     curSimulation->setDT(curSimulation->getDT() / 2);
-    // WorldSettings::setDT(WorldSettings::getDT() / 2);
     cout << caller->getLegend() << endl;
   }
 
   if (strcmp(caller->getLegend(), "Faster") == 0) {
     curSimulation->setDT(curSimulation->getDT() * 2);
-    // WorldSettings::setDT(WorldSettings::getDT() * 2);
   }
   cout << "Alterdt.postDT: " << curSimulation->getDT() << endl << endl;
 

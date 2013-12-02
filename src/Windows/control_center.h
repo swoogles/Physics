@@ -130,10 +130,10 @@ public:
 
 	/*! \brief Changes current timestep value for simulation
 	 *
-	 *  Calls WorldSettings::setDT(float) using WorldSettings::getDT() divided or multiplied by 2 depending on whether simulation is being sped up or slowed down
+	 *  Calls Simulation.setDT(float) using Simulation.getDT() divided or multiplied by 2 depending on whether simulation is being sped up or slowed down
 	 */
 	static void alterDT(puObject *);
-	//! Pauses simulation using WorldSettings::Pause()
+	//! Pauses simulation 
 	static void pause_cb(puObject *);
 
   static void clearShapes(puObject * caller);

@@ -51,7 +51,7 @@ void Observer::zoomOut() {
 	pos[2] *= 1.05;
 }
 
-void Observer::setAutoScale(bool shouldScale) {
+void Observer::setAutoScaling(bool shouldScale) {
 	autoScale = shouldScale;
 }
 
