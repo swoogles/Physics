@@ -110,8 +110,7 @@ void Simulation::resetXYMinsAndMaxes() {
 	minX = FLT_MAX;
 	maxX = FLT_MIN;
 
-  // TODO Figure out wtf is going wrong when I enable this line....
-	// minY = FLT_MAX;
+	minY = FLT_MAX;
 	maxY = FLT_MIN;
 }
 

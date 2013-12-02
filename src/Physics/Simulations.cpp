@@ -111,7 +111,6 @@ void Simulations::simpleOrbit() {
 
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(0);
-  curSimulation->setTimeElapsed(0);
 	curSimulation->makeAllElastic();
 	curSimulation->setGravBetweenObjects(false);
 	curSimulation->setConstGravField(false);
@@ -171,10 +170,8 @@ shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
 {
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(.003);
-  curSimulation->setTimeElapsed(0);
 	curSimulation->makeAllElastic();
 	curSimulation->setGravBetweenObjects(false);
-	curSimulation->setConstGravField(false);
   ShapeList physicalObjects;
 
 	int numPieces = 0;
@@ -185,16 +182,9 @@ shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
 
   numPieces= numRows*numRows;
 
-	sgVec4 cueVelocity;
-	cueVelocity[0] = 30;
-	//cueVelocity[1] = -15.05;
-	cueVelocity[1] = -75;
-	cueVelocity[2] = 0;
+	sgVec4 cueVelocity = { 30, -75, 0 };
 
-	sgVec3 newColor;
-	newColor[0] = 1;
-	newColor[1] = 0;
-	newColor[2] = 1;
+	sgVec3 newColor = { 1, 0, 1 };
     
   shape_pointer shapeForInsertion;
 
@@ -222,18 +212,14 @@ shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
 		cout << endl;
 	}
 
-	cout << "NumPieces: " << numPieces << endl;
-
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
-
 }
 
 
 shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(.003);
-  curSimulation->setTimeElapsed(0);
 	curSimulation->makeAllElastic();
 	curSimulation->setGravBetweenObjects(false);
   ShapeList physicalObjects;
@@ -247,15 +233,9 @@ shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
 
   numPieces= numRows*numRows*numRows;
 
-	sgVec4 cueVelocity;
-	cueVelocity[0] = 30;
-	cueVelocity[1] = -75;
-	cueVelocity[2] = 20;
+	sgVec4 cueVelocity = { 30, -75, 20 };
 
-	sgVec3 newColor;
-	newColor[0] = 1;
-	newColor[1] = 1;
-	newColor[2] = 1;
+	sgVec3 newColor = { 1, 1, 1 };
 
   shape_pointer shapeForInsertion;
 
@@ -284,12 +264,8 @@ shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
       physicalObjects.addShapeToList( shapeForInsertion );
       }
 		}
-		cout << endl;
 	}
 
-	cout << "NumPieces: " << numPieces << endl;
-
-  // return physicalObjects;
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
@@ -297,29 +273,18 @@ shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
 shared_ptr<Simulation> Simulations::simpleCollision_ArbitraryList() {
   float dt = .01;
 
-	//float objectDensity = 5;
 	float aMass = 1;
 	float bMass = 1;
 	float aRadius = 1;
 	float bRadius = 1;
 
-	sgVec4 startPlacement, startAngMom;
-
-	// Object A
-	startPlacement[0] = -1;
-	startPlacement[1] = -6;
-	startPlacement[2] = 0;
-	startPlacement[3] = 1;
-
-	startAngMom[0] = 0;
-	startAngMom[1] = 0;
-	startAngMom[2] = 0;
+	sgVec4 startPlacement = { -1, -6, 0, 1 };
+	sgVec4 startAngMom = { 0, 0, 0, 0 };
 
   ShapeList physicalObjects;
 
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT( dt );
-  curSimulation->setTimeElapsed(0);
   shape_pointer curShape;
 
 	curShape = make_shared<Circle>();
@@ -328,12 +293,10 @@ shared_ptr<Simulation> Simulations::simpleCollision_ArbitraryList() {
 	curShape->setRadius(aRadius*2);
 	curShape->setVelocity(0, 25, 0);
 	curShape->setAngVelocity(startAngMom);
-  // MyShape::addShapeToList( curShape );
   physicalObjects.addShapeToList( curShape );
 
 	// Object B
 	startPlacement[0] = 2.5;
-	//startPlacement[1] = -.9; //45 Degree placement
 	startPlacement[1] = 0;
 	startPlacement[2] = 0;
 
@@ -342,30 +305,22 @@ shared_ptr<Simulation> Simulations::simpleCollision_ArbitraryList() {
 	curShape->setMass(bMass);
 	curShape->setRadius(bRadius*2);
 	curShape->setVelocity(0, -25, 0);
-  // MyShape::addShapeToList( curShape );
   physicalObjects.addShapeToList( curShape );
 
-  // return physicalObjects;
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
-
 }
 
-shared_ptr<Simulation> Simulations::disruption_ArbitraryList() {
-  
-  // ShapeList physicalObjects = Simulations::bodyFormation_ArbitraryList( 1000 );
+shared_ptr<Simulation> Simulations::disruption_ArbitraryList() 
+{
   shared_ptr<Simulation> curSimulation = Simulations::bodyFormation_ArbitraryList( 1000 );
-  // curSimulation->setPhysicalObjects( physicalObjects );
 
   int numPieces = 1;
 	float objectDensity = DENSITY_SUN;
 	float bodyVolume = (MASS_SUN)/(objectDensity)/3;
 	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
 	float pieceMass = pow(pieceRadius, 3.0);
-	sgVec4 startMomentum;
-  startMomentum[0] = pieceMass/35 ; 
-  startMomentum[1] = 0;
-  startMomentum[2] = 0;
+	sgVec4 startMomentum = { pieceMass/35, 0, 0 };
 
   shape_pointer curShape = make_shared<Circle>();
   curShape->setPos(-pieceRadius * 30, 0, 0);
@@ -374,20 +329,17 @@ shared_ptr<Simulation> Simulations::disruption_ArbitraryList() {
   curShape->setMomentum(startMomentum);
   curShape->setDensity(objectDensity);
 
-  // physicalObjects.addShapeToList( curShape );
-
-  // return physicalObjects;
   curSimulation->addPhysicalObjectToList( curShape );
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
+shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() 
+{
   float dt = 1000;
   int numPieces = 2;
 
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT( dt );
-  curSimulation->setTimeElapsed(0);
 	curSimulation->makeAllInelastic();
 	curSimulation->setGravBetweenObjects(true);
 
@@ -396,16 +348,10 @@ shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
 	float objectDensity = DENSITY_SUN;
 	float bodyVolume = (MASS_SUN * 10.0)/(objectDensity);
 	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	sgVec4 startPlacement, startMomentum;
+	sgVec4 startPlacement;
+	sgVec4 startMomentum = { 0, 0, 0 };
 
-	sgVec3 newColor;
-	newColor[0] = 1;
-	newColor[1] = 0;
-	newColor[2] = 1;
-
-  startMomentum[0] = 0;
-  startMomentum[1] = 0;
-  startMomentum[2] = 0;
+	sgVec3 newColor = { 1, 0, 1 };
 
 	float pieceMass = pow(pieceRadius, 3.0);
   pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
@@ -432,10 +378,8 @@ shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
   totalMass += curShape->getMass();
 
   startPlacement[0]= -offset;
-  // startPlacement[1]= -offset;
 
   curShape = make_shared<Circle>();
-  // curShape = make_shared<Circle>();
   curShape->setPos( startPlacement );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
@@ -457,9 +401,7 @@ shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() {
   curShape->setDensity(objectDensity);
   curShape->setColor(newColor);
 
-  // physicalObjects.addShapeToList( curShape );
   totalMass += curShape->getMass();
-
   curSimulation->adjustTotalMass( totalMass );
 
   curSimulation->setPhysicalObjects( physicalObjects );
@@ -470,7 +412,6 @@ shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom()
 {
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(1000);
-  curSimulation->setTimeElapsed(0);
 	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
 
@@ -478,13 +419,9 @@ shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom()
 	float objectDensity = DENSITY_SUN;
 	float bodyVolume = (MASS_SUN)/(objectDensity);
 	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	sgVec4 startMomentum;
-  startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
+	sgVec4 startMomentum = { 0, 0, 0 };
 
-	sgVec3 newColor;
-	newColor[0] = 1;
-	newColor[1] = 1;
-	newColor[2] = 1;
+	sgVec3 newColor = { 1, 1, 1 };
 
 	float pieceMass = pow(pieceRadius, 3.0);
 	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
@@ -563,24 +500,16 @@ shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces)
 {
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(1000);
-  curSimulation->setTimeElapsed(0);
 	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
 	float bodyVolume = (MASS_SUN * 10)/(objectDensity);
 	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	sgVec4 startPlacement, startMomentum, target;
+	sgVec4 startPlacement, startMomentum;
+	sgVec4 target = { 1000, 0, 0, 1};
 
-  target[0]=-1000;
-  target[1]=0;
-  target[2]=0;
-  target[3]=1;
-
-	sgVec3 newColor;
-	newColor[0] = 1;
-	newColor[1] = 1;
-	newColor[2] = 1;
+	sgVec3 newColor = { 1, 1, 1 };
 
 	float pieceMass = pow(pieceRadius, 3.0);
 	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
@@ -603,7 +532,6 @@ shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces)
 		}
 
     curShape = make_shared<Circle>();
-		// curShape = make_shared<Circle>();
     curShape->setPos( startPlacement );
 		curShape->setMass(pieceMass);
 		curShape->setRadius(pieceRadius);
@@ -630,7 +558,6 @@ shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(int numPi
 {
   shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
 	curSimulation->setDT(1000);
-  curSimulation->setTimeElapsed(0);
 	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
 
@@ -680,7 +607,6 @@ shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(int numPi
 	}
   curSimulation->adjustTotalMass( totalMass );
 
-  // return physicalObjects;
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
 }
@@ -705,13 +631,11 @@ int Simulations::addShapeToList( shape_pointer insertShape )
 }
 
 shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
-// shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 {
   shared_ptr<Simulation> newSimulation;
 
 	//******CURRENT SIMULATION*****
   if ( simNumber == '0' ) {
-    // Simulations::largeGridAlternating();
 	  newSimulation = Simulations::bodyFormation_NonRandom();
   }
   if ( simNumber == '1' ) {
@@ -736,11 +660,7 @@ shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
     groupMomentum[1]=2800;
     groupMomentum[2]=0;
     groupMomentum[3]=1;
-    sgVec4 target;
-    target[0]=-2000;
-    target[1]=0;
-    target[2]=0;
-    target[3]=1;
+    sgVec4 target = { -2000, 0, 0, 1 };
 	  Simulations::bodyFormationGeneric_ArbitraryList( 650, target, groupMomentum );
 
     target[0]=-target[0];
@@ -760,7 +680,5 @@ shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
     newSimulation = Simulations::billiards3_ArbitraryList( 5 );
   }
 
-
   return newSimulation;
-
 }
