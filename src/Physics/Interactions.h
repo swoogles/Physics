@@ -17,7 +17,6 @@
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/ShapeList.h"
 #include "Simulations.h"
-#include "WorldSettings.h"
 
 using namespace std;
 
@@ -199,13 +198,5 @@ bool isConflict_ArbitraryList(compressed_vector<shape_pointer> physiaclObjects, 
  *  \brief Will eventually calculate drag force on a single object
  */
 void calcDrag(float dt);
-
-
-//TODO find good place for this function
-/*! \relates sgVec
- *  \brief Easy outputting for Display/Debugging
- */
-ostream & operator<<(ostream& os, sgVec4 outputVec);
-
 
 #endif /* INTERACTIONS_H_ */

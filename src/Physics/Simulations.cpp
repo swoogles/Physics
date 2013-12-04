@@ -7,6 +7,7 @@
 
 #include "Simulations.h"
 
+float Simulations::G = 6.67384e-11;
 compressed_vector< shared_ptr<MyShape> > Simulations::physicalObjects(0);
 int Simulations::curStep;
 

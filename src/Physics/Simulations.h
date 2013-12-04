@@ -92,6 +92,8 @@ class Simulations
 
 
   public:
+    static float G;
+
     inline static int getCurStep() { return curStep; };
     inline static void setCurStep( int inCurStep ) { Simulations::curStep = inCurStep; };
     inline static void incCurStep() { curStep+= 1; };

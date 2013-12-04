@@ -7,9 +7,6 @@
 
 #include "MyShape.h"
 
-//TODO (re)Move this. It's terrible.
-float MyShape::G = 6.67384e-11;
-
 compressed_vector< shared_ptr<MyShape> > MyShape::shapes(0);
 
 MyShape::MyShape()

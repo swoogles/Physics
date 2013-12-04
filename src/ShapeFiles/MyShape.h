@@ -173,9 +173,6 @@ class MyShape : public Moveable {
     typedef shared_ptr<MyShape> shape_pointer;
     static compressed_vector<shape_pointer> shapes;
 
-    //Get rid of this and store in WorldSettings instead
-    static float G;
-
     static void clearShapes();
 
     /*! \brief Returns a moveable from the main moveables list
