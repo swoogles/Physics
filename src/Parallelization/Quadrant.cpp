@@ -2,10 +2,6 @@
 
 using namespace std;
 
-//void Quadrant::calcForcesForAll()
-//{
-//}
-
 shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
 {
   return shapeInQuadrant;
@@ -13,10 +9,8 @@ shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
 
 Quadrant::~Quadrant()
 {
-  // MyShape::removeShapeFromList( MyShape::shapes(0) );
   MyShape::removeShapeFromList( borders );
   MyShape::removeShapeFromList( centerOfMassRepresentation );
-  // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
 }
 
 
@@ -29,31 +23,22 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   ,weightedPosition({0,0,0})
   
 {
-  // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
-
   setPos( pos );
   sgCopyVec4( this->dimensions, dimensions );
 
-  // borders = make_shared<Box>();
   borders->setPos(pos);
 
-  sgVec3 newColor;
   float redAmount = level*.10; 
   float greenAmount = (1-level*.10);
   float blueAmount = (1-level*.10);
-  newColor[0]=redAmount;
-  newColor[1]=greenAmount;
-  newColor[2]=blueAmount;
-  borders->setColor( newColor );
+  sgVec3 newColor = { redAmount, greenAmount, blueAmount };
 
+  borders->setColor( newColor );
   borders->setSideLength( dimensions[0] );
 
   MyShape::addShapeToList( borders );
 
-  sgVec3 CoMColor;
-  CoMColor[0] = 0;
-  CoMColor[1] = 1;
-  CoMColor[2] = 0;
+  sgVec3 CoMColor = { 0, 1, 0 };
 
   centerOfMassRepresentation = make_shared<Circle>();
   centerOfMassRepresentation->setPos( 0,0,0 );
@@ -72,59 +57,13 @@ shared_ptr<Quadrant> Quadrant::getQuadrantFromCell( int x, int y, int z )
   return quadOctree[x][y][z];
 }
 
-// x,y, & z must have values of 0|1
-void Quadrant::subDivide( int x, int y, int z, int numCells )
-{
-  sgVec4 newPos;
-  sgVec4 newDimensions;
-
-  int xFactor;
-  int yFactor;
-  int zFactor;
-
-  if ( x ) {
-    xFactor=1;
-  }
-  else {
-    xFactor =-1;
-  }
-  if ( y ) {
-    yFactor=1;
-  }
-  else {
-    yFactor =-1;
-  }
-  if ( z ) {
-    zFactor=1;
-  }
-  else {
-    zFactor =-1;
-  }
-
-  newDimensions[0] = dimensions[0]/2;
-  newDimensions[1] = dimensions[1]/2;
-  newDimensions[2] = dimensions[2]/2;
-
-
-  newPos[0]=pos[0]+(xFactor*dimensions[0]/4.0);
-  newPos[1]=pos[1]+(yFactor*dimensions[1]/4.0);
-  newPos[2]=pos[2]+(zFactor*dimensions[2]/4.0);
-
-  quad_pointer insertionQuadrant;
-
-  quadOctree[x][y][z] = make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
-}
-
 void Quadrant::subDivideAll( int levels, int numCells )
 {
   sgVec4 newPos;
   sgVec4 newDimensions;
 
-  int xFactor;
-  int yFactor;
-  int zFactor;
+  int xFactor, yFactor, zFactor;
 
-  // Quadrant
   quad_pointer targetQuadrant;
 
   if ( this->level < levels )
@@ -176,26 +115,25 @@ void Quadrant::subDivideAll( int levels, int numCells )
   }
 }
 
-void Quadrant::getWeightedPosition(sgVec4 weightedPosition)
+void Quadrant::getWeightedPosition( sgVec4 weightedPosition )
 {
-	sgCopyVec4(weightedPosition, this->weightedPosition);
+	sgCopyVec4( weightedPosition, this->weightedPosition );
 }
-void Quadrant::setWeightedPosition(sgVec4 weightedPosition)
+void Quadrant::setWeightedPosition( sgVec4 weightedPosition )
 {
-  sgCopyVec4(this->weightedPosition, weightedPosition);
+  sgCopyVec4( this->weightedPosition, weightedPosition );
 }
 
-void Quadrant::getCenterOfMass(sgVec4 centerOfMass)
+void Quadrant::getCenterOfMass( sgVec4 centerOfMass )
 {
-  // cout << "MASS: " << this->mass << endl;
-	sgCopyVec4(centerOfMass, this->weightedPosition);
+	sgCopyVec4( centerOfMass, this->weightedPosition );
   sgScaleVec4( centerOfMass, 1.0/mass );
 }
 
 void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 {
-  sgCopyVec4(this->weightedPosition, centerOfMass);
-  sgScaleVec4( this->weightedPosition, mass);
+  sgCopyVec4( this->weightedPosition, centerOfMass );
+  sgScaleVec4( this->weightedPosition, mass );
 }
 
 void Quadrant::insertShape( shape_pointer insertedShape )
@@ -220,14 +158,13 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     insertedShape->getPos( shapeWeightedPosition );
     sgScaleVec4( shapeWeightedPosition, insertedShape->getMass() );
 
-    sgAddVec4(quadrantWeightedPosition, shapeWeightedPosition );
+    sgAddVec4( quadrantWeightedPosition, shapeWeightedPosition );
     this->setWeightedPosition( quadrantWeightedPosition );
 
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
     if ( targetQuadrant != NULL )
     {
       targetQuadrant->insertShape( insertedShape );
-      // this->adjustMass( insertedShape->getMass() );
     }
   }
   else
@@ -255,32 +192,22 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     shapeInQuadrant.reset();
   }
 
-  // cout << "mass before retrievals: " << this->getMass() << endl;
   sgVec4 CoMPosition;
   this->getCenterOfMass( CoMPosition );
-  // cout << "CoMPosition: <" << CoMPosition[0] << ", " << CoMPosition[1] << ", " << CoMPosition[2] << endl;
 
-  // sgVec4 quadrantWeightedPosition;
-  // this->getWeightedPosition( CoMPosition );
-  // cout << "WeightedPosition: <" << quadrantWeightedPosition[0] << ", " << quadrantWeightedPosition[1] << ", " << quadrantWeightedPosition[2] << endl;
-
-  // 
   centerOfMassRepresentation->setPos( CoMPosition );
-
 }
 
 
 // Guaranteed to hand back an instantiated Quadrant
 shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
-  sgVec4 insertPos;
+  sgVec4 insertPos, newPos, newDimensions;
   shapeToInsert->getPos( insertPos ); 
   float insertX = insertPos[0];
   float insertY = insertPos[1];
   float insertZ = insertPos[2];
 
-  sgVec4 newPos;
-  sgVec4 newDimensions;
   sgCopyVec4( newDimensions, dimensions );
   sgScaleVec4 ( newDimensions, .5 );
 
@@ -360,13 +287,9 @@ shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shapeToInse
     int numCells = 8;
 
     insertionQuadrant = quadOctree[targetX][targetY][targetZ];
-    // insertionQuadrant = getQuadrantFromCell( targetX, targetY, targetZ );
-
 
     if ( insertionQuadrant == NULL )
     {
-      //subDivide( targetX, targetY, targetZ, numCells );
-
       insertionQuadrant = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) ) ;
       quadOctree[targetX][targetY][targetZ] = insertionQuadrant;
     }
@@ -398,7 +321,7 @@ ShapeList Quadrant::getShapesRecursive()
       for ( int z = 0; z < 2; z++ )
       {
 
-        targetQuadrant = this->getQuadrantFromCell( x, y, z );
+        targetQuadrant = quadOctree[x][y][z];
         if ( targetQuadrant != NULL )
         {
           targetShapeList = targetQuadrant->getShapesRecursive();
@@ -414,4 +337,3 @@ ShapeList Quadrant::getShapesRecursive()
 
   return totalShapeList;
 }
-
