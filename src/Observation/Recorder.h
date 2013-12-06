@@ -24,6 +24,9 @@ void intToAsc(int iCurPic, char * sCurPic);
 
 bool screenshot(unsigned int width, unsigned int height, char *path, int quality);
 
+using namespace Magick;
+// using Magick::Image;
+// using Magick::Geometry;
 
 /*! \brief Handles writing of frames to a jpeg files
  *
@@ -92,6 +95,8 @@ public:
 	 *  \n -Compresses image
 	 */
 	friend bool screenshot(unsigned int width, unsigned int height, char * path, int quality);
+
+  void imageMagickMucking();
 
 };
 

@@ -8,4 +8,4 @@ USER_OBJS :=
 # LIBS := -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg
 
 # 32 Bit/Laptop version
-LIBS := -lGL -lGLU -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt
+LIBS := -lGL -lGLU -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt -lMagick++ -lMagickCore
