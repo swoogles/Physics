@@ -141,14 +141,14 @@ bool screenshot(unsigned int width, unsigned int height, char *path, int quality
       //glReadBuffer(GL_FRONT_LEFT);
       glPixelStorei(GL_PACK_ALIGNMENT, 1);
       glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-      glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer );
-      cout << "A" << endl;
-      Blob b( buffer, 3 * width * height );
-      cout << "B" << endl;
-      Image i( b, g1, 3 );
-      cout << "C" << endl;
-      pixels_cache.sync();
-      i.write( "/home/bfrasure/boop.jpg" );
+      // glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer );
+      // cout << "A" << endl;
+      // Blob b( buffer, 3 * width * height );
+      // cout << "B" << endl;
+      // Image i( b, g1, 3 );
+      // cout << "C" << endl;
+      // pixels_cache.sync();
+      // i.write( "/home/bfrasure/boop.jpg" );
 
       // give some specifications about the image to save to libjpeg
       cinfo.image_width = width;
