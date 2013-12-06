@@ -147,6 +147,7 @@ void init(char simulation) {
   globalProperties->readProperties();
 
   globalRecorder = make_shared<Recorder>();
+  globalRecorder->imageMagickMucking();
 
   Observer::init();
 
