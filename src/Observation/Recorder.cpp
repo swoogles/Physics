@@ -123,7 +123,7 @@ bool screenshot(unsigned int width, unsigned int height, char *path, int quality
   Image sample_image( g1, imageColor );
   Pixels pixels_cache( sample_image );
   int start_x = 0, start_y = 0, size_x = 1280, size_y = 720;
-  magickPixels = pixels_cache.get( start_x, start_y, size_x, size_y );
+  // magickPixels = pixels_cache.get( start_x, start_y, size_x, size_y );
 
   if((shot=fopen(path, "wb"))!=NULL) { // jpeg file
     // initializatoin
@@ -133,22 +133,26 @@ bool screenshot(unsigned int width, unsigned int height, char *path, int quality
     row_stride = width * 3;
 
     pixels = (GLubyte *)malloc(sizeof(GLubyte)*width*height*3);
+    cout << "sizeof: " << (sizeof(GLubyte)*width*height*3) << endl;
     flip = (GLubyte *)malloc(sizeof(GLubyte)*width*height*3);
 
-    unsigned char* buffer = ( unsigned char* ) malloc ( width * height * 3 );
+    char* buffer = ( char* ) malloc (sizeof(GLubyte)*width*height*3);
     if (pixels!=NULL && flip!=NULL) {
       // save the screen shot into the buffer
       //glReadBuffer(GL_FRONT_LEFT);
       glPixelStorei(GL_PACK_ALIGNMENT, 1);
-      glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-      // glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer );
-      // cout << "A" << endl;
-      // Blob b( buffer, 3 * width * height );
-      // cout << "B" << endl;
-      // Image i( b, g1, 3 );
-      // cout << "C" << endl;
+      // glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+      glReadPixels(0, 0, width, height, GL_RGB, GL_BYTE, buffer );
+      cout << "width: " << width << "  height: " << height << endl;
+      cout << "A" << endl;
+      Blob b( buffer, 3 * width * height );
+      cout << "B" << endl;
+      cout << "blob.length: " << b.length() << endl;
+      Image i( b, g1, imageColor );
+      cout << "C" << endl;
       // pixels_cache.sync();
-      // i.write( "/home/bfrasure/boop.jpg" );
+      i.write( "/home/bfrasure/boop.jpg" );
 
       // give some specifications about the image to save to libjpeg
       cinfo.image_width = width;
