@@ -12,6 +12,8 @@
 
 #include <boost/foreach.hpp>
 #include <boost/ref.hpp>
+#include <boost/chrono.hpp>
+#include <cmath>
 
 #include <float.h>
 #include <string>
@@ -155,6 +157,14 @@ void init(char simulation) {
   Observer::observers(0) = new Observer;
   Observer * curObserver =  Observer::observers(0);
   Observer::setCurObserver(0);
+
+  //Chrono stuff
+  boost::chrono::system_clock::time_point start = boost::chrono::system_clock::now();
+  for ( long i = 0; i < 10000000; ++i )
+    std::sqrt( 123.456L ); // burn some time
+
+  boost::chrono::duration<double> sec = boost::chrono::system_clock::now() - start;
+  std::cout << "took " << sec.count() << " seconds\n";
 
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation );

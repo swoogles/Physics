@@ -116,9 +116,9 @@ void calcForcesAll_Naive( shared_ptr<Simulation> curSimulation )
           fGrav = calcForceGrav(object1, object2, distanceSquared);
           if ( curObjectIdx == 0 )
           {
-            cout << "fGrav from Shape[" << actingObjectIdx << "]: " << fGrav << endl;
-            cout << "distanceSquared: " << distanceSquared << endl;
-            cout << "mass of Shape: " << object2->getMass() << endl << endl;
+            // cout << "fGrav from Shape[" << actingObjectIdx << "]: " << fGrav << endl;
+            // cout << "distanceSquared: " << distanceSquared << endl;
+            // cout << "mass of Shape: " << object2->getMass() << endl << endl;
           }
 
           sgNormaliseVec4(unitVec, sepVec);
