@@ -166,6 +166,15 @@ void init(char simulation) {
   boost::chrono::duration<double> sec = boost::chrono::system_clock::now() - start;
   std::cout << "took " << sec.count() << " seconds\n";
 
+  typedef boost::chrono::duration<long, boost::ratio<60> > minutes;
+  minutes m1(3);                 // m1 stores 3
+  minutes m2(2);                 // m2 stores 2
+  minutes m3 = m1 + m2;          // m3 stores 5
+
+  cout << "Minutes1: " << m1 << endl; 
+  cout << "Minutes2: " << m2 << endl; 
+  cout << "Minutes3: " << m3 << endl; 
+
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation );
   MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
