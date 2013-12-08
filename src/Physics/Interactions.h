@@ -16,6 +16,7 @@
 #include "../ShapeFiles/Box.h"
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/ShapeList.h"
+#include "../Observation/Timer.h"
 #include "Simulations.h"
 
 using namespace std;

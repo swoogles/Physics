@@ -12,8 +12,6 @@
 
 #include <boost/foreach.hpp>
 #include <boost/ref.hpp>
-#include <boost/chrono.hpp>
-#include <cmath>
 
 #include <float.h>
 #include <string>
@@ -40,6 +38,7 @@
 
 //Output
 #include "Observation/Recorder.h"
+#include "Observation/Timer.h"
 
 //File interaction
 #include "fileInteraction.h"
@@ -158,23 +157,6 @@ void init(char simulation) {
   Observer * curObserver =  Observer::observers(0);
   Observer::setCurObserver(0);
 
-  //Chrono stuff
-  boost::chrono::system_clock::time_point start = boost::chrono::system_clock::now();
-  for ( long i = 0; i < 10000000; ++i )
-    std::sqrt( 123.456L ); // burn some time
-
-  boost::chrono::duration<double> sec = boost::chrono::system_clock::now() - start;
-  std::cout << "took " << sec.count() << " seconds\n";
-
-  typedef boost::chrono::duration<long, boost::ratio<60> > minutes;
-  minutes m1(3);                 // m1 stores 3
-  minutes m2(2);                 // m2 stores 2
-  minutes m3 = m1 + m2;          // m3 stores 5
-
-  cout << "Minutes1: " << m1 << endl; 
-  cout << "Minutes2: " << m2 << endl; 
-  cout << "Minutes3: " << m3 << endl; 
-
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation );
   MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
@@ -204,7 +186,6 @@ void init(char simulation) {
 }
 
 void idle() {
-  typedef shared_ptr<MyShape> shape_pointer;
   sgVec4 curPos;
 
   if (! globalSimulation->isPaused()  ) {
@@ -215,7 +196,11 @@ void idle() {
     // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
     string forceCalculations = globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD );
 
+
+    Timer collisionsTimer = Timer();
+    collisionsTimer.startTiming();
     calcCollisionsAll( globalSimulation );
+    collisionsTimer.stopTiming();
     // if ( globalSimulation->getCurStep() == 0 )
     // {
       calcForcesAll( globalSimulation );

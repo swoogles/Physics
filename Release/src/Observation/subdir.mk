@@ -4,29 +4,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+./src/Observation/Timer.cpp \
 ./src/Observation/Observer.cpp \
 ./src/Observation/Recorder.cpp 
-# ../src/Physics/Interactions.cpp \
-# ../src/Physics/Simulations.cpp \
-# ../src/Physics/WorldSettings.cpp 
-
 
 OBJS += \
+./src/Observation/Timer.o \
 ./src/Observation/Observer.o \
 ./src/Observation/Recorder.o 
-# ./src/Physics/Interactions.o \
-# ./src/Physics/Simulations.o \
-# ./src/Physics/WorldSettings.o 
-
 
 CPP_DEPS += \
+./src/Observation/Timer.d \
 ./src/Observation/Observer.d \
 ./src/Observation/Recorder.d 
-# ./src/Physics/Interactions.d \
-# ./src/Physics/Simulations.d \
-# ./src/Physics/WorldSettings.d 
-
-
 
 # Each subdirectory must supply rules for building sources it contributes
 src/Observation/%.o: ../src/Observation/%.cpp

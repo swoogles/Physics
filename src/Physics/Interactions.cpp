@@ -249,6 +249,8 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation )
     cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
   }
 
+  // Timer forceCalcTimer = Timer();
+  // forceCalcTimer.startTiming();
   if ( curSimulation->getForceCalcMethod() != Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
     calcForcesAll_Naive( curSimulation );
@@ -278,6 +280,7 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation )
     }
   }
 
+  // forceCalcTimer.stopTiming();
 }
 
 bool isConflict(int newShape) 

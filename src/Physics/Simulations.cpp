@@ -640,7 +640,7 @@ shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 	  newSimulation = Simulations::bodyFormation_NonRandom();
   }
   if ( simNumber == '1' ) {
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 500 );
+    newSimulation = Simulations::bodyFormation_ArbitraryList( 1000 );
   }
   if ( simNumber == '2' ) {
 	  newSimulation = Simulations::disruption_ArbitraryList();
