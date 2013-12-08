@@ -12,7 +12,6 @@
 #include <cmath>
 
 #include "../ShapeFiles/Moveable.h"
-#include "../CameraFunctions.h"
 
 using namespace boost;
 

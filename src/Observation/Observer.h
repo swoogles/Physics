@@ -14,7 +14,6 @@
 #include <plib/sg.h>
 
 #include "../ShapeFiles/Moveable.h"
-#include "../CameraFunctions.h"
 
 using boost::numeric::ublas::compressed_vector;
 
@@ -74,5 +73,7 @@ public:
 
   //! Similar as MyShape::update(float), except only uses angular velocity right now
   void update(float);
+
+  static void BuildPerspProjMat(float *m, float fov, float aspect, float znear, float zfar);
 };
 #endif /* OBSERVER_H_ */

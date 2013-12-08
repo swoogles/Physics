@@ -12,13 +12,14 @@
 
 #include <boost/foreach.hpp>
 #include <boost/ref.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/thread/scoped_thread.hpp>
 
 #include <float.h>
 #include <string>
 
 #include "BillProperties.h"
 #include "inputFunctions.h"
-#include "CameraFunctions.h"
 
 //GUI stuff
 #include "Windows/control_center.h"
@@ -56,6 +57,11 @@ using boost::shared_ptr;
 using boost::make_shared;
 
 typedef shared_ptr<MyShape> shape_pointer;
+
+void sneeze()
+{
+  cout << "Achoo!" << endl;
+}
 
 void myTimer(int v) {
   glutPostRedisplay();
@@ -149,6 +155,8 @@ void init(char simulation) {
 
   globalRecorder = make_shared<Recorder>();
   globalRecorder->imageMagickMucking();
+
+  // boost::strict_scoped_thread<> t((boost::thread( sneeze )));
 
   Observer::init();
 
