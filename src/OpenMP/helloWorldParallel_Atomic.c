@@ -45,10 +45,11 @@ int main()
       localX = ( (localI)+0.5)*step;
       threadSum = threadSum + 3.0/(1.0+localX*localX);
     }
-    sums[ID] += threadSum;
+    #pragma omp critical
+      sum += threadSum;
   }
   /* sleep(1); */
-  sum = sums[0] + sums[1] + sums[2] + sums[3];
+  /* sum = sums[0] + sums[1] + sums[2] + sums[3]; */
   pi = step * sum;
   endTime = omp_get_wtime();
   printf( "Pi: (%f)\n", pi );

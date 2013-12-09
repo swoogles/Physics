@@ -39,16 +39,18 @@ int main()
     int ID = omp_get_thread_num();
     double threadSum = 0.0;
     double localX;
-    double localI;
-    for (localI =stepsPerThread*ID; localI < stepsPerThread*(ID+1) ; localI+=1)
+    int localI;
+    #pragma omp for schedule(static,stepsPerThread)
+    for (localI = 0; localI < num_steps; localI+=1)
     {
       localX = ( (localI)+0.5)*step;
       threadSum = threadSum + 3.0/(1.0+localX*localX);
     }
-    sums[ID] += threadSum;
+    #pragma omp critical
+      sum += threadSum;
   }
   /* sleep(1); */
-  sum = sums[0] + sums[1] + sums[2] + sums[3];
+  /* sum = sums[0] + sums[1] + sums[2] + sums[3]; */
   pi = step * sum;
   endTime = omp_get_wtime();
   printf( "Pi: (%f)\n", pi );
