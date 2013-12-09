@@ -156,7 +156,7 @@ void init(char simulation) {
   globalRecorder = make_shared<Recorder>();
   globalRecorder->imageMagickMucking();
 
-  // boost::strict_scoped_thread<> t((boost::thread( sneeze )));
+  boost::strict_scoped_thread<> t((boost::thread( sneeze )));
 
   Observer::init();
 

@@ -149,9 +149,7 @@ void calcForcesAll_Naive( shared_ptr<Simulation> curSimulation )
 
 void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQuadrant, float dt) 
 {
-  sgVec4 sepVec;
-  sgVec4 unitVec;
-  sgVec4 gravVec;
+  sgVec4 sepVec, unitVec, gravVec;
   shared_ptr<MyShape> object1, object2, shapeInQuadrant;
   float fGrav;
   SGfloat distance, distanceSquared;

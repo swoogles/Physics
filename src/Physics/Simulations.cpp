@@ -430,7 +430,7 @@ shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom()
 	float totalMass = 0.0;
 
   shape_pointer curShape;
-  float d= 1e5;
+  float d= 1.8e3;
 
   //#0
   curShape = make_shared<Circle>();

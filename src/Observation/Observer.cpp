@@ -142,7 +142,6 @@ float znear, float zfar)
   w = w / aspect;
   float h = 2 * znear / height;
 
-
   m[0]  = w;
   m[1]  = 0;
   m[2]  = 0;
