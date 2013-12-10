@@ -13,7 +13,7 @@ int main()
   double startTime = omp_get_wtime();
   for (i = 0; i<num_steps;i++){
     x = (i+0.5)*step;
-    sum = sum + 3.0/(1.0+x*x);
+    sum = sum + 4.0/(1.0+x*x);
   }
   double endTime = omp_get_wtime();
   pi = step * sum;
@@ -29,17 +29,19 @@ int main()
   sums[2]=0.0;
   sums[3]=0.0;
 
+  /* omp_set_schedule( */
 
   int numThreads = omp_get_num_threads();
   int stepsPerThread = num_steps/numThreads;
   double threadSum = 0.0;
   double localX;
   int localI;
+  /* #pragma omp parallel for schedule(runtime) reduction(+:threadSum) */
   #pragma omp parallel for reduction(+:threadSum)
   for (localI = 0; localI < num_steps; localI+=1)
   {
     double localX = ( (localI)+0.5)*step;
-    threadSum += 3.0/(1.0+localX*localX);
+    threadSum += 4.0/(1.0+localX*localX);
   }
 
   pi = step * threadSum;

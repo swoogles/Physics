@@ -22,8 +22,8 @@ class Circle: public RoundShape {
     float getMarkerSize();
     void scaleMembers(float);
 
-    void drawScale();
-    void drawUnit();
+    void drawScale() const;
+    void drawUnit() const;
 
     float getRadius();
     void setRadius(float);

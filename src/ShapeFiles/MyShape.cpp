@@ -25,7 +25,7 @@ matrix<double> MyShape::getPts() {
 	return pts;
 }
 
-void MyShape::draw() {
+void MyShape::draw() const{
 	glPushMatrix();
 
 	//Translate
@@ -44,8 +44,8 @@ void MyShape::draw() {
 	glPopMatrix();
 }
 
-void MyShape::drawScale() {}
-void MyShape::drawUnit() {}
+void MyShape::drawScale() const {}
+void MyShape::drawUnit() const {}
 
 float MyShape::getMarkerSize() {
 	return 0;

@@ -74,17 +74,17 @@ class MyShape : public Moveable {
      *  \n -Call drawUnit() to draw a unit square, circle, etc.
      *  \n -Pop matrix from the stack
      */
-    void draw();
+    void draw() const;
 
 
     /*! \brief Use shape dimensions to scale points before drawing
      *
      *  Implementation varies depending on shape: will use side for squares, radius for circles, etc
      */
-    virtual void drawScale();
+    virtual void drawScale() const;
 
     //! Draw unit shape (should be called last in draw() )
-    virtual void drawUnit();
+    virtual void drawUnit() const;
 
     //! Purely virtual method used by Circle
     virtual void setRadius(float );

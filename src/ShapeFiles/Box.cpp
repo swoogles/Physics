@@ -82,14 +82,14 @@ matrix<double> Box::getPts() {
 	return pts;
 }
 
-void Box::drawUnit() {
+void Box::drawUnit() const {
   // YOU FUCKING WHORE!!!!
   // WHY WOULD YOU EVER BE WRITTEN LIKE THIS?!?!?!
   //glutWireCube( width );
   glutWireCube( 1.0 );
 }
 
-void Box::drawScale() {
+void Box::drawScale() const {
 	glScalef(width, height, depth);
 }
 

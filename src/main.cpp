@@ -18,6 +18,8 @@
 #include <float.h>
 #include <string>
 
+#include <omp.h>
+
 #include "BillProperties.h"
 #include "inputFunctions.h"
 
@@ -57,6 +59,9 @@ using boost::shared_ptr;
 using boost::make_shared;
 
 typedef shared_ptr<MyShape> shape_pointer;
+
+int curStep = 0;
+double totalTime = 0;
 
 void sneeze()
 {
@@ -106,10 +111,50 @@ void display(void)
   glMatrixMode(GL_MODELVIEW);
   if ( MyShape::shapes.size() > 0 )
   {
-    foreach_ ( shape_pointer curShape, MyShape::shapes )
+    // #pragma omp parallel for
+    // for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
+    //   MyShape::shapes(i)->draw();
+    // }
+
+    Timer drawingTimer = Timer();
+    if ( curStep < 100 )
     {
+      drawingTimer.startTiming();
+    }
+
+    int numShapes = MyShape::shapes.size();
+    shape_pointer curShape;
+    // #pragma omp parallel for
+    for (unsigned int i = 0; i < numShapes; i++) 
+    {
+      curShape = MyShape::shapes(i);
       curShape->draw();
     }
+
+    // foreach_ ( shape_pointer curShape, MyShape::shapes )
+    // {
+    //   curShape->draw();
+    // }
+
+    if ( curStep < 100 )
+    {
+      cout << "Drawing ";
+      drawingTimer.stopTiming();
+      totalTime +=drawingTimer.getDuration().count();
+    }
+    else if ( curStep == 100 )
+    {
+      cout << "Avg time: " << totalTime/100  << endl;
+    }
+
+    curStep++;
+
+    // #pragma omp parallel for reduction(+:threadSum)
+    // for (localI = 0; localI < num_steps; localI+=1)
+    // {
+    //   double localX = ( (localI)+0.5)*step;
+    //   threadSum += 4.0/(1.0+localX*localX);
+    // }
   }
 
   glMatrixMode(GL_PROJECTION);
@@ -142,6 +187,9 @@ void controlDisplay(void) {
 
   //glutSetWindow(main_window);
 }
+
+static long num_steps = 200000000;
+double step;
 
 void init(char simulation) {
   cout.flush();
@@ -205,10 +253,11 @@ void idle() {
     string forceCalculations = globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD );
 
 
-    Timer collisionsTimer = Timer();
-    collisionsTimer.startTiming();
+    // Timer collisionsTimer = Timer();
+    // collisionsTimer.startTiming();
     calcCollisionsAll( globalSimulation );
-    collisionsTimer.stopTiming();
+    // collisionsTimer.stopTiming();
+
     // if ( globalSimulation->getCurStep() == 0 )
     // {
       calcForcesAll( globalSimulation );

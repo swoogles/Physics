@@ -35,8 +35,8 @@ public:
 	virtual ~Box();
 
 	matrix<double> getPts();
-	void drawUnit();
-  void drawScale();
+	void drawUnit() const;
+  void drawScale() const;
 
   float getSideLength();
   void setSideLength(float);
