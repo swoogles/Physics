@@ -122,14 +122,23 @@ void display(void)
       drawingTimer.startTiming();
     }
 
-    int numShapes = MyShape::shapes.size();
+    omp_set_num_threads(1);
+    int numShapes = 0;
     shape_pointer curShape;
-    // #pragma omp parallel for
-    for (unsigned int i = 0; i < numShapes; i++) 
+    // for (unsigned int i = 0; i < numShapes; i++) 
+    #pragma omp parallel for reduction(+:numShapes)
+    for (unsigned int i = 0; i < MyShape::shapes.size(); i++) 
     {
       curShape = MyShape::shapes(i);
       curShape->draw();
+      if ( curStep == 1 )
+      {
+        cout << "Shape(" << i << ").pos: " << curShape->getPosString() << endl;
+      }
+      numShapes++;
     }
+
+    // cout << "numShapes (reduced): " << numShapes  << endl;
 
     // foreach_ ( shape_pointer curShape, MyShape::shapes )
     // {
@@ -138,9 +147,9 @@ void display(void)
 
     if ( curStep < 100 )
     {
-      cout << "Drawing ";
-      drawingTimer.stopTiming();
-      totalTime +=drawingTimer.getDuration().count();
+      // cout << "Drawing ";
+      // drawingTimer.stopTiming();
+      // totalTime +=drawingTimer.getDuration().count();
     }
     else if ( curStep == 100 )
     {
