@@ -270,6 +270,7 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation )
       {
         // if ( curObjectIdx == 0 )
         // {
+        // TODO PHYS-22 Look at seperating position update later. I think tihs actually MUST happen because right now there's a ripple effect of force calculations and position updates. This could actually be a huge problem as it currently works.
         calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() );
         curShape->update( curSimulation->getDT() );
         // }
