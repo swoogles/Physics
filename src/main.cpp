@@ -111,52 +111,21 @@ void display(void)
   glMatrixMode(GL_MODELVIEW);
   if ( MyShape::shapes.size() > 0 )
   {
-    // #pragma omp parallel for
-    // for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
-    //   MyShape::shapes(i)->draw();
-    // }
 
-    Timer drawingTimer = Timer();
-    if ( curStep < 100 )
-    {
-      drawingTimer.startTiming();
-    }
-
-    omp_set_num_threads(1);
-    int numShapes = 0;
     shape_pointer curShape;
-    // for (unsigned int i = 0; i < numShapes; i++) 
-    // #pragma omp parallel for reduction(+:numShapes)
     for (unsigned int i = 0; i < MyShape::shapes.size(); i++) 
     {
       curShape = MyShape::shapes(i);
       curShape->draw();
-      if ( curStep == 1 )
-      {
-        cout << "Shape(" << i << ").pos: " << curShape->getPosString() << endl;
-      }
-      numShapes++;
     }
 
-    // cout << "numShapes (reduced): " << numShapes  << endl;
 
     // foreach_ ( shape_pointer curShape, MyShape::shapes )
     // {
     //   curShape->draw();
     // }
 
-    if ( curStep < 100 )
-    {
-      // cout << "Drawing ";
-      // drawingTimer.stopTiming();
-      // totalTime +=drawingTimer.getDuration().count();
-    }
-    else if ( curStep == 100 )
-    {
-      cout << "Avg time: " << totalTime/100  << endl;
-    }
 
-    curStep++;
 
     // #pragma omp parallel for reduction(+:threadSum)
     // for (localI = 0; localI < num_steps; localI+=1)
@@ -268,7 +237,26 @@ void idle() {
     // collisionsTimer.stopTiming();
 
     calcForcesAll( globalSimulation );
+
+    Timer drawingTimer = Timer();
+    if ( curStep < 100 )
+    {
+      drawingTimer.startTiming();
+    }
     globalSimulation->getPhysicalObjects().update( globalSimulation->getDT() );
+
+    if ( curStep < 100 )
+    {
+      cout << "Drawing ";
+      drawingTimer.stopTiming();
+      totalTime +=drawingTimer.getDuration().count();
+    }
+    else if ( curStep == 100 )
+    {
+      cout << "Avg time: " << totalTime/100  << endl;
+    }
+
+    curStep++;
 
     globalSimulation->updateTimeElapsed();
     globalMainDisplay.update();

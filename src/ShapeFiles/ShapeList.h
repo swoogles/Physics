@@ -11,6 +11,7 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <cmath>
+#include <omp.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp> 
