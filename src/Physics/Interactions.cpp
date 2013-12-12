@@ -253,10 +253,6 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation )
   {
     calcForcesAll_Naive( curSimulation );
 
-    foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
-    {
-      curShape->update( curSimulation->getDT() );
-    }
   }
   else //Calculations with Octree
   {
@@ -264,20 +260,13 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation )
     {
       ShapeList shapeList;
 
-      // int curObjectIdx = 0;
-      // int actingObjectIdx = 0;
       foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
       {
-        // if ( curObjectIdx == 0 )
-        // {
-        // TODO PHYS-22 Look at seperating position update later. I think tihs actually MUST happen because right now there's a ripple effect of force calculations and position updates. This could actually be a huge problem as it currently works.
         calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() );
-        curShape->update( curSimulation->getDT() );
-        // }
       }
-
     }
   }
+  // physicalObjects.update( curSimulation->getDT()  );
 
   // forceCalcTimer.stopTiming();
 }

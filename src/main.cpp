@@ -126,7 +126,7 @@ void display(void)
     int numShapes = 0;
     shape_pointer curShape;
     // for (unsigned int i = 0; i < numShapes; i++) 
-    #pragma omp parallel for reduction(+:numShapes)
+    // #pragma omp parallel for reduction(+:numShapes)
     for (unsigned int i = 0; i < MyShape::shapes.size(); i++) 
     {
       curShape = MyShape::shapes(i);
@@ -267,10 +267,8 @@ void idle() {
     calcCollisionsAll( globalSimulation );
     // collisionsTimer.stopTiming();
 
-    // if ( globalSimulation->getCurStep() == 0 )
-    // {
-      calcForcesAll( globalSimulation );
-    // }
+    calcForcesAll( globalSimulation );
+    globalSimulation->getPhysicalObjects().update( globalSimulation->getDT() );
 
     globalSimulation->updateTimeElapsed();
     globalMainDisplay.update();

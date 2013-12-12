@@ -42,5 +42,6 @@ class ShapeList {
     int removeShapeFromList( shape_pointer shapeToRemove );
     int clearShapes();
     compressed_vector<shape_pointer> getShapes();
+    void update(const float dt);
 };
 #endif /* SHAPE_LIST_H */

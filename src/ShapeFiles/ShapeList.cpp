@@ -59,3 +59,11 @@ compressed_vector<shape_pointer> ShapeList::getShapes()
 {
   return shapes;
 }
+
+void ShapeList::update(const float dt)
+{
+  foreach_ ( shape_pointer curShape, shapes )
+  {
+    curShape->update( dt );
+  }
+}
