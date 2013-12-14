@@ -14,6 +14,7 @@ class BillProperties
     // Using char * instead of string gets rid of heap allocation and dynamic initialization
     static const char FORCE_CALCULATION_METHOD[];
     static const char  SIMULATION_DT[];
+    static const char  PARALLEL[];
 
     bool static isValidProperty( string line );
     void readProperties();

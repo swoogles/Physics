@@ -2,6 +2,7 @@
 
 const char BillProperties::FORCE_CALCULATION_METHOD[] = "forceCalculationMethod";
 const char BillProperties::SIMULATION_DT[] = "dt";
+const char BillProperties::PARALLEL[] = "parallel";
 
 string BillProperties::at( const char target[]  )
 {

@@ -176,8 +176,12 @@ void init(char simulation) {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
+  cout << "Reading properties" << endl;
+
   globalProperties = make_shared<BillProperties>();
   globalProperties->readProperties();
+
+  cout << "Read properties" << endl;
 
   globalRecorder = make_shared<Recorder>();
   globalRecorder->imageMagickMucking();
@@ -243,7 +247,17 @@ void idle() {
     {
       drawingTimer.startTiming();
     }
-    globalSimulation->getPhysicalObjects().update( globalSimulation->getDT() );
+    
+    bool parallelize;
+    if ( globalProperties->at( BillProperties::PARALLEL ).compare( "true" ) )
+    {
+      parallelize = true;
+    }
+    else
+    {
+      parallelize = false;
+    }
+    globalSimulation->getPhysicalObjects().update( globalSimulation->getDT(), parallelize );
 
     if ( curStep < 100 )
     {
