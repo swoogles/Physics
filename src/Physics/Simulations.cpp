@@ -175,13 +175,10 @@ shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
 	curSimulation->setGravBetweenObjects(false);
   ShapeList physicalObjects;
 
-	int numPieces = 0;
 	float cueMass = 100.0;
 	float ballMass = 0.156;
 
 	float ballRadius = .95;
-
-  numPieces= numRows*numRows;
 
 	sgVec4 cueVelocity = { 30, -75, 0 };
 
@@ -196,8 +193,6 @@ shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
 	shapeForInsertion->setVelocity(cueVelocity);
 	shapeForInsertion->setColor(newColor);
   physicalObjects.addShapeToList( shapeForInsertion );
-
-	// MyShape::shapes.resize(MyShape::shapes.size() + numPieces );
 
 	for (int i = 0; i < numRows; i++) {
 		for (int j = 0; j < numRows; j++) {
@@ -225,14 +220,11 @@ shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
 	curSimulation->setGravBetweenObjects(false);
   ShapeList physicalObjects;
 
-	int numPieces = 0;
 	float cueMass = 100.0;
 	float ballMass = 0.156;
 
 	float cueRadius = 4;
 	float ballRadius = .95;
-
-  numPieces= numRows*numRows*numRows;
 
 	sgVec4 cueVelocity = { 30, -75, 20 };
 

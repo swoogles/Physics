@@ -62,8 +62,6 @@ compressed_vector<shape_pointer> ShapeList::getShapes()
 
 void ShapeList::update(const float dt, bool parallelize)
 {
-
-  int numShapes = 0;
   shape_pointer curShape;
   if ( parallelize )
   {

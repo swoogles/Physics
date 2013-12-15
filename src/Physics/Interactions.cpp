@@ -81,8 +81,6 @@ void calcForcesAll_Naive( shared_ptr<Simulation> curSimulation )
 
   sgVec4 gravField;
 
-  bool killed = false;
-
   int curObjectIdx = 0;
   int actingObjectIdx = 0;
 
@@ -344,8 +342,6 @@ void calcCollisionsAll(shared_ptr<Simulation> curSimulation)
 
   compressed_vector<shape_pointer> physicalObjects = shapeList.getShapes();
   compressed_vector<shape_pointer> deleteList;
-
-  bool killed = false;
 
   sgVec4 gravField;
 

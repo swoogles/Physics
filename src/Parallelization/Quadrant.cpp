@@ -18,9 +18,9 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   :isLeaf(true)
   ,containsBody(false)
   ,level(level)
+  ,weightedPosition({0,0,0})
   ,borders(make_shared<Box>() )
   ,quadOctree(extents[2][2][2])
-  ,weightedPosition({0,0,0})
   
 {
   setPos( pos );

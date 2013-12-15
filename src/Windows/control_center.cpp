@@ -201,8 +201,6 @@ void control_center::init( shared_ptr<Simulation> residentSimulation ) {
   dec_dt_button->setUserData( &residentSimulation );
   dec_dt_button->setCallback( alterDT );
 
-  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)dec_dt_button->getUserData();
-
   pause_dt_button = new puButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
   curX += (placementWidth +gap);
   pause_dt_button->setLegend("Pause");
