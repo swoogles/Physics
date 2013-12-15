@@ -15,7 +15,6 @@ Box::Box()
   width = 1;
   height = 1;
   depth = 1;
-  sgMakeIdentQuat(orientationQuat);
 }
 
 
@@ -36,8 +35,6 @@ matrix<double> Box::getPts() {
 		pts(ptsIt, 2) = 0;
 		pts(ptsIt, 3) = 1;
 
-		//row(pts, ptsIt) = prod(rotMat, row(pts, ptsIt) );
-
 		xVal += xDelta;
 		ptsIt++;
 	}
@@ -47,8 +44,6 @@ matrix<double> Box::getPts() {
 		pts(ptsIt, 1) = yVal;
 		pts(ptsIt, 2) = 0;
 		pts(ptsIt, 3) = 1;
-
-		//row(pts, ptsIt) = prod(rotMat, row(pts, ptsIt) );
 
 		yVal -= yDelta;
 		ptsIt++;
@@ -60,8 +55,6 @@ matrix<double> Box::getPts() {
 		pts(ptsIt, 2) = 0;
 		pts(ptsIt, 3) = 1;
 
-		//row(pts, ptsIt) = prod(rotMat, row(pts, ptsIt) );
-
 		xVal -= xDelta;
 		ptsIt++;
 	}
@@ -72,13 +65,9 @@ matrix<double> Box::getPts() {
 		pts(ptsIt, 2) = 0;
 		pts(ptsIt, 3) = 1;
 
-		//row(pts, ptsIt) = prod(rotMat, row(pts, ptsIt) );
-
 		yVal += yDelta;
 		ptsIt++;
 	}
-
-
 
 	return pts;
 }
