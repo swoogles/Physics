@@ -10,11 +10,12 @@
 //Initializing the static variables needed for drawing
 GLfloat * Box::cube_vertices = new GLfloat[48];
 
-Box::Box() {
+Box::Box()
+{
   width = 1;
   height = 1;
   depth = 1;
-	sgMakeIdentQuat(orientationQuat);
+  sgMakeIdentQuat(orientationQuat);
 }
 
 

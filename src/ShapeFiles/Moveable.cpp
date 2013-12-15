@@ -33,6 +33,7 @@ Moveable::Moveable()
 				orientationMat[i][j] = 1;
 			}
 			else {
+        orientationMat[i][j] = 0;
 			}
 		}
 	}
@@ -86,9 +87,9 @@ void Moveable::setAngle(float xAngle, float yAngle, float zAngle) {
 	sgPostMultQuat(orientationQuat, tempQuat);
 
 	sgAngleAxisToQuat(tempQuat, zAngle, zAxis);
-	sgPostMultQuat(orientationQuat, tempQuat);
+  sgPostMultQuat(orientationQuat, tempQuat);
 
-	sgQuatToMatrix(orientationMat, orientationQuat);
+  sgQuatToMatrix(orientationMat, orientationQuat);
 }
 
 void Moveable::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
@@ -98,7 +99,6 @@ void Moveable::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
 
 	sgPostMultQuat(orientationQuat, tempRotQuat);
 	sgQuatToMatrix(orientationMat, orientationQuat);
-
 }
 
 void Moveable::setVelocity(float inX, float inY, float inZ) {
