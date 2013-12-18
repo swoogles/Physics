@@ -188,7 +188,7 @@ void MyShape::clearShapes() {
 
 int MyShape::getType() const { return 1;}
 
-int MyShape::addShapeToList( const shape_pointer insertShape )
+int MyShape::addShapeToList( shape_pointer insertShape )
 {
   int curSize = shapes.size();
   shapes.resize(curSize + 1);
@@ -196,7 +196,7 @@ int MyShape::addShapeToList( const shape_pointer insertShape )
   return curSize;
 }
 
-void MyShape::removeShapeFromList( const shape_pointer shapeToRemove )
+void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
 {
   compressed_vector<shape_pointer> newShapeVector;
   int newSize =  shapes.size();

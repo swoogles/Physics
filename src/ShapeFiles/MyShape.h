@@ -180,8 +180,8 @@ class MyShape : public Moveable {
      *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
      *  \return Pointer to desired moveable
      */
-    static int addShapeToList( const shape_pointer insertShape );
+    static int addShapeToList( shape_pointer insertShape );
 
-    static void removeShapeFromList( const shape_pointer shapeToRemove );
+    static void removeShapeFromList( shape_pointer shapeToRemove );
 };
 #endif /* MYSHAPE_H_ */
