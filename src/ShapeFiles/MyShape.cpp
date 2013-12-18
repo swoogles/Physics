@@ -58,7 +58,7 @@ void MyShape::setMomentum(float inX, float inY, float inZ) {
 	sgCopyVec4(prevMomentum, momentum);
 }
 
-void MyShape::setMomentum(sgVec4 newMomentum) {
+void MyShape::setMomentum(const sgVec4 newMomentum) {
 	sgCopyVec4(momentum, newMomentum);
 	sgCopyVec4(prevMomentum, momentum);
 }
@@ -69,24 +69,24 @@ void MyShape::adjustMomentum(float dx, float dy, float dz) {
 	momentum[2] += dz;
 }
 
-void MyShape::adjustMomentum(sgVec4 dMomentum) {
+void MyShape::adjustMomentum(const sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
 }
 
-void MyShape::getMomentum(sgVec4 retVec) {
+void MyShape::getMomentum(sgVec4 retVec) const{
 	sgCopyVec4(retVec, momentum);
 }
 
-std::string MyShape::getMomentumString()
+std::string MyShape::getMomentumString() const
 {
   string posString = "<" + lexical_cast<std::string>( momentum[0] )  + ", " + lexical_cast<std::string>( momentum[0] ) + ", " + lexical_cast<std::string>( momentum[0] ) + ">";
   return posString;
 }
 
 // Angular Momentum and Velocity
-float MyShape::getMomentOfInertia() { return 1;}
+float MyShape::getMomentOfInertia() const { return 1;}
 
-void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
+void MyShape::setAngMomentum(const sgVec4 newAngMomentum) {
 	float I = getMomentOfInertia();
 	sgCopyVec4(angMomentum, newAngMomentum);
 	sgCopyVec4(angVelocity, angMomentum);
@@ -94,7 +94,7 @@ void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
 	sgCopyVec4(prevAngVelocity, angVelocity);
 }
 
-void MyShape::adjustAngMomentum(sgVec4 dAngMomentum) {
+void MyShape::adjustAngMomentum(const sgVec4 dAngMomentum) {
 	//TODO generalize for other shapes
 	float I = getMomentOfInertia();
 
@@ -103,7 +103,7 @@ void MyShape::adjustAngMomentum(sgVec4 dAngMomentum) {
 	sgScaleVec4(angVelocity, 1.0/I);
 }
 
-void MyShape::getAngMomentum(sgVec4 retVec) {
+void MyShape::getAngMomentum(sgVec4 retVec) const{
 	sgCopyVec4(retVec, angMomentum);
 }
 
@@ -115,7 +115,7 @@ void MyShape::adjustMass(float dMass) {
 	mass += dMass;
 }
 
-float MyShape::getMass() {
+float MyShape::getMass() const{
 	return mass;
 }
 
@@ -123,7 +123,7 @@ void MyShape::setDensity(float newDensity) {
 	density = newDensity;
 }
 
-float MyShape::getDensity() {
+float MyShape::getDensity() const{
 	return density;
 }
 
@@ -151,16 +151,16 @@ bool MyShape::setKineticEnergy(float newKineticEnergy)
 }
 
 //! Returns kineticEnergy of object
-float MyShape::getKineticEnergy()
+float MyShape::getKineticEnergy() const
 {
   return kineticEnergy;
 }
 
-void MyShape::setColor(sgVec3 newColor) {
+void MyShape::setColor(const sgVec3 newColor) {
 	sgCopyVec3(color, newColor);
 }
 
-void MyShape::getColor(sgVec3 retVec) {
+void MyShape::getColor(sgVec3 retVec) const{
 	sgCopyVec3(retVec, color);
 }
 
@@ -186,9 +186,9 @@ void MyShape::clearShapes() {
 	shapes.resize(0);
 }
 
-int MyShape::getType() { return 1;}
+int MyShape::getType() const { return 1;}
 
-int MyShape::addShapeToList( shape_pointer insertShape )
+int MyShape::addShapeToList( const shape_pointer insertShape )
 {
   int curSize = shapes.size();
   shapes.resize(curSize + 1);
@@ -196,7 +196,7 @@ int MyShape::addShapeToList( shape_pointer insertShape )
   return curSize;
 }
 
-void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
+void MyShape::removeShapeFromList( const shape_pointer shapeToRemove )
 {
   compressed_vector<shape_pointer> newShapeVector;
   int newSize =  shapes.size();
@@ -226,4 +226,4 @@ void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
 }
 
 void MyShape::setRadius(float) {}
-float MyShape::getRadius() { return 1;}
+float MyShape::getRadius() const { return 1;}
