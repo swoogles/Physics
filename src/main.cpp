@@ -242,11 +242,11 @@ void idle() {
 
     calcForcesAll( globalSimulation );
 
-    Timer drawingTimer = Timer();
-    if ( curStep < 100 )
-    {
-      drawingTimer.startTiming();
-    }
+    // Timer drawingTimer = Timer();
+    // if ( curStep < 100 )
+    // {
+    //   drawingTimer.startTiming();
+    // }
     
     bool parallelize;
     if ( globalProperties->at( BillProperties::PARALLEL ).compare( "true" ) )
@@ -259,18 +259,18 @@ void idle() {
     }
     globalSimulation->getPhysicalObjects().update( globalSimulation->getDT(), parallelize );
 
-    if ( curStep < 100 )
-    {
-      cout << "Drawing ";
-      drawingTimer.stopTiming();
-      totalTime +=drawingTimer.getDuration().count();
-    }
-    else if ( curStep == 100 )
-    {
-      cout << "Avg time: " << totalTime/100  << endl;
-    }
+    // if ( curStep < 100 )
+    // {
+    //   cout << "Drawing ";
+    //   drawingTimer.stopTiming();
+    //   totalTime +=drawingTimer.getDuration().count();
+    // }
+    // else if ( curStep == 100 )
+    // {
+    //   cout << "Avg time: " << totalTime/100  << endl;
+    // }
 
-    curStep++;
+    // curStep++;
 
     globalSimulation->updateTimeElapsed();
     globalMainDisplay.update();

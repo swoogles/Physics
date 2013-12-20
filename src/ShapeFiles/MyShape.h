@@ -122,7 +122,9 @@ class MyShape : public Moveable {
     //! Alters angular momentum of object by <dAngMomentum>
     void adjustAngMomentum(const sgVec4 dAngMomentum);
     //! Returns angular momentum of object in retVec
-    void getAngMomentum(sgVec4 retVec) const;
+    void getAngMomentum(sgVec4 retVec);
+    //! Print angular momentum of object. Format: <##,##,##>
+    std::string getAngMomentumString();
 
     //! Sets mass of object to newMass
     void setMass(float newMass);

@@ -22,7 +22,7 @@ using namespace std;
 
 void intToAsc(int iCurPic, char * sCurPic);
 
-bool screenshot(unsigned int width, unsigned int height, char *path, int quality);
+bool screenshot(unsigned int width, unsigned int height, const char * const path, int quality);
 
 using namespace Magick;
 // using Magick::Image;

@@ -106,7 +106,7 @@ bool Recorder::captureThisFrame(unsigned int width, unsigned int height) {
 }
 
 
-bool screenshot(unsigned int width, unsigned int height, char *path, int quality)
+bool screenshot(unsigned int width, unsigned int height, const char * const path, int quality)
 {
   bool ret=false;
 
@@ -117,6 +117,9 @@ bool screenshot(unsigned int width, unsigned int height, char *path, int quality
   PixelPacket* magickPixels;
   FILE *shot;
   int row_stride; // width of row in image buffer
+
+  // TODO get this working
+  // char * defaultPath = "/home/bfrasure/output/outFrame";
 
   Geometry g1(1280,720);
   Color imageColor( "orange" );
@@ -133,7 +136,7 @@ bool screenshot(unsigned int width, unsigned int height, char *path, int quality
     row_stride = width * 3;
 
     pixels = (GLubyte *)malloc(sizeof(GLubyte)*width*height*3);
-    cout << "sizeof: " << (sizeof(GLubyte)*width*height*3) << endl;
+    // cout << "sizeof: " << (sizeof(GLubyte)*width*height*3) << endl;
     flip = (GLubyte *)malloc(sizeof(GLubyte)*width*height*3);
 
     char* buffer = ( char* ) malloc (sizeof(GLubyte)*width*height*3);
