@@ -107,6 +107,12 @@ void MyShape::getAngMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, angMomentum);
 }
 
+std::string MyShape::getAngMomentumString()
+{
+  string angMomString = "<" + lexical_cast<std::string>( angMomentum[0] )  + ", " + lexical_cast<std::string>( angMomentum[0] ) + ", " + lexical_cast<std::string>( angMomentum[0] ) + ">";
+  return angMomString;
+}
+
 void MyShape::setMass(float newMass) {
 	mass = newMass;
 }
