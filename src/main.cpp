@@ -224,6 +224,8 @@ void init(char simulation) {
 }
 
 void idle() {
+  //The program is working fine at this commit: bc0fed62b95fa02206c96ab10945e9d39582744e
+  // Figure out where things went so wrong
   sgVec4 curPos;
 
   if (! globalSimulation->isPaused()  ) {
