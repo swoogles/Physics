@@ -32,7 +32,8 @@ void MyShape::draw() const{
 	glTranslatef(pos[0], pos[1], pos[2]);
 
 	//Rotate
-	glMultMatrixf( (const GLfloat*) orientationMat);
+  // TODO TURN THIS BACK ON. YOU ARE NOT ROTATING ANYTHING RIGHT NOW
+	// glMultMatrixf( (const GLfloat*)orientationMat);
 
 	//Scale
 	drawScale();
@@ -58,7 +59,7 @@ void MyShape::setMomentum(float inX, float inY, float inZ) {
 	sgCopyVec4(prevMomentum, momentum);
 }
 
-void MyShape::setMomentum(const sgVec4 newMomentum) {
+void MyShape::setMomentum(sgVec4 newMomentum) {
 	sgCopyVec4(momentum, newMomentum);
 	sgCopyVec4(prevMomentum, momentum);
 }
@@ -69,24 +70,24 @@ void MyShape::adjustMomentum(float dx, float dy, float dz) {
 	momentum[2] += dz;
 }
 
-void MyShape::adjustMomentum(const sgVec4 dMomentum) {
+void MyShape::adjustMomentum(sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
 }
 
-void MyShape::getMomentum(sgVec4 retVec) const{
+void MyShape::getMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, momentum);
 }
 
-std::string MyShape::getMomentumString() const
+std::string MyShape::getMomentumString()
 {
   string posString = "<" + lexical_cast<std::string>( momentum[0] )  + ", " + lexical_cast<std::string>( momentum[0] ) + ", " + lexical_cast<std::string>( momentum[0] ) + ">";
   return posString;
 }
 
 // Angular Momentum and Velocity
-float MyShape::getMomentOfInertia() const { return 1;}
+float MyShape::getMomentOfInertia() { return 1;}
 
-void MyShape::setAngMomentum(const sgVec4 newAngMomentum) {
+void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
 	float I = getMomentOfInertia();
 	sgCopyVec4(angMomentum, newAngMomentum);
 	sgCopyVec4(angVelocity, angMomentum);
@@ -94,7 +95,7 @@ void MyShape::setAngMomentum(const sgVec4 newAngMomentum) {
 	sgCopyVec4(prevAngVelocity, angVelocity);
 }
 
-void MyShape::adjustAngMomentum(const sgVec4 dAngMomentum) {
+void MyShape::adjustAngMomentum(sgVec4 dAngMomentum) {
 	//TODO generalize for other shapes
 	float I = getMomentOfInertia();
 
@@ -103,14 +104,8 @@ void MyShape::adjustAngMomentum(const sgVec4 dAngMomentum) {
 	sgScaleVec4(angVelocity, 1.0/I);
 }
 
-void MyShape::getAngMomentum(sgVec4 retVec){
+void MyShape::getAngMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, angMomentum);
-}
-
-std::string MyShape::getAngMomentumString()
-{
-  string angMomString = "<" + lexical_cast<std::string>( angMomentum[0] )  + ", " + lexical_cast<std::string>( angMomentum[0] ) + ", " + lexical_cast<std::string>( angMomentum[0] ) + ">";
-  return angMomString;
 }
 
 void MyShape::setMass(float newMass) {
@@ -121,7 +116,7 @@ void MyShape::adjustMass(float dMass) {
 	mass += dMass;
 }
 
-float MyShape::getMass() const{
+float MyShape::getMass() {
 	return mass;
 }
 
@@ -129,7 +124,7 @@ void MyShape::setDensity(float newDensity) {
 	density = newDensity;
 }
 
-float MyShape::getDensity() const{
+float MyShape::getDensity() {
 	return density;
 }
 
@@ -157,16 +152,16 @@ bool MyShape::setKineticEnergy(float newKineticEnergy)
 }
 
 //! Returns kineticEnergy of object
-float MyShape::getKineticEnergy() const
+float MyShape::getKineticEnergy()
 {
   return kineticEnergy;
 }
 
-void MyShape::setColor(const sgVec3 newColor) {
+void MyShape::setColor(sgVec3 newColor) {
 	sgCopyVec3(color, newColor);
 }
 
-void MyShape::getColor(sgVec3 retVec) const{
+void MyShape::getColor(sgVec3 retVec) {
 	sgCopyVec3(retVec, color);
 }
 
@@ -192,7 +187,7 @@ void MyShape::clearShapes() {
 	shapes.resize(0);
 }
 
-int MyShape::getType() const { return 1;}
+int MyShape::getType() { return 1;}
 
 int MyShape::addShapeToList( shape_pointer insertShape )
 {
@@ -232,4 +227,4 @@ void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
 }
 
 void MyShape::setRadius(float) {}
-float MyShape::getRadius() const { return 1;}
+float MyShape::getRadius() { return 1;}

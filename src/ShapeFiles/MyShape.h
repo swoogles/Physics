@@ -89,7 +89,7 @@ class MyShape : public Moveable {
     //! Purely virtual method used by Circle
     virtual void setRadius(float );
     //! Purely virtual method used by Circle
-    virtual float getRadius() const;
+    virtual float getRadius();
 
     //! Calculates orientationMat based on orientationQuat
     void calcRotMat();
@@ -97,56 +97,54 @@ class MyShape : public Moveable {
     //! Sets momentum of object to <inX, inY, inZ>
     void setMomentum(float inX, float inY, float inZ);
     //! Sets momentum of object to <newMomentum>
-    void setMomentum(const sgVec4 newMomentum);
+    void setMomentum(sgVec4 newMomentum);
 
     //! Alters momentum by <dx, dy, dz>
     void adjustMomentum(float dx, float dy, float dz);
     //! Alters momentum by <dMomentum>
-    void adjustMomentum(const sgVec4 dMomentum);
+    void adjustMomentum(sgVec4 dMomentum);
 
     //! Returns momentum of object in retVec
-    void getMomentum(sgVec4 retVec) const;
+    void getMomentum(sgVec4 retVec);
 
     //! Print momentum of object. Format: <##,##,##>
-    std::string getMomentumString() const;
+    std::string getMomentumString();
 
     /*! \brief Calculates the moment of inertia for the object
      *
      *  Calculation varies for different types of object
      *  \return Moment of Inertia value
      */
-    virtual float getMomentOfInertia() const;
+    virtual float getMomentOfInertia();
 
     //! Sets angular momentum of object to <newAngMomentum>
-    void setAngMomentum(const sgVec4 newAngMomentum);
+    void setAngMomentum(sgVec4 newAngMomentum);
     //! Alters angular momentum of object by <dAngMomentum>
-    void adjustAngMomentum(const sgVec4 dAngMomentum);
+    void adjustAngMomentum(sgVec4 dAngMomentum);
     //! Returns angular momentum of object in retVec
     void getAngMomentum(sgVec4 retVec);
-    //! Print angular momentum of object. Format: <##,##,##>
-    std::string getAngMomentumString();
 
     //! Sets mass of object to newMass
     void setMass(float newMass);
     //! Alters mass of object by dMass
     void adjustMass(float dMass);
     //! Returns mass of object
-    float getMass() const;
+    float getMass();
 
     //! Sets density of object to newDensity
     void setDensity(float newDensity);
     //! Returns density of object
-    float getDensity() const;
+    float getDensity();
 
     //! Sets kineticEnergy of object to newDensity
     bool setKineticEnergy(float newKineticEnergy);
     //! Returns kineticEnergy of object
-    float getKineticEnergy() const;
+    float getKineticEnergy();
 
     //! Sets color of object to <newColor>
-    void setColor(const sgVec3 newColor);
+    void setColor(sgVec3 newColor);
     //! Returns color of object in retVec
-    void getColor(sgVec3 retVec) const;
+    void getColor(sgVec3 retVec);
 
     /*! \brief Calculates color of object based on how a star of that mass/density would burn
      *
@@ -164,7 +162,7 @@ class MyShape : public Moveable {
      *  \n 2: Box
      *  \n Rest to be determined
      */
-    virtual int getType() const;
+    virtual int getType();
 
     /*! \brief Vector that holds all currently active shapes
      *
