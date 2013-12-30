@@ -60,25 +60,10 @@ compressed_vector<shape_pointer> ShapeList::getShapes()
   return shapes;
 }
 
-void ShapeList::update(const float dt, bool parallelize)
+void ShapeList::update(const float dt)
 {
-  shape_pointer curShape;
-  if ( parallelize )
+  foreach_ ( shape_pointer curShape, shapes )
   {
-    omp_set_num_threads(2);
-    #pragma omp parallel for 
-    for (unsigned int i = 0; i < MyShape::shapes.size(); i++) 
-    {
-      curShape = MyShape::shapes(i);
-      curShape->update( dt );
-    }
-  }
-  else
-  {
-    for (unsigned int i = 0; i < MyShape::shapes.size(); i++) 
-    {
-      curShape = MyShape::shapes(i);
-      curShape->update( dt );
-    }
+    curShape->update( dt );
   }
 }

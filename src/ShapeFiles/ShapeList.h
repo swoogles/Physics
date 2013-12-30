@@ -11,7 +11,6 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <cmath>
-#include <omp.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp> 
@@ -43,6 +42,6 @@ class ShapeList {
     int removeShapeFromList( shape_pointer shapeToRemove );
     int clearShapes();
     compressed_vector<shape_pointer> getShapes();
-    void update(const float dt, bool parallelize);
+    void update(const float dt);
 };
 #endif /* SHAPE_LIST_H */

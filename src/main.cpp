@@ -13,7 +13,7 @@
 #include <boost/foreach.hpp>
 #include <boost/ref.hpp>
 #include <boost/thread/thread.hpp>
-#include <boost/thread/scoped_thread.hpp>
+// #include <boost/thread/scoped_thread.hpp>
 
 #include <float.h>
 #include <string>
@@ -186,7 +186,7 @@ void init(char simulation) {
   globalRecorder = make_shared<Recorder>();
   globalRecorder->imageMagickMucking();
 
-  boost::strict_scoped_thread<> t((boost::thread( sneeze )));
+  // boost::strict_scoped_thread<> t((boost::thread( sneeze )));
 
   Observer::init();
 
@@ -250,6 +250,7 @@ void idle() {
     //   drawingTimer.startTiming();
     // }
     
+    // Not using this for now because of all the corrupted list problems I was getting
     bool parallelize;
     if ( globalProperties->at( BillProperties::PARALLEL ).compare( "true" ) )
     {
@@ -259,7 +260,7 @@ void idle() {
     {
       parallelize = false;
     }
-    globalSimulation->getPhysicalObjects().update( globalSimulation->getDT(), parallelize );
+    globalSimulation->getPhysicalObjects().update( globalSimulation->getDT() );
 
     // if ( curStep < 100 )
     // {
