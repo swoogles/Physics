@@ -33,7 +33,7 @@ void MyShape::draw() const{
 
 	//Rotate
   // TODO TURN THIS BACK ON. YOU ARE NOT ROTATING ANYTHING RIGHT NOW
-	// glMultMatrixf( (const GLfloat*)orientationMat);
+	glMultMatrixf( (const GLfloat*)orientationMat);
 
 	//Scale
 	drawScale();
@@ -59,7 +59,7 @@ void MyShape::setMomentum(float inX, float inY, float inZ) {
 	sgCopyVec4(prevMomentum, momentum);
 }
 
-void MyShape::setMomentum(sgVec4 newMomentum) {
+void MyShape::setMomentum(const sgVec4 newMomentum) {
 	sgCopyVec4(momentum, newMomentum);
 	sgCopyVec4(prevMomentum, momentum);
 }
@@ -70,24 +70,24 @@ void MyShape::adjustMomentum(float dx, float dy, float dz) {
 	momentum[2] += dz;
 }
 
-void MyShape::adjustMomentum(sgVec4 dMomentum) {
+void MyShape::adjustMomentum(const sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
 }
 
-void MyShape::getMomentum(sgVec4 retVec) {
+void MyShape::getMomentum(sgVec4 retVec) const{
 	sgCopyVec4(retVec, momentum);
 }
 
-std::string MyShape::getMomentumString()
+std::string MyShape::getMomentumString() const
 {
   string posString = "<" + lexical_cast<std::string>( momentum[0] )  + ", " + lexical_cast<std::string>( momentum[0] ) + ", " + lexical_cast<std::string>( momentum[0] ) + ">";
   return posString;
 }
 
 // Angular Momentum and Velocity
-float MyShape::getMomentOfInertia() { return 1;}
+float MyShape::getMomentOfInertia() const { return 1;}
 
-void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
+void MyShape::setAngMomentum(const sgVec4 newAngMomentum) {
 	float I = getMomentOfInertia();
 	sgCopyVec4(angMomentum, newAngMomentum);
 	sgCopyVec4(angVelocity, angMomentum);
@@ -95,7 +95,7 @@ void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
 	sgCopyVec4(prevAngVelocity, angVelocity);
 }
 
-void MyShape::adjustAngMomentum(sgVec4 dAngMomentum) {
+void MyShape::adjustAngMomentum(const sgVec4 dAngMomentum) {
 	//TODO generalize for other shapes
 	float I = getMomentOfInertia();
 
@@ -107,6 +107,13 @@ void MyShape::adjustAngMomentum(sgVec4 dAngMomentum) {
 void MyShape::getAngMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, angMomentum);
 }
+
+std::string MyShape::getAngMomentumString() const
+{
+  string angMomString = "<" + lexical_cast<std::string>( angMomentum[0] )  + ", " + lexical_cast<std::string>( angMomentum[0] ) + ", " + lexical_cast<std::string>( angMomentum[0] ) + ">";
+  return angMomString;
+}
+
 
 void MyShape::setMass(float newMass) {
 	mass = newMass;

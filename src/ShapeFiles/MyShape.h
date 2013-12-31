@@ -97,32 +97,34 @@ class MyShape : public Moveable {
     //! Sets momentum of object to <inX, inY, inZ>
     void setMomentum(float inX, float inY, float inZ);
     //! Sets momentum of object to <newMomentum>
-    void setMomentum(sgVec4 newMomentum);
+    void setMomentum(const sgVec4 newMomentum);
 
     //! Alters momentum by <dx, dy, dz>
     void adjustMomentum(float dx, float dy, float dz);
     //! Alters momentum by <dMomentum>
-    void adjustMomentum(sgVec4 dMomentum);
+    void adjustMomentum(const sgVec4 dMomentum);
 
     //! Returns momentum of object in retVec
-    void getMomentum(sgVec4 retVec);
+    void getMomentum(sgVec4 retVec) const;
 
     //! Print momentum of object. Format: <##,##,##>
-    std::string getMomentumString();
+    std::string getMomentumString() const;
 
     /*! \brief Calculates the moment of inertia for the object
      *
      *  Calculation varies for different types of object
      *  \return Moment of Inertia value
      */
-    virtual float getMomentOfInertia();
+    virtual float getMomentOfInertia() const;
 
     //! Sets angular momentum of object to <newAngMomentum>
-    void setAngMomentum(sgVec4 newAngMomentum);
+    void setAngMomentum(const sgVec4 newAngMomentum);
     //! Alters angular momentum of object by <dAngMomentum>
-    void adjustAngMomentum(sgVec4 dAngMomentum);
+    void adjustAngMomentum(const sgVec4 dAngMomentum);
     //! Returns angular momentum of object in retVec
     void getAngMomentum(sgVec4 retVec);
+    //! Print angular momentum of object. Format: <##,##,##>
+    std::string getAngMomentumString() const;
 
     //! Sets mass of object to newMass
     void setMass(float newMass);
