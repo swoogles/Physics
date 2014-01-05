@@ -1,0 +1,2 @@
+# Used this to add -Wall flag to all make files in project
+sed -i 's_g++_g++ -Wall_g' `find . -iname "*mk"`
