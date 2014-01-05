@@ -448,10 +448,11 @@ void calcMergedAngMomentum(shared_ptr<MyShape> object1, shared_ptr<MyShape> obje
   object2->getPos(bPos);
   sgSubVec4( sepVec, aPos, bPos );
   sgNormaliseVec4( sepVecUnit, sepVec );
-  sgSubVec3( r, aPos, hitPt );
 
   sgScaleVec4(tempVec, sepVecUnit, object1->getRadius());
   sgAddVec4(hitPt, aPos, tempVec);
+  
+  sgSubVec3( r, aPos, hitPt );
 
   for (int i = 0; i < 3; i++) {
     totalAngMom3[i] = 0;
@@ -459,31 +460,34 @@ void calcMergedAngMomentum(shared_ptr<MyShape> object1, shared_ptr<MyShape> obje
 
 
   // COM Calc Start
-  sgCopyVec4(tempVec, aPos);
-  sgCopyVec4(tempVec2, bPos);
+  // sgCopyVec4(tempVec, aPos);
+  // sgCopyVec4(tempVec2, bPos);
 
-  sgScaleVec4(tempVec, object1->getMass());
-  sgScaleVec4(tempVec2, object2->getMass());
+  // sgScaleVec4(tempVec, object1->getMass());
+  // sgScaleVec4(tempVec2, object2->getMass());
 
-  sgAddVec4(COM,tempVec, tempVec2);
-  sgScaleVec4(COM, 1/(object1->getMass() + object2->getMass()) );
+  // sgAddVec4(COM,tempVec, tempVec2);
+  // sgScaleVec4(COM, 1/(object1->getMass() + object2->getMass()) );
   // COM Calc End
 
   object1->getMomentum(aMomentum);
   object2->getMomentum(bMomentum);
 
-  sgSubVec3( r, aPos, hitPt );
+  // sgSubVec3( r, aPos, hitPt );
+  crossed[0]=0;
+  crossed[1]=0;
+  crossed[2]=0;
 
   aMom3[0] = aMomentum[0];
   aMom3[1] = aMomentum[1];
   aMom3[2] = aMomentum[2];
-  // cout << "aMom3: < " << aMom3[0] << ", " << aMom3[1] << ", " << aMom3[2] << endl;
-  // cout << "r: < " << r[0] << ", " << r[1] << ", " << r[2] << endl;
+  cout << "aMom3: < " << aMom3[0] << ", " << aMom3[1] << ", " << aMom3[2] << ">" << endl;
+  cout << "r: < " << r[0] << ", " << r[1] << ", " << r[2] << ">" << endl;
   sgVectorProductVec3(crossed, r, aMom3);
-  // cout << "crossed: < " << crossed[0] << ", " << crossed[1] << ", " << crossed[2] << endl;
+  cout << "crossed: < " << crossed[0] << ", " << crossed[1] << ", " << crossed[2] << ">" << endl;
 
-  // cout << "totAngMom3: < " << totalAngMom3[0] << ", " << totalAngMom3[1] << ", " << totalAngMom3[2] << endl;
   sgAddVec3(totalAngMom3, crossed);
+  cout << "totAngMom3: < " << totalAngMom3[0] << ", " << totalAngMom3[1] << ", " << totalAngMom3[2] << ">" << endl;
 
   sgSubVec3( r, bPos, hitPt );
 
