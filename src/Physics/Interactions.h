@@ -23,7 +23,7 @@ using namespace std;
 
 using boost::shared_ptr;
 using boost::numeric::ublas::compressed_vector;
-typedef shared_ptr<MyShape> shape_pointer;
+typedef boost::shared_ptr<MyShape> shape_pointer;
 
 /*! \relates MyShape
  *  \brief Calculates new velocities after a collision
@@ -32,12 +32,12 @@ typedef shared_ptr<MyShape> shape_pointer;
  *  both objects have their elastic bools on.
  *
  */
-void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, float dt);
+void elasticCollision( boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt);
 
-void calcForceOnObject_Octree( shape_pointer curObject, shared_ptr<Quadrant> curQuadrant, float dt);
+void calcForceOnObject_Octree( shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt);
 
 
-void calcForcesAll( shared_ptr<Simulation> curSimulation );
+void calcForcesAll( boost::shared_ptr<Simulation> curSimulation );
 
 /*! \relates MyShape
  *  \brief Calculates forces on all current objects
@@ -47,21 +47,21 @@ void calcForcesAll( shared_ptr<Simulation> curSimulation );
  *
  *  \param dt Determines time over which each force acts
  */
-void calcForcesAll_Naive( shared_ptr<Simulation> curSimulation );
+void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation );
 
 /*! \relates MyShape
  *  \brief Determines if any objects are colliding and responds appropriately.
  *
  *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
  */
-void calcCollisionsAll(shared_ptr<Simulation> curSimulation);
+void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation);
 
 /*! \relates MyShape
  *  \brief Calculates magnitude of the force of gravity between 2 objects
  *
  *
  */
-float calcForceGrav(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, SGfloat rSquared);
+float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, SGfloat rSquared);
 
 
 /*! \relates MyShape
@@ -71,7 +71,7 @@ float calcForceGrav(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, SG
  *  \param object2 End Object
  *  \param sepVector Calculated separation vector
  */
-void getVectorToObject2(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, sgVec4 sepVector);
+void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 sepVector);
 
 /*! \relates MyShape
  *  \brief Finds a vector pointing from object1 to object2
@@ -80,7 +80,7 @@ void getVectorToObject2(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2
  *  \param object2 End Object
  *  \param sepVector Calculated separation vector
  */
-void getVectorToQuadrant(shared_ptr<MyShape> object1, shared_ptr<Quadrant> quadrant, sgVec4 sepVector);
+void getVectorToQuadrant(boost::shared_ptr<MyShape> object1, boost::shared_ptr<Quadrant> quadrant, sgVec4 sepVector);
 
 
 /*! \relates MyShape
@@ -99,7 +99,7 @@ void getVectorToQuadrant(shared_ptr<MyShape> object1, shared_ptr<Quadrant> quadr
  *
  *	\return The angular momentum to be assigned to the merged object
  */
-void calcMergedAngMomentum(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, sgVec4 retAngMomentum);
+void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 retAngMomentum);
 
 
 /*! \relates Circle
@@ -120,7 +120,7 @@ float calcMergedRadius(float massBoth, float density);
  *
  *  Note: This function does NOT delete the second object, currently that must be handled outside
  */
-void mergeObjects(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2);
+void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2);
 
 
 /*! \relates Circle
@@ -168,7 +168,7 @@ void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass);
  *  \brief Returns true if objects are touching eachother
  *
  */
-bool contact(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2);
+bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2);
 
 /*! \relates MyShape
  *  \brief Returns true if new shape is placed on top of a previously created shape

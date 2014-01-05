@@ -7,7 +7,7 @@
 
 #include "MyShape.h"
 
-compressed_vector< shared_ptr<MyShape> > MyShape::shapes(0);
+compressed_vector< boost::shared_ptr<MyShape> > MyShape::shapes(0);
 
 MyShape::MyShape()
 {

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, float dt) {
+void elasticCollision( boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt) {
 	sgVec4 sepVec;
 	sgVec4 sepVecUnit;
 
@@ -50,7 +50,7 @@ void elasticCollision( shared_ptr<MyShape> object1, shared_ptr<MyShape> object2,
 
 }
 
-bool contact(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2) {
+bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2) {
 	sgVec4 sepVec;
 	float minSep;
 	SGfloat distance, distanceSquared;
@@ -68,14 +68,14 @@ bool contact(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2) {
 		return false;
 }
 
-void calcForcesAll_Naive( shared_ptr<Simulation> curSimulation ) 
+void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation ) 
 {
   compressed_vector<shape_pointer> physicalObjects = curSimulation->getPhysicalObjects().getShapes();
   float dt = curSimulation->getDT();
   sgVec4 sepVec;
   sgVec4 unitVec;
   sgVec4 gravVec;
-  shared_ptr<MyShape> object1, object2;
+  boost::shared_ptr<MyShape> object1, object2;
   float fGrav;
   SGfloat distanceSquared;
 
@@ -145,14 +145,14 @@ void calcForcesAll_Naive( shared_ptr<Simulation> curSimulation )
 
 }
 
-void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQuadrant, float dt) 
+void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt) 
 {
   sgVec4 sepVec, unitVec, gravVec;
-  shared_ptr<MyShape> object1, object2, shapeInQuadrant;
+  boost::shared_ptr<MyShape> object1, object2, shapeInQuadrant;
   float fGrav;
   SGfloat distance, distanceSquared;
   SGfloat theta = 0.5;
-  typedef shared_ptr<Quadrant> quad_pointer;
+  typedef boost::shared_ptr<Quadrant> quad_pointer;
 
   //1. 
     //a. If the current node is an external node 
@@ -237,7 +237,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, shared_ptr<Quadrant> curQ
 
 }
 
-void calcForcesAll( shared_ptr<Simulation> curSimulation )
+void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
 {
   ShapeList physicalObjects = curSimulation->getPhysicalObjects();
   if ( curSimulation->getCurStep() % 100 == 0 )
@@ -275,7 +275,7 @@ bool isConflict(int newShape)
   SGfloat distanceSquared, distance, minSep;
   bool conflict = false;
 
-  shared_ptr<MyShape> object1, object2;
+  boost::shared_ptr<MyShape> object1, object2;
 
   object2 = MyShape::shapes(newShape);
 
@@ -306,8 +306,8 @@ bool isConflict_ArbitraryList( compressed_vector<shape_pointer> physicalObjects,
   SGfloat distanceSquared, distance, minSep;
   bool conflict = false;
 
-  shared_ptr<MyShape> object1;
-  shared_ptr<MyShape> object2;
+  boost::shared_ptr<MyShape> object1;
+  boost::shared_ptr<MyShape> object2;
 
   object2 = physicalObjects(newShape);
 
@@ -333,11 +333,11 @@ bool isConflict_ArbitraryList( compressed_vector<shape_pointer> physicalObjects,
   return conflict;
 }
 
-void calcCollisionsAll(shared_ptr<Simulation> curSimulation) 
+void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation) 
 {
   ShapeList shapeList = curSimulation->getPhysicalObjects() ;
   sgVec4 sepVec;
-  shared_ptr<MyShape> object1, object2;
+  boost::shared_ptr<MyShape> object1, object2;
   SGfloat distanceSquared, distance, minSep;
 
   compressed_vector<shape_pointer> physicalObjects = shapeList.getShapes();
@@ -391,7 +391,7 @@ void calcCollisionsAll(shared_ptr<Simulation> curSimulation)
 }
 
 //setting rSquared to a constant value with a grid can make some awesome effects
-float calcForceGrav(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, SGfloat rSquared) {
+float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, SGfloat rSquared) {
   if (rSquared < .00001)
   {
     rSquared = .00001;
@@ -399,7 +399,7 @@ float calcForceGrav(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, SG
   return ( Simulations::G * object1->getMass() * object2->getMass()) / rSquared;
 }
 
-void getVectorToObject2(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, sgVec4 sepVector) {
+void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 sepVector) {
   sgVec4 pos1, pos2;
   object1->getPos(pos1 );
   object2->getPos(pos2 );
@@ -408,7 +408,7 @@ void getVectorToObject2(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2
   sgSubVec4(sepVector, pos2, pos1);
 }
 
-void getVectorToQuadrant(shared_ptr<MyShape> object1, shared_ptr<Quadrant> quadrant, sgVec4 sepVector) {
+void getVectorToQuadrant(boost::shared_ptr<MyShape> object1, boost::shared_ptr<Quadrant> quadrant, sgVec4 sepVector) {
   sgVec4 pos1, pos2;
   object1->getPos(pos1 );
   quadrant->getCenterOfMass(pos2 );
@@ -431,7 +431,7 @@ float calcMergedRadius(float massBoth, float density) {
   return radius;
 }
 
-void calcMergedAngMomentum(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, sgVec4 retAngMomentum)
+void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 retAngMomentum)
 {
   sgVec4 sepVec, sepVecUnit;
 
@@ -511,7 +511,7 @@ void calcMergedAngMomentum(shared_ptr<MyShape> object1, shared_ptr<MyShape> obje
   sgAddVec4(retAngMomentum, tempVec);
 }
 
-void mergeObjects(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2) 
+void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2) 
 {
   cout << "Merging!" << endl;
 
@@ -661,7 +661,7 @@ void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
 void calcDrag(float dt) {
   float dragConstant = -30;
   sgVec4 dragForce;
-  shared_ptr<MyShape> curShape;
+  boost::shared_ptr<MyShape> curShape;
 
   for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
     curShape = MyShape::shapes(i);

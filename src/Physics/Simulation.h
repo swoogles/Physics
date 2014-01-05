@@ -21,7 +21,7 @@ using boost::make_shared;
 class Simulation
 {
   private:
-    typedef shared_ptr<MyShape> shape_pointer;
+    typedef boost::shared_ptr<MyShape> shape_pointer;
     int forceCalcMethod;
     ShapeList physicalObjects;
 
@@ -40,7 +40,7 @@ class Simulation
     sgVec4 gravField;
     bool gravBetweenObjects;
 
-    shared_ptr<Quadrant> quadrant;
+    boost::shared_ptr<Quadrant> quadrant;
 
   public:
     static const char FORCE_CALC_METHOD_NAIVE_STRING[];
@@ -82,7 +82,7 @@ class Simulation
     inline float getMaxY() { return maxY; }
 
     void refreshQuadrant();
-    inline shared_ptr<Quadrant> getQuadrant() { return quadrant; }
+    inline boost::shared_ptr<Quadrant> getQuadrant() { return quadrant; }
     void getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY );
 
 	//! Returns true if a ubiquitous force from gravity affects the entire system

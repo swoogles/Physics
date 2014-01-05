@@ -38,7 +38,7 @@ using boost::shared_ptr;
  */
 class main_window_UI {
 private:
-  shared_ptr<Simulation> simulation;
+  boost::shared_ptr<Simulation> simulation;
 
 	puMenuBar * main_menu;
 	puaFileSelector * open_selector;
@@ -67,13 +67,13 @@ public:
 	//! Unnecessary constructor for entirely static class
 	main_window_UI();
 
-  void setSimulation( shared_ptr<Simulation> simulation );
+  void setSimulation( boost::shared_ptr<Simulation> simulation );
 
 	/*! \brief Initializes values for the Main Window interface
 	 *
 	 *  Creates the Main Menu puMenuBar and populates it with open, save, etc. funcitnos
 	 */
-	void init( shared_ptr<Simulation> residentSimulation );
+	void init( boost::shared_ptr<Simulation> residentSimulation );
 
 	/*! \brief Updates the time values
 	 *

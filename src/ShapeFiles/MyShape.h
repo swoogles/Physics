@@ -172,7 +172,7 @@ class MyShape : public Moveable {
      */
     // static vector<MyShape *> shapes;
     //PHYS-7
-    typedef shared_ptr<MyShape> shape_pointer;
+    typedef boost::shared_ptr<MyShape> shape_pointer;
     static compressed_vector<shape_pointer> shapes;
 
     static void clearShapes();

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
+boost::shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
 {
   return shapeInQuadrant;
 }
@@ -18,11 +18,14 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   :isLeaf(true)
   ,containsBody(false)
   ,level(level)
-  ,weightedPosition({0,0,0})
+  // ,weightedPosition({0,0,0})
   ,borders(make_shared<Box>() )
   ,quadOctree(extents[2][2][2])
   
 {
+  weightedPosition[0]=0.0;
+  weightedPosition[1]=0.0;
+  weightedPosition[2]=0.0;
   setPos( pos );
   sgCopyVec4( this->dimensions, dimensions );
 
@@ -52,7 +55,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
 }
 
-shared_ptr<Quadrant> Quadrant::getQuadrantFromCell( int x, int y, int z )
+boost::shared_ptr<Quadrant> Quadrant::getQuadrantFromCell( int x, int y, int z )
 {
   return quadOctree[x][y][z];
 }
@@ -200,7 +203,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
 
 
 // Guaranteed to hand back an instantiated Quadrant
-shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
+boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
   sgVec4 insertPos, newPos, newDimensions;
   shapeToInsert->getPos( insertPos ); 
