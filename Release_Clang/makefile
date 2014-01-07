@@ -40,6 +40,8 @@ endif
 
 -include ../makefile.defs
 
+CPLUSPLUS_COMPILER=GCC
+
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
@@ -48,7 +50,7 @@ all: ShapesLibrary
 # Tool invocations
 ShapesLibrary: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: GCC C++ Linker'
+	@echo 'Invoking: $(CPLUSPLUS_COMPILER) C++ Linker'
 	# g++ -o"ShapesLibrary" $(OBJS) $(USER_OBJS) $(LIBS)
 	g++ -std=c++0x -Wall -g  -o"ShapesLibrary" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
