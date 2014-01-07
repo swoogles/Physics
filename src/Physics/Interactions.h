@@ -99,7 +99,7 @@ void getVectorToQuadrant(shared_ptr<MyShape> object1, shared_ptr<Quadrant> quadr
  *
  *	\return The angular momentum to be assigned to the merged object
  */
-void calcMergedAngMomentum(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, sgVec4 retAngMomentum);
+void calcMergedAngMomentum(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2, sgVec3 totalAngMom);
 
 
 /*! \relates Circle

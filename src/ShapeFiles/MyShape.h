@@ -118,7 +118,7 @@ class MyShape : public Moveable {
     virtual float getMomentOfInertia() const;
 
     //! Sets angular momentum of object to <newAngMomentum>
-    void setAngMomentum(const sgVec4 newAngMomentum);
+    void setAngMomentum(sgVec4 newAngMomentum);
     //! Alters angular momentum of object by <dAngMomentum>
     void adjustAngMomentum(const sgVec4 dAngMomentum);
     //! Returns angular momentum of object in retVec

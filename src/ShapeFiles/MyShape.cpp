@@ -87,12 +87,12 @@ std::string MyShape::getMomentumString() const
 // Angular Momentum and Velocity
 float MyShape::getMomentOfInertia() const { return 1;}
 
-void MyShape::setAngMomentum(const sgVec4 newAngMomentum) {
+void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
+	sgCopyVec4(prevAngVelocity, angVelocity);
 	float I = getMomentOfInertia();
 	sgCopyVec4(angMomentum, newAngMomentum);
 	sgCopyVec4(angVelocity, angMomentum);
 	sgScaleVec4(angVelocity, 1.0/I);
-	sgCopyVec4(prevAngVelocity, angVelocity);
 }
 
 void MyShape::adjustAngMomentum(const sgVec4 dAngMomentum) {
