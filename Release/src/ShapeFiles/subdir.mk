@@ -13,7 +13,7 @@ CPP_SRCS += \
 ../src/ShapeFiles/ShapeList.cpp \
 ../src/ShapeFiles/StraightShape.cpp 
 
-OBJS += \
+SHAPE_OBJS += \
 ./src/ShapeFiles/Box.o \
 ./src/ShapeFiles/Circle.o \
 ./src/ShapeFiles/MyEllipse.o \
@@ -23,7 +23,9 @@ OBJS += \
 ./src/ShapeFiles/ShapeList.o \
 ./src/ShapeFiles/StraightShape.o 
 
-CPP_DEPS += \
+OBJS += $(SHAPE_OBJS)
+
+SHAPE_CPP_DEPS += \
 ./src/ShapeFiles/Box.d \
 ./src/ShapeFiles/Circle.d \
 ./src/ShapeFiles/MyEllipse.d \
@@ -33,6 +35,7 @@ CPP_DEPS += \
 ./src/ShapeFiles/ShapeList.d \
 ./src/ShapeFiles/StraightShape.d 
 
+CPP_DEPS += $(SHAPE_CPP_DEPS)
 
 # Each subdirectory must supply rules for building sources it contributes
 src/ShapeFiles/%.o: ../src/ShapeFiles/%.cpp

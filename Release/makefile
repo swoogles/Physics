@@ -59,6 +59,10 @@ clean:
 	-$(RM) $(OBJS)$(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) ShapesLibrary
 	-@echo ' '
 
+clean-shapes:
+	-$(RM) $(SHAPE_OBJS)$(SHAPE_CPP_DEPS) ShapesLibrary
+	-@echo ' '
+
 .PHONY: all clean dependents
 .SECONDARY:
 
