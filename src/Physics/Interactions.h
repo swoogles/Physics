@@ -99,8 +99,7 @@ void getVectorToQuadrant(boost::shared_ptr<MyShape> object1, boost::shared_ptr<Q
  *
  *	\return The angular momentum to be assigned to the merged object
  */
-void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 retAngMomentum);
-
+void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 totalAngMom);
 
 /*! \relates Circle
  *  \brief Finds radius after 2 circular objects are merged

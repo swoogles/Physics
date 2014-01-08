@@ -147,11 +147,11 @@ void Moveable::getVelocity(sgVec4 retVec) const {
 float Moveable::getMomentOfInertia() const { return 1;}
 
 void Moveable::setAngVelocity(const sgVec4 newAngVelocity) {
+	sgCopyVec4(prevAngVelocity, angVelocity);
 	float I = getMomentOfInertia();
 	sgCopyVec4(angVelocity, newAngVelocity);
 	sgCopyVec4(angMomentum, angVelocity);
 	sgScaleVec4(angMomentum, I);
-	sgCopyVec4(prevAngVelocity, angVelocity);
 }
 
 void Moveable::adjustAngVelocity(const sgVec4 dAngVelocity) {

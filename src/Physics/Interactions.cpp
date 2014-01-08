@@ -431,7 +431,7 @@ float calcMergedRadius(float massBoth, float density) {
   return radius;
 }
 
-void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 retAngMomentum)
+void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 totalAngMom)
 {
   sgVec4 sepVec, sepVecUnit;
 
@@ -439,7 +439,6 @@ void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr
   sgVec4 aMomentum, bMomentum;
   sgVec4 tempVec, tempVec2;
   sgVec4 hitPt;
-  sgVec3 totalAngMom3;
 
   sgVec3 r, aMom3, bMom3, COM;
   sgVec3 crossed;
@@ -454,21 +453,9 @@ void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr
   
   sgSubVec3( r, aPos, hitPt );
 
-  for (int i = 0; i < 3; i++) {
-    totalAngMom3[i] = 0;
+  for (int i = 0; i < 4; i++) {
+    totalAngMom[i] = 0;
   }
-
-
-  // COM Calc Start
-  // sgCopyVec4(tempVec, aPos);
-  // sgCopyVec4(tempVec2, bPos);
-
-  // sgScaleVec4(tempVec, object1->getMass());
-  // sgScaleVec4(tempVec2, object2->getMass());
-
-  // sgAddVec4(COM,tempVec, tempVec2);
-  // sgScaleVec4(COM, 1/(object1->getMass() + object2->getMass()) );
-  // COM Calc End
 
   object1->getMomentum(aMomentum);
   object2->getMomentum(bMomentum);
@@ -486,8 +473,7 @@ void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr
   sgVectorProductVec3(crossed, r, aMom3);
   cout << "crossed: < " << crossed[0] << ", " << crossed[1] << ", " << crossed[2] << ">" << endl;
 
-  sgAddVec3(totalAngMom3, crossed);
-  cout << "totAngMom3: < " << totalAngMom3[0] << ", " << totalAngMom3[1] << ", " << totalAngMom3[2] << ">" << endl;
+  sgAddVec4(totalAngMom, crossed);
 
   sgSubVec3( r, bPos, hitPt );
 
@@ -496,19 +482,15 @@ void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr
   bMom3[2] = bMomentum[2];
   sgVectorProductVec3(crossed, r, bMom3);
 
-  sgAddVec3(totalAngMom3, crossed);
-
-  retAngMomentum[0] = totalAngMom3[0];
-  retAngMomentum[1] = totalAngMom3[1];
-  retAngMomentum[2] = totalAngMom3[2];
+  sgAddVec3(totalAngMom, crossed);
 
   object1->getAngMomentum(tempVec);
-
-  sgAddVec4(retAngMomentum, tempVec);
+  sgAddVec4(totalAngMom, tempVec);
 
   object2->getAngMomentum(tempVec);
+  sgAddVec4(totalAngMom, tempVec);
 
-  sgAddVec4(retAngMomentum, tempVec);
+  cout << "totAngMom.inMerge: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
 }
 
 void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2) 
@@ -520,7 +502,7 @@ void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape>
 
   float newRadius = calcMergedRadius(newMass, density);
 
-  sgVec4 totalAngMom;
+  sgVec3 totalAngMom;
 
   calcMergedAngMomentum(object1, object2, totalAngMom);
 
@@ -544,24 +526,21 @@ void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape>
   sgVec4 object2momentum;
   object2->getMomentum(object2momentum);
 
-  sgVec4 object2AngMom;
-
-  object2->getAngMomentum(object2AngMom);
-
   object1->setMass(newMass);
   object1->setRadius(newRadius);
   object1->adjustMomentum( object2momentum );
 
+  cout << "totAngMom.preAssignment: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
   object1->setAngMomentum(totalAngMom);
+  sgVec3 angVel;
+  object1->getAngMomentum(totalAngMom);
+  object1->getAngVelocity(angVel);
+  cout << "totAngMom.postAssignment3: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
+  cout << "angVel: < " << angVel[0] << ", " << angVel[1] << ", " << angVel[2] << ">" << endl;
 
   object1->calcColor();
 
   object1->setPos(COM);
-
-
-  //cout << MASS_SUN << endl;
-  // delete object2momentum;
-
 }
 
 float getSplitBodyRadius(float volume, int numPieces ) {
