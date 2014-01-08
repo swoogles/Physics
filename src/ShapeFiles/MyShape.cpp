@@ -52,16 +52,16 @@ float MyShape::getMarkerSize() {
 }
 
 void MyShape::setMomentum(float inX, float inY, float inZ) {
+	sgCopyVec4(prevMomentum, momentum);
 	momentum[0] = inX;
 	momentum[1] = inY;
 	momentum[2] = inZ;
 	momentum[3] = 0;
-	sgCopyVec4(prevMomentum, momentum);
 }
 
 void MyShape::setMomentum(const sgVec4 newMomentum) {
-	sgCopyVec4(momentum, newMomentum);
 	sgCopyVec4(prevMomentum, momentum);
+	sgCopyVec4(momentum, newMomentum);
 }
 
 void MyShape::adjustMomentum(float dx, float dy, float dz) {
@@ -85,7 +85,7 @@ std::string MyShape::getMomentumString() const
 }
 
 // Angular Momentum and Velocity
-float MyShape::getMomentOfInertia() const { return 1;}
+float MyShape::getMomentOfInertia() { return 1;}
 
 void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
 	sgCopyVec4(prevAngVelocity, angVelocity);

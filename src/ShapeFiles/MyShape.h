@@ -115,7 +115,7 @@ class MyShape : public Moveable {
      *  Calculation varies for different types of object
      *  \return Moment of Inertia value
      */
-    virtual float getMomentOfInertia() const;
+    virtual float getMomentOfInertia();
 
     //! Sets angular momentum of object to <newAngMomentum>
     void setAngMomentum(sgVec4 newAngMomentum);
