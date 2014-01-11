@@ -165,7 +165,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     this->setWeightedPosition( quadrantWeightedPosition );
 
     quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
-    if ( targetQuadrant != NULL )
+    if ( targetQuadrant != nullptr )
     {
       targetQuadrant->insertShape( insertedShape );
     }
@@ -187,7 +187,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     sgAddVec4(quadrantWeightedPosition, shapeWeightedPosition );
     this->setWeightedPosition( quadrantWeightedPosition );
 
-    if ( targetQuadrant != NULL && targetQuadrantB != NULL )
+    if ( targetQuadrant != nullptr && targetQuadrantB != nullptr )
     {
       targetQuadrant->insertShape( insertedShape );
       targetQuadrantB->insertShape( shapeInQuadrant );
@@ -291,7 +291,7 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
 
     insertionQuadrant = quadOctree[targetX][targetY][targetZ];
 
-    if ( insertionQuadrant == NULL )
+    if ( insertionQuadrant == nullptr )
     {
       insertionQuadrant = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) ) ;
       quadOctree[targetX][targetY][targetZ] = insertionQuadrant;
@@ -325,7 +325,7 @@ ShapeList Quadrant::getShapesRecursive()
       {
 
         targetQuadrant = quadOctree[x][y][z];
-        if ( targetQuadrant != NULL )
+        if ( targetQuadrant != nullptr )
         {
           targetShapeList = targetQuadrant->getShapesRecursive();
           foreach_ ( shape_pointer curShape, targetShapeList.getShapes() )

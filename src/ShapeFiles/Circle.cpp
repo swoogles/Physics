@@ -38,11 +38,11 @@ matrix<double> Circle::getPts() {
 	return pts;
 }
 
-void Circle::drawScale() const {
+void Circle::drawScale(){
 	glScalef(radius, radius, radius);
 }
 
-void Circle::drawUnit() const {
+void Circle::drawUnit(){
 	glutWireSphere( 1, numPts, numPts);
 	//glutSolidSphere( 1, numPts, numPts);
 }

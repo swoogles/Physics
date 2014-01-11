@@ -13,6 +13,8 @@
 #include <cmath>
 #include <iostream>
 #include <plib/sg.h>
+#include <boost/geometry/arithmetic/dot_product.hpp>
+#include <boost/geometry/geometries/point.hpp>
 
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
@@ -112,7 +114,7 @@ public:
 	 *  Calculation varies for different types of object
 	 *  \return Moment of Inertia value
 	 */
-	virtual float getMomentOfInertia() const;
+	virtual float getMomentOfInertia();
 
 	//! Sets angular velocity of object to <newAngVelocity>
 	void setAngVelocity(const sgVec4 newAngVelocity);

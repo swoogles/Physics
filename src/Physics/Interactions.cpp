@@ -172,7 +172,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
     shapeInQuadrant = curQuadrant->getShapeInQuadrant();
 
     //b.
-    if ( shapeInQuadrant != NULL && curObject != shapeInQuadrant )
+    if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant )
     {
       getVectorToObject2( curObject, curQuadrant->getShapeInQuadrant(), sepVec);
       distance = sgLengthVec4( sepVec );
@@ -224,7 +224,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
           {
 
             targetQuadrant = curQuadrant->getQuadrantFromCell( x, y, z );
-            if ( targetQuadrant != NULL )
+            if ( targetQuadrant != nullptr )
             {
               calcForceOnObject_Octree(curObject, targetQuadrant, dt);
             }
@@ -437,10 +437,10 @@ void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr
 
   sgVec4 aPos, bPos;
   sgVec4 aMomentum, bMomentum;
-  sgVec4 tempVec, tempVec2;
+  sgVec4 tempVec;
   sgVec4 hitPt;
 
-  sgVec3 r, aMom3, bMom3, COM;
+  sgVec3 r, aMom3, bMom3;
   sgVec3 crossed;
 
   object1->getPos(aPos);

@@ -144,7 +144,7 @@ void Moveable::getVelocity(sgVec4 retVec) const {
 }
 
 // Angular Momentum and Velocity
-float Moveable::getMomentOfInertia() const { return 1;}
+float Moveable::getMomentOfInertia() { return 1;}
 
 void Moveable::setAngVelocity(const sgVec4 newAngVelocity) {
 	sgCopyVec4(prevAngVelocity, angVelocity);
