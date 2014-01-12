@@ -1,21 +1,30 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
 ################################################################################
+SHELL=/bin/bash
+
+# MODULES := ls -d ./src/*/
+# MODULES := ShapeFiles Observation
+
+SRC_FILES = $(wildcard ../src/*.cpp)
+SRC_FILES += $(wildcard ../src/ShapeFiles/*.cpp)
+SRC_FILES += $(wildcard ../src/Observation/*.cpp)
+SRC_FILES += $(wildcard ../src/Parallelization/*.cpp)
+SRC_FILES += $(wildcard ../src/Physics/*.cpp)
+SRC_FILES += $(wildcard ../src/Windows/*.cpp)
+
+ENDING = .cpp
+OBJ_TEST_TMP := $(SRC_FILES:$(ENDING)=.o)
+OBJ_TEST := $(subst ..,.,$(OBJ_TEST_TMP))
+OBJS=$(OBJ_TEST)
+# And this will replace all endings:
+
+# OBJ = $(addsuffix .o,$(basename $(SOURCES)))
+
+
 
 # Add inputs and outputs from these tool invocations to the build variables 
-CPP_SRCS += \
-../src/BillProperties.cpp \
-../src/fileInteraction.cpp \
-../src/inputFunctions.cpp \
-../src/main.cpp \
-../src/menus.cpp 
-
-OBJS += \
-./src/BillProperties.o \
-./src/fileInteraction.o \
-./src/inputFunctions.o \
-./src/main.o \
-./src/menus.o 
+CPP_SRCS = $(SRC_FILES)
 
 CPP_DEPS += \
 ./src/BillProperties.d \
@@ -24,15 +33,17 @@ CPP_DEPS += \
 ./src/main.d \
 ./src/menus.d 
 
+# SRC_FILES := $(../../%.cpp)
+# OBJ := $(SRC:.c=.o)
+# test: $(OBJ)
+# 	$(CC) -o $@ $(OBJ)
+# 	include $(OBJ:.o=.d)
+# 	%.d: %.c
+# 	depend.sh $(CFLAGS) \
+# 		$*.c > $@
 
 # Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.cpp
-	@echo 'Files: $(../src/%.cpp)'
-	@echo 'Objects: $(OBJS) '
-	@echo 'Libs: $(LIBS) '
-	@echo 'UserObjs: $(USER_OBJS) '
-	@echo 'Building file: $<'
-	@echo 'Invoking: GCC C++ Compiler!'
 	$(CC) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '

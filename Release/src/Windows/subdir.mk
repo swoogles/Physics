@@ -4,8 +4,8 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/Windows/control_center.cpp \
-../src/Windows/main_display.cpp 
+# ../src/Windows/control_center.cpp \
+# ../src/Windows/main_display.cpp 
 
 OBJS += \
 ./src/Windows/control_center.o \
