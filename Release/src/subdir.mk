@@ -27,9 +27,13 @@ CPP_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.cpp
+	@echo 'Files: $(../src/%.cpp)'
+	@echo 'Objects: $(OBJS) '
+	@echo 'Libs: $(LIBS) '
+	@echo 'UserObjs: $(USER_OBJS) '
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler!'
-	g++ -Wall -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	$(CC) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

@@ -4,36 +4,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/ShapeFiles/Box.cpp \
-../src/ShapeFiles/Circle.cpp \
-../src/ShapeFiles/MyEllipse.cpp \
-../src/ShapeFiles/MyShape.cpp \
-../src/ShapeFiles/Moveable.cpp \
-../src/ShapeFiles/RoundShape.cpp \
-../src/ShapeFiles/ShapeList.cpp \
-../src/ShapeFiles/StraightShape.cpp 
+../src/ShapeFiles/%.cpp
 
 SHAPE_OBJS += \
-./src/ShapeFiles/Box.o \
-./src/ShapeFiles/Circle.o \
-./src/ShapeFiles/MyEllipse.o \
-./src/ShapeFiles/MyShape.o \
-./src/ShapeFiles/Moveable.o \
-./src/ShapeFiles/RoundShape.o \
-./src/ShapeFiles/ShapeList.o \
-./src/ShapeFiles/StraightShape.o 
+./src/ShapeFiles/%.o
 
 OBJS += $(SHAPE_OBJS)
 
 SHAPE_CPP_DEPS += \
-./src/ShapeFiles/Box.d \
-./src/ShapeFiles/Circle.d \
-./src/ShapeFiles/MyEllipse.d \
-./src/ShapeFiles/MyShape.d \
-./src/ShapeFiles/Moveable.d \
-./src/ShapeFiles/RoundShape.d \
-./src/ShapeFiles/ShapeList.d \
-./src/ShapeFiles/StraightShape.d 
+./src/ShapeFiles/%.d
 
 CPP_DEPS += $(SHAPE_CPP_DEPS)
 
