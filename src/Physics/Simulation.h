@@ -39,6 +39,7 @@ class Simulation
     bool constGravField;
     sgVec4 gravField;
     bool gravBetweenObjects;
+    sgVec4 dimensions;
 
     boost::shared_ptr<Quadrant> quadrant;
 
