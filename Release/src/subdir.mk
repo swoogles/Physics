@@ -6,7 +6,7 @@ SHELL=/bin/bash
 # MODULES := ls -d ./src/*/
 # MODULES := ShapeFiles Observation
 
-SRC_FILES = $(wildcard ../src/*.cpp)
+SRC_FILES := $(wildcard ../src/*.cpp)
 SRC_FILES += $(wildcard ../src/ShapeFiles/*.cpp)
 SRC_FILES += $(wildcard ../src/Observation/*.cpp)
 SRC_FILES += $(wildcard ../src/Parallelization/*.cpp)

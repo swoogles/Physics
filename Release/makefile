@@ -29,7 +29,6 @@ all: ShapesLibrary
 
 # Tool invocations
 ShapesLibrary: $(OBJS) $(USER_OBJS)
-	@echo 'UserObjs: $(USER_OBJS)'
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
 	g++ -Wall -g  -o"ShapesLibrary" $(OBJS) $(USER_OBJS) $(LIBS)
