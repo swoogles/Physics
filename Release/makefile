@@ -3,8 +3,6 @@ RM := rm -rf
 CC=g++
 
 # All of the sources participating in the build are defined here
-# -include src/subdir.mk
-
 # 32 Bit/Laptop version
 OPENGL_LIBS := -lGL -lGLU -lglut
 PLIB_LIBS := -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt
