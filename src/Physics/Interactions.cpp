@@ -468,10 +468,10 @@ void calcMergedAngMomentum(shared_ptr<MyShape> object1, shared_ptr<MyShape> obje
   aMom3[0] = aMomentum[0];
   aMom3[1] = aMomentum[1];
   aMom3[2] = aMomentum[2];
-  cout << "aMom3: < " << aMom3[0] << ", " << aMom3[1] << ", " << aMom3[2] << ">" << endl;
-  cout << "r: < " << r[0] << ", " << r[1] << ", " << r[2] << ">" << endl;
+  // cout << "aMom3: < " << aMom3[0] << ", " << aMom3[1] << ", " << aMom3[2] << ">" << endl;
+  // cout << "r: < " << r[0] << ", " << r[1] << ", " << r[2] << ">" << endl;
   sgVectorProductVec3(crossed, r, aMom3);
-  cout << "crossed: < " << crossed[0] << ", " << crossed[1] << ", " << crossed[2] << ">" << endl;
+  // cout << "crossed: < " << crossed[0] << ", " << crossed[1] << ", " << crossed[2] << ">" << endl;
 
   sgAddVec4(totalAngMom, crossed);
 
@@ -490,12 +490,12 @@ void calcMergedAngMomentum(shared_ptr<MyShape> object1, shared_ptr<MyShape> obje
   object2->getAngMomentum(tempVec);
   sgAddVec4(totalAngMom, tempVec);
 
-  cout << "totAngMom.inMerge: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
+  // cout << "totAngMom.inMerge: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
 }
 
 void mergeObjects(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2) 
 {
-  cout << "Merging!" << endl;
+  // cout << "Merging!" << endl;
 
   float newMass = object1->getMass() + object2->getMass();
   float density = object1->getDensity();
@@ -530,13 +530,13 @@ void mergeObjects(shared_ptr<MyShape> object1, shared_ptr<MyShape> object2)
   object1->setRadius(newRadius);
   object1->adjustMomentum( object2momentum );
 
-  cout << "totAngMom.preAssignment: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
+  // cout << "totAngMom.preAssignment: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
   object1->setAngMomentum(totalAngMom);
   sgVec3 angVel;
   object1->getAngMomentum(totalAngMom);
   object1->getAngVelocity(angVel);
-  cout << "totAngMom.postAssignment3: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
-  cout << "angVel: < " << angVel[0] << ", " << angVel[1] << ", " << angVel[2] << ">" << endl;
+  // cout << "totAngMom.postAssignment3: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
+  // cout << "angVel: < " << angVel[0] << ", " << angVel[1] << ", " << angVel[2] << ">" << endl;
 
   object1->calcColor();
 
@@ -558,7 +558,7 @@ void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target)
   for (int i = 0; i < 3; i++)
   {
     //randMult = rand()%30; //Earth spacing
-    randMult = rand()%30;
+    randMult = rand()%100;
     if (randMult % 2 == 0) {
       randMult *= -1;
     }

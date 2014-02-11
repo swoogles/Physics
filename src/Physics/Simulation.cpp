@@ -53,7 +53,9 @@ void Simulation::refreshQuadrant()
   }
 
   sgVec4 pos = {0,0,0,1};
-  float side = magnitude * 2; //Formation Value
+  // float side = magnitude * 2; //Formation Value
+  float side = 10e5; //Formation Value
+  cout << "Side: " << side << endl;
   sgVec3 dimensions = { side, side, side };
   quadrant = make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
 
