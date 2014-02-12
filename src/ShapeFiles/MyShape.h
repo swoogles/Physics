@@ -74,17 +74,17 @@ class MyShape : public Moveable {
      *  \n -Call drawUnit() to draw a unit square, circle, etc.
      *  \n -Pop matrix from the stack
      */
-    void draw() const;
+    void draw();
 
 
     /*! \brief Use shape dimensions to scale points before drawing
      *
      *  Implementation varies depending on shape: will use side for squares, radius for circles, etc
      */
-    virtual void drawScale() const;
+    virtual void drawScale();
 
     //! Draw unit shape (should be called last in draw() )
-    virtual void drawUnit() const;
+    virtual void drawUnit();
 
     //! Purely virtual method used by Circle
     virtual void setRadius(float );
@@ -172,7 +172,7 @@ class MyShape : public Moveable {
      */
     // static vector<MyShape *> shapes;
     //PHYS-7
-    typedef shared_ptr<MyShape> shape_pointer;
+    typedef boost::shared_ptr<MyShape> shape_pointer;
     static compressed_vector<shape_pointer> shapes;
 
     static void clearShapes();

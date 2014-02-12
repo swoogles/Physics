@@ -39,11 +39,11 @@ class Quadrant : public Box
 
     sgVec4 weightedPosition;
 
-    shared_ptr<Box> borders;
-    shared_ptr<Circle> centerOfMassRepresentation;
+    boost::shared_ptr<Box> borders;
+    boost::shared_ptr<Circle> centerOfMassRepresentation;
 
-    typedef shared_ptr<MyShape> shape_pointer;
-    typedef shared_ptr<Quadrant> quad_pointer;
+    typedef boost::shared_ptr<MyShape> shape_pointer;
+    typedef boost::shared_ptr<Quadrant> quad_pointer;
     typedef multi_array< quad_pointer, 3> array_typeNew;
     array_typeNew  quadOctree;
 
@@ -55,7 +55,7 @@ class Quadrant : public Box
     quad_pointer getQuadrantFromCell( int x, int y, int z );
 
     shape_pointer shapeInQuadrant;
-    shared_ptr<MyShape> shapeInQuadrantNew;
+    boost::shared_ptr<MyShape> shapeInQuadrantNew;
 
     sgVec4 dimensions;
 
@@ -67,7 +67,7 @@ class Quadrant : public Box
 
     inline void getPos( sgVec4 retVec ) { getCenterOfMass( retVec ); }
 
-    shared_ptr<MyShape> getShapeInQuadrant();
+    boost::shared_ptr<MyShape> getShapeInQuadrant();
 
     void getWeightedPosition(sgVec4 weightedPosition);
     void setWeightedPosition(sgVec4 weightedPosition);

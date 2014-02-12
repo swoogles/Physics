@@ -4,23 +4,25 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/Windows/control_center.cpp \
-../src/Windows/main_display.cpp 
+./src/Observation/Timer.cpp \
+./src/Observation/Observer.cpp \
+./src/Observation/Recorder.cpp 
 
 OBJS += \
-./src/Windows/control_center.o \
-./src/Windows/main_display.o 
+./src/Observation/Timer.o \
+./src/Observation/Observer.o \
+./src/Observation/Recorder.o 
 
 CPP_DEPS += \
-./src/Windows/control_center.d \
-./src/Windows/main_display.d 
-
+./src/Observation/Timer.d \
+./src/Observation/Observer.d \
+./src/Observation/Recorder.d 
 
 # Each subdirectory must supply rules for building sources it contributes
-src/Windows/%.o: ../src/Windows/%.cpp
+src/Observation/%.o: ../src/Observation/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -Wall  -g -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	clang++ -std=c++0x  -Wall  -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

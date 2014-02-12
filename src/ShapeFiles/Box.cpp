@@ -72,19 +72,15 @@ matrix<double> Box::getPts() {
 	return pts;
 }
 
-void Box::drawUnit() const {
+void Box::drawUnit(){
   // YOU FUCKING WHORE!!!!
   // WHY WOULD YOU EVER BE WRITTEN LIKE THIS?!?!?!
   //glutWireCube( width );
   glutWireCube( 1.0 );
 }
 
-void Box::drawScale() const {
+void Box::drawScale(){
 	glScalef(width, height, depth);
-}
-
-float Box::getSideLength() {
-	return sideLength;
 }
 
 void Box::setSideLength(float inSideLength) {

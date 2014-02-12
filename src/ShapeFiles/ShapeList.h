@@ -28,7 +28,7 @@
 
 using boost::shared_ptr;
 using boost::numeric::ublas::compressed_vector;
-typedef shared_ptr<MyShape> shape_pointer;
+typedef boost::shared_ptr<MyShape> shape_pointer;
 
 /*! \brief Holds the objects to be used in a Simulation
  *

@@ -8,7 +8,7 @@
 #include "Simulations.h"
 
 float Simulations::G = 6.67384e-11;
-compressed_vector< shared_ptr<MyShape> > Simulations::physicalObjects(0);
+compressed_vector< boost::shared_ptr<MyShape> > Simulations::physicalObjects(0);
 int Simulations::curStep;
 
 using namespace std;
@@ -108,9 +108,9 @@ void Simulations::simpleOrbit() {
 	cout << "numBodies: " << MyShape::shapes.size() << endl;
 }
 
-  shared_ptr<Simulation> Simulations::billiards1(int numRows) {
+  boost::shared_ptr<Simulation> Simulations::billiards1(int numRows) {
 
-  shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
+  boost::shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(0);
 	curSimulation->makeAllElastic();
 	curSimulation->setGravBetweenObjects(false);
@@ -167,9 +167,9 @@ void Simulations::simpleOrbit() {
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
+boost::shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
 {
-  shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
+  boost::shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(.003);
 	curSimulation->makeAllElastic();
 	curSimulation->setGravBetweenObjects(false);
@@ -213,8 +213,8 @@ shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRows)
 }
 
 
-shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
-  shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
+boost::shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
+  boost::shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(.003);
 	curSimulation->makeAllElastic();
 	curSimulation->setGravBetweenObjects(false);
@@ -263,7 +263,7 @@ shared_ptr<Simulation> Simulations::billiards3_ArbitraryList(int numRows) {
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::simpleCollision_ArbitraryList() {
+boost::shared_ptr<Simulation> Simulations::simpleCollision_ArbitraryList() {
   float dt = .01;
 
 	float aMass = 1;
@@ -276,7 +276,7 @@ shared_ptr<Simulation> Simulations::simpleCollision_ArbitraryList() {
 
   ShapeList physicalObjects;
 
-  shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
+  boost::shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT( dt );
   shape_pointer curShape;
 
@@ -304,9 +304,9 @@ shared_ptr<Simulation> Simulations::simpleCollision_ArbitraryList() {
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::disruption_ArbitraryList() 
+boost::shared_ptr<Simulation> Simulations::disruption_ArbitraryList() 
 {
-  shared_ptr<Simulation> curSimulation = Simulations::bodyFormation_ArbitraryList( 1000 );
+  boost::shared_ptr<Simulation> curSimulation = Simulations::bodyFormation_ArbitraryList( 1000 );
 
   int numPieces = 1;
 	float objectDensity = DENSITY_SUN;
@@ -326,12 +326,12 @@ shared_ptr<Simulation> Simulations::disruption_ArbitraryList()
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() 
+boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom() 
 {
   float dt = 1000;
   int numPieces = 2;
 
-  shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
+  boost::shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT( dt );
 	curSimulation->makeAllInelastic();
 	curSimulation->setGravBetweenObjects(true);
@@ -401,9 +401,9 @@ shared_ptr<Simulation> Simulations::bodyFormation_NonRandom()
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom() 
+boost::shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom() 
 {
-  shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
+  boost::shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(1000);
 	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
@@ -489,9 +489,9 @@ shared_ptr<Simulation> Simulations::QuadrantTestingNonRandom()
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces) 
+boost::shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces) 
 {
-  shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
+  boost::shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
   curSimulation->setDT(1000);
 	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
@@ -547,9 +547,9 @@ shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPieces)
   return curSimulation;
 }
 
-shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) 
+boost::shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) 
 {
-  shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
+  boost::shared_ptr<Simulation> curSimulation = make_shared<Simulation>();
 	curSimulation->setDT(1000);
 	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
@@ -604,7 +604,7 @@ shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(int numPi
   return curSimulation;
 }
 
-shared_ptr<MyShape> Simulations::getShapeFromList( unsigned int shapeIndex )
+boost::shared_ptr<MyShape> Simulations::getShapeFromList( unsigned int shapeIndex )
 {
   shape_pointer returnShape;
   if ( physicalObjects.size() > shapeIndex )
@@ -623,9 +623,9 @@ int Simulations::addShapeToList( shape_pointer insertShape )
   return curSize;
 }
 
-shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
+boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 {
-  shared_ptr<Simulation> newSimulation;
+  boost::shared_ptr<Simulation> newSimulation;
 
 	//******CURRENT SIMULATION*****
   if ( simNumber == '0' ) {

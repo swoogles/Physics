@@ -24,16 +24,13 @@ CPP_DEPS += \
 ./src/main.d \
 ./src/menus.d 
 
+CPLUSPLUS_COMPILER=GCC
 
 # Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.cpp
-	@echo 'Files: $(../src/%.cpp)'
-	@echo 'Objects: $(OBJS) '
-	@echo 'Libs: $(LIBS) '
-	@echo 'UserObjs: $(USER_OBJS) '
 	@echo 'Building file: $<'
-	@echo 'Invoking: GCC C++ Compiler!'
-	$(CC) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	@echo 'Invoking: $(CPLUSPLUS_COMPILER) C++ Linker'
+	clang++ -std=c++0x  -Wall  -g -fopenmp -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

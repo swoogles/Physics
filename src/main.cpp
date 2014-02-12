@@ -18,7 +18,7 @@
 #include <float.h>
 #include <string>
 
-#include <omp.h>
+// #include <omp.h>
 
 #include "BillProperties.h"
 #include "inputFunctions.h"
@@ -58,7 +58,7 @@ using boost::numeric::ublas::compressed_vector;
 using boost::shared_ptr;
 using boost::make_shared;
 
-typedef shared_ptr<MyShape> shape_pointer;
+typedef boost::shared_ptr<MyShape> shape_pointer;
 
 int curStep = 0;
 double totalTime = 0;
@@ -78,9 +78,9 @@ static int main_window;
 static int control_center_num;
 
 // GLOBALS
-shared_ptr<Simulation> globalSimulation;
-shared_ptr<Recorder> globalRecorder;
-shared_ptr<BillProperties> globalProperties;
+boost::shared_ptr<Simulation> globalSimulation;
+boost::shared_ptr<Recorder> globalRecorder;
+boost::shared_ptr<BillProperties> globalProperties;
 
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;

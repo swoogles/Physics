@@ -3,24 +3,22 @@
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
-CPP_SRCS += \
-../src/ShapeFiles/%.cpp
 
-SHAPE_OBJS += \
-./src/ShapeFiles/%.o
+#CPP_SRCS += \
+#../fileInteraction.cpp 
 
-OBJS += $(SHAPE_OBJS)
+#OBJS += \
+#./fileInteraction.o 
 
-SHAPE_CPP_DEPS += \
-./src/ShapeFiles/%.d
+#CPP_DEPS += \
+#./fileInteraction.d 
 
-CPP_DEPS += $(SHAPE_CPP_DEPS)
 
 # Each subdirectory must supply rules for building sources it contributes
-src/ShapeFiles/%.o: ../src/ShapeFiles/%.cpp
+%.o: ../%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -Wall  -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	clang++ -std=c++0x  -Wall  -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

@@ -16,12 +16,19 @@ ostream& operator<<(ostream& os, sgVec4 outputVec) {
 }
 
 Moveable::Moveable()
-          :pos({0.0,0.0,0.0,1.0})
-          ,mass(1)
+          // :pos({0.0,0.0,0.0,1.0})
+          :mass(1)
           ,density(1)
-          ,color({0.5,1.0,0.0})
+          // ,color({0.5,1.0,0.0})
           ,ptsHighlighted(true)
 {
+  pos[0]=0.0;
+  pos[1]=0.0;
+  pos[2]=0.0;
+  pos[3]=1.0;
+  color[0]=0.5;
+  color[1]=1.0;
+  color[2]=0.0;
 	sgMakeIdentQuat(orientationQuat);
 
 	for (int i = 0; i < 4; i++) {
@@ -137,7 +144,7 @@ void Moveable::getVelocity(sgVec4 retVec) const {
 }
 
 // Angular Momentum and Velocity
-float Moveable::getMomentOfInertia() const { return 1;}
+float Moveable::getMomentOfInertia() { return 1;}
 
 void Moveable::setAngVelocity(const sgVec4 newAngVelocity) {
 	sgCopyVec4(prevAngVelocity, angVelocity);

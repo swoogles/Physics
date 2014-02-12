@@ -26,8 +26,7 @@ private:
 	static GLubyte * topIndices;
 	static GLubyte * bottomIndices;
 
-  float sideLength;
-  float length;
+  float depth;
   float width;
   float height;
 public:
@@ -35,8 +34,8 @@ public:
 	virtual ~Box();
 
 	matrix<double> getPts();
-	void drawUnit() const;
-  void drawScale() const;
+	void drawUnit();
+  void drawScale();
 
   float getSideLength();
   void setSideLength(float);

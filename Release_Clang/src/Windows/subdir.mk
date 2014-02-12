@@ -4,23 +4,23 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/ShapeFiles/%.cpp
+../src/Windows/control_center.cpp \
+../src/Windows/main_display.cpp 
 
-SHAPE_OBJS += \
-./src/ShapeFiles/%.o
+OBJS += \
+./src/Windows/control_center.o \
+./src/Windows/main_display.o 
 
-OBJS += $(SHAPE_OBJS)
+CPP_DEPS += \
+./src/Windows/control_center.d \
+./src/Windows/main_display.d 
 
-SHAPE_CPP_DEPS += \
-./src/ShapeFiles/%.d
-
-CPP_DEPS += $(SHAPE_CPP_DEPS)
 
 # Each subdirectory must supply rules for building sources it contributes
-src/ShapeFiles/%.o: ../src/ShapeFiles/%.cpp
+src/Windows/%.o: ../src/Windows/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -Wall  -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	clang++ -std=c++0x  -Wall  -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
