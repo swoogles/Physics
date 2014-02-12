@@ -352,10 +352,10 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom()
   float totalMass = 0.0;
 
   shape_pointer curShape;
-  float offset = 8e2;
+  float offset = 8e4;
   startPlacement[0]= offset;
   startPlacement[1]= offset;
-  startPlacement[2]= 0;
+  startPlacement[2]= offset;
   startPlacement[3]= 0;
 
   curShape = make_shared<Circle>();
@@ -632,8 +632,8 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 	  newSimulation = Simulations::bodyFormation_NonRandom();
   }
   if ( simNumber == '1' ) {
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 200 );
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 300 );
+    // newSimulation = Simulations::bodyFormation_ArbitraryList( 200 );
+    newSimulation = Simulations::bodyFormation_ArbitraryList( 1500 );
   }
   if ( simNumber == '2' ) {
 	  newSimulation = Simulations::disruption_ArbitraryList();
