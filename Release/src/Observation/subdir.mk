@@ -4,9 +4,9 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-./src/Observation/Timer.cpp \
-./src/Observation/Observer.cpp \
-./src/Observation/Recorder.cpp 
+# ./src/Observation/Timer.cpp \
+# ./src/Observation/Observer.cpp \
+# ./src/Observation/Recorder.cpp 
 
 OBJS += \
 ./src/Observation/Timer.o \

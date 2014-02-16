@@ -4,7 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-./src/Parallelization/Quadrant.cpp 
+# ./src/Parallelization/Quadrant.cpp 
 
 
 OBJS += \
