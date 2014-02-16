@@ -10,6 +10,7 @@
 
 #include <GL/glut.h>
 #include <iostream>
+#include <string>
 #include <fstream>
 #include <string.h>
 //#include <stdlib.h>
@@ -22,7 +23,7 @@ using namespace std;
 
 void intToAsc(int iCurPic, char * sCurPic);
 
-bool screenshot(unsigned int width, unsigned int height, const char * const path, int quality);
+bool screenshot(unsigned int width, unsigned int height, const string path, int quality);
 
 using namespace Magick;
 // using Magick::Image;
@@ -40,6 +41,10 @@ private:
 	char * outFileSuffix;
 	char * outFile;
 
+	string path;
+	string outFileName;
+	string extension;
+
 	int skipFrames;
 	int curFrame;
 	int curImage;
@@ -51,11 +56,18 @@ public:
   Recorder();
 	//! Sets up default values for completely static class
 	void init();
-	/*! \brief Set the file base name for frames to be stored
-	 *
-	 *  This won't be the full filename, but rather the base that frame numbers will be appended to when writing.
+
+	/*! \brief Set the path where frames will be saved.
 	 */
-	void setPath(char * outFile);
+	void setPath(string path);
+
+	/*! \brief Set the file base name for frames to be saved.
+	 */
+  void setOutFileName(string outFileName);
+
+	/*! \brief Set the extension that frames will use.
+	 */
+  void setExtension(string extension);
 
 	//! Returns the current frame number
 	int getCurFrame();
@@ -94,7 +106,7 @@ public:
 	 *  \n -Loops through all pixels
 	 *  \n -Compresses image
 	 */
-	friend bool screenshot(unsigned int width, unsigned int height, char * path, int quality);
+	friend bool screenshot(unsigned int width, unsigned int height, const string path, int quality);
 
   void imageMagickMucking();
 
