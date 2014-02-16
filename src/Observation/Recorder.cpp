@@ -12,26 +12,16 @@ Recorder::Recorder()
           curFrame(0),
           curImage(1)
 {
-	outFilePrefix = new char [80];
-	outFileName = new char [80];
-	// path = new char [80];
-	outFileSuffix = new char[7];
-	extension = new char[7];
-	strcpy(outFileSuffix, ".jpg");
   extension = "jpg";
-	// strcpy(extension, ".jpg");
-	outFile = new char[100];
-	strcpy(outFilePrefix, outFile);
-
 }
 void Recorder::imageMagickMucking()
 {
   Geometry g1(1280,720);
   Color imageColor( "orange" );
   Image sample_image( g1, imageColor );
-  cout << "Color.redQuantum(): " << imageColor.redQuantum() << endl;
-  cout << "Color.greenQuantum(): " << imageColor.greenQuantum() << endl;
-  cout << "Color.blueQuantum(): " << imageColor.blueQuantum() << endl;
+  // cout << "Color.redQuantum(): " << imageColor.redQuantum() << endl;
+  // cout << "Color.greenQuantum(): " << imageColor.greenQuantum() << endl;
+  // cout << "Color.blueQuantum(): " << imageColor.blueQuantum() << endl;
 
   PixelPacket* pixels;
   Pixels pixels_cache( sample_image );
@@ -52,8 +42,6 @@ void Recorder::init() {
 
 void Recorder::setPath(string path) {
   this->path = path;
-	// strcpy(this->path, path);
-	strcpy(outFilePrefix, path.c_str() );
 }
 
 void Recorder::setOutFileName(string outFileName) {
