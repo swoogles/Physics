@@ -654,14 +654,14 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber, int
     groupMomentum[2]=0;
     groupMomentum[3]=1;
     sgVec4 target = { -2000, 0, 0, 1 };
-	  Simulations::bodyFormationGeneric_ArbitraryList( 650, target, groupMomentum );
+	  Simulations::bodyFormationGeneric_ArbitraryList( numShapes, target, groupMomentum );
 
     target[0]=-target[0];
     groupMomentum[0]=0;
     groupMomentum[1]=-2800;
     groupMomentum[2]=0;
 
-	  Simulations::bodyFormationGeneric_ArbitraryList( 650, target, groupMomentum );
+	  Simulations::bodyFormationGeneric_ArbitraryList( numShapes, target, groupMomentum );
   }
   if ( simNumber == '7' ) {
   }
