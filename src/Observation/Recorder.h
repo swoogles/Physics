@@ -11,6 +11,7 @@
 #include <GL/glut.h>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <fstream>
 #include <string.h>
 //#include <stdlib.h>
