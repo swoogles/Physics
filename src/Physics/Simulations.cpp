@@ -623,7 +623,7 @@ int Simulations::addShapeToList( shape_pointer insertShape )
   return curSize;
 }
 
-boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
+boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber, int numShapes )
 {
   boost::shared_ptr<Simulation> newSimulation;
 
@@ -632,7 +632,7 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 	  newSimulation = Simulations::bodyFormation_NonRandom();
   }
   if ( simNumber == '1' ) {
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 200 );
+    newSimulation = Simulations::bodyFormation_ArbitraryList( numShapes );
   }
   if ( simNumber == '2' ) {
 	  newSimulation = Simulations::disruption_ArbitraryList();

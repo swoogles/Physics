@@ -17,6 +17,7 @@
 
 #include <float.h>
 #include <string>
+#include <sstream>
 
 // #include <omp.h>
 
@@ -195,8 +196,12 @@ void init(char simulation) {
   Observer * curObserver =  Observer::observers(0);
   Observer::setCurObserver(0);
 
+  string Text = globalProperties->at( BillProperties::NUM_SHAPES );
+  int numShapes;
+  if ( ! (istringstream(Text) >> numShapes) ) numShapes = 0;
+
   // Determine and create simulation
-  globalSimulation = Simulations::createSimulation( simulation );
+  globalSimulation = Simulations::createSimulation( simulation, numShapes );
   MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
   globalSimulation->setForceCalcMethodByString( globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD ) );

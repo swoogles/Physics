@@ -16,6 +16,7 @@ class BillProperties
     static const char  SIMULATION_DT[];
     static const char  PARALLEL[];
     static const char  OUTPUT_DIRECTORY[];
+    static const char  NUM_SHAPES[];
 
     bool static isValidProperty( string line );
     void readProperties();
