@@ -2,7 +2,6 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
--include ./makefile.init
 -include $(DEPFILES)
 
 RM := rm -rf
@@ -11,18 +10,10 @@ CC=g++
 
 USER_OBJS :=
 
-# 64 Bit/Desktop version
-# LIBS := -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg
-
 # 32 Bit/Laptop version
 LIBS := -lGL -lGLU -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt -lMagick++ -lMagickCore -lboost_system -lboost_timer -lboost_chrono -lboost_thread -lrt -fopenmp -Wc++0x-compat
 
-# All of the sources participating in the build are defined here
-
--include ./makefile.defs
-
-#subdir.mk
-SHELL=/bin/bash
+# SHELL=/bin/bash
 
 SRC_FILES := $(wildcard src/*.cpp)
 SRC_FILES += $(wildcard src/ShapeFiles/*.cpp)
@@ -30,17 +21,14 @@ SRC_FILES += $(wildcard src/Observation/*.cpp)
 SRC_FILES += $(wildcard src/Parallelization/*.cpp)
 SRC_FILES += $(wildcard src/Physics/*.cpp)
 SRC_FILES += $(wildcard src/Windows/*.cpp)
-#/subdir.mk
 
 
-PROJDIRS := src/ src/ShapeFiles src/Observation src/Parallelization src/Physics src/Windows
-SRCFILES_NEW := $(shell find $(PROJDIRS) -type f -name "\*.cpp")
+# PROJDIRS := src/ src/ShapeFiles src/Observation src/Parallelization src/Physics src/Windows
+# SRCFILES_NEW := $(shell find $(PROJDIRS) -type f -name "\*.cpp")
 
 OBJ_FILES := $(patsubst %.cpp,%.o,$(SRC_FILES))
 # OBJ_FILES := $(patsubst src/%.cpp,./Release/src/%.o,$(SRC_FILES))
 DEP_FILES    := $(patsubst %.o,%.d,$(OBJ_FILES))
-
-# Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
 all: ShapesLibrary
@@ -73,6 +61,3 @@ clean-shapes:
 
 .PHONY: all clean dependents
 .SECONDARY:
-
--include ./makefile.targets
-
