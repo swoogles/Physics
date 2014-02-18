@@ -15,6 +15,9 @@ LIBS := -lGL -lGLU -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfn
 
 # SHELL=/bin/bash
 
+r PROJDIRS := src/ src/ShapeFiles src/Observation src/Parallelization src/Physics src/Windows
+# SRC_FILES := $(wildcard $(PROJDIRS)*.cpp)
+
 SRC_FILES := $(wildcard src/*.cpp)
 SRC_FILES += $(wildcard src/ShapeFiles/*.cpp)
 SRC_FILES += $(wildcard src/Observation/*.cpp)
@@ -30,9 +33,14 @@ OBJ_FILES := $(patsubst %.cpp,%.o,$(SRC_FILES))
 # OBJ_FILES := $(patsubst src/%.cpp,./Release/src/%.o,$(SRC_FILES))
 DEP_FILES    := $(patsubst %.o,%.d,$(OBJ_FILES))
 
+
 # All Target
 all: ShapesLibrary
 	echo Boobs
+
+OBJS: 
+	# $(foreach var,$(NUMBERS),./a.out $(var);)
+	$(foreach var,$(PROJDIRS),echo $(var);)
 
 # Tool invocations
 # ShapesLibrary: ../Release/src/%.o $(OBJS) $(USER_OBJS)
@@ -48,6 +56,7 @@ ShapesLibrary: $(OBJ_FILES)
 	# dependency:=$(@:./Release/src/%.o,src/%.cpp)
 $(OBJ_FILES): $(@:.o=.cpp) makefile
 	@echo "Cur object: $(@)"
+	@echo "SRC_FILES: $(SRC_FILES)"
 	$(CC) $(CFLAGS) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"  -o "$@"   "$(@:.o=.cpp)"
 
 # Other Targets
