@@ -56,7 +56,6 @@ ShapesLibrary: $(OBJ_FILES)
 	# dependency:=$(@:./Release/src/%.o,src/%.cpp)
 $(OBJ_FILES): $(@:.o=.cpp) makefile
 	@echo "Cur object: $(@)"
-	@echo "SRC_FILES: $(SRC_FILES)"
 	$(CC) $(CFLAGS) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"  -o "$@"   "$(@:.o=.cpp)"
 
 # Other Targets
