@@ -13,6 +13,10 @@ SRC_FILES += $(wildcard ../src/Parallelization/*.cpp)
 SRC_FILES += $(wildcard ../src/Physics/*.cpp)
 SRC_FILES += $(wildcard ../src/Windows/*.cpp)
 
+# PROJDIRS := ../src/ ../src/ShapeFiles ../src/Observation ../src/Parallelization ../src/Physics ../src/Windows
+PROJDIRS := ../src/ ../src/ShapeFiles ../src/Observation ../src/Parallelization ../src/Physics ../src/Windows
+SRCFILES_NEW := $(shell find $(PROJDIRS) -type f -name "\*.cpp")
+
 ENDING = .cpp
 OBJ_TEST_TMP := $(SRC_FILES:$(ENDING)=.o)
 OBJ_TEST := $(subst ..,.,$(OBJ_TEST_TMP))
@@ -44,6 +48,9 @@ CPP_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.cpp
+	echo $(PROJDIRS)
+	echo $(SRCFILES_NEW)
+	
 	$(CC) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
