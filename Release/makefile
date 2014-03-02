@@ -1,24 +1,41 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
--include ../makefile.init
-
 RM := rm -rf
 
 CC=g++
 
 # All of the sources participating in the build are defined here
--include sources.mk
--include subdir.mk
--include src/subdir.mk
+# -include src/subdir.mk
 
 # 32 Bit/Laptop version
 LIBS := -lGL -lGLU -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt -lMagick++ -lMagickCore -lboost_system -lboost_timer -lboost_chrono -lboost_thread -lrt -fopenmp -Wc++0x-compat
 
--include ../makefile.defs
+SRC_FILES := $(wildcard ../src/*.cpp)
+SRC_FILES += $(wildcard ../src/ShapeFiles/*.cpp)
+SRC_FILES += $(wildcard ../src/Observation/*.cpp)
+SRC_FILES += $(wildcard ../src/Parallelization/*.cpp)
+SRC_FILES += $(wildcard ../src/Physics/*.cpp)
+SRC_FILES += $(wildcard ../src/Windows/*.cpp)
 
-# Add inputs and outputs from these tool invocations to the build variables 
+ENDING = .cpp
+OBJ_TEST_TMP := $(SRC_FILES:$(ENDING)=.o)
+OBJ_TEST := $(subst ..,.,$(OBJ_TEST_TMP))
+OBJS=$(OBJ_TEST)
+# And this will replace all endings:
+
+# OBJ = $(addsuffix .o,$(basename $(SOURCES)))
+CPP_DEPS_TEST_TMP := $(SRC_FILES:$(ENDING)=.d)
+CPP_DEPS_TEST := $(subst ..,.,$(CPP_DEPS_TEST_TMP))
+CPP_DEPS=$(CPP_DEPS_TEST)
+
+# SRC_FILES := $(../../%.cpp)
+# OBJ := $(SRC:.c=.o)
+# test: $(OBJ)
+# 	$(CC) -o $@ $(OBJ)
+# 	include $(OBJ:.o=.d)
+# 	%.d: %.c
+# 	depend.sh $(CFLAGS) \
+# 		$*.c > $@
+
+
 
 # All Target
 all: ShapesLibrary
@@ -41,7 +58,12 @@ clean-shapes:
 	-$(RM) $(SHAPE_OBJS)$(SHAPE_CPP_DEPS) ShapesLibrary
 	-@echo ' '
 
+# Each subdirectory must supply rules for building sources it contributes
+src/%.o: ../src/%.cpp
+	$(CC) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	@echo 'bill bilding'
+	@echo 'Finished building: $<'
+	@echo ' '
+
 .PHONY: all clean dependents
 .SECONDARY:
-
--include ../makefile.targets
