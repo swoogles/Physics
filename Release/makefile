@@ -6,40 +6,28 @@ CC=g++
 # -include src/subdir.mk
 
 # 32 Bit/Laptop version
-LIBS := -lGL -lGLU -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt -lMagick++ -lMagickCore -lboost_system -lboost_timer -lboost_chrono -lboost_thread -lrt -fopenmp -Wc++0x-compat
+OPENGL_LIBS := -lGL -lGLU -lglut
+PLIB_LIBS := -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt
+MAGICK_LIBS := -lMagick++ -lMagickCore
+BOOST_LIBS := -lboost_system -lboost_timer -lboost_chrono -lboost_thread
+LIBS :=  $(OPENGL_LIBS) $(PLIB_LIBS) $(MAGICK_LIBS) $(BOOST_LIBS) -ljpeg  -lrt -fopenmp -Wc++0x-compat
 
-SRC_FILES := $(wildcard ../src/*.cpp)
-SRC_FILES += $(wildcard ../src/ShapeFiles/*.cpp)
-SRC_FILES += $(wildcard ../src/Observation/*.cpp)
-SRC_FILES += $(wildcard ../src/Parallelization/*.cpp)
-SRC_FILES += $(wildcard ../src/Physics/*.cpp)
-SRC_FILES += $(wildcard ../src/Windows/*.cpp)
+CPP_EXT = .cpp
 
-ENDING = .cpp
-OBJ_TEST_TMP := $(SRC_FILES:$(ENDING)=.o)
-OBJ_TEST := $(subst ..,.,$(OBJ_TEST_TMP))
-OBJS=$(OBJ_TEST)
-# And this will replace all endings:
+SRC_FILES := $(wildcard ../src/*$(CPP_EXT))
+SRC_FILES += $(wildcard ../src/ShapeFiles/*$(CPP_EXT))
+SRC_FILES += $(wildcard ../src/Observation/*$(CPP_EXT))
+SRC_FILES += $(wildcard ../src/Parallelization/*$(CPP_EXT))
+SRC_FILES += $(wildcard ../src/Physics/*$(CPP_EXT))
+SRC_FILES += $(wildcard ../src/Windows/*$(CPP_EXT))
 
-# OBJ = $(addsuffix .o,$(basename $(SOURCES)))
-CPP_DEPS_TEST_TMP := $(SRC_FILES:$(ENDING)=.d)
-CPP_DEPS_TEST := $(subst ..,.,$(CPP_DEPS_TEST_TMP))
-CPP_DEPS=$(CPP_DEPS_TEST)
+BUILD_FILES := $(subst ..,.,$(SRC_FILES))
 
-# SRC_FILES := $(../../%.cpp)
-# OBJ := $(SRC:.c=.o)
-# test: $(OBJ)
-# 	$(CC) -o $@ $(OBJ)
-# 	include $(OBJ:.o=.d)
-# 	%.d: %.c
-# 	depend.sh $(CFLAGS) \
-# 		$*.c > $@
-
-
+OBJS:= $(BUILD_FILES:$(CPP_EXT)=.o)
+CPP_DEPS:= $(BUILD_FILES:$(CPP_EXT)=.d)
 
 # All Target
 all: ShapesLibrary
-
 
 # Tool invocations
 ShapesLibrary: $(OBJS) $(USER_OBJS)
