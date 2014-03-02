@@ -1,31 +1,33 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
--include ../makefile.init
-
 RM := rm -rf
 
 CC=g++
 
 # All of the sources participating in the build are defined here
--include sources.mk
--include subdir.mk
--include src/subdir.mk
-# -include src/Windows/subdir.mk
-# -include src/ShapeFiles/subdir.mk
-# -include src/Parallelization/subdir.mk
-# -include src/Physics/subdir.mk
-# -include src/Observation/subdir.mk
--include objects.mk
+# -include src/subdir.mk
 
--include ../makefile.defs
+# 32 Bit/Laptop version
+OPENGL_LIBS := -lGL -lGLU -lglut
+PLIB_LIBS := -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt
+MAGICK_LIBS := -lMagick++ -lMagickCore
+BOOST_LIBS := -lboost_system -lboost_timer -lboost_chrono -lboost_thread
+LIBS :=  $(OPENGL_LIBS) $(PLIB_LIBS) $(MAGICK_LIBS) $(BOOST_LIBS) -ljpeg  -lrt -fopenmp -Wc++0x-compat
 
-# Add inputs and outputs from these tool invocations to the build variables 
+CPP_EXT = .cpp
+
+SRC_FILES := $(wildcard ../src/*$(CPP_EXT))
+SRC_FILES += $(wildcard ../src/ShapeFiles/*$(CPP_EXT))
+SRC_FILES += $(wildcard ../src/Observation/*$(CPP_EXT))
+SRC_FILES += $(wildcard ../src/Parallelization/*$(CPP_EXT))
+SRC_FILES += $(wildcard ../src/Physics/*$(CPP_EXT))
+SRC_FILES += $(wildcard ../src/Windows/*$(CPP_EXT))
+
+BUILD_FILES := $(subst ..,.,$(SRC_FILES))
+
+OBJS:= $(BUILD_FILES:$(CPP_EXT)=.o)
+CPP_DEPS:= $(BUILD_FILES:$(CPP_EXT)=.d)
 
 # All Target
 all: ShapesLibrary
-
 
 # Tool invocations
 ShapesLibrary: $(OBJS) $(USER_OBJS)
@@ -44,7 +46,12 @@ clean-shapes:
 	-$(RM) $(SHAPE_OBJS)$(SHAPE_CPP_DEPS) ShapesLibrary
 	-@echo ' '
 
+# Each subdirectory must supply rules for building sources it contributes
+src/%.o: ../src/%.cpp
+	$(CC) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	@echo 'bill bilding'
+	@echo 'Finished building: $<'
+	@echo ' '
+
 .PHONY: all clean dependents
 .SECONDARY:
-
--include ../makefile.targets
