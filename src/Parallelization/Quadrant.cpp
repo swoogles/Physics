@@ -97,11 +97,8 @@ void Quadrant::subDivideAll( int levels, int numCells )
   sgVec4 newPos;
   sgVec4 newDimensions;
   sgVec4 scaleFactors;
-  sgVec4 offsets;
   sgVec4 halfNewDimensions;
   sgVec3 crossProduct;
-
-  int xFactor, yFactor, zFactor;
 
   quad_pointer targetQuadrant;
 
@@ -117,15 +114,10 @@ void Quadrant::subDivideAll( int levels, int numCells )
           scaleFactors[0] = ( x ) ?  1 : -1;
           scaleFactors[1] = ( y ) ?  1 : -1;
           scaleFactors[2] = ( z ) ?  1 : -1;
-
-          // sgScaleVec3( offsets, scaleFactors, 
-          // newPos[0]=pos[0]+(xFactor*dimensions[0]/4.0);
            
           sgScaleVec3  ( newDimensions, dimensions, .5 );
           sgScaleVec3  ( halfNewDimensions, newDimensions, .5 );
-
           
-              // void sgVectorProductVec3 ( sgVec3 dst, sgVec3 a, sgVec3 b )
           sgVectorProductVec3 ( crossProduct, scaleFactors, halfNewDimensions );
 
           newPos[0]=pos[0]+( crossProduct[0] );
@@ -236,14 +228,12 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
   sgVec4 insertPos;
   sgVec4 newPos;
   sgVec4 newDimensions;
-  sgVec4 scaleFactors;
   sgVec4 offsets;
-  sgVec4 halfNewDimensions;
-  sgVec3 crossProduct;
   sgVec3 targets;
 
   shapeToInsert->getPos( insertPos ); 
 
+  // Each dimension is cut in half as you go down
   sgScaleVec4 ( newDimensions, dimensions, .5 );
 
   sgScaleVec3( offsets, dimensions, .25 );
@@ -255,8 +245,7 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
   sgVec3 minBoundaries;
   sgSubVec3( minBoundaries, pos, newDimensions );
 
-  sgVec3 centralBoundaries;
-  sgCopyVec3( centralBoundaries, pos );
+  sgCopyVec3( newPos, pos );
 
   targets[0] = INVALID_OCTREE_INDEX;
   targets[1] = INVALID_OCTREE_INDEX;
@@ -270,15 +259,15 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
   {
     for ( int i = 0; i < 3; i++ )
     {
-      if ( insertPos[i] < centralBoundaries[i] )
+      if ( insertPos[i] < pos[i] )
       {
         targets[i] = 0; 
-        newPos[i] = centralBoundaries[i] - offsets[i];
+        newPos[i] -= offsets[i];
       }
       else
       {
         targets[i] = 1; 
-        newPos[i] = centralBoundaries[i] + offsets[i];
+        newPos[i] += offsets[i];
       }
     }
   }
