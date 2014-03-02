@@ -12,12 +12,9 @@ CC=g++
 -include sources.mk
 -include subdir.mk
 -include src/subdir.mk
-# -include src/Windows/subdir.mk
-# -include src/ShapeFiles/subdir.mk
-# -include src/Parallelization/subdir.mk
-# -include src/Physics/subdir.mk
-# -include src/Observation/subdir.mk
--include objects.mk
+
+# 32 Bit/Laptop version
+LIBS := -lGL -lGLU -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt -lMagick++ -lMagickCore -lboost_system -lboost_timer -lboost_chrono -lboost_thread -lrt -fopenmp -Wc++0x-compat
 
 -include ../makefile.defs
 
