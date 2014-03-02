@@ -2,6 +2,24 @@
 
 using namespace std;
 
+bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundaries )
+{
+
+  bool withinBoundaries = true;
+  // X coordinate checking
+  for ( int i = 0; i < 3 && withinBoundaries == true; i++ )
+  {
+    if ( 
+        (insertPos[i] < minBoundaries[i] ) && 
+        ( insertPos[i] > maxBoundaries[i] ) 
+      )
+    {
+      withinBoundaries = false;
+    }
+  }
+  return withinBoundaries;
+}
+
 boost::shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
 {
   return shapeInQuadrant;
@@ -58,6 +76,20 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 boost::shared_ptr<Quadrant> Quadrant::getQuadrantFromCell( int x, int y, int z )
 {
   return quadOctree[x][y][z];
+}
+
+boost::shared_ptr<Quadrant> Quadrant::operator() ( const sgVec3 targets )
+{
+  if ( targets[0] == INVALID_OCTREE_INDEX &&
+      targets[1] == INVALID_OCTREE_INDEX &&
+      targets[2] == INVALID_OCTREE_INDEX ) 
+  {
+
+    return nullptr;
+  }
+  else {
+    return quadOctree[targets[0]][targets[1]][targets[2]];
+  }
 }
 
 void Quadrant::subDivideAll( int levels, int numCells )
@@ -208,82 +240,45 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
   sgVec4 offsets;
   sgVec4 halfNewDimensions;
   sgVec3 crossProduct;
+  sgVec3 targets;
 
   shapeToInsert->getPos( insertPos ); 
 
-  float insertX = insertPos[0];
-  float insertY = insertPos[1];
-  float insertZ = insertPos[2];
+  sgScaleVec4 ( newDimensions, dimensions, .5 );
 
-  sgCopyVec4( newDimensions, dimensions );
-  sgScaleVec4 ( newDimensions, .5 );
-
-  
   sgScaleVec3( offsets, dimensions, .25 );
+
   // Boundaries [0]=min : [1]=central : [2]=max
-  sgVec3 xBoundaries;
-  // xBoundaries[0]
   sgVec3 maxBoundaries;
   sgAddVec3( maxBoundaries, pos, newDimensions );
 
   sgVec3 minBoundaries;
   sgSubVec3( minBoundaries, pos, newDimensions );
 
-  float centralXBoundary = pos[0];
-  float maxXBoundary = maxBoundaries[0];
+  sgVec3 centralBoundaries;
+  sgCopyVec3( centralBoundaries, pos );
 
-  float centralYBoundary = pos[1];
-  float maxYBoundary = maxBoundaries[1];
+  targets[0] = INVALID_OCTREE_INDEX;
+  targets[1] = INVALID_OCTREE_INDEX;
+  targets[2] = INVALID_OCTREE_INDEX;
 
-  float centralZBoundary = pos[2];
-  float maxZBoundary = maxBoundaries[2];
+  // TODO make one function that will take 2 vectors and return
+  // true if one falls completely within the bounds of another
+  bool validInsertPosition = withinBoundaries( insertPos, minBoundaries, maxBoundaries );
 
-  int targetX = INVALID_OCTREE_INDEX;
-  int targetY = INVALID_OCTREE_INDEX;
-  int targetZ = INVALID_OCTREE_INDEX;
-
-
-  // X coordinate checking
-  if ( insertX >= minBoundaries[0] ) //Within min X boundary
+  if ( validInsertPosition )
   {
-    if ( insertX < centralXBoundary ) //Less than central X boundary
+    for ( int i = 0; i < 3; i++ )
     {
-      targetX = 0; 
-      newPos[0] = centralXBoundary - offsets[0];
-    }
-    else if ( insertX <= maxBoundaries[0] ) //Less than max X boundary
-    {
-      targetX = 1;
-      newPos[0] = centralXBoundary + offsets[0];
-    }
-
-    // Y coordinate checking
-    if ( insertY >= minBoundaries[2] ) //Within min Y boundary
-    {
-      if ( insertY < centralYBoundary ) //Less than central Y boundary
+      if ( insertPos[i] < centralBoundaries[i] )
       {
-        targetY = 0; 
-        newPos[1] = centralYBoundary - offsets[1];
+        targets[i] = 0; 
+        newPos[i] = centralBoundaries[i] - offsets[i];
       }
-      else if ( insertY <= maxBoundaries[1] ) //Less than max Y boundary
+      else
       {
-        targetY = 1;
-        newPos[1] = centralYBoundary + offsets[1];
-      }
-
-      // Z coordinate checking
-      if ( insertZ >= minBoundaries[2] ) //Within min Z boundary
-      {
-        if ( insertZ < centralZBoundary ) //Less than central Z boundary
-        {
-          newPos[2] = centralZBoundary - offsets[2];
-          targetZ = 0; 
-        }
-        else if ( insertZ <= maxBoundaries[2] ) //Less than max Z boundary
-        {
-          targetZ = 1;
-          newPos[2] = centralZBoundary + offsets[2];
-        }
+        targets[i] = 1; 
+        newPos[i] = centralBoundaries[i] + offsets[i];
       }
     }
   }
@@ -292,18 +287,19 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
 
   // Only proceed if we have determined that the provided shape does actually
   // belong in this Quadrant
-  if ( targetX != INVALID_OCTREE_INDEX &&
-      targetY != INVALID_OCTREE_INDEX &&
-      targetZ != INVALID_OCTREE_INDEX )
+  if ( targets[0] != INVALID_OCTREE_INDEX &&
+      targets[1] != INVALID_OCTREE_INDEX &&
+      targets[2] != INVALID_OCTREE_INDEX )
   {
     int numCells = 8;
 
-    insertionQuadrant = quadOctree[targetX][targetY][targetZ];
+    // quadOctree(targets);
+    insertionQuadrant = quadOctree[targets[0]][targets[1]][targets[2]];
 
     if ( insertionQuadrant == nullptr )
     {
       insertionQuadrant = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) ) ;
-      quadOctree[targetX][targetY][targetZ] = insertionQuadrant;
+      quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }
 

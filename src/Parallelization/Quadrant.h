@@ -79,5 +79,7 @@ class Quadrant : public Box
 
     ShapeList getShapesRecursive();
 
+    boost::shared_ptr<Quadrant> operator() ( const sgVec3 targets );
+
 };
 #endif /* QUADRANT_H_ */
