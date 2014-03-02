@@ -24,7 +24,12 @@ OBJS=$(OBJ_TEST)
 
 
 # Add inputs and outputs from these tool invocations to the build variables 
-CPP_SRCS = $(SRC_FILES)
+# CPP_SRCS = $(SRC_FILES)
+
+# ENDING = .cpp
+CPP_DEPS_TEST_TMP := $(SRC_FILES:$(ENDING)=.d)
+CPP_DEPS_TEST := $(subst ..,.,$(CPP_DEPS_TEST_TMP))
+CPP_DEPS=$(CPP_DEPS_TEST)
 
 CPP_DEPS += \
 ./src/BillProperties.d \
@@ -45,6 +50,7 @@ CPP_DEPS += \
 # Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.cpp
 	$(CC) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	@echo 'bill bilding'
 	@echo 'Finished building: $<'
 	@echo ' '
 
