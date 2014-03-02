@@ -1,8 +1,8 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
 
-#include "ShapeFiles/Circle.h"
-#include "Physics/Simulation.h"
+#include "../src/ShapeFiles/Circle.h"
+#include "../src/Physics/Simulation.h"
 
 Circle circle;
 
@@ -52,9 +52,11 @@ TEST_CASE( "Simulation is made", "[simulation]" ) {
   REQUIRE( testSimulation.isConstGravField() == false );
   REQUIRE( testSimulation.isGravBetweenObjects() == true );
 
+  SECTION( "Update dimensions" ) {
+    testSimulation.getMinX() ;
+    // SECTION( "resizing gives a new radius" ) {
+    //   testCircle.setRadius( 5 );
+    //   REQUIRE( testCircle.getRadius() == 5 );
+  }
 
-  // SECTION( "resizing gives a new radius" ) {
-  //   testCircle.setRadius( 5 );
-  //   REQUIRE( testCircle.getRadius() == 5 );
-  // }
-}
+  }
