@@ -51,7 +51,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
   float redAmount = level*.10; 
   float greenAmount = (1-level*.10);
-  float blueAmount = (1-level*.10);
+  float blueAmount = greenAmount;
   sgVec3 newColor = { redAmount, greenAmount, blueAmount };
 
   borders->setColor( newColor );
