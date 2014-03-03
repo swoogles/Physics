@@ -1,23 +1,12 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
--include $(DEPFILES)
-
 RM := rm -rf
 
 CC=g++
 
-USER_OBJS :=
-
-# 32 Bit/Laptop version
 OPENGL_LIBS := -lGL -lGLU -lglut
 PLIB_LIBS := -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt
 MAGICK_LIBS := -lMagick++ -lMagickCore
 BOOST_LIBS := -lboost_system -lboost_timer -lboost_chrono -lboost_thread
 LIBS :=  $(OPENGL_LIBS) $(PLIB_LIBS) $(MAGICK_LIBS) $(BOOST_LIBS) -ljpeg  -lrt -fopenmp -Wc++0x-compat
-
-# SHELL=/bin/bash
 
 PROJDIRS := src/ src/ShapeFiles src/Observation src/Parallelization src/Physics src/Windows
 # SRC_FILES := $(wildcard $(PROJDIRS)*.cpp)
@@ -29,16 +18,10 @@ SRC_FILES += $(wildcard src/Parallelization/*.cpp)
 SRC_FILES += $(wildcard src/Physics/*.cpp)
 SRC_FILES += $(wildcard src/Windows/*.cpp)
 
-
-# PROJDIRS := src/ src/ShapeFiles src/Observation src/Parallelization src/Physics src/Windows
-# SRCFILES_NEW := $(shell find $(PROJDIRS) -type f -name "\*.cpp")
-
 BUILD_FILES := $(subst src,Release/src,$(SRC_FILES))
 
 OBJ_FILES := $(patsubst %.cpp,%.o,$(BUILD_FILES))
-# OBJ_FILES := $(patsubst src/%.cpp,./Release/src/%.o,$(SRC_FILES))
 DEP_FILES := $(patsubst %.cpp,%.d,$(BUILD_FILES))
-
 
 # All Target
 all: ShapesLibrary
@@ -58,8 +41,6 @@ ShapesLibrary: $(OBJ_FILES)
 	@echo ' '
 
 
-	# @echo "replacement: "$(patsubst ./Release/src/%.o,src/%.cpp,$(@)) 
-	# dependency:=$(@:./Release/src/%.o,src/%.cpp)
 # $(OBJ_FILES): $(@:.o=.cpp) makefile
 Release/src/%.o: ./src/%.cpp
 
