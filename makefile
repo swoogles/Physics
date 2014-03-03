@@ -1,3 +1,7 @@
+# My best attempt at a good makefile so far
+# There are still plenty of stupid things in here, but it's much
+# better than it used to be.
+
 RM := rm -rf
 
 CC=g++
@@ -29,7 +33,6 @@ OBJS_WITHOUT_MAIN := $(filter-out $(MAIN_OBJECT),$(OBJ_FILES))
 
 # All Target
 all: ShapesLibrary
-	echo Boobs
 
 OBJS: 
 	# $(foreach var,$(NUMBERS),./a.out $(var);)
