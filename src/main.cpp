@@ -17,6 +17,7 @@
 
 #include <float.h>
 #include <string>
+#include <sstream>
 
 // #include <omp.h>
 
@@ -195,8 +196,12 @@ void init(char simulation) {
   Observer * curObserver =  Observer::observers(0);
   Observer::setCurObserver(0);
 
+  string Text = globalProperties->at( BillProperties::NUM_SHAPES );
+  int numShapes;
+  if ( ! (istringstream(Text) >> numShapes) ) numShapes = 0;
+
   // Determine and create simulation
-  globalSimulation = Simulations::createSimulation( simulation );
+  globalSimulation = Simulations::createSimulation( simulation, numShapes );
   MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
   globalSimulation->setForceCalcMethodByString( globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD ) );
@@ -215,7 +220,14 @@ void init(char simulation) {
   curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 
   char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
-  globalRecorder->setPath(pathName);
+  // char path[]= globalProperties->at( BillProperties::OUTPUT_DIRECTORY ) + "/outFrame" ;
+  // cout << "OutputDirectory: " << globalProperties->at( BillProperties::OUTPUT_DIRECTORY )  << endl;
+
+  string outFileName = "outFrame";
+  string extension = "jpg";
+  globalRecorder->setOutFileName( outFileName );
+  globalRecorder->setPath( globalProperties->at( BillProperties::OUTPUT_DIRECTORY ) );
+  globalRecorder->setExtension( extension );
   globalRecorder->setSkipFrames(1);
 
   //openShapes(saveFileName);

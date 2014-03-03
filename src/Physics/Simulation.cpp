@@ -52,14 +52,11 @@ void Simulation::refreshQuadrant()
     }
   }
 
-  cout << "1" << endl;
   sgVec4 pos = {0,0,0,1};
   // float side = quadrant->getWidth(); //Formation Value
   float side = 10e5; //Formation Value
-  cout << "2" << endl;
   sgVec3 dimensions = { side, side, side };
   quadrant = make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
-  cout << "3" << endl;
 
   foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
   {

@@ -352,10 +352,10 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom()
   float totalMass = 0.0;
 
   shape_pointer curShape;
-  float offset = 8e2;
+  float offset = 8e4;
   startPlacement[0]= offset;
   startPlacement[1]= offset;
-  startPlacement[2]= 0;
+  startPlacement[2]= offset;
   startPlacement[3]= 0;
 
   curShape = make_shared<Circle>();
@@ -623,7 +623,7 @@ int Simulations::addShapeToList( shape_pointer insertShape )
   return curSize;
 }
 
-boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
+boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber, int numShapes )
 {
   boost::shared_ptr<Simulation> newSimulation;
 
@@ -632,8 +632,7 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
 	  newSimulation = Simulations::bodyFormation_NonRandom();
   }
   if ( simNumber == '1' ) {
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 200 );
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 300 );
+    newSimulation = Simulations::bodyFormation_ArbitraryList( numShapes );
   }
   if ( simNumber == '2' ) {
 	  newSimulation = Simulations::disruption_ArbitraryList();
@@ -655,14 +654,14 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
     groupMomentum[2]=0;
     groupMomentum[3]=1;
     sgVec4 target = { -2000, 0, 0, 1 };
-	  Simulations::bodyFormationGeneric_ArbitraryList( 650, target, groupMomentum );
+	  Simulations::bodyFormationGeneric_ArbitraryList( numShapes, target, groupMomentum );
 
     target[0]=-target[0];
     groupMomentum[0]=0;
     groupMomentum[1]=-2800;
     groupMomentum[2]=0;
 
-	  Simulations::bodyFormationGeneric_ArbitraryList( 650, target, groupMomentum );
+	  Simulations::bodyFormationGeneric_ArbitraryList( numShapes, target, groupMomentum );
   }
   if ( simNumber == '7' ) {
   }

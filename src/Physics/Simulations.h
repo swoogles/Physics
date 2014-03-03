@@ -121,7 +121,7 @@ class Simulations
 
     static boost::shared_ptr<Simulation> simpleCollision_ArbitraryList();
 
-    static boost::shared_ptr<Simulation> createSimulation( char simNumber );
+    static boost::shared_ptr<Simulation> createSimulation( char simNumber, int numShapes );
 
     /*! \brief Returns a shape from the static list of objects that should be considered during
      * physical interactions.

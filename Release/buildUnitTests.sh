@@ -1,0 +1,3 @@
+g++ -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/unitTests.d" -MT"src/unitTests.d" -o"src/unitTests.o" "./unitTests.cpp"
+
+g++ -Wall -g  -o"UnitTests" ./src/unitTests.o ./src/ShapeFiles/ShapeList.o ./src/ShapeFiles/StraightShape.o ./src/ShapeFiles/Box.o ./src/ShapeFiles/Circle.o ./src/ShapeFiles/RoundShape.o ./src/ShapeFiles/MyShape.o ./src/ShapeFiles/Moveable.o ./src/Physics/Simulation.o ./src/Parallelization/Quadrant.o -lGL -lGLU -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt -lMagick++ -lMagickCore -lboost_system -lboost_timer -lboost_chrono -lboost_thread -lrt -fopenmp -Wc++0x-compat 
