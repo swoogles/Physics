@@ -15,7 +15,7 @@ LIBS := -lGL -lGLU -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfn
 
 # SHELL=/bin/bash
 
-r PROJDIRS := src/ src/ShapeFiles src/Observation src/Parallelization src/Physics src/Windows
+PROJDIRS := src/ src/ShapeFiles src/Observation src/Parallelization src/Physics src/Windows
 # SRC_FILES := $(wildcard $(PROJDIRS)*.cpp)
 
 SRC_FILES := $(wildcard src/*.cpp)
