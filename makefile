@@ -11,7 +11,11 @@ CC=g++
 USER_OBJS :=
 
 # 32 Bit/Laptop version
-LIBS := -lGL -lGLU -lglut -ljpeg -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt -lMagick++ -lMagickCore -lboost_system -lboost_timer -lboost_chrono -lboost_thread -lrt -fopenmp -Wc++0x-compat
+OPENGL_LIBS := -lGL -lGLU -lglut
+PLIB_LIBS := -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt
+MAGICK_LIBS := -lMagick++ -lMagickCore
+BOOST_LIBS := -lboost_system -lboost_timer -lboost_chrono -lboost_thread
+LIBS :=  $(OPENGL_LIBS) $(PLIB_LIBS) $(MAGICK_LIBS) $(BOOST_LIBS) -ljpeg  -lrt -fopenmp -Wc++0x-compat
 
 # SHELL=/bin/bash
 
@@ -29,9 +33,11 @@ SRC_FILES += $(wildcard src/Windows/*.cpp)
 # PROJDIRS := src/ src/ShapeFiles src/Observation src/Parallelization src/Physics src/Windows
 # SRCFILES_NEW := $(shell find $(PROJDIRS) -type f -name "\*.cpp")
 
-OBJ_FILES := $(patsubst %.cpp,%.o,$(SRC_FILES))
+BUILD_FILES := $(subst src,Release/src,$(SRC_FILES))
+
+OBJ_FILES := $(patsubst %.cpp,%.o,$(BUILD_FILES))
 # OBJ_FILES := $(patsubst src/%.cpp,./Release/src/%.o,$(SRC_FILES))
-DEP_FILES    := $(patsubst %.o,%.d,$(OBJ_FILES))
+DEP_FILES := $(patsubst %.cpp,%.d,$(BUILD_FILES))
 
 
 # All Target
@@ -54,13 +60,15 @@ ShapesLibrary: $(OBJ_FILES)
 
 	# @echo "replacement: "$(patsubst ./Release/src/%.o,src/%.cpp,$(@)) 
 	# dependency:=$(@:./Release/src/%.o,src/%.cpp)
-$(OBJ_FILES): $(@:.o=.cpp) makefile
+# $(OBJ_FILES): $(@:.o=.cpp) makefile
+Release/src/%.o: ./src/%.cpp
+
 	@echo "Cur object: $(@)"
-	$(CC) $(CFLAGS) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"  -o "$@"   "$(@:.o=.cpp)"
+	$(CC) $(CFLAGS) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"  -o "$@"   "$<"
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS)$(DEP_FILES) ShapesLibrary
+	-$(RM) $(OBJ_FILES)$(DEP_FILES) $(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) ShapesLibrary
 	-@echo ' '
 
 clean-shapes:
