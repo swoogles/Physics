@@ -49,7 +49,7 @@ Release/src/%.o: ./src/%.cpp
 
 # Other Targets
 clean:
-	-$(RM) $(OBJ_FILES)$(DEP_FILES) $(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) ShapesLibrary
+	-$(RM) $(OBJ_FILES) $(DEP_FILES) $(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) ShapesLibrary
 	-@echo ' '
 
 clean-shapes:
