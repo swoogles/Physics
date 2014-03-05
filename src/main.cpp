@@ -177,12 +177,8 @@ void init(char simulation) {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
-  cout << "Reading properties" << endl;
-
   globalProperties = make_shared<BillProperties>();
   globalProperties->readProperties();
-
-  cout << "Read properties" << endl;
 
   globalRecorder = make_shared<Recorder>();
   globalRecorder->imageMagickMucking();
@@ -236,8 +232,6 @@ void init(char simulation) {
 }
 
 void idle() {
-  //The program is working fine at this commit: bc0fed62b95fa02206c96ab10945e9d39582744e
-  // Figure out where things went so wrong
   sgVec4 curPos;
 
   if (! globalSimulation->isPaused()  ) {
@@ -248,20 +242,10 @@ void idle() {
     // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
     string forceCalculations = globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD );
 
-
-    // Timer collisionsTimer = Timer();
-    // collisionsTimer.startTiming();
     calcCollisionsAll( globalSimulation );
-    // collisionsTimer.stopTiming();
 
     calcForcesAll( globalSimulation );
 
-    // Timer drawingTimer = Timer();
-    // if ( curStep < 100 )
-    // {
-    //   drawingTimer.startTiming();
-    // }
-    
     // Not using this for now because of all the corrupted list problems I was getting
     bool parallelize;
     if ( globalProperties->at( BillProperties::PARALLEL ).compare( "true" ) )
@@ -274,19 +258,6 @@ void idle() {
     }
     globalSimulation->getPhysicalObjects().update( globalSimulation->getDT() );
 
-    // if ( curStep < 100 )
-    // {
-    //   cout << "Drawing ";
-    //   drawingTimer.stopTiming();
-    //   totalTime +=drawingTimer.getDuration().count();
-    // }
-    // else if ( curStep == 100 )
-    // {
-    //   cout << "Avg time: " << totalTime/100  << endl;
-    // }
-
-    // curStep++;
-
     globalSimulation->updateTimeElapsed();
     globalMainDisplay.update();
 
@@ -298,10 +269,7 @@ void idle() {
       globalSimulation->updateXYMinsAndMaxes(curPos);
     }
 
-    // if ( globalSimulation->getCurStep() == 0 )
-    // {
-      globalSimulation->refreshQuadrant();
-    // }
+    globalSimulation->refreshQuadrant();
   }
 
   int curObserverIdx = Observer::getCurObserver();
