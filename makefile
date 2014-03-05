@@ -59,16 +59,12 @@ Tests: $(OBJ_FILES)
 Release/src/%.o: ./src/%.cpp
 
 	@echo "Cur object: $(@)"
-	$(CC) $(CFLAGS) -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"  -o "$@"   "$<"
+	$(CC) $(CFLAGS) -std=c++11 -g -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"  -o "$@"   "$<"
 
 # Other Targets
 clean:
 	-$(RM) $(OBJ_FILES) $(DEP_FILES) $(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) ShapesLibrary
 	-@echo ' '
-	@echo 'Hi'
-	-@echo 'ObjFiles: $(OBJ_FILES) '
-	-@echo 'ObjFiles w/o main: $(OBJS_WITHOUT_MAIN) '
-	
 
 clean-shapes:
 	-$(RM) $(SHAPE_OBJS)$(SHAPE_CPP_DEPS) ShapesLibrary
