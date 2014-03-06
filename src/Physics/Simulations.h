@@ -87,7 +87,7 @@ class Simulations
      *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
      */
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    static compressed_vector< shape_pointer > physicalObjects;
+    // static compressed_vector< shape_pointer > physicalObjects;
     static int curStep;
 
 
@@ -122,21 +122,6 @@ class Simulations
     static boost::shared_ptr<Simulation> simpleCollision_ArbitraryList();
 
     static boost::shared_ptr<Simulation> createSimulation( char simNumber, int numShapes );
-
-    /*! \brief Returns a shape from the static list of objects that should be considered during
-     * physical interactions.
-     *
-     *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
-     *  \return Pointer to desired shape
-     */
-    static shape_pointer getShapeFromList( unsigned int shapeIndex );
-
-    /*! \brief Returns a shape from the main shapes list
-     *
-     *  /param shapeIndex The index of the shape you want to retrieve from the main shapes list
-     *  \return Pointer to desired shape
-     */
-    static int addShapeToList( shape_pointer insertShape );
 };
 
 

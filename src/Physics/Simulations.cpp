@@ -8,18 +8,10 @@
 #include "Simulations.h"
 
 float Simulations::G = 6.67384e-11;
-compressed_vector< boost::shared_ptr<MyShape> > Simulations::physicalObjects(0);
+// compressed_vector< boost::shared_ptr<MyShape> > Simulations::physicalObjects(0);
 int Simulations::curStep;
 
 using namespace std;
-
-void testAutoScale() {
-	int numObjects = 5;
-	for (int i = 0; i < numObjects; i++ ) {
-
-	}
-}
-
 
 void Simulations::largeGridAlternating() {
 	sgVec4 startPos;
@@ -602,25 +594,6 @@ boost::shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(in
 
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
-}
-
-boost::shared_ptr<MyShape> Simulations::getShapeFromList( unsigned int shapeIndex )
-{
-  shape_pointer returnShape;
-  if ( physicalObjects.size() > shapeIndex )
-  {
-    returnShape = physicalObjects(shapeIndex);
-  }
-
-  return returnShape;
-}
-
-int Simulations::addShapeToList( shape_pointer insertShape )
-{
-  int curSize = physicalObjects.size();
-  physicalObjects.resize(curSize + 1);
-  physicalObjects(curSize) = insertShape;
-  return curSize;
 }
 
 boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber, int numShapes )
