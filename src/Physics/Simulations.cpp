@@ -94,10 +94,6 @@ void Simulations::simpleOrbit() {
 	curShape->setMomentum(startMom);
 	curShape->setDensity(earthDensity);
 	curShape->setMass(earthMass);
-
-	cout << "earthMass: " << curShape->getMass() << endl;
-
-	cout << "numBodies: " << MyShape::shapes.size() << endl;
 }
 
   boost::shared_ptr<Simulation> Simulations::billiards1(int numRows) {
@@ -148,11 +144,8 @@ void Simulations::simpleOrbit() {
 			curShape->setRadius(ballRadius);
       physicalObjects.addShapeToList( curShape );
 		}
-		cout << endl;
 		cutOff--;
 	}
-
-	cout << "NumPieces: " << numPieces << endl;
 
   // return physicalObjects;
   curSimulation->setPhysicalObjects( physicalObjects );
@@ -197,7 +190,6 @@ boost::shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRo
 
       physicalObjects.addShapeToList( shapeForInsertion );
 		}
-		cout << endl;
 	}
 
   curSimulation->setPhysicalObjects( physicalObjects );
@@ -574,7 +566,6 @@ boost::shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(in
     sgAddVec4( startMomentum, groupMomentum );
 
 		curShape = make_shared<Circle>();
-    cout << "StartPos: " << startPlacement[0] << endl;
 		curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		curShape->setMass(pieceMass);
 		curShape->setRadius(pieceRadius);
