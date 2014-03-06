@@ -562,8 +562,6 @@ void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 targe
     startPos[i] = randMult;
   }
 
-  startPos[3] = 1;
-
   sgAddVec4( startPos, target );
 }
 
@@ -588,23 +586,17 @@ void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       else {
         randMult *= -1;
       }
-
-      //randMult*=.3;
-
-      //startMom[i] = randMult * pieceMass * 0.00060; //Mainly escape
-      //startMom[i] = randMult * pieceMass * 0.00080; // Good mix
       startMom[i] = randMult * pieceMass * 0.00050; // Good mix
-      //startMom[i] = randMult * pieceMass * 0.00008; //Quick Collapse
-
-      //startMom[i] = randMult * pieceMass * 0.000023; //Earth 500 pieces
     }
   }
 
 
-  if (switchB)
+  if (switchB) {
     switchB = false;
-  else
+  }
+  else {
     switchB = true;
+  }
   startMom[3] = 0;
 }
 
