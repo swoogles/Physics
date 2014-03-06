@@ -62,10 +62,7 @@ bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> obje
 
 	minSep = object1->getRadius() + object2->getRadius();
 
-	if (distance < minSep)
-		return true;
-	else
-		return false;
+	return (distance < minSep);
 }
 
 void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation ) 
@@ -236,8 +233,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
     cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
   }
 
-  // Timer forceCalcTimer = Timer();
-  // forceCalcTimer.startTiming();
   if ( curSimulation->getForceCalcMethod() != Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
     calcForcesAll_Naive( curSimulation );
@@ -255,9 +250,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
       }
     }
   }
-  // physicalObjects.update( curSimulation->getDT()  );
-
-  // forceCalcTimer.stopTiming();
 }
 
 bool isConflict(int newShape) 
