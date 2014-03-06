@@ -140,10 +140,11 @@ bool screenshot(unsigned int width, unsigned int height, string path, int qualit
          glPixelStorei(GL_PACK_ALIGNMENT, 1);
          glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
 
+         int numComponents = 3; // 3 for R, G, Bs
          // give some specifications about the image to save to libjpeg
          cinfo.image_width = width;
          cinfo.image_height = height;
-         cinfo.input_components = 3; // 3 for R, G, B
+         cinfo.input_components = numComponents; // 3 for R, G, B
          cinfo.in_color_space = JCS_RGB; // type of image
 
          jpeg_set_defaults(&cinfo);
@@ -155,9 +156,9 @@ bool screenshot(unsigned int width, unsigned int height, string path, int qualit
          // flip lines.
          for (unsigned int y=0;y < height; y++) {
             for (unsigned int x=0;x < width; x++) {
-               flip[(y*width+x)*3] = pixels[((height-1-y)*width+x)*3];
-               flip[(y*width+x)*3+1] = pixels[((height-1-y)*width+x)*3+1];
-               flip[(y*width+x)*3+2] = pixels[((height-1-y)*width+x)*3+2];
+               flip[(y*width+x)*numComponents] = pixels[((height-1-y)*width+x)*numComponents];
+               flip[(y*width+x)*numComponents+1] = pixels[((height-1-y)*width+x)*numComponents+1];
+               flip[(y*width+x)*numComponents+2] = pixels[((height-1-y)*width+x)*numComponents+2];
             }
          }
 
