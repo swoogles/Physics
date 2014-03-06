@@ -7,42 +7,31 @@
 
 #include "fileInteraction.h"
 
-//TODO save more information in header
 void saveShapes(char * fileName) {
 	shape_pointer curShape;
 	sgVec4 curField;
 	ofstream myfile;
 	myfile.open (fileName);
-	//myfile << "Writing this to a file.\n";
 	myfile << MyShape::shapes.size() << endl;
 	for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
 		curShape = MyShape::shapes(i);
-		//myfile << "Shape " << i << endl;
 
-		//myfile << "Type: ";
 		myfile << curShape->getType() << endl;
 
 		curShape->getPos(curField);
-		//myfile << "  Pos: ";
 		vecFilePrint(myfile, curField);
 
-
-		//myfile << "  Mass: ";
 		myfile << curShape->getMass() << endl;
 
 		curShape->getMomentum(curField);
-		//myfile << "  Momentum: ";
 		vecFilePrint(myfile, curField);
 
 		curShape->getAngMomentum(curField);
-		//myfile << "  AngMomentum: ";
 		vecFilePrint(myfile, curField);
 
-		//myfile << "  Density: ";
 		myfile << curShape->getDensity() << endl;
 
 		curShape->getColor(curField);
-		//myfile << "  Color: ";
 		vecFilePrint(myfile, curField);
 
 	}
