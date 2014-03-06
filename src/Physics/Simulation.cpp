@@ -32,23 +32,17 @@ void Simulation::refreshQuadrant()
 {
   int magnitude;
   magnitude = maxX;
-  if ( minX < 0 )
+  if ( -minX > magnitude )
   {
-    if ( -minX > magnitude )
-    {
-      magnitude = -minX;
-    }
+    magnitude = -minX;
   }
 
   if ( maxY > magnitude )
   {
     magnitude = maxY;
-    if ( minY < 0 )
+    if ( -minY > magnitude )
     {
-      if ( -minY > magnitude )
-      {
-        magnitude = -minY;
-      }
+      magnitude = -minY;
     }
   }
 
