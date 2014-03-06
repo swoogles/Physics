@@ -343,7 +343,6 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom()
   startPlacement[3]= 0;
 
   curShape = make_shared<Circle>();
-  curShape = make_shared<Circle>();
   curShape->setPos( startPlacement );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
