@@ -165,10 +165,6 @@ void Moveable::getAngVelocity(sgVec4 retAngVelocity) const {
 	sgCopyVec4(retAngVelocity, angVelocity);
 }
 
-float Moveable::getMass() const {
-	return mass;
-}
-
 void Moveable::update(float dt) {
 	sgVec4 velocity;
 	sgVec4 prevVelocity;
