@@ -8,18 +8,10 @@
 #include "Simulations.h"
 
 float Simulations::G = 6.67384e-11;
-compressed_vector< boost::shared_ptr<MyShape> > Simulations::physicalObjects(0);
+// compressed_vector< boost::shared_ptr<MyShape> > Simulations::physicalObjects(0);
 int Simulations::curStep;
 
 using namespace std;
-
-void testAutoScale() {
-	int numObjects = 5;
-	for (int i = 0; i < numObjects; i++ ) {
-
-	}
-}
-
 
 void Simulations::largeGridAlternating() {
 	sgVec4 startPos;
@@ -102,10 +94,6 @@ void Simulations::simpleOrbit() {
 	curShape->setMomentum(startMom);
 	curShape->setDensity(earthDensity);
 	curShape->setMass(earthMass);
-
-	cout << "earthMass: " << curShape->getMass() << endl;
-
-	cout << "numBodies: " << MyShape::shapes.size() << endl;
 }
 
   boost::shared_ptr<Simulation> Simulations::billiards1(int numRows) {
@@ -156,11 +144,8 @@ void Simulations::simpleOrbit() {
 			curShape->setRadius(ballRadius);
       physicalObjects.addShapeToList( curShape );
 		}
-		cout << endl;
 		cutOff--;
 	}
-
-	cout << "NumPieces: " << numPieces << endl;
 
   // return physicalObjects;
   curSimulation->setPhysicalObjects( physicalObjects );
@@ -205,7 +190,6 @@ boost::shared_ptr<Simulation> Simulations::billiards2_ReturnSimulation(int numRo
 
       physicalObjects.addShapeToList( shapeForInsertion );
 		}
-		cout << endl;
 	}
 
   curSimulation->setPhysicalObjects( physicalObjects );
@@ -358,7 +342,6 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom()
   startPlacement[2]= offset;
   startPlacement[3]= 0;
 
-  curShape = make_shared<Circle>();
   curShape = make_shared<Circle>();
   curShape->setPos( startPlacement );
   curShape->setMass(pieceMass);
@@ -582,7 +565,6 @@ boost::shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(in
     sgAddVec4( startMomentum, groupMomentum );
 
 		curShape = make_shared<Circle>();
-    cout << "StartPos: " << startPlacement[0] << endl;
 		curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		curShape->setMass(pieceMass);
 		curShape->setRadius(pieceRadius);
@@ -602,25 +584,6 @@ boost::shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(in
 
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
-}
-
-boost::shared_ptr<MyShape> Simulations::getShapeFromList( unsigned int shapeIndex )
-{
-  shape_pointer returnShape;
-  if ( physicalObjects.size() > shapeIndex )
-  {
-    returnShape = physicalObjects(shapeIndex);
-  }
-
-  return returnShape;
-}
-
-int Simulations::addShapeToList( shape_pointer insertShape )
-{
-  int curSize = physicalObjects.size();
-  physicalObjects.resize(curSize + 1);
-  physicalObjects(curSize) = insertShape;
-  return curSize;
 }
 
 boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber, int numShapes )
@@ -657,9 +620,7 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber, int
 	  Simulations::bodyFormationGeneric_ArbitraryList( numShapes, target, groupMomentum );
 
     target[0]=-target[0];
-    groupMomentum[0]=0;
-    groupMomentum[1]=-2800;
-    groupMomentum[2]=0;
+    groupMomentum[1]*=-1;
 
 	  Simulations::bodyFormationGeneric_ArbitraryList( numShapes, target, groupMomentum );
   }

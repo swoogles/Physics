@@ -62,10 +62,7 @@ bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> obje
 
 	minSep = object1->getRadius() + object2->getRadius();
 
-	if (distance < minSep)
-		return true;
-	else
-		return false;
+	return (distance < minSep);
 }
 
 void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation ) 
@@ -112,12 +109,6 @@ void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation )
 
         if (curSimulation->isGravBetweenObjects() ) {
           fGrav = calcForceGrav(object1, object2, distanceSquared);
-          if ( curObjectIdx == 0 )
-          {
-            // cout << "fGrav from Shape[" << actingObjectIdx << "]: " << fGrav << endl;
-            // cout << "distanceSquared: " << distanceSquared << endl;
-            // cout << "mass of Shape: " << object2->getMass() << endl << endl;
-          }
 
           sgNormaliseVec4(unitVec, sepVec);
 
@@ -178,10 +169,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
       distance = sgLengthVec4( sepVec );
       distanceSquared = sgLengthSquaredVec4( sepVec );
       //c.
-      // cout <<"Distance Squared: " <<  distanceSquared << endl;;
       fGrav = calcForceGrav(curObject, shapeInQuadrant, distanceSquared);
-      // cout << "fGrav from Shape: " << fGrav << endl << endl;
-      // cout << "1.b" << endl;
 
       sgNormaliseVec4(unitVec, sepVec);
 
@@ -245,8 +233,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
     cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
   }
 
-  // Timer forceCalcTimer = Timer();
-  // forceCalcTimer.startTiming();
   if ( curSimulation->getForceCalcMethod() != Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
     calcForcesAll_Naive( curSimulation );
@@ -264,9 +250,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
       }
     }
   }
-  // physicalObjects.update( curSimulation->getDT()  );
-
-  // forceCalcTimer.stopTiming();
 }
 
 bool isConflict(int newShape) 
@@ -403,8 +386,6 @@ void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<My
   sgVec4 pos1, pos2;
   object1->getPos(pos1 );
   object2->getPos(pos2 );
-  // cout << "--Subtracting " << pos1[0] << "," << pos1[1] << "," << pos1[2] << endl;
-  // cout << "--from        " << pos2[0] << "," << pos2[1] << "," << pos2[2] << endl;
   sgSubVec4(sepVector, pos2, pos1);
 }
 
@@ -441,7 +422,7 @@ void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr
   sgVec4 hitPt;
 
   sgVec3 r, aMom3, bMom3;
-  sgVec3 crossed;
+  sgVec3 crossed = { 0, 0, 0 };
 
   object1->getPos(aPos);
   object2->getPos(bPos);
@@ -460,18 +441,10 @@ void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr
   object1->getMomentum(aMomentum);
   object2->getMomentum(bMomentum);
 
-  // sgSubVec3( r, aPos, hitPt );
-  crossed[0]=0;
-  crossed[1]=0;
-  crossed[2]=0;
-
   aMom3[0] = aMomentum[0];
   aMom3[1] = aMomentum[1];
   aMom3[2] = aMomentum[2];
-  // cout << "aMom3: < " << aMom3[0] << ", " << aMom3[1] << ", " << aMom3[2] << ">" << endl;
-  // cout << "r: < " << r[0] << ", " << r[1] << ", " << r[2] << ">" << endl;
   sgVectorProductVec3(crossed, r, aMom3);
-  // cout << "crossed: < " << crossed[0] << ", " << crossed[1] << ", " << crossed[2] << ">" << endl;
 
   sgAddVec4(totalAngMom, crossed);
 
@@ -489,14 +462,10 @@ void calcMergedAngMomentum(boost::shared_ptr<MyShape> object1, boost::shared_ptr
 
   object2->getAngMomentum(tempVec);
   sgAddVec4(totalAngMom, tempVec);
-
-  // cout << "totAngMom.inMerge: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
 }
 
 void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2) 
 {
-  // cout << "Merging!" << endl;
-
   float newMass = object1->getMass() + object2->getMass();
   float density = object1->getDensity();
 
@@ -530,13 +499,10 @@ void mergeObjects(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape>
   object1->setRadius(newRadius);
   object1->adjustMomentum( object2momentum );
 
-  // cout << "totAngMom.preAssignment: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
   object1->setAngMomentum(totalAngMom);
   sgVec3 angVel;
   object1->getAngMomentum(totalAngMom);
   object1->getAngVelocity(angVel);
-  // cout << "totAngMom.postAssignment3: < " << totalAngMom[0] << ", " << totalAngMom[1] << ", " << totalAngMom[2] << ">" << endl;
-  // cout << "angVel: < " << angVel[0] << ", " << angVel[1] << ", " << angVel[2] << ">" << endl;
 
   object1->calcColor();
 
@@ -557,7 +523,6 @@ void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target)
 
   for (int i = 0; i < 3; i++)
   {
-    //randMult = rand()%30; //Earth spacing
     randMult = rand()%100;
     if (randMult % 2 == 0) {
       randMult *= -1;
@@ -580,7 +545,6 @@ void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 targe
 
   for (int i = 0; i < 3; i++)
   {
-    //randMult = rand()%30; //Earth spacing
     dimensionInteger = (int) volume[i]/2;
 
     randMult = rand()%(dimensionInteger/2);
@@ -589,8 +553,6 @@ void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 targe
     }
     startPos[i] = randMult;
   }
-
-  startPos[3] = 1;
 
   sgAddVec4( startPos, target );
 }
@@ -616,23 +578,17 @@ void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       else {
         randMult *= -1;
       }
-
-      //randMult*=.3;
-
-      //startMom[i] = randMult * pieceMass * 0.00060; //Mainly escape
-      //startMom[i] = randMult * pieceMass * 0.00080; // Good mix
       startMom[i] = randMult * pieceMass * 0.00050; // Good mix
-      //startMom[i] = randMult * pieceMass * 0.00008; //Quick Collapse
-
-      //startMom[i] = randMult * pieceMass * 0.000023; //Earth 500 pieces
     }
   }
 
 
-  if (switchB)
+  if (switchB) {
     switchB = false;
-  else
+  }
+  else {
     switchB = true;
+  }
   startMom[3] = 0;
 }
 

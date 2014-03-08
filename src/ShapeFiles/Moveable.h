@@ -125,13 +125,5 @@ public:
 
 	//! Moves object based on current normal and angular momentum
 	void update(float);
-
-	//! Sets mass of object to newMass
-	void setMass(float newMass);
-	//! Alters mass of object by dMass
-	void adjustMass(float dMass);
-	//! Returns mass of object
-	float getMass() const;
-
 };
 #endif /* MOVEABLE_H_ */
