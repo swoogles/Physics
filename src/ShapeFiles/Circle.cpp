@@ -13,6 +13,13 @@ Circle::Circle() {
 
 Circle::Circle( const Circle& copyCircle )
 {
+  // super( copyCircle );
+  this->radius = copyCircle.getRadius();
+}
+
+Circle::Circle( Circle& copyCircle )
+{
+  // super( copyCircle );
   this->radius = copyCircle.getRadius();
 }
 

@@ -47,30 +47,16 @@ void Simulations::largeGridAlternating() {
 
 void Simulations::simpleOrbit() {
 
-	sgVec4 startPos, startMom;
+	sgVec4 startPos = { 0, 0, 0, 1 };
+  sgVec4 startMom = { 0, -2e-1, 0, 0 };
 	float sunRadiusScale = 15;
 	float earthRadiusScale = 220;
 
-	float sunDensity = DENSITY_SUN;
-	float sunMass = MASS_SUN;
-	float sunVolume = (sunMass*MASS_VAR)/(sunDensity*CONVERSION_CONST);
+	float sunVolume = (MASS_SUN*MASS_VAR)/(DENSITY_SUN*CONVERSION_CONST);
 	float sunRadius = getSplitBodyRadius(sunVolume, 1);
 
-
-	float earthDensity = DENSITY_EARTH;
-	float earthMass = MASS_EARTH;
-	float earthVolume = (earthMass*MASS_VAR)/(earthDensity*CONVERSION_CONST);
+	float earthVolume = (MASS_EARTH*MASS_VAR)/(DENSITY_EARTH*CONVERSION_CONST);
 	float earthRadius = getSplitBodyRadius(earthVolume, 1);
-
-	startMom[0] = 0;
-	startMom[1] = -2e-1;//-2.9e2; //-2.9 * earthMass;
-	startMom[2] = 0;
-	startMom[3] = 0;
-
-	startPos[0] = 0;
-	startPos[1] = 0;
-	startPos[2] = 0;
-	startPos[3] = 1;
 
   shape_pointer curShape;
 
@@ -78,13 +64,10 @@ void Simulations::simpleOrbit() {
 	curShape->setPos(startPos);
 	curShape->setRadius(sunRadius * sunRadiusScale);
 	curShape->setMomentum(startMom);
-	curShape->setDensity(sunDensity);
-	curShape->setMass(sunMass);
+	curShape->setDensity(DENSITY_SUN);
+	curShape->setMass(MASS_SUN);
 
 	startPos[0] = sunRadius * 214.94;
-	startPos[1] = 0;
-	startPos[2] = 0;
-	startPos[3] = 1;
 
 	sgNegateVec4(startMom);
 
@@ -92,8 +75,8 @@ void Simulations::simpleOrbit() {
 	curShape->setPos(startPos);
 	curShape->setRadius(earthRadius*earthRadiusScale);
 	curShape->setMomentum(startMom);
-	curShape->setDensity(earthDensity);
-	curShape->setMass(earthMass);
+	curShape->setDensity(DENSITY_EARTH);
+	curShape->setMass(MASS_EARTH);
 }
 
   boost::shared_ptr<Simulation> Simulations::billiards1(int numRows) {
@@ -251,9 +234,9 @@ boost::shared_ptr<Simulation> Simulations::simpleCollision_ArbitraryList() {
   float dt = .01;
 
 	float aMass = 1;
-	float bMass = 1;
+	float bMass = aMass;
 	float aRadius = 1;
-	float bRadius = 1;
+	float bRadius = aRadius;
 
 	sgVec4 startPlacement = { -1, -6, 0, 1 };
 	sgVec4 startAngMom = { 0, 0, 0, 0 };
@@ -336,22 +319,26 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom()
   float totalMass = 0.0;
 
   shape_pointer curShape;
+  circle_pointer curCircle;
+
   float offset = 8e4;
   startPlacement[0]= offset;
   startPlacement[1]= offset;
   startPlacement[2]= offset;
   startPlacement[3]= 0;
 
-  curShape = make_shared<Circle>();
-  curShape->setPos( startPlacement );
-  curShape->setMass(pieceMass);
-  curShape->setRadius(pieceRadius);
-  curShape->setMomentum(startMomentum);
-  curShape->setDensity(objectDensity);
-  curShape->setColor(newColor);
+  circle_pointer oldCircle = make_shared<Circle>();
+  oldCircle->setPos( startPlacement );
+  oldCircle->setMass(pieceMass);
+  oldCircle->setRadius(pieceRadius);
+  oldCircle->setMomentum(startMomentum);
+  oldCircle->setDensity(objectDensity);
+  oldCircle->setColor(newColor);
 
-  physicalObjects.addShapeToList( curShape );
-  totalMass += curShape->getMass();
+  curCircle = make_shared<Circle>(*oldCircle);
+  physicalObjects.addShapeToList( curCircle );
+  totalMass += curCircle->getMass();
+
 
   startPlacement[0]= -offset;
 
@@ -365,20 +352,34 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom()
 
   physicalObjects.addShapeToList( curShape );
   totalMass += curShape->getMass();
+
+  startPlacement[0]= -offset;
+
+  // curShape = make_shared<Circle>(*curShape);
+  // curShape = make_shared<Circle>();
+  // curShape->setPos( startPlacement );
+  // curShape->setMass(pieceMass);
+  // curShape->setRadius(pieceRadius);
+  // curShape->setMomentum(startMomentum);
+  // curShape->setDensity(objectDensity);
+  // curShape->setColor(newColor);
+
+  // physicalObjects.addShapeToList( curShape );
+  // totalMass += curShape->getMass();
 
   startPlacement[0]= -offset;
   startPlacement[1]= -offset;
 
-  curShape = make_shared<Circle>();
-  curShape->setPos( startPlacement );
-  curShape->setMass(pieceMass);
-  curShape->setRadius(pieceRadius);
-  curShape->setMomentum(startMomentum);
-  curShape->setDensity(objectDensity);
-  curShape->setColor(newColor);
+  // curShape = make_shared<Circle>();
+  // curShape->setPos( startPlacement );
+  // curShape->setMass(pieceMass);
+  // curShape->setRadius(pieceRadius);
+  // curShape->setMomentum(startMomentum);
+  // curShape->setDensity(objectDensity);
+  // curShape->setColor(newColor);
 
-  totalMass += curShape->getMass();
-  curSimulation->adjustTotalMass( totalMass );
+  // totalMass += curShape->getMass();
+  // curSimulation->adjustTotalMass( totalMass );
 
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;

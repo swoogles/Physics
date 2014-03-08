@@ -15,6 +15,7 @@ class Circle: public RoundShape {
     GLdouble radius;
   public:
     Circle();
+    Circle( Circle& );
     Circle( const Circle& );
     virtual ~Circle();
 

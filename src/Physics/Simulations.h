@@ -87,6 +87,7 @@ class Simulations
      *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
      */
     typedef boost::shared_ptr<MyShape> shape_pointer;
+    typedef boost::shared_ptr<Circle> circle_pointer;
     // static compressed_vector< shape_pointer > physicalObjects;
     static int curStep;
 
