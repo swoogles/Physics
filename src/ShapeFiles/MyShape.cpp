@@ -17,6 +17,25 @@ MyShape::MyShape()
 	ptsHighlighted = true;
 }
 
+MyShape::MyShape( const MyShape& copyShape )
+{
+  sgVec4 newPos;
+  copyShape.getPos( newPos );
+  this->setPos( newPos );
+
+  sgVec4 newMom;
+  copyShape.getMomentum( newMom );
+  this->setMomentum( newMom );
+
+  this->setMass( copyShape.getMass() );
+  this->setDensity( copyShape.getDensity() );
+  // this->setRadius( copyShape.getRadius() );
+
+  sgVec4 newColor;;
+  copyShape.getColor( newColor );
+  this->setColor( newColor );
+}
+
 MyShape::~MyShape() {
 	//cout << "Killing MyShape" << endl;
 }
@@ -123,15 +142,15 @@ void MyShape::adjustMass(float dMass) {
 	mass += dMass;
 }
 
-float MyShape::getMass() {
+float MyShape::getMass() const{
 	return mass;
 }
 
-void MyShape::setDensity(float newDensity) {
+void MyShape::setDensity(float newDensity){
 	density = newDensity;
 }
 
-float MyShape::getDensity() {
+float MyShape::getDensity() const {
 	return density;
 }
 
@@ -168,7 +187,7 @@ void MyShape::setColor(sgVec3 newColor) {
 	sgCopyVec3(color, newColor);
 }
 
-void MyShape::getColor(sgVec3 retVec) {
+void MyShape::getColor(sgVec3 retVec) const{
 	sgCopyVec3(retVec, color);
 }
 

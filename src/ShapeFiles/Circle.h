@@ -15,6 +15,7 @@ class Circle: public RoundShape {
     GLdouble radius;
   public:
     Circle();
+    Circle( const Circle& );
     virtual ~Circle();
 
     matrix<double> getPts();
@@ -25,7 +26,7 @@ class Circle: public RoundShape {
     void drawScale();
     void drawUnit();
 
-    float getRadius();
+    float getRadius() const;
     void setRadius(float);
 
     float getMomentOfInertia();

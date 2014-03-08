@@ -54,6 +54,7 @@ class MyShape : public Moveable {
     /*! \brief Sets default values of members common to all shapes
     */
     MyShape();
+    MyShape( const MyShape& );
 
     virtual ~MyShape();
 
@@ -131,12 +132,12 @@ class MyShape : public Moveable {
     //! Alters mass of object by dMass
     void adjustMass(float dMass);
     //! Returns mass of object
-    float getMass();
+    float getMass() const;
 
     //! Sets density of object to newDensity
     void setDensity(float newDensity);
     //! Returns density of object
-    float getDensity();
+    float getDensity() const;
 
     //! Sets kineticEnergy of object to newDensity
     bool setKineticEnergy(float newKineticEnergy);
@@ -146,7 +147,7 @@ class MyShape : public Moveable {
     //! Sets color of object to <newColor>
     void setColor(sgVec3 newColor);
     //! Returns color of object in retVec
-    void getColor(sgVec3 retVec);
+    void getColor(sgVec3 retVec) const;
 
     /*! \brief Calculates color of object based on how a star of that mass/density would burn
      *
