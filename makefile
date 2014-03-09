@@ -46,7 +46,7 @@ Tests: $(OBJ_FILES)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
 	g++ -std=c++11 -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"Release/src/unitTests.d" -MT"Release/src/unitTests.d" -o"Release/src/unitTests.o" "./Release/unitTests.cpp"
-	g++ -Wall -g  -o"UnitTests" ./Release/src/unitTests.o ./Release/src/ShapeFiles/ShapeList.o ./Release/src/ShapeFiles/StraightShape.o ./Release/src/ShapeFiles/Box.o ./Release/src/ShapeFiles/Circle.o ./Release/src/ShapeFiles/RoundShape.o ./Release/src/ShapeFiles/MyShape.o ./Release/src/ShapeFiles/Moveable.o ./Release/src/Physics/Simulation.o ./Release/src/Parallelization/Quadrant.o $(LIBS)
+	g++ -Wall -g  -o"UnitTests" ./Release/src/unitTests.o $(OBJS_WITHOUT_MAIN)  $(LIBS)
 	@echo 'Finished building target: $@'
 
 
