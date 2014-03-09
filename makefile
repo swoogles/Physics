@@ -16,12 +16,7 @@ PROJDIRS := src/ src/ShapeFiles src/Observation src/Parallelization src/Physics 
 # SRC_FILES := $(wildcard $(PROJDIRS)*.cpp)
 
 SRC_FILES := $(wildcard src/*.cpp)
-SRC_FILES += $(wildcard src/ShapeFiles/*.cpp)
-SRC_FILES += $(wildcard src/Observation/*.cpp)
-SRC_FILES += $(wildcard src/Parallelization/*.cpp)
-SRC_FILES += $(wildcard src/Physics/*.cpp)
-SRC_FILES += $(wildcard src/Windows/*.cpp)
-
+SRC_FILES += $(wildcard src/*/?*.cpp)
 BUILD_FILES := $(subst src,Release/src,$(SRC_FILES))
 
 OBJ_FILES := $(patsubst %.cpp,%.o,$(BUILD_FILES))
@@ -63,7 +58,7 @@ Release/src/%.o: ./src/%.cpp
 
 # Other Targets
 clean:
-	-$(RM) $(OBJ_FILES) $(DEP_FILES) $(C++_DEPS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) ShapesLibrary
+	-$(RM) $(OBJ_FILES) $(DEP_FILES) ShapesLibrary
 	-@echo ' '
 
 clean-shapes:
