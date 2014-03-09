@@ -215,10 +215,6 @@ void init(char simulation) {
   globalSimulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
   curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 
-  char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
-  // char path[]= globalProperties->at( BillProperties::OUTPUT_DIRECTORY ) + "/outFrame" ;
-  // cout << "OutputDirectory: " << globalProperties->at( BillProperties::OUTPUT_DIRECTORY )  << endl;
-
   string outFileName = "outFrame";
   string extension = "jpg";
   globalRecorder->setOutFileName( outFileName );
