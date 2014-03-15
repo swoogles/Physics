@@ -38,6 +38,7 @@ class ShapeList {
     compressed_vector<shape_pointer> shapes;
 
   public:
+    bool hasConflictsWith( shape_pointer insertShape );
     int addShapeToList( shape_pointer insertShape );
     int removeShapeFromList( shape_pointer shapeToRemove );
     int clearShapes();

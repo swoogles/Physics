@@ -9,6 +9,22 @@
 
 using namespace std;
 
+bool ShapeList::hasConflictsWith( shape_pointer insertShape )
+{
+  sgVec4 sepVec;
+  SGfloat distanceSquared, distance, minSep;
+  bool conflict = false;
+
+  boost::shared_ptr<MyShape> object1;
+
+  for (int i = 0; i < shapes.size() && conflict == false; i++) 
+  {
+    object1 = shapes(i);
+    conflict = object1->isTouching( insertShape  );
+  }
+  return conflict;
+}
+
 int ShapeList::addShapeToList( shape_pointer insertShape )
 {
   int curSize = shapes.size();

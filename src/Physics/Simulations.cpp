@@ -518,7 +518,7 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPi
     curShape->setColor(newColor);
 
 		//Check if being placed on previously created object
-		while ( isConflict_ArbitraryList(physicalObjects.getShapes(), curShape) ) {
+		while ( physicalObjects.hasConflictsWith( curShape ) ) {
 			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
       curShape->setPos( startPlacement );
 		}
