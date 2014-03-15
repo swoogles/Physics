@@ -167,7 +167,6 @@ void controlDisplay(void) {
   //glutSetWindow(main_window);
 }
 
-static long num_steps = 200000000;
 double step;
 
 void init(char simulation) {
