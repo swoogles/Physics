@@ -523,7 +523,7 @@ void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target)
 
   for (int i = 0; i < 3; i++)
   {
-    randMult = rand()%100;
+    randMult = rand()%50;
     if (randMult % 2 == 0) {
       randMult *= -1;
     }
