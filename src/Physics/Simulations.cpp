@@ -335,9 +335,10 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_NonRandom()
   oldCircle->setDensity(objectDensity);
   oldCircle->setColor(newColor);
 
-  curCircle = make_shared<Circle>(*oldCircle);
-  physicalObjects.addShapeToList( curCircle );
+  physicalObjects.addShapeToList( oldCircle );
   totalMass += curCircle->getMass();
+
+  // curCircle = make_shared<Circle>(*oldCircle);
 
 
   startPlacement[0]= -offset;
@@ -516,12 +517,12 @@ boost::shared_ptr<Simulation> Simulations::bodyFormation_ArbitraryList(int numPi
 		curShape->setDensity(objectDensity);
     curShape->setColor(newColor);
 
-    physicalObjects.addShapeToList( curShape );
 		//Check if being placed on previously created object
-		while ( isConflict_ArbitraryList(physicalObjects.getShapes(), i) ) {
+		while ( isConflict_ArbitraryList(physicalObjects.getShapes(), curShape) ) {
 			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
       curShape->setPos( startPlacement );
 		}
+    physicalObjects.addShapeToList( curShape );
 
 		totalMass += curShape->getMass();
 	}
