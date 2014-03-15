@@ -54,7 +54,7 @@ class MyShape : public Moveable {
     /*! \brief Sets default values of members common to all shapes
     */
     MyShape();
-    MyShape( const MyShape& );
+    // MyShape( const MyShape& );
 
     virtual ~MyShape();
 
@@ -106,10 +106,10 @@ class MyShape : public Moveable {
     void adjustMomentum(const sgVec4 dMomentum);
 
     //! Returns momentum of object in retVec
-    void getMomentum(sgVec4 retVec) const;
+    void getMomentum(sgVec4 retVec);
 
     //! Print momentum of object. Format: <##,##,##>
-    std::string getMomentumString() const;
+    std::string getMomentumString();
 
     /*! \brief Calculates the moment of inertia for the object
      *
@@ -132,12 +132,12 @@ class MyShape : public Moveable {
     //! Alters mass of object by dMass
     void adjustMass(float dMass);
     //! Returns mass of object
-    float getMass() const;
+    float getMass();
 
     //! Sets density of object to newDensity
     void setDensity(float newDensity);
     //! Returns density of object
-    float getDensity() const;
+    float getDensity();
 
     //! Sets kineticEnergy of object to newDensity
     bool setKineticEnergy(float newKineticEnergy);

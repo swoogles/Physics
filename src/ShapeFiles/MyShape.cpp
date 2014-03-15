@@ -17,24 +17,24 @@ MyShape::MyShape()
 	ptsHighlighted = true;
 }
 
-MyShape::MyShape( const MyShape& copyShape )
-{
-  sgVec4 newPos;
-  copyShape.getPos( newPos );
-  this->setPos( newPos );
-
-  sgVec4 newMom;
-  copyShape.getMomentum( newMom );
-  this->setMomentum( newMom );
-
-  this->setMass( copyShape.getMass() );
-  this->setDensity( copyShape.getDensity() );
-  // this->setRadius( copyShape.getRadius() );
-
-  sgVec4 newColor;;
-  copyShape.getColor( newColor );
-  this->setColor( newColor );
-}
+// MyShape::MyShape( const MyShape& copyShape )
+// {
+//   sgVec4 newPos;
+//   copyShape.getPos( newPos );
+//   this->setPos( newPos );
+// 
+//   sgVec4 newMom;
+//   copyShape.getMomentum( newMom );
+//   this->setMomentum( newMom );
+// 
+//   this->setMass( copyShape.getMass() );
+//   this->setDensity( copyShape.getDensity() );
+//   // this->setRadius( copyShape.getRadius() );
+// 
+//   sgVec4 newColor;;
+//   copyShape.getColor( newColor );
+//   this->setColor( newColor );
+// }
 
 MyShape::~MyShape() {
 	//cout << "Killing MyShape" << endl;
@@ -93,11 +93,11 @@ void MyShape::adjustMomentum(const sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
 }
 
-void MyShape::getMomentum(sgVec4 retVec) const{
+void MyShape::getMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, momentum);
 }
 
-std::string MyShape::getMomentumString() const
+std::string MyShape::getMomentumString() 
 {
   string posString = "<" + lexical_cast<std::string>( momentum[0] )  + ", " + lexical_cast<std::string>( momentum[0] ) + ", " + lexical_cast<std::string>( momentum[0] ) + ">";
   return posString;
@@ -142,7 +142,7 @@ void MyShape::adjustMass(float dMass) {
 	mass += dMass;
 }
 
-float MyShape::getMass() const{
+float MyShape::getMass() {
 	return mass;
 }
 
@@ -150,7 +150,7 @@ void MyShape::setDensity(float newDensity){
 	density = newDensity;
 }
 
-float MyShape::getDensity() const {
+float MyShape::getDensity() {
 	return density;
 }
 

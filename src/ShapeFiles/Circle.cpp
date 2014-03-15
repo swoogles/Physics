@@ -11,17 +11,17 @@ Circle::Circle() {
 	radius = 1;
 }
 
-Circle::Circle( const Circle& copyCircle )
-{
-  // super( copyCircle );
-  this->radius = copyCircle.getRadius();
-}
-
-Circle::Circle( Circle& copyCircle )
-{
-  // super( copyCircle );
-  this->radius = copyCircle.getRadius();
-}
+// Circle::Circle( const Circle& copyCircle )
+// {
+//   // super( copyCircle );
+//   this->radius = copyCircle.getRadius();
+// }
+// 
+// Circle::Circle( Circle& copyCircle )
+// {
+//   // super( copyCircle );
+//   this->radius = copyCircle.getRadius();
+// }
 
 Circle::~Circle() {
 }
@@ -59,7 +59,7 @@ void Circle::drawUnit(){
 	//glutSolidSphere( 1, numPts, numPts);
 }
 
-float Circle::getRadius() const{
+float Circle::getRadius() {
 	return radius;
 }
 
