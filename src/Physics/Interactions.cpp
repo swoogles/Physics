@@ -283,35 +283,18 @@ bool isConflict(int newShape)
   return conflict;
 }
 
-bool isConflict_ArbitraryList( compressed_vector<shape_pointer> physicalObjects, int newShape) 
+bool isConflict_ArbitraryList( compressed_vector<shape_pointer> physicalObjects, shape_pointer newShape ) 
 {
   sgVec4 sepVec;
   SGfloat distanceSquared, distance, minSep;
   bool conflict = false;
 
   boost::shared_ptr<MyShape> object1;
-  boost::shared_ptr<MyShape> object2;
 
-  object2 = physicalObjects(newShape);
-
-  for (int i = 0; i < newShape && conflict == false; i++) 
+  for (int i = 0; i < physicalObjects.size() && conflict == false; i++) 
   {
     object1 = physicalObjects(i);
-    if ( object1->getType() == 2 )
-    {
-      getVectorToObject2(object1, object2, sepVec);
-
-      distanceSquared = sgLengthSquaredVec4(sepVec);
-      distance = sqrt(distanceSquared);
-
-      minSep = object1->getRadius() + object2->getRadius();
-
-
-      if (distance < minSep) 
-      {
-        conflict = true;
-      }
-    }
+    conflict = object1->isTouching( newShape  );
   }
   return conflict;
 }

@@ -191,7 +191,7 @@ bool isConflict(int newShape);
  *
  *  \returns True if new object causes a conflict
  */
-bool isConflict_ArbitraryList(compressed_vector<shape_pointer> physiaclObjects, int newShape);
+bool isConflict_ArbitraryList(compressed_vector<shape_pointer> physiaclObjects, shape_pointer newShape);
 
 
 /*! \relates MyShape
