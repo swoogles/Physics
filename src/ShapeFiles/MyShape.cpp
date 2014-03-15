@@ -9,6 +9,13 @@
 
 compressed_vector< boost::shared_ptr<MyShape> > MyShape::shapes(0);
 
+void MyShape::getVectorToObject( boost::shared_ptr<MyShape> object2, sgVec4 sepVector) {
+  sgVec4 pos1, pos2;
+  this->getPos(pos1);
+  object2->getPos(pos2 );
+  sgSubVec4(sepVector, pos2, pos1);
+}
+
 MyShape::MyShape()
 {
 	numPts = 16;
@@ -250,6 +257,35 @@ void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
     // compressed_vector<shape_pointer> localShapeList =  newShapeVector ;
     shapes = newShapeVector;
   }
+}
+
+bool MyShape::isTouching( boost::shared_ptr<MyShape> otherShape )
+{
+  bool touching = false;
+  sgVec4 sepVec;
+  SGfloat distanceSquared, distance, minSep;
+
+  this->getVectorToObject( otherShape, sepVec);
+
+  distanceSquared = sgLengthSquaredVec4(sepVec);
+  distance = sqrt(distanceSquared);
+
+  minSep = this->getRadius() + otherShape->getRadius();
+
+
+  if (distance < minSep) 
+  {
+    touching = true;
+    // cout << "this->radius: " << this->getRadius() << endl;
+    // cout << "otherShape->getRadius(): " << otherShape->getRadius() << endl;
+    // cout << "MinSep: " << minSep << endl;
+    // cout << "distance: " << distance << endl;
+    // cout << "No touching!" << endl;
+    cout << "this->pos: " << this->getPosString() << endl;
+    cout << "otherShape->pos: " << otherShape->getPosString() << endl;
+  }
+
+  return touching;
 }
 
 void MyShape::setRadius(float) {}

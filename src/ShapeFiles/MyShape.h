@@ -186,5 +186,8 @@ class MyShape : public Moveable {
     static int addShapeToList( shape_pointer insertShape );
 
     static void removeShapeFromList( shape_pointer shapeToRemove );
+
+    void getVectorToObject( boost::shared_ptr<MyShape> object2, sgVec4 sepVector);
+    bool isTouching( boost::shared_ptr<MyShape> otherShape );
 };
 #endif /* MYSHAPE_H_ */
