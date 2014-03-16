@@ -8,9 +8,11 @@
 #ifndef CIRCLE_H_
 #define CIRCLE_H_
 
-#include "RoundShape.h"
+#include "MyShape.h"
 
-class Circle: public RoundShape {
+#define PI 3.14159265
+
+class Circle: public MyShape {
   private:
     GLdouble radius;
   public:
