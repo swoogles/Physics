@@ -573,13 +573,13 @@ boost::shared_ptr<Simulation> Simulations::bodyFormationGeneric_ArbitraryList(in
 		curShape->setMomentum(startMomentum);
 		curShape->setDensity(objectDensity);
 
-    physicalObjects.addShapeToList( curShape );
 
 		//Check if being placed on previously created object
-		while ( isConflict(i) ) {
+		while ( physicalObjects.hasConflictsWith( curShape ) ) {
 			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
 			curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		}
+    physicalObjects.addShapeToList( curShape );
 		totalMass += pieceMass;
 	}
   curSimulation->adjustTotalMass( totalMass );
