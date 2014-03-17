@@ -288,5 +288,109 @@ bool MyShape::isTouching( boost::shared_ptr<MyShape> otherShape )
   return touching;
 }
 
+void MyShape::mergeWith( boost::shared_ptr<MyShape> otherShape ) 
+{
+  float newMass = this->getMass() + otherShape->getMass();
+  float density = this->getDensity();
+
+  float newRadius = calcMergedRadius( newMass, density );
+
+  sgVec3 totalAngMom;
+
+  calcMergedAngMomentum( otherShape, totalAngMom );
+
+  // COM start
+  sgVec4 aPos, bPos;
+  sgVec4 tempVec, tempVec2, COM;
+
+  this->getPos(aPos);
+  otherShape->getPos(bPos);
+
+  sgCopyVec4(tempVec, aPos);
+  sgCopyVec4(tempVec2, bPos);
+
+  sgScaleVec4(tempVec, this->getMass());
+  sgScaleVec4(tempVec2, otherShape->getMass());
+
+  sgAddVec4(COM,tempVec, tempVec2);
+  sgScaleVec4(COM, 1/(this->getMass() + otherShape->getMass()) );
+  // COM end
+
+  sgVec4 otherShapeMomentum;
+  otherShape->getMomentum(otherShapeMomentum);
+
+  this->setMass(newMass);
+  this->setRadius(newRadius);
+  this->adjustMomentum( otherShapeMomentum );
+
+  this->setAngMomentum(totalAngMom);
+  sgVec3 angVel;
+  this->getAngMomentum(totalAngMom);
+  this->getAngVelocity(angVel);
+
+  this->calcColor();
+
+  this->setPos(COM);
+}
+
+void MyShape::calcMergedAngMomentum( boost::shared_ptr<MyShape> otherShape, sgVec4 totalAngMom )
+{
+  sgVec4 sepVec, sepVecUnit;
+
+  sgVec4 aPos, bPos;
+  sgVec4 aMomentum, bMomentum;
+  sgVec4 tempVec;
+  sgVec4 hitPt;
+
+  sgVec3 r, aMom3, bMom3;
+  sgVec3 crossed = { 0, 0, 0 };
+
+  this->getPos(aPos);
+  otherShape->getPos(bPos);
+  sgSubVec4( sepVec, aPos, bPos );
+  sgNormaliseVec4( sepVecUnit, sepVec );
+
+  sgScaleVec4(tempVec, sepVecUnit, this->getRadius());
+  sgAddVec4(hitPt, aPos, tempVec);
+  
+  sgSubVec3( r, aPos, hitPt );
+
+  for (int i = 0; i < 4; i++) {
+    totalAngMom[i] = 0;
+  }
+
+  this->getMomentum(aMomentum);
+  otherShape->getMomentum(bMomentum);
+
+  aMom3[0] = aMomentum[0];
+  aMom3[1] = aMomentum[1];
+  aMom3[2] = aMomentum[2];
+  sgVectorProductVec3(crossed, r, aMom3);
+
+  sgAddVec4(totalAngMom, crossed);
+
+  sgSubVec3( r, bPos, hitPt );
+
+  bMom3[0] = bMomentum[0];
+  bMom3[1] = bMomentum[1];
+  bMom3[2] = bMomentum[2];
+  sgVectorProductVec3(crossed, r, bMom3);
+
+  sgAddVec3(totalAngMom, crossed);
+
+  this->getAngMomentum(tempVec);
+  sgAddVec4(totalAngMom, tempVec);
+
+  otherShape->getAngMomentum(tempVec);
+  sgAddVec4(totalAngMom, tempVec);
+}
+
+float MyShape::calcMergedRadius(float massBoth, float density) {
+  float radius = massBoth/density;
+  radius /= (4/3.0);
+  radius = pow(radius, 1.0/3);
+  return radius;
+}
+
 void MyShape::setRadius(float) {}
 float MyShape::getRadius() { return 1;}

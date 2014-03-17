@@ -189,5 +189,8 @@ class MyShape : public Moveable {
 
     void getVectorToObject( boost::shared_ptr<MyShape> object2, sgVec4 sepVector);
     bool isTouching( boost::shared_ptr<MyShape> otherShape );
+    void mergeWith( boost::shared_ptr<MyShape> otherShape );
+    void calcMergedAngMomentum( boost::shared_ptr<MyShape> otherShape, sgVec4 totalAngMom );
+    float calcMergedRadius(float massBoth, float density);
 };
 #endif /* MYSHAPE_H_ */
