@@ -21,57 +21,6 @@ Box::Box()
 Box::~Box() {
 }
 
-matrix<double> Box::getPts() {
-	int ptsIt = 0;
-	float xVal = -width/2;
-	float yVal = height/2;
-	float xDelta = width/(numPts/4);
-	float yDelta = width/(numPts/4);
-
-
-	while (ptsIt < numPts/4) {
-		pts(ptsIt, 0) = xVal;
-		pts(ptsIt, 1) = yVal;
-		pts(ptsIt, 2) = 0;
-		pts(ptsIt, 3) = 1;
-
-		xVal += xDelta;
-		ptsIt++;
-	}
-
-	while (ptsIt < numPts/2) {
-		pts(ptsIt, 0) = xVal;
-		pts(ptsIt, 1) = yVal;
-		pts(ptsIt, 2) = 0;
-		pts(ptsIt, 3) = 1;
-
-		yVal -= yDelta;
-		ptsIt++;
-	}
-
-	while (ptsIt < 3*numPts/4) {
-		pts(ptsIt, 0) = xVal;
-		pts(ptsIt, 1) = yVal;
-		pts(ptsIt, 2) = 0;
-		pts(ptsIt, 3) = 1;
-
-		xVal -= xDelta;
-		ptsIt++;
-	}
-
-	while (ptsIt < numPts) {
-		pts(ptsIt, 0) = xVal;
-		pts(ptsIt, 1) = yVal;
-		pts(ptsIt, 2) = 0;
-		pts(ptsIt, 3) = 1;
-
-		yVal += yDelta;
-		ptsIt++;
-	}
-
-	return pts;
-}
-
 void Box::drawUnit(){
   // YOU FUCKING WHORE!!!!
   // WHY WOULD YOU EVER BE WRITTEN LIKE THIS?!?!?!

@@ -8,12 +8,12 @@
 #ifndef BOX_H_
 #define BOX_H_
 
-#include "StraightShape.h"
+#include "MyShape.h"
 #include <iostream>
 
 using namespace std;
 
-class Box: public StraightShape {
+class Box: public MyShape {
 private:
 	static GLfloat * cube_vertices;
 
@@ -33,7 +33,6 @@ public:
 	Box();
 	virtual ~Box();
 
-	matrix<double> getPts();
 	void drawUnit();
   void drawScale();
 
