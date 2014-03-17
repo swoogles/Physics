@@ -43,8 +43,8 @@ class Quadrant : public Box
     boost::shared_ptr<Circle> centerOfMassRepresentation;
 
     typedef boost::shared_ptr<MyShape> shape_pointer;
-    typedef boost::shared_ptr<Quadrant> quad_pointer;
-    typedef multi_array< quad_pointer, 3> array_typeNew;
+    typedef boost::shared_ptr<Quadrant> QuadrantPointer_t;
+    typedef multi_array< QuadrantPointer_t, 3> array_typeNew;
     array_typeNew  quadOctree;
 
   public:
@@ -52,7 +52,7 @@ class Quadrant : public Box
     Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions );
     ~Quadrant();
     void subDivideAll( int levels, int numCells );
-    quad_pointer getQuadrantFromCell( int x, int y, int z );
+    QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 
     shape_pointer shapeInQuadrant;
     boost::shared_ptr<MyShape> shapeInQuadrantNew;
@@ -75,11 +75,11 @@ class Quadrant : public Box
     void getCenterOfMass(sgVec4 centerOfMass);
     void setCenterOfMass( sgVec4 centerOfMass );
 
-    quad_pointer determineShapeQuadrant( shape_pointer shapeToInsert );
+    QuadrantPointer_t determineShapeQuadrant( shape_pointer shapeToInsert );
 
     ShapeList getShapesRecursive();
 
-    boost::shared_ptr<Quadrant> operator() ( const sgVec3 targets );
+    QuadrantPointer_t operator() ( const sgVec3 targets );
 
 };
 #endif /* QUADRANT_H_ */

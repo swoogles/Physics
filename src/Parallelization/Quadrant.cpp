@@ -2,6 +2,8 @@
 
 using namespace std;
 
+typedef boost::shared_ptr<Quadrant> QuadrantPointer_t;
+
 bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundaries )
 {
 
@@ -73,12 +75,12 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
 }
 
-boost::shared_ptr<Quadrant> Quadrant::getQuadrantFromCell( int x, int y, int z )
+QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z )
 {
   return quadOctree[x][y][z];
 }
 
-boost::shared_ptr<Quadrant> Quadrant::operator() ( const sgVec3 targets )
+QuadrantPointer_t Quadrant::operator() ( const sgVec3 targets )
 {
   if ( targets[0] == INVALID_OCTREE_INDEX &&
       targets[1] == INVALID_OCTREE_INDEX &&
@@ -100,7 +102,7 @@ void Quadrant::subDivideAll( int levels, int numCells )
   sgVec4 halfNewDimensions;
   sgVec3 crossProduct;
 
-  quad_pointer targetQuadrant;
+  QuadrantPointer_t targetQuadrant;
 
   if ( this->level < levels )
   {
@@ -126,7 +128,7 @@ void Quadrant::subDivideAll( int levels, int numCells )
           newPos[3]=1;
 
 
-          quad_pointer insertionQuadrant;
+          QuadrantPointer_t insertionQuadrant;
           quadOctree[x][y][z] = make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
           targetQuadrant = quadOctree[x][y][z];
           targetQuadrant->subDivideAll(levels, 4);
@@ -184,7 +186,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     sgAddVec4( quadrantWeightedPosition, shapeWeightedPosition );
     this->setWeightedPosition( quadrantWeightedPosition );
 
-    quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
+    QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
     if ( targetQuadrant != nullptr )
     {
       targetQuadrant->insertShape( insertedShape );
@@ -194,8 +196,8 @@ void Quadrant::insertShape( shape_pointer insertedShape )
   {
     this->adjustMass( insertedShape->getMass() );
     isLeaf = false;
-    quad_pointer targetQuadrant = this->determineShapeQuadrant( insertedShape );
-    quad_pointer targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
+    QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
+    QuadrantPointer_t targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
 
     sgVec4 quadrantWeightedPosition;
     this->getWeightedPosition( quadrantWeightedPosition );
@@ -223,7 +225,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
 
 
 // Guaranteed to hand back an instantiated Quadrant
-boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
+QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
   sgVec4 insertPos;
   sgVec4 newPos;
@@ -272,7 +274,7 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
     }
   }
 
-  quad_pointer insertionQuadrant;
+  QuadrantPointer_t insertionQuadrant;
 
   // Only proceed if we have determined that the provided shape does actually
   // belong in this Quadrant
@@ -299,7 +301,6 @@ boost::shared_ptr<Quadrant> Quadrant::determineShapeQuadrant( shape_pointer shap
 ShapeList Quadrant::getShapesRecursive()
 {
   shape_pointer curShape;
-  typedef boost::shared_ptr<Quadrant> quad_pointer;
 
   ShapeList totalShapeList;
   ShapeList targetShapeList;
@@ -309,7 +310,7 @@ ShapeList Quadrant::getShapesRecursive()
     totalShapeList.addShapeToList( this->getShapeInQuadrant() );
   }
 
-  quad_pointer targetQuadrant;
+  QuadrantPointer_t targetQuadrant;
 
   for ( int x = 0; x < 2; x++ )
   {
