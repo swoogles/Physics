@@ -306,7 +306,8 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation)
           elasticCollision( object1, object2, curSimulation->getDT() );
         }
         else if (curSimulation->isAllInelastic() ){
-          mergeObjects(object1, object2);
+          object1->mergeWith( object2 );
+          // mergeObjects(object1, object2);
           deleteList.resize(deleteList.size()+1);
           deleteList.insert_element(deleteList.size()-1, object2);
         }
