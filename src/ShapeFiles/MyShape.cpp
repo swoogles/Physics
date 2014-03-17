@@ -7,9 +7,10 @@
 
 #include "MyShape.h"
 
-compressed_vector< boost::shared_ptr<MyShape> > MyShape::shapes(0);
+typedef boost::shared_ptr<MyShape> shapePointer_t;
+compressed_vector< shapePointer_t > MyShape::shapes(0);
 
-void MyShape::getVectorToObject( boost::shared_ptr<MyShape> object2, sgVec4 sepVector) {
+void MyShape::getVectorToObject( shapePointer_t object2, sgVec4 sepVector) {
   sgVec4 pos1, pos2;
   this->getPos(pos1);
   object2->getPos(pos2 );
@@ -222,7 +223,7 @@ void MyShape::clearShapes() {
 
 int MyShape::getType() { return 1;}
 
-int MyShape::addShapeToList( shape_pointer insertShape )
+int MyShape::addShapeToList( shapePointer_t insertShape )
 {
   int curSize = shapes.size();
   shapes.resize(curSize + 1);
@@ -230,15 +231,15 @@ int MyShape::addShapeToList( shape_pointer insertShape )
   return curSize;
 }
 
-void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
+void MyShape::removeShapeFromList( shapePointer_t shapeToRemove )
 {
-  compressed_vector<shape_pointer> newShapeVector;
+  compressed_vector<shapePointer_t> newShapeVector;
   int newSize =  shapes.size();
   newShapeVector.resize(newSize);
   bool removedShape = false;
 
   int curIndex = 0;
-  foreach_( shape_pointer curShape, shapes)
+  foreach_( shapePointer_t curShape, shapes)
   {
     if ( curShape.get() != shapeToRemove.get() )
     {
@@ -254,12 +255,12 @@ void MyShape::removeShapeFromList( shape_pointer shapeToRemove )
   if ( removedShape )
   {
     //TODO PHYS-17 Do a more appropriate vector copy
-    // compressed_vector<shape_pointer> localShapeList =  newShapeVector ;
+    // compressed_vector<shapePointer_t> localShapeList =  newShapeVector ;
     shapes = newShapeVector;
   }
 }
 
-bool MyShape::isTouching( boost::shared_ptr<MyShape> otherShape )
+bool MyShape::isTouching( shapePointer_t otherShape )
 {
   bool touching = false;
   sgVec4 sepVec;
@@ -281,7 +282,7 @@ bool MyShape::isTouching( boost::shared_ptr<MyShape> otherShape )
   return touching;
 }
 
-void MyShape::mergeWith( boost::shared_ptr<MyShape> otherShape ) 
+void MyShape::mergeWith( shapePointer_t otherShape ) 
 {
   float newMass = this->getMass() + otherShape->getMass();
   float density = this->getDensity();
@@ -326,7 +327,7 @@ void MyShape::mergeWith( boost::shared_ptr<MyShape> otherShape )
   this->setPos(COM);
 }
 
-void MyShape::calcMergedAngMomentum( boost::shared_ptr<MyShape> otherShape, sgVec4 totalAngMom )
+void MyShape::calcMergedAngMomentum( shapePointer_t otherShape, sgVec4 totalAngMom )
 {
   sgVec4 sepVec, sepVecUnit;
 

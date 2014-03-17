@@ -173,8 +173,8 @@ class MyShape : public Moveable {
      */
     // static vector<MyShape *> shapes;
     //PHYS-7
-    typedef boost::shared_ptr<MyShape> shape_pointer;
-    static compressed_vector<shape_pointer> shapes;
+    typedef boost::shared_ptr<MyShape> shapePointer_t;
+    static compressed_vector<shapePointer_t> shapes;
 
     static void clearShapes();
 
@@ -183,9 +183,9 @@ class MyShape : public Moveable {
      *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
      *  \return Pointer to desired moveable
      */
-    static int addShapeToList( shape_pointer insertShape );
+    static int addShapeToList( shapePointer_t insertShape );
 
-    static void removeShapeFromList( shape_pointer shapeToRemove );
+    static void removeShapeFromList( shapePointer_t shapeToRemove );
 
     /*! \relates MyShape
      *  \brief Finds a vector pointing from object1 to object2
@@ -194,9 +194,9 @@ class MyShape : public Moveable {
      *  \param object2 End Object
      *  \param sepVector Calculated separation vector
      */
-    void getVectorToObject( boost::shared_ptr<MyShape> object2, sgVec4 sepVector);
+    void getVectorToObject( shapePointer_t object2, sgVec4 sepVector);
 
-    bool isTouching( boost::shared_ptr<MyShape> otherShape );
+    bool isTouching( shapePointer_t otherShape );
 
     /*! \relates MyShape
      *  \brief Combines 2 distinct objects in an inelastic collision into the first object and eliminates the second
@@ -209,7 +209,7 @@ class MyShape : public Moveable {
      *
      *  Note: This function does NOT delete the second object, currently that must be handled outside
      */
-    void mergeWith( boost::shared_ptr<MyShape> otherShape );
+    void mergeWith( shapePointer_t otherShape );
 
     /*! \relates MyShape
      *  \brief Determines the final angular momentum after 2 objects collide in a completely inelastic collision
@@ -227,7 +227,7 @@ class MyShape : public Moveable {
      *
      *	\return The angular momentum to be assigned to the merged object
      */
-    void calcMergedAngMomentum( boost::shared_ptr<MyShape> otherShape, sgVec4 totalAngMom );
+    void calcMergedAngMomentum( shapePointer_t otherShape, sgVec4 totalAngMom );
 
     /*! \relates Circle
      *  \brief Finds radius after 2 circular objects are merged
