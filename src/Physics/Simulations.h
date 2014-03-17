@@ -130,6 +130,7 @@ class Simulations
      */
     static void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass);
 
+    typedef boost::shared_ptr<Simulation> SimulationPointer_t;
   public:
     static float G;
 
@@ -141,26 +142,26 @@ class Simulations
 
     static void simpleOrbit();
 
-    static boost::shared_ptr<Simulation> disruption_ArbitraryList();
+    static SimulationPointer_t disruption_ArbitraryList();
 
-    static boost::shared_ptr<Simulation> bodyFormation_NonRandom();
-    static boost::shared_ptr<Simulation> QuadrantTestingNonRandom();
+    static SimulationPointer_t bodyFormation_NonRandom();
+    static SimulationPointer_t QuadrantTestingNonRandom();
 
-    static boost::shared_ptr<Simulation> bodyFormation_ArbitraryList( int numPieces );
+    static SimulationPointer_t bodyFormation_ArbitraryList( int numPieces );
 
-    static boost::shared_ptr<Simulation> bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
+    static SimulationPointer_t bodyFormationGeneric_ArbitraryList( int numPieces, sgVec4 target, sgVec4 groupMomentum );
 
-    static boost::shared_ptr<Simulation> billiards1(int);
+    static SimulationPointer_t billiards1(int);
 
-    static boost::shared_ptr<Simulation> billiards2_ReturnSimulation(int);
+    static SimulationPointer_t billiards2_ReturnSimulation(int);
 
-    static boost::shared_ptr<Simulation> billiards3_ArbitraryList(int);
+    static SimulationPointer_t billiards3_ArbitraryList(int);
 
     static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
-    static boost::shared_ptr<Simulation> simpleCollision_ArbitraryList();
+    static SimulationPointer_t simpleCollision_ArbitraryList();
 
-    static boost::shared_ptr<Simulation> createSimulation( char simNumber, int numShapes );
+    static SimulationPointer_t createSimulation( char simNumber, int numShapes );
 };
 
 
