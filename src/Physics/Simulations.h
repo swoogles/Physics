@@ -91,6 +91,10 @@ class Simulations
     // static compressed_vector< shape_pointer > physicalObjects;
     static int curStep;
 
+    static float getSplitBodyRadius(float volume, int numPieces );
+    static void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target);
+    static void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 target );
+    static void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass);
 
   public:
     static float G;

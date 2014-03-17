@@ -638,3 +638,87 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber, int
 
   return newSimulation;
 }
+
+float Simulations::getSplitBodyRadius(float volume, int numPieces ) {
+  float pieceVol = volume/numPieces;
+  float pieceRadius = pieceVol/(M_PI * 4.0/3.0);
+  pieceRadius = pow(pieceRadius, 1.0/3.0);
+
+  return pieceRadius;
+}
+
+void Simulations::randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target) {
+  int randMult;
+  float largestDistance = 0;
+
+  for (int i = 0; i < 3; i++)
+  {
+    randMult = rand()%50;
+    if (randMult % 2 == 0) {
+      randMult *= -1;
+    }
+    startPos[i] = randMult * pieceRadius;
+    if ( startPos[i] > largestDistance )
+    {
+      largestDistance = startPos[i];
+    }
+  }
+
+  startPos[3] = 1;
+
+  sgAddVec4( startPos, target );
+}
+
+void Simulations::randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 target ) {
+  int randMult;
+  int dimensionInteger;
+
+  for (int i = 0; i < 3; i++)
+  {
+    dimensionInteger = (int) volume[i]/2;
+
+    randMult = rand()%(dimensionInteger/2);
+    if (randMult % 2 == 0) {
+      randMult *= -1;
+    }
+    startPos[i] = randMult;
+  }
+
+  sgAddVec4( startPos, target );
+}
+
+void Simulations::randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
+  static int randMult;
+
+  static bool switchB = false;
+
+  if (switchB)
+  {
+    for (int i = 0; i < 3; i++) {
+
+      if (switchB)
+      {
+        // Set the range of momenta, and have them be half positive/half negative
+        randMult = rand()%15;
+        if (randMult % 2 == 0)
+          randMult *= -1;
+
+
+      }
+      else {
+        randMult *= -1;
+      }
+      startMom[i] = randMult * pieceMass * 0.00050; // Good mix
+    }
+  }
+
+
+  if (switchB) {
+    switchB = false;
+  }
+  else {
+    switchB = true;
+  }
+  startMom[3] = 0;
+}
+
