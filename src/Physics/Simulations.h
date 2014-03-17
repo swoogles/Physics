@@ -91,9 +91,43 @@ class Simulations
     // static compressed_vector< shape_pointer > physicalObjects;
     static int curStep;
 
+    /*! \relates Circle
+     * \brief SplitRadius!
+     *
+     * Given a volume and number of pieces for it to be split into, this function calculates the radius needed for the volume of the individual pieces to add up
+     * to the original volume.
+     * \param volume Total volume to be split
+     * \param numPieces Number of desired pieces
+     *
+     * \return Radius for the smaller sub-pieces
+     */
     static float getSplitBodyRadius(float volume, int numPieces );
+
+    /*! \relates MyShape
+     *  \brief Gets a random starting position vector based on the second parameter
+     *
+     *  This function currently uses pieceRadius as the determining factor for the bounding box; this should be changed to an independent bounding variable
+     *  \param startPos Random starting position is returned here
+     *  \param pieceRadius Determines size of bounding box
+     */
     static void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target);
+
+    /*! \relates MyShape
+     *  \brief Gets a random starting position vector inside the volume vector
+     *
+     *  \param startPos Random starting position is returned here
+     *  \param volume Determines size of bounding box
+     */
     static void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 target );
+
+    /*! \relates MyShape
+     *  \brief Gets a random starting momentum vector based on second parameter
+     *
+     *  This function currently uses pieceMass as the determining factor for momentum range; figure out a better basis
+     *
+     *  \param startMom Random starting momentum is returned here
+     *  \param pieceMass Determines magnitude of momentum
+     */
     static void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass);
 
   public:
