@@ -63,16 +63,6 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation);
  */
 float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, SGfloat rSquared);
 
-
-/*! \relates MyShape
- *  \brief Finds a vector pointing from object1 to object2
- *
- *  \param object1 Start Object
- *  \param object2 End Object
- *  \param sepVector Calculated separation vector
- */
-void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 sepVector);
-
 /*! \relates MyShape
  *  \brief Finds a vector pointing from object1 to object2
  *
@@ -81,8 +71,6 @@ void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<My
  *  \param sepVector Calculated separation vector
  */
 void getVectorToQuadrant(boost::shared_ptr<MyShape> object1, boost::shared_ptr<Quadrant> quadrant, sgVec4 sepVector);
-
-
 
 /*! \relates Circle
  * \brief SplitRadius!
@@ -124,12 +112,6 @@ void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 targe
  *  \param pieceMass Determines magnitude of momentum
  */
 void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass);
-
-/*! \relates MyShape
- *  \brief Returns true if objects are touching eachother
- *
- */
-bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2);
 
 /*! \relates MyShape
  *  \brief Returns true if new shape is placed on top of a previously created shape

@@ -20,7 +20,7 @@ void elasticCollision( boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyS
 
 	float c;
 
-	getVectorToObject2(object1, object2, sepVec);
+	object1->getVectorToObject( object2, sepVec);
 	sgNormaliseVec4(sepVecUnit, sepVec);
 
 	object1->getVelocity(aVel);
@@ -42,27 +42,10 @@ void elasticCollision( boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyS
 	object2->adjustVelocity(tempVec);
 
   // TODO Figure out how necessary these lines are.
-	while (contact(object1, object2)) {
+	while ( object1->isTouching(object2) ) {
 		object1->update(dt/30);
 		object2->update(dt/30);
 	}
-
-
-}
-
-bool contact(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2) {
-	sgVec4 sepVec;
-	float minSep;
-	SGfloat distance, distanceSquared;
-
-	getVectorToObject2(object1, object2, sepVec);
-
-	distanceSquared = sgLengthSquaredVec4(sepVec);
-	distance = sqrt(distanceSquared);
-
-	minSep = object1->getRadius() + object2->getRadius();
-
-	return (distance < minSep);
 }
 
 void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation ) 
@@ -103,7 +86,7 @@ void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation )
         object2 = physicalObjects(j);
         object2->getPos(pos);
 
-        getVectorToObject2(object1, object2, sepVec);
+        object1->getVectorToObject( object2, sepVec);
 
         distanceSquared = sgLengthSquaredVec4(sepVec);
 
@@ -165,7 +148,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
     //b.
     if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant )
     {
-      getVectorToObject2( curObject, curQuadrant->getShapeInQuadrant(), sepVec);
+      curObject->getVectorToObject( curQuadrant->getShapeInQuadrant(), sepVec);
       distance = sgLengthVec4( sepVec );
       distanceSquared = sgLengthSquaredVec4( sepVec );
       //c.
@@ -293,7 +276,7 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation)
     {
       object2 = physicalObjects(j);
 
-      getVectorToObject2(object1, object2, sepVec);
+      object1->getVectorToObject( object2, sepVec);
 
       distanceSquared = sgLengthSquaredVec4(sepVec);
       distance = sqrt(distanceSquared);
@@ -333,13 +316,6 @@ float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShap
     rSquared = .00001;
   }
   return ( Simulations::G * object1->getMass() * object2->getMass()) / rSquared;
-}
-
-void getVectorToObject2(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, sgVec4 sepVector) {
-  sgVec4 pos1, pos2;
-  object1->getPos(pos1 );
-  object2->getPos(pos2 );
-  sgSubVec4(sepVector, pos2, pos1);
 }
 
 void getVectorToQuadrant(boost::shared_ptr<MyShape> object1, boost::shared_ptr<Quadrant> quadrant, sgVec4 sepVector) {
