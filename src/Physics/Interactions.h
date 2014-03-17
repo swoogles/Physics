@@ -72,19 +72,6 @@ float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShap
 void getVectorToQuadrant(boost::shared_ptr<MyShape> object1, boost::shared_ptr<Quadrant> quadrant, sgVec4 sepVector);
 
 /*! \relates MyShape
- *  \brief Returns true if new shape is placed on top of a previously created shape
- *
- *  Loops through shapes vector up until newShape, seeing if any shapes overlap with the newly-placed one. Only necessary when dealing with elastic collisions;
- *  otherwise, the new object will just be merged with the existing one.
- *
- *  \param newShape Index of newshape in shapes vector
- *
- *  \returns True if new object causes a conflict
- */
-bool isConflict_ArbitraryList(compressed_vector<shape_pointer> physiaclObjects, shape_pointer newShape);
-
-
-/*! \relates MyShape
  *  \brief Will eventually calculate drag force on a single object
  */
 void calcDrag(float dt);

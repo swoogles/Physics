@@ -235,22 +235,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
   }
 }
 
-bool isConflict_ArbitraryList( compressed_vector<shape_pointer> physicalObjects, shape_pointer newShape ) 
-{
-  sgVec4 sepVec;
-  SGfloat distanceSquared, distance, minSep;
-  bool conflict = false;
-
-  boost::shared_ptr<MyShape> object1;
-
-  for (int i = 0; i < physicalObjects.size() && conflict == false; i++) 
-  {
-    object1 = physicalObjects(i);
-    conflict = object1->isTouching( newShape  );
-  }
-  return conflict;
-}
-
 void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation) 
 {
   ShapeList shapeList = curSimulation->getPhysicalObjects() ;
