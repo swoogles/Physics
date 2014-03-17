@@ -276,13 +276,6 @@ bool MyShape::isTouching( boost::shared_ptr<MyShape> otherShape )
   if (distance < minSep) 
   {
     touching = true;
-    // cout << "this->radius: " << this->getRadius() << endl;
-    // cout << "otherShape->getRadius(): " << otherShape->getRadius() << endl;
-    // cout << "MinSep: " << minSep << endl;
-    // cout << "distance: " << distance << endl;
-    // cout << "No touching!" << endl;
-    cout << "this->pos: " << this->getPosString() << endl;
-    cout << "otherShape->pos: " << otherShape->getPosString() << endl;
   }
 
   return touching;
