@@ -161,8 +161,20 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
   sgScaleVec4( this->weightedPosition, mass );
 }
 
+/* Description of insertion algorithm
+
+  1. If node x does not contain a body, put the new body b here.
+
+  2. a. If node x is an internal node, update the center-of-mass and total mass of x. 
+     b. Recursively insert the body b in the appropriate quadrant.
+
+  3. a. If node x is an external node, say containing a body named c, then there are two bodies b and c in the same region. 
+     b. Subdivide the region further by creating four children. Then, recursively insert both b and c into the appropriate quadrant(s). Since b and c may still end up in the same quadrant, there may be several subdivisions during a single insertion.      c. Finally, update the center-of-mass and total mass of x.
+*/
+
 void Quadrant::insertShape( shape_pointer insertedShape )
 {
+  // 1.
   if ( !containsBody )
   {
     shapeInQuadrant = insertedShape;
@@ -172,6 +184,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     insertedShape->getPos(pos);
     this->setCenterOfMass( pos );
   }
+  // 2. a
   else if ( ! isLeaf )
   {
     this->adjustMass( insertedShape->getMass() );
@@ -186,16 +199,21 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     sgAddVec4( quadrantWeightedPosition, shapeWeightedPosition );
     this->setWeightedPosition( quadrantWeightedPosition );
 
+    // 2. b
     QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
     if ( targetQuadrant != nullptr )
     {
       targetQuadrant->insertShape( insertedShape );
     }
   }
+  // 3. a
   else
   {
     this->adjustMass( insertedShape->getMass() );
     isLeaf = false;
+    // 3. b
+    // I deviate from the described algorithm here, because I only make the
+    // Quadrants necessary, rather than all 4 up front.
     QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
     QuadrantPointer_t targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
 
@@ -209,14 +227,19 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     sgAddVec4(quadrantWeightedPosition, shapeWeightedPosition );
     this->setWeightedPosition( quadrantWeightedPosition );
 
+    // Consider removing this check. It's only an issue when you're out of
+    // memory, and it's not like I'm checking for that situation everywhere
+    // else in the program.
     if ( targetQuadrant != nullptr && targetQuadrantB != nullptr )
     {
+      // 3.c
       targetQuadrant->insertShape( insertedShape );
       targetQuadrantB->insertShape( shapeInQuadrant );
     }
     shapeInQuadrant.reset();
   }
 
+  // 3.d
   sgVec4 CoMPosition;
   this->getCenterOfMass( CoMPosition );
 
