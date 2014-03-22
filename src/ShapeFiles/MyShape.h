@@ -196,6 +196,11 @@ class MyShape : public Moveable {
      */
     void getVectorToObject( shapePointer_t object2, sgVec4 sepVector);
 
+    /*! 
+      * Simple method for getting distance between 2 objects
+      */
+    float getDistanceToObject( shapePointer_t object2 );
+
     bool isTouching( shapePointer_t otherShape );
 
     /*! \relates MyShape

@@ -17,6 +17,16 @@ void MyShape::getVectorToObject( shapePointer_t object2, sgVec4 sepVector) {
   sgSubVec4(sepVector, pos2, pos1);
 }
 
+float MyShape::getDistanceToObject( shapePointer_t object2 ) {
+  sgVec4 sepVec;
+  float distance;
+
+  this->getVectorToObject( object2, sepVec);
+  distance = sgLengthVec4( sepVec );
+
+  return distance;
+}
+
 MyShape::MyShape()
 {
 	numPts = 16;
