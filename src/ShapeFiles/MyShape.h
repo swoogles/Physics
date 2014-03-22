@@ -234,5 +234,7 @@ class MyShape : public Moveable {
      *
      */
     float calcMergedRadius(float massBoth, float density);
+
+    void getCenterOfMass(sgVec4 centerOfMass);
 };
 #endif /* MYSHAPE_H_ */
