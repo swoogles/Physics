@@ -171,3 +171,9 @@ float Simulation::getTotalMass() {
 void Simulation::setTotalMass(float newMass) {
 	totalMass=newMass;
 }
+
+void Simulation::update()
+{
+  physicalObjects.update(DT);
+  updateTimeElapsed();
+}

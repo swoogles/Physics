@@ -251,9 +251,7 @@ void idle() {
     {
       parallelize = false;
     }
-    globalSimulation->getPhysicalObjects().update( globalSimulation->getDT() );
-
-    globalSimulation->updateTimeElapsed();
+    globalSimulation->update();
     globalMainDisplay.update();
 
     globalSimulation->incCurStep();

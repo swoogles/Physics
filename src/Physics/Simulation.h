@@ -70,6 +70,8 @@ class Simulation
     void updateTimeElapsed() { timeElapsed += DT; };
     double getTimeElapsed() { return timeElapsed; };
 
+    void update();
+
     void Pause() { paused = true; };
     void unPause() { paused = false; };
     bool isPaused() { return paused; };
