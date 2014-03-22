@@ -176,4 +176,14 @@ void Simulation::update()
 {
   physicalObjects.update(DT);
   updateTimeElapsed();
+  incCurStep();
+
+  sgVec4 curPos;
+  foreach_ ( shape_pointer curShape, getPhysicalObjects().getShapes() )
+  {
+    curShape->getPos(curPos);
+    updateXYMinsAndMaxes(curPos);
+  }
+
+  refreshQuadrant();
 }

@@ -237,7 +237,6 @@ void init(char simulation) {
 }
 
 void idle() {
-  sgVec4 curPos;
 
   if (! globalSimulation->isPaused()  ) {
     if (WorldSettings::isAutoScaling())
@@ -253,16 +252,6 @@ void idle() {
 
     globalSimulation->update();
     globalMainDisplay.update();
-
-    globalSimulation->incCurStep();
-
-    foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
-    {
-      curShape->getPos(curPos);
-      globalSimulation->updateXYMinsAndMaxes(curPos);
-    }
-
-    globalSimulation->refreshQuadrant();
   }
 
   int curObserverIdx = Observer::getCurObserver();
