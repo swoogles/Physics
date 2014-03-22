@@ -119,6 +119,64 @@ void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation )
 
 }
 
+// I'm working on this method because I think there are some basic
+// structural changes that I can make so that it will be more legible and
+// more suitable for later parallelization
+void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation ) 
+{
+  compressed_vector<shape_pointer> physicalObjects = curSimulation->getPhysicalObjects().getShapes();
+  float dt = curSimulation->getDT();
+  sgVec4 gravVec;
+  boost::shared_ptr<MyShape> object1, object2;
+
+  sgVec4 gravField;
+
+  int curObjectIdx = 0;
+  int actingObjectIdx = 0;
+
+  if (curSimulation->isConstGravField() ) {
+    curSimulation->getConstGravFieldVal(gravField);
+    sgScaleVec4(gravField, 1/dt);
+  }
+  
+  if ( physicalObjects.size() > 0 )
+  {
+    for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
+    {
+      object1 = physicalObjects(i);
+
+      if (curSimulation->isConstGravField() ) {
+        object1->adjustMomentum(gravField);
+      }
+
+      for (unsigned int j = i + 1; j < physicalObjects.size(); )
+      {
+
+        if (curSimulation->isGravBetweenObjects() ) {
+          calcForceGravNew(gravVec, object1, object2, dt );
+
+
+          object1->adjustMomentum(gravVec);
+          sgNegateVec4(gravVec);
+          object2->adjustMomentum(gravVec);
+        }
+
+        j++;
+        actingObjectIdx++;
+      }
+      curObjectIdx++;
+    }
+
+    // Add unary forces to last object
+    object1 = physicalObjects(physicalObjects.size()-1);
+
+    if (curSimulation->isConstGravField() ) {
+      object1->adjustMomentum(gravField);
+    }
+  }
+
+}
+
 void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt) 
 {
   sgVec4 sepVec, unitVec, gravVec;
@@ -300,6 +358,32 @@ float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShap
     rSquared = .00001;
   }
   return ( Simulations::G * object1->getMass() * object2->getMass()) / rSquared;
+}
+
+void calcForceGravNew( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) 
+{
+  float forceMagnitude;
+  SGfloat rSquared;
+  sgVec4 sepVec, unitVec;
+
+  sgVec4 pos;
+  object1->getPos(pos);
+
+  object1->getVectorToObject( object2, sepVec);
+
+  rSquared = sgLengthSquaredVec4(sepVec);
+
+  if (rSquared < .00001)
+  {
+    rSquared = .00001;
+  }
+  forceMagnitude = (Simulations::G * object1->getMass() * object2->getMass()) / rSquared;
+
+  sgNormaliseVec4(unitVec, sepVec);
+
+  sgScaleVec4(gravVec, unitVec, forceMagnitude);
+  sgScaleVec4(gravVec, dt);
+
 }
 
 void getVectorToQuadrant(boost::shared_ptr<MyShape> object1, boost::shared_ptr<Quadrant> quadrant, sgVec4 sepVector) {

@@ -62,6 +62,8 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation);
  */
 float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, SGfloat rSquared);
 
+void calcForceGravNew( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) ;
+
 /*! \relates MyShape
  *  \brief Finds a vector pointing from object1 to object2
  *
