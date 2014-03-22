@@ -196,8 +196,6 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
   }
   else
   {
-    sgVec4 com;
-    curQuadrant->getCenterOfMass( com );
     curObject->getVectorToObject( curQuadrant, sepVec);
     distance = sgLengthVec4( sepVec );
     //2.
