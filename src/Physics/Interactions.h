@@ -46,7 +46,7 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation );
  *
  *  \param dt Determines time over which each force acts
  */
-void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation );
+void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation );
 
 /*! \relates MyShape
  *  \brief Determines if any objects are colliding and responds appropriately.

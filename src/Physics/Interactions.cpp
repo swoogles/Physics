@@ -48,59 +48,6 @@ void elasticCollision( boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyS
 	}
 }
 
-void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation ) 
-{
-  compressed_vector<shape_pointer> physicalObjects = curSimulation->getPhysicalObjects().getShapes();
-  float dt = curSimulation->getDT();
-  sgVec4 gravVec;
-  boost::shared_ptr<MyShape> object1, object2;
-
-  sgVec4 gravField;
-
-  int curObjectIdx = 0;
-  int actingObjectIdx = 0;
-
-  if (curSimulation->isConstGravField() ) {
-    curSimulation->getConstGravFieldVal(gravField);
-    sgScaleVec4(gravField, 1/dt);
-  }
-  
-  if ( physicalObjects.size() > 0 )
-  {
-    for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
-    {
-      object1 = physicalObjects(i);
-
-      if (curSimulation->isConstGravField() ) {
-        object1->adjustMomentum(gravField);
-      }
-
-      for (unsigned int j = i + 1; j < physicalObjects.size(); )
-      {
-        if (curSimulation->isGravBetweenObjects() ) {
-          calcForceGrav(gravVec, object1, object2, dt);
-
-          object1->adjustMomentum(gravVec);
-          sgNegateVec4(gravVec);
-          object2->adjustMomentum(gravVec);
-        }
-
-        j++;
-        actingObjectIdx++;
-      }
-      curObjectIdx++;
-    }
-
-    // Add unary forces to last object
-    object1 = physicalObjects(physicalObjects.size()-1);
-
-    if (curSimulation->isConstGravField() ) {
-      object1->adjustMomentum(gravField);
-    }
-  }
-
-}
-
 // I'm working on this method because I think there are some basic
 // structural changes that I can make so that it will be more legible and
 // more suitable for later parallelization
