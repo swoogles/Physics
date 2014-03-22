@@ -52,12 +52,8 @@ void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation )
 {
   compressed_vector<shape_pointer> physicalObjects = curSimulation->getPhysicalObjects().getShapes();
   float dt = curSimulation->getDT();
-  sgVec4 sepVec;
-  sgVec4 unitVec;
   sgVec4 gravVec;
   boost::shared_ptr<MyShape> object1, object2;
-  float fGrav;
-  SGfloat distanceSquared;
 
   sgVec4 gravField;
 
@@ -74,8 +70,6 @@ void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation )
     for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
     {
       object1 = physicalObjects(i);
-      sgVec4 pos;
-      object1->getPos(pos);
 
       if (curSimulation->isConstGravField() ) {
         object1->adjustMomentum(gravField);
@@ -83,20 +77,8 @@ void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation )
 
       for (unsigned int j = i + 1; j < physicalObjects.size(); )
       {
-        object2 = physicalObjects(j);
-        object2->getPos(pos);
-
-        object1->getVectorToObject( object2, sepVec);
-
-        distanceSquared = sgLengthSquaredVec4(sepVec);
-
         if (curSimulation->isGravBetweenObjects() ) {
-          fGrav = calcForceGrav(object1, object2, distanceSquared);
-
-          sgNormaliseVec4(unitVec, sepVec);
-
-          sgScaleVec4(gravVec, unitVec, fGrav);
-          sgScaleVec4(gravVec, dt);
+          calcForceGravNew(gravVec, object1, object2, dt);
 
           object1->adjustMomentum(gravVec);
           sgNegateVec4(gravVec);
@@ -206,16 +188,8 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
     //b.
     if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant )
     {
-      curObject->getVectorToObject( curQuadrant->getShapeInQuadrant(), sepVec);
-      distance = sgLengthVec4( sepVec );
-      distanceSquared = sgLengthSquaredVec4( sepVec );
       //c.
-      fGrav = calcForceGrav(curObject, shapeInQuadrant, distanceSquared);
-
-      sgNormaliseVec4(unitVec, sepVec);
-
-      sgScaleVec4(gravVec, unitVec, fGrav);
-      sgScaleVec4(gravVec, dt);
+      calcForceGravNew( gravVec, curObject, shapeInQuadrant, dt);
 
       curObject->adjustMomentum(gravVec);
     }
