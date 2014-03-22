@@ -133,10 +133,10 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
 
       for (unsigned int j = i + 1; j < physicalObjects.size(); )
       {
+        object2 = physicalObjects(j);
 
         if (curSimulation->isGravBetweenObjects() ) {
           calcForceGrav(gravVec, object1, object2, dt );
-
 
           object1->adjustMomentum(gravVec);
           sgNegateVec4(gravVec);
@@ -240,7 +240,7 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
 
   if ( curSimulation->getForceCalcMethod() != Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
-    calcForcesAll_Naive( curSimulation );
+    calcForcesAll_LessNaive( curSimulation );
 
   }
   else //Calculations with Octree
