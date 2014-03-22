@@ -78,7 +78,7 @@ void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation )
       for (unsigned int j = i + 1; j < physicalObjects.size(); )
       {
         if (curSimulation->isGravBetweenObjects() ) {
-          calcForceGravNew(gravVec, object1, object2, dt);
+          calcForceGrav(gravVec, object1, object2, dt);
 
           object1->adjustMomentum(gravVec);
           sgNegateVec4(gravVec);
@@ -135,7 +135,7 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
       {
 
         if (curSimulation->isGravBetweenObjects() ) {
-          calcForceGravNew(gravVec, object1, object2, dt );
+          calcForceGrav(gravVec, object1, object2, dt );
 
 
           object1->adjustMomentum(gravVec);
@@ -188,7 +188,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
     if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant )
     {
       //c.
-      calcForceGravNew( gravVec, curObject, shapeInQuadrant, dt);
+      calcForceGrav( gravVec, curObject, shapeInQuadrant, dt);
 
       curObject->adjustMomentum(gravVec);
     }
@@ -200,7 +200,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
     //a.
     if ( curQuadrant->getWidth() / distance < theta )
     {
-      calcForceGravNew( gravVec, curObject, curQuadrant, dt);
+      calcForceGrav( gravVec, curObject, curQuadrant, dt);
 
       //b.
       curObject->adjustMomentum(gravVec);
@@ -312,7 +312,7 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation)
   curSimulation->setPhysicalObjects( shapeList ) ;
 }
 
-void calcForceGravNew( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) 
+void calcForceGrav( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) 
 {
   float forceMagnitude;
   SGfloat rSquared;

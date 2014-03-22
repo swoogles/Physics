@@ -59,7 +59,7 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation);
  *  \brief Calculates magnitude of the force of gravity between 2 objects
  *
  */
-void calcForceGravNew( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) ;
+void calcForceGrav( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) ;
 
 /*! \relates MyShape
  *  \brief Will eventually calculate drag force on a single object
