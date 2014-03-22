@@ -77,10 +77,6 @@ void calcForcesAll_Naive( boost::shared_ptr<Simulation> curSimulation )
       sgVec4 pos;
       object1->getPos(pos);
 
-      if (curSimulation->isConstGravField() ) {
-        object1->adjustMomentum(gravField);
-      }
-
       for (unsigned int j = i + 1; j < physicalObjects.size(); )
       {
         object2 = physicalObjects(j);
