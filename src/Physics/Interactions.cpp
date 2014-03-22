@@ -161,10 +161,10 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
 
 void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt) 
 {
-  sgVec4 sepVec, unitVec, gravVec;
-  boost::shared_ptr<MyShape> object1, object2, shapeInQuadrant;
+  sgVec4 sepVec, gravVec;
+  boost::shared_ptr<MyShape> object1, shapeInQuadrant;
   float fGrav;
-  SGfloat distance, distanceSquared;
+  SGfloat distance;
   SGfloat theta = 0.5;
   typedef boost::shared_ptr<Quadrant> quad_pointer;
 
@@ -198,19 +198,13 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
   {
     sgVec4 com;
     curQuadrant->getCenterOfMass( com );
-    getVectorToQuadrant( curObject, curQuadrant, sepVec);
+    curObject->getVectorToObject( curQuadrant, sepVec);
     distance = sgLengthVec4( sepVec );
-    distanceSquared = sgLengthSquaredVec4( sepVec );
     //2.
     //a.
     if ( curQuadrant->getWidth() / distance < theta )
     {
-      fGrav = calcForceGrav(curObject, curQuadrant, distanceSquared);
-
-      sgNormaliseVec4(unitVec, sepVec);
-
-      sgScaleVec4(gravVec, unitVec, fGrav);
-      sgScaleVec4(gravVec, dt);
+      calcForceGravNew( gravVec, curObject, curQuadrant, dt);
 
       //b.
       curObject->adjustMomentum(gravVec);
@@ -358,22 +352,6 @@ void calcForceGravNew( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost
   sgScaleVec4(gravVec, unitVec, forceMagnitude);
   sgScaleVec4(gravVec, dt);
 
-}
-
-void getVectorToQuadrant(boost::shared_ptr<MyShape> object1, boost::shared_ptr<Quadrant> quadrant, sgVec4 sepVector) {
-  sgVec4 pos1, pos2;
-  object1->getPos(pos1 );
-  quadrant->getCenterOfMass(pos2 );
-  if ( ! sgCompareVec4( pos1, pos2, .0001 ) )
-  {
-    sgSubVec4(sepVector, pos2, pos1);
-  }
-  else
-  {
-    sepVector[0]=0;
-    sepVector[1]=0;
-    sepVector[2]=0;
-  }
 }
 
 //TODO Fix and only apply to a single shape

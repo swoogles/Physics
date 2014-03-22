@@ -65,15 +65,6 @@ float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShap
 void calcForceGravNew( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) ;
 
 /*! \relates MyShape
- *  \brief Finds a vector pointing from object1 to object2
- *
- *  \param object1 Start Object
- *  \param object2 End Object
- *  \param sepVector Calculated separation vector
- */
-void getVectorToQuadrant(boost::shared_ptr<MyShape> object1, boost::shared_ptr<Quadrant> quadrant, sgVec4 sepVector);
-
-/*! \relates MyShape
  *  \brief Will eventually calculate drag force on a single object
  */
 void calcDrag(float dt);
