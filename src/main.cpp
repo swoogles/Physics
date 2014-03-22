@@ -221,6 +221,16 @@ void init(char simulation) {
   globalRecorder->setExtension( extension );
   globalRecorder->setSkipFrames(1);
 
+  // Not using this for now because of all the corrupted list problems I was getting
+  bool parallelize;
+  if ( globalProperties->at( BillProperties::PARALLEL ).compare( "true" ) )
+  {
+    parallelize = true;
+  }
+  else
+  {
+    parallelize = false;
+  }
   //openShapes(saveFileName);
 
   globalSimulation->refreshQuadrant();
@@ -241,16 +251,6 @@ void idle() {
 
     calcForcesAll( globalSimulation );
 
-    // Not using this for now because of all the corrupted list problems I was getting
-    bool parallelize;
-    if ( globalProperties->at( BillProperties::PARALLEL ).compare( "true" ) )
-    {
-      parallelize = true;
-    }
-    else
-    {
-      parallelize = false;
-    }
     globalSimulation->update();
     globalMainDisplay.update();
 
