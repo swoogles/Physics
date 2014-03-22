@@ -161,9 +161,8 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
 
 void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt) 
 {
-  sgVec4 sepVec, gravVec;
+  sgVec4 gravVec;
   boost::shared_ptr<MyShape> object1, shapeInQuadrant;
-  float fGrav;
   SGfloat distance;
   SGfloat theta = 0.5;
   typedef boost::shared_ptr<Quadrant> quad_pointer;
@@ -196,8 +195,7 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
   }
   else
   {
-    curObject->getVectorToObject( curQuadrant, sepVec);
-    distance = sgLengthVec4( sepVec );
+    distance = curObject->getDistanceToObject( curQuadrant );
     //2.
     //a.
     if ( curQuadrant->getWidth() / distance < theta )
@@ -262,9 +260,8 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
 void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation) 
 {
   ShapeList shapeList = curSimulation->getPhysicalObjects() ;
-  sgVec4 sepVec;
   boost::shared_ptr<MyShape> object1, object2;
-  SGfloat distanceSquared, distance, minSep;
+  SGfloat distance, minSep;
 
   compressed_vector<shape_pointer> physicalObjects = shapeList.getShapes();
   compressed_vector<shape_pointer> deleteList;
@@ -284,10 +281,8 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation)
     {
       object2 = physicalObjects(j);
 
-      object1->getVectorToObject( object2, sepVec);
+      distance = object1->getDistanceToObject( object2 );
 
-      distanceSquared = sgLengthSquaredVec4(sepVec);
-      distance = sqrt(distanceSquared);
       minSep = object1->getRadius() + object2->getRadius();
 
       if (distance < minSep)
@@ -315,15 +310,6 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation)
   }
 
   curSimulation->setPhysicalObjects( shapeList ) ;
-}
-
-//setting rSquared to a constant value with a grid can make some awesome effects
-float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, SGfloat rSquared) {
-  if (rSquared < .00001)
-  {
-    rSquared = .00001;
-  }
-  return ( Simulations::G * object1->getMass() * object2->getMass()) / rSquared;
 }
 
 void calcForceGravNew( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) 

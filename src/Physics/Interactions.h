@@ -58,10 +58,7 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation);
 /*! \relates MyShape
  *  \brief Calculates magnitude of the force of gravity between 2 objects
  *
- *
  */
-float calcForceGrav(boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, SGfloat rSquared);
-
 void calcForceGravNew( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) ;
 
 /*! \relates MyShape
