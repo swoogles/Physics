@@ -113,9 +113,6 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
 
   sgVec4 gravField;
 
-  int curObjectIdx = 0;
-  int actingObjectIdx = 0;
-
   if (curSimulation->isConstGravField() ) {
     curSimulation->getConstGravFieldVal(gravField);
     sgScaleVec4(gravField, 1/dt);
@@ -131,7 +128,7 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
         object1->adjustMomentum(gravField);
       }
 
-      for (unsigned int j = i + 1; j < physicalObjects.size(); )
+      for (unsigned int j = i + 1; j < physicalObjects.size(); j++)
       {
         object2 = physicalObjects(j);
 
@@ -142,11 +139,7 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
           sgNegateVec4(gravVec);
           object2->adjustMomentum(gravVec);
         }
-
-        j++;
-        actingObjectIdx++;
       }
-      curObjectIdx++;
     }
 
     // Add unary forces to last object
