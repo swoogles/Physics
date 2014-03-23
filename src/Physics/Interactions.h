@@ -8,8 +8,13 @@
 #ifndef INTERACTIONS_H_
 #define INTERACTIONS_H_
 
+#include <boost/bimap.hpp>
+#include <boost/bimap/set_of.hpp>
+// #include <boost/range/adaptor/map.hpp>
+#include <boost/fusion/container/map.hpp>
 #include <boost/numeric/ublas/vector_sparse.hpp>
 #include <iostream>
+#include <string>
 #include <plib/sg.h>
 
 #include "../Parallelization/Quadrant.h"
@@ -21,6 +26,8 @@
 
 using namespace std;
 
+using boost::bimaps::set_of;
+using boost::bimap;
 using boost::shared_ptr;
 using boost::numeric::ublas::compressed_vector;
 typedef boost::shared_ptr<MyShape> shape_pointer;

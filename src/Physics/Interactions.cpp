@@ -129,6 +129,26 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
 
 }
 
+template< class Map, class CompatibleKey, class CompatibleData >
+void use_it( Map & m,
+                 const CompatibleKey  & key,
+                              const CompatibleData & data )
+{
+  typedef typename Map::value_type value_type;
+  typedef typename Map::const_iterator const_iterator;
+
+  m.insert( value_type(key,data) );
+  const_iterator iter = m.find(key);
+  if( iter != m.end() )
+  {
+    assert( iter->first  == key  );
+    assert( iter->second == data );
+
+    std::cout << iter->first << " --> " << iter->second;
+  }
+  m.erase(key);
+}
+
 ShapeList calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt) 
 {
   sgVec4 gravVec;
@@ -185,6 +205,17 @@ ShapeList calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Qu
     //3.
     else
     {
+      typedef bimap< set_of<std::string>, set_of<int> > bimap_type;
+      // typedef bimap< std::string, int > bimap_type;
+      // Map newMap;
+      // typedef typename Map::value_type value_type;
+      // typedef typename Map::const_iterator const_iterator;
+
+      // m.insert( value_type(key,data) );
+      // bimap_type bimapExample("hi",3);
+
+      bimap_type bimapExample;
+      // bimapExample->first = "hi";
       quad_pointer targetQuadrant;
       for ( int x = 0; x < 2; x++ )
       {
