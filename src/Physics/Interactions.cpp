@@ -245,6 +245,20 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation)
       object2 = physicalObjects(j);
 
       distance = object1->getDistanceToObject( object2 );
+      minSep = object1->getRadius() + object2->getRadius();
+
+      if (distance < minSep)
+      {
+        if (curSimulation->isAllElastic() )
+        {
+          elasticCollision( object1, object2, curSimulation->getDT() );
+        }
+        else if (curSimulation->isAllInelastic() ){
+          object1->mergeWith( object2 );
+          deleteList.resize(deleteList.size()+1);
+          deleteList.insert_element(deleteList.size()-1, object2);
+        }
+      }
 
     }
   }
