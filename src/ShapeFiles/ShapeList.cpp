@@ -33,6 +33,22 @@ int ShapeList::addShapeToList( shape_pointer insertShape )
   return curSize;
 }
 
+int ShapeList::addList( ShapeList addList )
+{
+  compressed_vector<shape_pointer> addShapes = addList.getShapes();
+  int additionSize = addShapes.size();
+  int curSize = shapes.size();
+  shapes.resize( curSize + additionSize );
+  foreach_( shape_pointer curShape, addShapes )
+  {
+    this->addShapeToList( curShape );
+  }
+
+  addList.clearShapes();
+
+  return shapes.size();
+}
+
 int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
 {
   compressed_vector<shape_pointer> newShapeVector;
