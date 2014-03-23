@@ -202,16 +202,9 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation)
   compressed_vector<shape_pointer> physicalObjects = shapeList.getShapes();
   compressed_vector<shape_pointer> deleteList;
 
-  sgVec4 gravField;
-
   for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
   {
     object1 = physicalObjects(i);
-
-    if (curSimulation->isConstGravField() ) 
-    {
-      object1->adjustMomentum(gravField);
-    }
 
     for (unsigned int j = i + 1; j < physicalObjects.size(); j++)
     {
@@ -229,7 +222,6 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation)
         }
         else if (curSimulation->isAllInelastic() ){
           object1->mergeWith( object2 );
-          // mergeObjects(object1, object2);
           deleteList.resize(deleteList.size()+1);
           deleteList.insert_element(deleteList.size()-1, object2);
         }
