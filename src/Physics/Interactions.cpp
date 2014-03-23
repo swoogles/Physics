@@ -222,6 +222,7 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
       {
         calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() );
       }
+      calcCollisionsAll( curSimulation );
     }
   }
 }
