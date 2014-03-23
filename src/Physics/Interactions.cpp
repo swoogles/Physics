@@ -129,13 +129,15 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
 
 }
 
-void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt) 
+ShapeList calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt) 
 {
   sgVec4 gravVec;
   boost::shared_ptr<MyShape> object1, shapeInQuadrant;
   SGfloat distance;
   SGfloat theta = 0.5;
   typedef boost::shared_ptr<Quadrant> quad_pointer;
+
+  ShapeList deleteList;
 
   //1. 
     //a. If the current node is an external node 
@@ -159,6 +161,11 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
     {
       //c.
       calcForceGrav( gravVec, curObject, shapeInQuadrant, dt);
+
+      if ( curObject->isTouching( shapeInQuadrant ) )
+      {
+        deleteList.addShapeToList( shapeInQuadrant );
+      }
 
       curObject->adjustMomentum(gravVec);
     }
@@ -197,6 +204,8 @@ void calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadran
 
     }
   }
+
+  return deleteList;
 
 }
 
