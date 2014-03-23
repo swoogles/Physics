@@ -95,6 +95,8 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
 
         if (distance < minSep)
         {
+          cout << "Objects touching i[" << i << ":" << object1.get() << endl;
+          cout << "Objects touching j[" << j << ":" << object2.get() << endl;
           if (curSimulation->isAllElastic() )
           {
             elasticCollision( object1, object2, curSimulation->getDT() );
@@ -118,10 +120,11 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
     {
       foreach_ ( shape_pointer curShape, deleteList )
       {
-        cout << "Deleting shape." << endl;
+        cout << "Deleting shape:" << curShape.get() << endl;
         shapeList.removeShapeFromList( curShape );
         MyShape::removeShapeFromList( curShape );
       }
+      cout << endl << endl;
     }
 
     curSimulation->setPhysicalObjects( shapeList ) ;

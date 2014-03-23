@@ -406,6 +406,8 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
 	float pieceMass = pow(pieceRadius, 3.0);
 	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
 
+  pieceRadius /= 2;
+
 	float totalMass = 0.0;
 
   shape_pointer curShape;
@@ -449,7 +451,7 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
 
   //#3
   curShape = make_shared<Circle>();
-  curShape->setPos( +(7/8.0 * d), +(5/8.0 * d), 1 );
+  curShape->setPos( +(7/8.0 * d), +(2/8.0 * d), 1 );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
   curShape->setMomentum(startMomentum);
