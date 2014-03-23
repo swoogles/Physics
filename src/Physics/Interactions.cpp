@@ -196,7 +196,7 @@ ShapeList calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Qu
             targetQuadrant = curQuadrant->getQuadrantFromCell( x, y, z );
             if ( targetQuadrant != nullptr )
             {
-              calcForceOnObject_Octree(curObject, targetQuadrant, dt);
+              deleteList.addList( calcForceOnObject_Octree(curObject, targetQuadrant, dt) ) ;
             }
           }
         }
@@ -211,6 +211,8 @@ ShapeList calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Qu
 
 void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
 {
+  ShapeList deleteList;
+
   ShapeList physicalObjects = curSimulation->getPhysicalObjects();
   if ( curSimulation->getCurStep() % 100 == 0 )
   {
@@ -229,9 +231,17 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
 
       foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
       {
-        calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() );
+        deleteList.addList( calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() ) );
       }
       calcCollisionsAll( curSimulation );
+    }
+    if ( deleteList.getShapes().size() > 0 )
+    {
+      cout << "Shapes to delete: " << endl;
+      foreach_ ( shape_pointer curShape, deleteList.getShapes() )
+      {
+        cout << "CurShape: " << curShape << endl;
+      }
     }
   }
 }
