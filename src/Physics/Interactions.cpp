@@ -53,12 +53,16 @@ void elasticCollision( boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyS
 // more suitable for later parallelization
 void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation ) 
 {
-  compressed_vector<shape_pointer> physicalObjects = curSimulation->getPhysicalObjects().getShapes();
   float dt = curSimulation->getDT();
   sgVec4 gravVec;
   boost::shared_ptr<MyShape> object1, object2;
+  SGfloat distance, minSep;
 
   sgVec4 gravField = {0, 0, 0, 0};
+
+  ShapeList shapeList = curSimulation->getPhysicalObjects() ;
+  compressed_vector<shape_pointer> physicalObjects = shapeList.getShapes();
+  compressed_vector<shape_pointer> deleteList;
 
   if (curSimulation->isConstGravField() ) {
     curSimulation->getConstGravFieldVal(gravField);
@@ -77,6 +81,7 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
       {
         object2 = physicalObjects(j);
 
+
         if (curSimulation->isGravBetweenObjects() ) {
           calcForceGrav(gravVec, object1, object2, dt );
 
@@ -84,6 +89,23 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
           sgNegateVec4(gravVec);
           object2->adjustMomentum(gravVec);
         }
+
+        distance = object1->getDistanceToObject( object2 );
+        minSep = object1->getRadius() + object2->getRadius();
+
+        if (distance < minSep)
+        {
+          if (curSimulation->isAllElastic() )
+          {
+            elasticCollision( object1, object2, curSimulation->getDT() );
+          }
+          else if (curSimulation->isAllInelastic() ){
+            object1->mergeWith( object2 );
+            deleteList.resize(deleteList.size()+1);
+            deleteList.insert_element(deleteList.size()-1, object2);
+          }
+        }
+
       }
     }
 
@@ -91,6 +113,18 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
     object1 = physicalObjects(physicalObjects.size()-1);
 
     object1->adjustMomentum(gravField);
+
+    if ( deleteList.size() > 0 )
+    {
+      foreach_ ( shape_pointer curShape, deleteList )
+      {
+        cout << "Deleting shape." << endl;
+        shapeList.removeShapeFromList( curShape );
+        MyShape::removeShapeFromList( curShape );
+      }
+    }
+
+    curSimulation->setPhysicalObjects( shapeList ) ;
   }
 
 }
@@ -177,7 +211,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
   if ( curSimulation->getForceCalcMethod() != Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
     calcForcesAll_LessNaive( curSimulation );
-
   }
   else //Calculations with Octree
   {
@@ -212,20 +245,6 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation)
 
       distance = object1->getDistanceToObject( object2 );
 
-      minSep = object1->getRadius() + object2->getRadius();
-
-      if (distance < minSep)
-      {
-        if (curSimulation->isAllElastic() )
-        {
-          elasticCollision( object1, object2, curSimulation->getDT() );
-        }
-        else if (curSimulation->isAllInelastic() ){
-          object1->mergeWith( object2 );
-          deleteList.resize(deleteList.size()+1);
-          deleteList.insert_element(deleteList.size()-1, object2);
-        }
-      }
     }
   }
   if ( deleteList.size() > 0 )

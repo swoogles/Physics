@@ -246,7 +246,7 @@ void idle() {
     // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
     string forceCalculations = globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD );
 
-    calcCollisionsAll( globalSimulation );
+    // calcCollisionsAll( globalSimulation );
 
     calcForcesAll( globalSimulation );
 
