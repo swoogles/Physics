@@ -32,7 +32,7 @@ typedef boost::shared_ptr<MyShape> shape_pointer;
  *  both objects have their elastic bools on.
  *
  */
-void elasticCollision( boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt);
+void elasticCollision( shape_pointer object1, shape_pointer object2, float dt);
 
 ShapeList calcForceOnObject_Octree( shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt);
 
@@ -59,7 +59,7 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation);
  *  \brief Calculates magnitude of the force of gravity between 2 objects
  *
  */
-void calcForceGrav( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) ;
+void calcForceGrav( sgVec4 gravVec, shape_pointer object1, shape_pointer object2, float dt ) ;
 
 /*! \relates MyShape
  *  \brief Will eventually calculate drag force on a single object
