@@ -40,7 +40,7 @@
 #include "Physics/WorldSettings.h"
 
 //Output
-#include "Observation/Recorder.h"
+// #include "Observation/Recorder.h"
 #include "Observation/Timer.h"
 
 //File interaction
@@ -79,7 +79,7 @@ static int control_center_num;
 
 // GLOBALS
 boost::shared_ptr<Simulation> globalSimulation;
-boost::shared_ptr<Recorder> globalRecorder;
+// boost::shared_ptr<Recorder> globalRecorder;
 boost::shared_ptr<BillProperties> globalProperties;
 
 control_center globalControlCenter;
@@ -141,11 +141,11 @@ void display(void)
   //Recording section
   // TODO A different version of this function should be called if I want to record, rather 
   // than a branch here.
-  if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame() && ! globalSimulation->isPaused() ) {
+  // if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame() && ! globalSimulation->isPaused() ) {
 
-    globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-  }
-  globalRecorder->incCurFrame();
+  //   globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+  // }
+  // globalRecorder->incCurFrame();
 
   puDisplay();
   glutSwapBuffers();
@@ -183,8 +183,8 @@ void init(char simulation) {
 
   cout << "Read properties" << endl;
 
-  globalRecorder = make_shared<Recorder>();
-  globalRecorder->imageMagickMucking();
+  // globalRecorder = make_shared<Recorder>();
+  // globalRecorder->imageMagickMucking();
 
   // boost::strict_scoped_thread<> t((boost::thread( sneeze )));
 
@@ -215,8 +215,8 @@ void init(char simulation) {
   curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 
   char pathName[]="/media/bfrasure/Media Hog/VideoOutput/outFrame";
-  globalRecorder->setPath(pathName);
-  globalRecorder->setSkipFrames(1);
+  // globalRecorder->setPath(pathName);
+  // globalRecorder->setSkipFrames(1);
 
   //openShapes(saveFileName);
 
@@ -337,9 +337,9 @@ int main(int argcp, char **argv) {
 
   init( simulation );
 
-  if ( record == 'r' ){
-    globalRecorder->setRecording(true);
-  }
+  // if ( record == 'r' ){
+  //   globalRecorder->setRecording(true);
+  // }
 
   //Creates main menu bar
   globalMainDisplay.init( globalSimulation );
