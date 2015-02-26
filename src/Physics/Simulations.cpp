@@ -633,7 +633,7 @@ boost::shared_ptr<Simulation> Simulations::createSimulation( char simNumber )
   }
   if ( simNumber == '1' ) {
     // newSimulation = Simulations::bodyFormation_ArbitraryList( 200 );
-    newSimulation = Simulations::bodyFormation_ArbitraryList( 1500 );
+    newSimulation = Simulations::bodyFormation_ArbitraryList( 500 );
   }
   if ( simNumber == '2' ) {
 	  newSimulation = Simulations::disruption_ArbitraryList();
