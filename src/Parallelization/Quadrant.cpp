@@ -39,7 +39,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   ,containsBody(false)
   ,level(level)
   // ,weightedPosition({0,0,0})
-  ,borders(make_shared<Box>() )
+  ,borders(boost::make_shared<Box>() )
   ,quadOctree(extents[2][2][2])
   
 {
@@ -63,7 +63,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
 
   sgVec3 CoMColor = { 0, 1, 0 };
 
-  centerOfMassRepresentation = make_shared<Circle>();
+  centerOfMassRepresentation = boost::make_shared<Circle>();
   centerOfMassRepresentation->setPos( 0,0,0 );
   centerOfMassRepresentation->setRadius( 1.0 );
   centerOfMassRepresentation->setColor(CoMColor);
@@ -129,7 +129,7 @@ void Quadrant::subDivideAll( int levels, int numCells )
 
 
           QuadrantPointer_t insertionQuadrant;
-          quadOctree[x][y][z] = make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
+          quadOctree[x][y][z] = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
           targetQuadrant = quadOctree[x][y][z];
           targetQuadrant->subDivideAll(levels, 4);
 

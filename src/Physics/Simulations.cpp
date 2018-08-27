@@ -27,12 +27,12 @@ void Simulations::largeGridAlternating() {
 		for (int j = 0; j < gridSide; j++) {
       //int curIndex = i*gridSide + j;
 			if ( (i*gridSide + j) % 2 == 0) {
-				curShape = make_shared<Circle>();
+				curShape = boost::make_shared<Circle>();
 				startPos[2] = 5;
 
 			}
 			else {
-				curShape = make_shared<Box>();
+				curShape = boost::make_shared<Box>();
 				startPos[2] = -5;
 
 			}
@@ -62,7 +62,7 @@ void Simulations::simpleOrbit() {
 
   shape_pointer curShape;
 
-	curShape = make_shared<Circle>();
+	curShape = boost::make_shared<Circle>();
 	curShape->setPos(startPos);
 	curShape->setRadius(sunRadius * sunRadiusScale);
 	curShape->setMomentum(startMom);
@@ -73,7 +73,7 @@ void Simulations::simpleOrbit() {
 
 	sgNegateVec4(startMom);
 
-	curShape = make_shared<Circle>();
+	curShape = boost::make_shared<Circle>();
 	curShape->setPos(startPos);
 	curShape->setRadius(earthRadius*earthRadiusScale);
 	curShape->setMomentum(startMom);
@@ -83,7 +83,7 @@ void Simulations::simpleOrbit() {
 
   SimulationPointer_t Simulations::billiards1(int numRows) {
 
-  SimulationPointer_t curSimulation = make_shared<Simulation>();
+  SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
   curSimulation->setDT(0);
 	curSimulation->makeAllElastic();
 	curSimulation->setGravBetweenObjects(false);
@@ -111,7 +111,7 @@ void Simulations::simpleOrbit() {
 
   shape_pointer curShape;
 
-	curShape = make_shared<Circle>();
+	curShape = boost::make_shared<Circle>();
 	curShape->setPos(numRows, numRows*3, 0);
 	curShape->setMass(cueMass);
 	curShape->setRadius(ballRadius);
@@ -123,7 +123,7 @@ void Simulations::simpleOrbit() {
 	int cutOff = numRows*2;
 	for (int i = 1; i < numRows+1; i++) {
 		for (int j = i; j < cutOff; j+= 2) {
-			curShape = make_shared<Circle>();
+			curShape = boost::make_shared<Circle>();
 			curShape->setPos(j*1.7, i*2.5, 0);
 			curShape->setMass(ballMass);
 			curShape->setRadius(ballRadius);
@@ -139,7 +139,7 @@ void Simulations::simpleOrbit() {
 
 SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows)
 {
-  SimulationPointer_t curSimulation = make_shared<Simulation>();
+  SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
   curSimulation->setDT(.003);
 	curSimulation->makeAllElastic();
 	curSimulation->setGravBetweenObjects(false);
@@ -156,7 +156,7 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows)
     
   shape_pointer shapeForInsertion;
 
-	shapeForInsertion = make_shared<Circle>();
+	shapeForInsertion = boost::make_shared<Circle>();
 	shapeForInsertion->setPos(numRows, numRows*3, 0);
 	shapeForInsertion->setMass(cueMass);
 	shapeForInsertion->setRadius(ballRadius);
@@ -166,7 +166,7 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows)
 
 	for (int i = 0; i < numRows; i++) {
 		for (int j = 0; j < numRows; j++) {
-			shapeForInsertion = make_shared<Circle>();
+			shapeForInsertion = boost::make_shared<Circle>();
 			shapeForInsertion->setPos(j*3, i*3, 0);
 			shapeForInsertion->setMass(ballMass);
 			shapeForInsertion->setRadius(ballRadius);
@@ -183,7 +183,7 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows)
 
 
 SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows) {
-  SimulationPointer_t curSimulation = make_shared<Simulation>();
+  SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
   curSimulation->setDT(.003);
 	curSimulation->makeAllElastic();
 	curSimulation->setGravBetweenObjects(false);
@@ -201,7 +201,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows) {
 
   shape_pointer shapeForInsertion;
 
-	shapeForInsertion = make_shared<Circle>();
+	shapeForInsertion = boost::make_shared<Circle>();
 	shapeForInsertion->setPos(numRows, numRows*5, 0);
 	shapeForInsertion->setMass(cueMass);
 	shapeForInsertion->setRadius(cueRadius);
@@ -216,7 +216,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows) {
 		for (int j = 0; j < numRows; j++) {
       for (int z = 0; z < numRows; z++) {
 
-			shapeForInsertion = make_shared<Circle>();
+			shapeForInsertion = boost::make_shared<Circle>();
 			shapeForInsertion->setPos(j*4, i*4, z*4);
 			shapeForInsertion->setMass(ballMass);
 			shapeForInsertion->setRadius(ballRadius);
@@ -245,11 +245,11 @@ SimulationPointer_t Simulations::simpleCollision_ArbitraryList() {
 
   ShapeList physicalObjects;
 
-  SimulationPointer_t curSimulation = make_shared<Simulation>();
+  SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
   curSimulation->setDT( dt );
   shape_pointer curShape;
 
-	curShape = make_shared<Circle>();
+	curShape = boost::make_shared<Circle>();
 	curShape->setPos(startPlacement);
 	curShape->setMass(aMass);
 	curShape->setRadius(aRadius*2);
@@ -262,7 +262,7 @@ SimulationPointer_t Simulations::simpleCollision_ArbitraryList() {
 	startPlacement[1] = 0;
 	startPlacement[2] = 0;
 
-	curShape = make_shared<Circle>();
+	curShape = boost::make_shared<Circle>();
 	curShape->setPos(startPlacement);
 	curShape->setMass(bMass);
 	curShape->setRadius(bRadius*2);
@@ -284,7 +284,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList()
 	float pieceMass = pow(pieceRadius, 3.0);
 	sgVec4 startMomentum = { pieceMass/35, 0, 0 };
 
-  shape_pointer curShape = make_shared<Circle>();
+  shape_pointer curShape = boost::make_shared<Circle>();
   curShape->setPos(-pieceRadius * 30, 0, 0);
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
@@ -300,7 +300,7 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
   float dt = 1000;
   int numPieces = 2;
 
-  SimulationPointer_t curSimulation = make_shared<Simulation>();
+  SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
   curSimulation->setDT( dt );
 	curSimulation->makeAllInelastic();
 	curSimulation->setGravBetweenObjects(true);
@@ -329,7 +329,7 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
   startPlacement[2]= offset;
   startPlacement[3]= 0;
 
-  circle_pointer oldCircle = make_shared<Circle>();
+  circle_pointer oldCircle = boost::make_shared<Circle>();
   oldCircle->setPos( startPlacement );
   oldCircle->setMass(pieceMass);
   oldCircle->setRadius(pieceRadius);
@@ -340,12 +340,12 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
   physicalObjects.addShapeToList( oldCircle );
   totalMass += curCircle->getMass();
 
-  // curCircle = make_shared<Circle>(*oldCircle);
+  // curCircle = boost::make_shared<Circle>(*oldCircle);
 
 
   startPlacement[0]= -offset;
 
-  curShape = make_shared<Circle>();
+  curShape = boost::make_shared<Circle>();
   curShape->setPos( startPlacement );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
@@ -358,31 +358,8 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
 
   startPlacement[0]= -offset;
 
-  // curShape = make_shared<Circle>(*curShape);
-  // curShape = make_shared<Circle>();
-  // curShape->setPos( startPlacement );
-  // curShape->setMass(pieceMass);
-  // curShape->setRadius(pieceRadius);
-  // curShape->setMomentum(startMomentum);
-  // curShape->setDensity(objectDensity);
-  // curShape->setColor(newColor);
-
-  // physicalObjects.addShapeToList( curShape );
-  // totalMass += curShape->getMass();
-
   startPlacement[0]= -offset;
   startPlacement[1]= -offset;
-
-  // curShape = make_shared<Circle>();
-  // curShape->setPos( startPlacement );
-  // curShape->setMass(pieceMass);
-  // curShape->setRadius(pieceRadius);
-  // curShape->setMomentum(startMomentum);
-  // curShape->setDensity(objectDensity);
-  // curShape->setColor(newColor);
-
-  // totalMass += curShape->getMass();
-  // curSimulation->adjustTotalMass( totalMass );
 
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
@@ -390,7 +367,7 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
 
 SimulationPointer_t Simulations::QuadrantTestingNonRandom() 
 {
-  SimulationPointer_t curSimulation = make_shared<Simulation>();
+  SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
   curSimulation->setDT(1000);
 	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
@@ -414,7 +391,7 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
   float d= 1.8e3;
 
   //#0
-  curShape = make_shared<Circle>();
+  curShape = boost::make_shared<Circle>();
   curShape->setPos( -(7/8.0 * d), +(3/8.0 * d), 1 );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
@@ -426,7 +403,7 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
   totalMass += curShape->getMass();
 
   //#1
-  curShape = make_shared<Circle>();
+  curShape = boost::make_shared<Circle>();
   curShape->setPos( +(5/8.0 * d), +(7/8.0 * d), 1 );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
@@ -438,7 +415,7 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
   totalMass += curShape->getMass();
 
   //#2
-  curShape = make_shared<Circle>();
+  curShape = boost::make_shared<Circle>();
   curShape->setPos( +(7/8.0 * d), +(7/8.0 * d), 1 );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
@@ -450,7 +427,7 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
   totalMass += curShape->getMass();
 
   //#3
-  curShape = make_shared<Circle>();
+  curShape = boost::make_shared<Circle>();
   curShape->setPos( +(7/8.0 * d), +(2/8.0 * d), 1 );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
@@ -462,7 +439,7 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
   totalMass += curShape->getMass();
 
   //#4
-  curShape = make_shared<Circle>();
+  curShape = boost::make_shared<Circle>();
   curShape->setPos( -(5/8.0 * d), +(1/8.0 * d), 1 );
   curShape->setMass(pieceMass);
   curShape->setRadius(pieceRadius);
@@ -480,7 +457,7 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
 
 SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces) 
 {
-  SimulationPointer_t curSimulation = make_shared<Simulation>();
+  SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
   curSimulation->setDT(1000);
 	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
@@ -513,7 +490,7 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
 			sgNegateVec4(startPlacement);
 		}
 
-    curShape = make_shared<Circle>();
+    curShape = boost::make_shared<Circle>();
     curShape->setPos( startPlacement );
 		curShape->setMass(pieceMass);
 		curShape->setRadius(pieceRadius);
@@ -538,7 +515,7 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
 
 SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) 
 {
-  SimulationPointer_t curSimulation = make_shared<Simulation>();
+  SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
 	curSimulation->setDT(1000);
 	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
@@ -570,7 +547,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
     // Apply general group momentum to individual pieces momentum
     sgAddVec4( startMomentum, groupMomentum );
 
-		curShape = make_shared<Circle>();
+		curShape = boost::make_shared<Circle>();
 		curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		curShape->setMass(pieceMass);
 		curShape->setRadius(pieceRadius);

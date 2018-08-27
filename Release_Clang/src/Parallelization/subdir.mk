@@ -4,19 +4,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-./src/Observation/Timer.cpp \
-./src/Observation/Observer.cpp
+../src/Parallelization/Quadrant.cpp
 
 OBJS += \
-./src/Observation/Timer.o \
-./src/Observation/Observer.o
+../src/Parallelization/Quadrant.o
 
 CPP_DEPS += \
-./src/Observation/Timer.d \
-./src/Observation/Observer.d
+../src/Parallelization/Quadrant.d
 
 # Each subdirectory must supply rules for building sources it contributes
-src/Observation/%.o: ../src/Observation/%.cpp
+src/ShapeFiles/%.o: ../src/Parallelization/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
 	clang++ -std=c++0x  -Wall  -g -Imgl -Iplibsg -Iplibul -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"

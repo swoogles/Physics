@@ -7,56 +7,6 @@
 
 #include "control_center.h"
 
-//Group 1
-// puGroup * control_center::placement_group;
-// puaSelectBox * control_center::pick_object;
-// puText * control_center::object_name_label;
-// puInput * control_center::object_name_input;
-// 
-// puText * control_center::placement_label;
-// puText * control_center::placement_label2;
-// puInput * control_center::placementX_in;
-// puInput * control_center::placementY_in;
-// puInput * control_center::placementZ_in;
-// 
-// puText * control_center::momentum_label;
-// puText * control_center::momentum_label2;
-// puInput * control_center::momentumX_in;
-// puInput * control_center::momentumY_in;
-// puInput * control_center::momentumZ_in;
-// 
-// puText * control_center::mass_label;
-// puInput * control_center::mass_in;
-// 
-// puButton * control_center::clear_objects;
-
-//Group 2
-// puGroup * control_center::runtime_group;
-// puText * control_center::speed_c_label;
-// puInput * control_center::speed_c_input;
-
-//Control speed
-// puOneShot * control_center::inc_dt_button;
-// puOneShot * control_center::dec_dt_button;
-// puButton * control_center::pause_dt_button;
-
-//Control viewpoint
-// puArrowButton * control_center::inc_rotSide_button;
-// puArrowButton * control_center::dec_rotSide_button;
-// puButton * control_center::pause_rotSide_button;
-// puArrowButton * control_center::rotUp_button;
-// puArrowButton * control_center::rotDown_button;
-
-//Autoscale
-// puButton * control_center::autoScale_button;
-
-
-// bool control_center::showingRuntime = false;
-
-// sgVec3 control_center::userDat = {2,-1,0};
-
-// puButton * control_center::viewSwitcher;
-
 using namespace std;
 
 void control_center::clearShapes(puObject * caller) {
@@ -227,8 +177,6 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
 
   curHeight -= elementHeight;
 
-
-  //curHeight = 200;
   curX = startX;
 
   dec_rotSide_button = new puArrowButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight, PUARROW_LEFT);
@@ -269,14 +217,6 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
 
   runtime_group->close();
   // runtime_group->hide();
-
-  /*
-     button = new puButton ( 90, 100, 90+16, 100+16, PUBUTTON_RADIO ) ;
-     button->setLabelPlace ( PUPLACE_CENTERED_RIGHT ) ;
-     button->setLabel ( "Label" ) ;
-     button->setValue ( 1 ) ;
-     button->setCallback(flipAutoScaling);
-     */
 
 }
 

@@ -41,7 +41,6 @@
 #include "Physics/WorldSettings.h"
 
 //Output
-#include "Observation/Recorder.h"
 #include "Observation/Timer.h"
 
 //File interaction
@@ -80,7 +79,6 @@ static int control_center_num;
 
 // GLOBALS
 boost::shared_ptr<Simulation> globalSimulation;
-boost::shared_ptr<Recorder> globalRecorder;
 boost::shared_ptr<BillProperties> globalProperties;
 
 control_center globalControlCenter;
@@ -120,33 +118,15 @@ void display(void)
       curShape->draw();
     }
 
-
     // foreach_ ( shape_pointer curShape, MyShape::shapes )
     // {
     //   curShape->draw();
     // }
 
-
-
-    // #pragma omp parallel for reduction(+:threadSum)
-    // for (localI = 0; localI < num_steps; localI+=1)
-    // {
-    //   double localX = ( (localI)+0.5)*step;
-    //   threadSum += 4.0/(1.0+localX*localX);
-    // }
   }
 
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
-
-  //Recording section
-  // TODO A different version of this function should be called if I want to record, rather 
-  // than a branch here.
-  if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame() && ! globalSimulation->isPaused() ) {
-
-    globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-  }
-  globalRecorder->incCurFrame();
 
   puDisplay();
   glutSwapBuffers();
@@ -160,44 +140,49 @@ void controlDisplay(void) {
 
   puDisplay(control_center_num);
 
-  //puDisplay();
   glutSwapBuffers();
   glutPostRedisplay();
-
-  //glutSetWindow(main_window);
 }
 
 double step;
 
 void init(char simulation) {
-  cout.flush();
+   cout << "lookin for simulation: "  << simulation;
   glViewport(-WW,WW,-WH,WH);
 
   glMatrixMode(GL_MODELVIEW);
+  cout << "0.04" ;
   glLoadIdentity();
 
-  globalProperties = make_shared<BillProperties>();
+  cout << "0.1" ;
+  globalProperties = boost::make_shared<BillProperties>();
   globalProperties->readProperties();
 
-  globalRecorder = make_shared<Recorder>();
-  globalRecorder->imageMagickMucking();
-
-  // boost::strict_scoped_thread<> t((boost::thread( sneeze )));
-
+  cout << "0.2" ;
   Observer::init();
 
   Observer::observers.resize(Observer::observers.size()+1);
   Observer::observers(0) = new Observer;
+  cout << "0.3" ;
   Observer * curObserver =  Observer::observers(0);
   Observer::setCurObserver(0);
+  cout << "4" ;
+  cout.flush();
 
-  string Text = globalProperties->at( BillProperties::NUM_SHAPES );
   int numShapes;
-  if ( ! (istringstream(Text) >> numShapes) ) numShapes = 0;
+    cout << "5" ;
+    cout.flush();
+//  if ( ! (istringstream(Text) >> numShapes) ) numShapes = 0;
+    cout << "6" ;
+    cout.flush();
 
   // Determine and create simulation
+  cout << "a" ;
   globalSimulation = Simulations::createSimulation( simulation, numShapes );
+    cout.flush();
+  cout << "b" ;
   MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
+    cout.flush();
 
   globalSimulation->setForceCalcMethodByString( globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD ) );
 
@@ -216,10 +201,6 @@ void init(char simulation) {
 
   string outFileName = "outFrame";
   string extension = "jpg";
-  globalRecorder->setOutFileName( outFileName );
-  globalRecorder->setPath( globalProperties->at( BillProperties::OUTPUT_DIRECTORY ) );
-  globalRecorder->setExtension( extension );
-  globalRecorder->setSkipFrames(1);
 
   // Not using this for now because of all the corrupted list problems I was getting
   bool parallelize;
@@ -243,10 +224,7 @@ void idle() {
     {
       globalSimulation->resetXYMinsAndMaxes();
     }
-    // cout << "Function:" << BOOST_CURRENT_FUNCTION << endl;
     string forceCalculations = globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD );
-
-    // calcCollisionsAll( globalSimulation );
 
     calcForcesAll( globalSimulation );
 
@@ -254,6 +232,7 @@ void idle() {
     globalMainDisplay.update();
   }
 
+  // Should just directly call Observer::getCurObserverInstance()
   int curObserverIdx = Observer::getCurObserver();
   Observer * curObserver =  Observer::observers(curObserverIdx);
   curObserver->update( globalSimulation->getDT() );
@@ -268,6 +247,7 @@ void idle() {
 }
 
 int main(int argcp, char **argv) {
+    cout << "Anything?!?!?!";
   int mainWinPosX = 100;
   int mainWinPosY = 50;
   int mainWinHeight = 720;
@@ -294,14 +274,9 @@ int main(int argcp, char **argv) {
   glutTimerFunc(1000, myTimer, FPS);
 
   puInit();
-  char record = argv[1][0];
   char simulation = argv[2][0];
 
   init( simulation );
-
-  if ( record == 'r' ){
-    globalRecorder->setRecording(true);
-  }
 
   //Creates main menu bar
   globalMainDisplay.init( globalSimulation );

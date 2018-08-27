@@ -4,10 +4,11 @@ const char BillProperties::FORCE_CALCULATION_METHOD[] = "forceCalculationMethod"
 const char BillProperties::SIMULATION_DT[] = "dt";
 const char BillProperties::PARALLEL[] = "parallel";
 const char BillProperties::OUTPUT_DIRECTORY[] = "outputDirectory";
-const char BillProperties::NUM_SHAPES[] = "numShapes";
 
 string BillProperties::at( const char target[]  )
 {
+
+    cout << "getting value at: " << target << endl;
   return properties.at( target );
 }
 

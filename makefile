@@ -8,9 +8,8 @@ CC=g++
 
 OPENGL_LIBS := -lGL -lGLU -lglut
 PLIB_LIBS := -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt
-MAGICK_LIBS := -lMagick++ -lMagickCore
 BOOST_LIBS := -lboost_system -lboost_timer -lboost_chrono -lboost_thread
-LIBS :=  $(OPENGL_LIBS) $(PLIB_LIBS) $(MAGICK_LIBS) $(BOOST_LIBS) -ljpeg  -lrt -fopenmp -Wc++0x-compat
+LIBS :=  $(OPENGL_LIBS) $(PLIB_LIBS) $(BOOST_LIBS) -ljpeg  -lrt -fopenmp -Wc++0x-compat
 
 DEPENDENCY_OPTIONS := -MMD -MP -MF
 DEPENDENCY_CONVERSION := 

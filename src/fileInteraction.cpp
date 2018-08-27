@@ -61,7 +61,7 @@ void openShapes(char * fileName) {
 
 		curFile >> type;
 		if (type == 1) {
-			MyShape::shapes(i) = make_shared<Circle>(); 
+			MyShape::shapes(i) = boost::make_shared<Circle>();
 			curShape = MyShape::shapes(i);
 
 			//Set start position
