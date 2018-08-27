@@ -169,7 +169,7 @@ void init(char simulation) {
   cout << "4" ;
   cout.flush();
 
-  int numShapes;
+  int numShapes = 500;
     cout << "5" ;
     cout.flush();
 //  if ( ! (istringstream(Text) >> numShapes) ) numShapes = 0;
