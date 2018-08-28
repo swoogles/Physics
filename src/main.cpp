@@ -151,38 +151,24 @@ void init(char simulation) {
   glViewport(-WW,WW,-WH,WH);
 
   glMatrixMode(GL_MODELVIEW);
-  cout << "0.04" ;
   glLoadIdentity();
 
-  cout << "0.1" ;
   globalProperties = boost::make_shared<BillProperties>();
   globalProperties->readProperties();
 
-  cout << "0.2" ;
   Observer::init();
 
   Observer::observers.resize(Observer::observers.size()+1);
   Observer::observers(0) = new Observer;
-  cout << "0.3" ;
   Observer * curObserver =  Observer::observers(0);
   Observer::setCurObserver(0);
-  cout << "4" ;
-  cout.flush();
 
   int numShapes = 500;
-    cout << "5" ;
-    cout.flush();
 //  if ( ! (istringstream(Text) >> numShapes) ) numShapes = 0;
-    cout << "6" ;
-    cout.flush();
 
   // Determine and create simulation
-  cout << "a" ;
   globalSimulation = Simulations::createSimulation( simulation, numShapes );
-    cout.flush();
-  cout << "b" ;
   MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
-    cout.flush();
 
   globalSimulation->setForceCalcMethodByString( globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD ) );
 
@@ -247,7 +233,6 @@ void idle() {
 }
 
 int main(int argcp, char **argv) {
-    cout << "Anything?!?!?!";
   int mainWinPosX = 100;
   int mainWinPosY = 50;
   int mainWinHeight = 720;

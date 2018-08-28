@@ -7,8 +7,6 @@ const char BillProperties::OUTPUT_DIRECTORY[] = "outputDirectory";
 
 string BillProperties::at( const char target[]  )
 {
-
-    cout << "getting value at: " << target << endl;
   return properties.at( target );
 }
 
