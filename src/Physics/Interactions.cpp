@@ -320,13 +320,11 @@ void calcForceGrav( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::s
 }
 
 //TODO Fix and only apply to a single shape
-void calcDrag(float dt) {
+void calcDrag(float dt, compressed_vector<shape_pointer> shapes) {
   float dragConstant = -30;
   sgVec4 dragForce;
-  boost::shared_ptr<MyShape> curShape;
 
-  for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
-    curShape = MyShape::shapes(i);
+  foreach_ ( shape_pointer curShape, MyShape::shapes ) {
     curShape->getVelocity(dragForce);
     sgScaleVec4(dragForce, dragConstant);
     sgScaleVec4(dragForce, dt);
