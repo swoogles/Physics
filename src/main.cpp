@@ -111,17 +111,10 @@ void display(void)
   if ( MyShape::shapes.size() > 0 )
   {
 
-    shape_pointer curShape;
-    for (unsigned int i = 0; i < MyShape::shapes.size(); i++) 
-    {
-      curShape = MyShape::shapes(i);
-      curShape->draw();
-    }
-
-    // foreach_ ( shape_pointer curShape, MyShape::shapes )
-    // {
-    //   curShape->draw();
-    // }
+     foreach_ ( shape_pointer curShape, MyShape::shapes )
+     {
+       curShape->draw();
+     }
 
   }
 
