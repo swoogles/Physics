@@ -99,8 +99,7 @@ void display(void)
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
 
-  int curObserverIdx = Observer::getCurObserver();
-  Observer * curObserver =  Observer::observers(curObserverIdx);
+  Observer * curObserver = Observer::getCurObserver();
   curObserver->getView();
   curObserver->getPos(curPos);
 
@@ -110,12 +109,10 @@ void display(void)
   glMatrixMode(GL_MODELVIEW);
   if ( MyShape::shapes.size() > 0 )
   {
-
      foreach_ ( shape_pointer curShape, MyShape::shapes )
      {
        curShape->draw();
      }
-
   }
 
   glMatrixMode(GL_PROJECTION);
@@ -212,8 +209,7 @@ void idle() {
   }
 
   // Should just directly call Observer::getCurObserverInstance()
-  int curObserverIdx = Observer::getCurObserver();
-  Observer * curObserver =  Observer::observers(curObserverIdx);
+  Observer * curObserver = Observer::getCurObserver();
   curObserver->update( globalSimulation->getDT() );
 
   // Not sure if I can use Observer the way that I want to here, due to the constaints of the input methods

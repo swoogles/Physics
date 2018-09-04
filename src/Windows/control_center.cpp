@@ -227,8 +227,7 @@ void control_center::uncheckAutoScaling() {
 
 void control_center::flipAutoScaling(puObject * caller) {
   // TODO Get this actually working. Don't think it's doing anything right now.
-  int curObserverIdx = Observer::getCurObserver();
-  Observer * curObserver =  Observer::observers(curObserverIdx);
+  Observer * curObserver = Observer::getCurObserver();
 
   bool isAutoScaling = curObserver->isAutoScaling();
   if (isAutoScaling) {
@@ -274,30 +273,30 @@ void control_center::pause_cb(puObject * caller) {
 }
 
 void control_center::rotRight(puObject *) {
-  Moveable * curObserver =  Observer::observers(Observer::getCurObserver());
+  Moveable * curObserver =  Observer::getCurObserver();
   sgVec3 angVelocity = {0,.5,0};
   curObserver->adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotLeft(puObject *) {
-  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+  Observer * curObserver =  Observer::getCurObserver();
   sgVec3 angVelocity = {0,-.5,0};
   curObserver->adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotUp(puObject *) {
-  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+  Observer * curObserver =  Observer::getCurObserver();
   sgVec3 angVelocity = {+.5,0,0};
   curObserver->adjustAngVelocity(angVelocity);
 }
 void control_center::rotDown(puObject *) {
-  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+  Observer * curObserver =  Observer::getCurObserver();
   sgVec3 angVelocity = {-.5,0,0};
   curObserver->adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotStop(puObject *) {
-  Observer * curObserver =  Observer::observers(Observer::getCurObserver());
+  Observer * curObserver =  Observer::getCurObserver();
   sgVec3 angVelocity = {0,0,0};
   curObserver->setAngVelocity(angVelocity);
 }

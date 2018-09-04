@@ -72,8 +72,8 @@ void Observer::setCurObserver(int newLooker) {
 	curObserver = newLooker;
 }
 
-int Observer::getCurObserver() {
-	return curObserver;
+Observer * Observer::getCurObserver() {
+	return observers(curObserver);
 }
 
 void Observer::update(float dt) {

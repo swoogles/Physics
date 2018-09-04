@@ -64,7 +64,7 @@ public:
 	//! Switches active Observer to newLooker
 	static void setCurObserver(int newLooker);
 	//! Returns an integer indicating the active Observer
-	static int getCurObserver();
+	static Observer * getCurObserver();
 
 	//! Stores all created Observers
 	static compressed_vector<Observer *> observers;
