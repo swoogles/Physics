@@ -9,19 +9,21 @@
 
 using namespace std;
 
+void stopAutoScaling() {
+	control_center::uncheckAutoScaling();
+	WorldSettings::setAutoScaling(false);
+}
+
 void myMouse(int button, int state, int x, int y) {
 	if (state == GLUT_UP) {
-    int curObserverIdx = Observer::getCurObserver();
-    Observer * curObserver =  Observer::observers(curObserverIdx);
+		Observer * curObserver = Observer::getCurObserver();
 		if (button == GLUT_WHEEL_UP) {
-      curObserver->zoomIn();
-			control_center::uncheckAutoScaling();
-			WorldSettings::setAutoScaling(false);
+			curObserver->zoomIn();
+			stopAutoScaling();
 		}
 		if (button == GLUT_WHEEL_DOWN) {
 			curObserver->zoomOut();
-			control_center::uncheckAutoScaling();
-			WorldSettings::setAutoScaling(false);
+			stopAutoScaling();
 		}
 
 	}
