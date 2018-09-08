@@ -137,14 +137,17 @@ void openGlInit() {
   glLoadIdentity();
 }
 
+void updateMinsAndMaxes(boost::shared_ptr<Simulation> simulation) {
+  sgVec4 curPos;
+    foreach_ ( shape_pointer curShape, simulation->getPhysicalObjects().getShapes() )
+    {
+        curShape->getPos(curPos);
+        simulation->updateXYMinsAndMaxes(curPos);
+    }
+}
+
 void determineViewBasedOnSimulation(boost::shared_ptr<Simulation> simulation, Observer * observer) {
   float minX, minY, maxX, maxY;
-  sgVec4 curPos;
-  foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
-  {
-    curShape->getPos(curPos);
-    globalSimulation->updateXYMinsAndMaxes(curPos);
-  }
   globalSimulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
   observer->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 }
@@ -165,7 +168,7 @@ void init(char simulation) {
   MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
   globalSimulation->setForceCalcMethodByString( globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD ) );
-
+  updateMinsAndMaxes(globalSimulation);
   determineViewBasedOnSimulation(globalSimulation, curObserver);
 
   // This is the first "n" part in "n log(n)"
