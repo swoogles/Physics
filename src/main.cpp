@@ -1,8 +1,6 @@
 /*
- * main.cpp
- *
  *  Created on: Jul 10, 2011
- *      Author: brasure
+ *      Author: Bill Frasure
  */
 
 #define PU_USE_GLUT 1
@@ -11,15 +9,9 @@
 #include <GL/glu.h>
 
 #include <boost/foreach.hpp>
-#include <boost/ref.hpp>
-#include <boost/thread/thread.hpp>
-// #include <boost/thread/scoped_thread.hpp>
 
 #include <float.h>
 #include <string>
-#include <sstream>
-
-// #include <omp.h>
 
 #include "BillProperties.h"
 #include "inputFunctions.h"
@@ -29,7 +21,7 @@
 #include "Windows/main_display.h"
 
 //All PLIB includes (What a great library)
-#include <plib/sg.h>
+#include <plib/sg.h> // A better main class wouldn't be reference sgVecs.
 #include <plib/pu.h>
 
 //Observers
@@ -40,33 +32,14 @@
 #include "Physics/Simulations.h"
 #include "Physics/WorldSettings.h"
 
-//Output
-#include "Observation/Timer.h"
-
-//File interaction
-#include "fileInteraction.h"
-
 #define WW 5
 #define WH 5
 #define FPS 1
 
 #define foreach_  BOOST_FOREACH                                                                                              
 
-using namespace std;
-using namespace boost::numeric::ublas;
-using boost::numeric::ublas::compressed_vector;
 using boost::shared_ptr;
-using boost::make_shared;
-
-typedef boost::shared_ptr<MyShape> shape_pointer;
-
-int curStep = 0;
-double totalTime = 0;
-
-void sneeze()
-{
-  cout << "Achoo!" << endl;
-}
+using boost::make_shared; // TODO Target this for removal
 
 void myTimer(int v) {
   glutPostRedisplay();
@@ -89,8 +62,6 @@ main_window_UI globalMainDisplay;
 // TODO Allow an arbitrary list of objects to be displayed
 void display(void)
 {
-  glutSetWindow(main_window);
-
   glClearColor(0,0,0,0);
   glClear(GL_COLOR_BUFFER_BIT);
 
@@ -128,22 +99,11 @@ void controlDisplay(void) {
   glutPostRedisplay();
 }
 
-double step;
-
 void openGlInit() {
   glViewport(-WW,WW,-WH,WH);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-}
-
-void updateMinsAndMaxes(boost::shared_ptr<Simulation> simulation) {
-  sgVec4 curPos;
-    foreach_ ( shape_pointer curShape, simulation->getPhysicalObjects().getShapes() )
-    {
-        curShape->getPos(curPos);
-        simulation->updateXYMinsAndMaxes(curPos);
-    }
 }
 
 void determineViewBasedOnSimulation(boost::shared_ptr<Simulation> simulation, Observer * observer) {
@@ -168,7 +128,7 @@ void init(char simulation) {
   MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
   globalSimulation->setForceCalcMethodByString( globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD ) );
-  updateMinsAndMaxes(globalSimulation);
+  globalSimulation->updateMinsAndMaxes();
   determineViewBasedOnSimulation(globalSimulation, curObserver);
 
   // This is the first "n" part in "n log(n)"
@@ -203,17 +163,29 @@ void idle() {
 
 }
 
-void mainGlut(int argcp, char **argv) {
-  int mainWinPosX = 100;
-  int mainWinPosY = 50;
-  int mainWinHeight = 720;
-  int mainWinWidth = 1280;
+void configureControlWindow(
+    int mainWinPosX,
+    int mainWinPosY,
+    int mainWinHeight,
+    int mainWinWidth
 
+) {
   int controlWinPosX = mainWinPosX;
   int controlWinPosY = mainWinPosY + mainWinHeight + 30;
   int controlWinWidth = mainWinWidth;
   int controlWinHeight = 200;
 
+
+  glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+  glutInitWindowPosition(controlWinPosX,controlWinPosY);
+  glutInitWindowSize(controlWinWidth,controlWinHeight);
+}
+
+void mainGlut(int argcp, char **argv) {
+  int mainWinPosX = 100;
+  int mainWinPosY = 50;
+  int mainWinHeight = 720;
+  int mainWinWidth = 1280;
 
   glutInit(&argcp, argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -229,11 +201,18 @@ void mainGlut(int argcp, char **argv) {
   glutIdleFunc(idle);
   glutTimerFunc(1000, myTimer, FPS);
 
-  glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-  glutInitWindowPosition(controlWinPosX,controlWinPosY);
-  glutInitWindowSize(controlWinWidth,controlWinHeight);
+  configureControlWindow(
+      mainWinPosX,
+      mainWinPosY,
+      mainWinHeight,
+      mainWinWidth
+  );
+}
 
-
+void postSimulationGlInit() {
+  glutDisplayFunc(controlDisplay);
+  glutMouseFunc(myMouse);
+  glutKeyboardFunc(myKey);
 }
 
 int main(int argcp, char **argv) {
@@ -248,13 +227,9 @@ int main(int argcp, char **argv) {
 
   control_center_num = glutCreateWindow("Control Center");
 
-  glutDisplayFunc(controlDisplay);
-  glutMouseFunc(myMouse);
-  glutKeyboardFunc(myKey);
+  postSimulationGlInit();
 
   globalControlCenter.init( globalSimulation );
-
-  glutSetWindow(main_window);
 
   glutMainLoop();
 
