@@ -60,6 +60,7 @@ void Simulation::refreshQuadrant()
 
 void Simulation::setForceCalcMethodByString( const string& forceCalcMethod )
 {
+    cout <<  forceCalcMethod << endl;
   if ( forceCalcMethod.compare( Simulation::FORCE_CALC_METHOD_OCTREE_STRING ) )
   {
     setForceCalcMethod( Simulation::FORCE_CALC_METHOD_OCTREE );

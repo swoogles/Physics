@@ -153,7 +153,7 @@ void init(char simulation) {
   Observer * curObserver =  Observer::observers(0);
   Observer::setCurObserver(0);
 
-  int numShapes = 500;
+  int numShapes = atoi(globalProperties->at( BillProperties::NUM_SHAPES ).c_str()); //value = 45
 //  if ( ! (istringstream(Text) >> numShapes) ) numShapes = 0;
 
   // Determine and create simulation
