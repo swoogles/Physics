@@ -168,26 +168,9 @@ void init(char simulation) {
 
   globalSimulation->setForceCalcMethodByString( globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD ) );
 
-  char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
-  strcat(saveFileName, "output.dat");
-
   determineViewBasedOnSimulation(globalSimulation, curObserver);
 
-  string outFileName = "outFrame";
-  string extension = "jpg";
-
-  // Not using this for now because of all the corrupted list problems I was getting
-  bool parallelize;
-  if ( globalProperties->at( BillProperties::PARALLEL ).compare( "true" ) )
-  {
-    parallelize = true;
-  }
-  else
-  {
-    parallelize = false;
-  }
-  //openShapes(saveFileName);
-
+  // This is the "n" part in "n log(n)"
   globalSimulation->refreshQuadrant();
 }
 
