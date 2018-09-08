@@ -130,12 +130,29 @@ void controlDisplay(void) {
 
 double step;
 
-void init(char simulation) {
-   cout << "lookin for simulation: "  << simulation;
+void openGlInit() {
   glViewport(-WW,WW,-WH,WH);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
+}
+
+void determineViewBasedOnSimulation(boost::shared_ptr<Simulation> simulation, Observer * observer) {
+  float minX, minY, maxX, maxY;
+  sgVec4 curPos;
+          foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
+        {
+          curShape->getPos(curPos);
+          globalSimulation->updateXYMinsAndMaxes(curPos);
+        }
+  globalSimulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
+  observer->calcMinPullback( 45.0, minX, minY, maxX, maxY);
+
+}
+
+
+void init(char simulation) {
+  openGlInit();
 
   globalProperties = boost::make_shared<BillProperties>();
   globalProperties->readProperties();
@@ -154,15 +171,7 @@ void init(char simulation) {
   char saveFileName[150] = "/media/Media Hog/ProjectOutput/TheReturn/";
   strcat(saveFileName, "output.dat");
 
-  float minX, minY, maxX, maxY;
-  sgVec4 curPos;
-  foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
-  {
-    curShape->getPos(curPos);
-    globalSimulation->updateXYMinsAndMaxes(curPos);
-  }
-  globalSimulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
-  curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
+  determineViewBasedOnSimulation(globalSimulation, curObserver);
 
   string outFileName = "outFrame";
   string extension = "jpg";
