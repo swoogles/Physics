@@ -140,16 +140,14 @@ void openGlInit() {
 void determineViewBasedOnSimulation(boost::shared_ptr<Simulation> simulation, Observer * observer) {
   float minX, minY, maxX, maxY;
   sgVec4 curPos;
-          foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
-        {
-          curShape->getPos(curPos);
-          globalSimulation->updateXYMinsAndMaxes(curPos);
-        }
+  foreach_ ( shape_pointer curShape, globalSimulation->getPhysicalObjects().getShapes() )
+  {
+    curShape->getPos(curPos);
+    globalSimulation->updateXYMinsAndMaxes(curPos);
+  }
   globalSimulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
   observer->calcMinPullback( 45.0, minX, minY, maxX, maxY);
-
 }
-
 
 void init(char simulation) {
   openGlInit();
@@ -170,7 +168,7 @@ void init(char simulation) {
 
   determineViewBasedOnSimulation(globalSimulation, curObserver);
 
-  // This is the "n" part in "n log(n)"
+  // This is the first "n" part in "n log(n)"
   globalSimulation->refreshQuadrant();
 }
 
@@ -202,7 +200,7 @@ void idle() {
 
 }
 
-int main(int argcp, char **argv) {
+void mainGlut(int argcp, char **argv) {
   int mainWinPosX = 100;
   int mainWinPosY = 50;
   int mainWinHeight = 720;
@@ -228,6 +226,15 @@ int main(int argcp, char **argv) {
   glutIdleFunc(idle);
   glutTimerFunc(1000, myTimer, FPS);
 
+  glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+  glutInitWindowPosition(controlWinPosX,controlWinPosY);
+  glutInitWindowSize(controlWinWidth,controlWinHeight);
+
+
+}
+
+int main(int argcp, char **argv) {
+  mainGlut(argcp, argv);
   puInit();
   char simulation = argv[2][0];
 
@@ -236,9 +243,6 @@ int main(int argcp, char **argv) {
   //Creates main menu bar
   globalMainDisplay.init( globalSimulation );
 
-  glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-  glutInitWindowPosition(controlWinPosX,controlWinPosY);
-  glutInitWindowSize(controlWinWidth,controlWinHeight);
   control_center_num = glutCreateWindow("Control Center");
 
   glutDisplayFunc(controlDisplay);
