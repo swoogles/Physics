@@ -173,18 +173,21 @@ void Simulation::setTotalMass(float newMass) {
 	totalMass=newMass;
 }
 
+void Simulation::updateMinsAndMaxes() {
+    sgVec4 curPos;
+    foreach_ ( shape_pointer curShape, getPhysicalObjects().getShapes() )
+    {
+        curShape->getPos(curPos);
+        updateXYMinsAndMaxes(curPos);
+    }
+}
+
 void Simulation::update()
 {
   physicalObjects.update(DT);
   updateTimeElapsed();
   incCurStep();
 
-  sgVec4 curPos;
-  foreach_ ( shape_pointer curShape, getPhysicalObjects().getShapes() )
-  {
-    curShape->getPos(curPos);
-    updateXYMinsAndMaxes(curPos);
-  }
-
+  updateMinsAndMaxes();
   refreshQuadrant();
 }

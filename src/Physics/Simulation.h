@@ -71,6 +71,7 @@ class Simulation
     void updateTimeElapsed() { timeElapsed += DT; };
     double getTimeElapsed() { return timeElapsed; };
 
+    void updateMinsAndMaxes();
     void update();
 
     void Pause() { paused = true; };
