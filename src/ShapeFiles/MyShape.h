@@ -16,7 +16,7 @@
 #include <boost/make_shared.hpp> 
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/foreach.hpp>
-#include "../ShapeFiles/Moveable.h"
+#include "../Dimensions/Moveable.h"
 #include "../Physics/WorldSettings.h"
 
 #include <iostream>

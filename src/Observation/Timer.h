@@ -12,7 +12,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <cmath>
 
-#include "../ShapeFiles/Moveable.h"
+#include "../Dimensions/Moveable.h"
 
 using namespace boost;
 

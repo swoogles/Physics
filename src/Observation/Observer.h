@@ -13,7 +13,7 @@
 #include <iostream>
 #include <plib/sg.h>
 
-#include "../ShapeFiles/Moveable.h"
+#include "../Dimensions/Moveable.h"
 
 using boost::numeric::ublas::compressed_vector;
 
