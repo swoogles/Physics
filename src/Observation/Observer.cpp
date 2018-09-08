@@ -13,7 +13,9 @@ compressed_vector<Observer *> Observer::observers(0);
 int Observer::curObserver;
 
 void Observer::init() {
-	curObserver = 0;
+    observers.resize(Observer::observers.size()+1);
+    observers(0) = new Observer;
+    curObserver = 0;
 }
 
 Observer::Observer() 

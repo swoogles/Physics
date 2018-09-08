@@ -147,14 +147,9 @@ void init(char simulation) {
   globalProperties->readProperties();
 
   Observer::init();
-
-  Observer::observers.resize(Observer::observers.size()+1);
-  Observer::observers(0) = new Observer;
-  Observer * curObserver =  Observer::observers(0);
-  Observer::setCurObserver(0);
+  Observer * curObserver = Observer::getCurObserver();
 
   int numShapes = atoi(globalProperties->at( BillProperties::NUM_SHAPES ).c_str()); //value = 45
-//  if ( ! (istringstream(Text) >> numShapes) ) numShapes = 0;
 
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation, numShapes );
