@@ -62,6 +62,7 @@ matrix<double> MyShape::getPts() {
 	return pts;
 }
 
+// TODO Figure out how to get the OpenGL crud out of this class. That should be handled elsewhere.
 void MyShape::draw(){
 	glPushMatrix();
 
@@ -78,6 +79,14 @@ void MyShape::draw(){
 
 	drawUnit();
 	glPopMatrix();
+}
+
+void MyShape::drawAllShapes() {
+    foreach_ ( shapePointer_t curShape, MyShape::shapes )
+    {
+        curShape->draw();
+    }
+
 }
 
 void MyShape::drawScale(){}

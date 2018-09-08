@@ -107,13 +107,7 @@ void display(void)
   glColor3fv(curColor);
 
   glMatrixMode(GL_MODELVIEW);
-  if ( MyShape::shapes.size() > 0 )
-  {
-     foreach_ ( shape_pointer curShape, MyShape::shapes )
-     {
-       curShape->draw();
-     }
-  }
+  MyShape::drawAllShapes();
 
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();

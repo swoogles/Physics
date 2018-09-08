@@ -77,6 +77,11 @@ class MyShape : public Moveable {
      */
     void draw();
 
+    /*
+     * Refer to draw() docs.
+     */
+    static void drawAllShapes();
+
 
     /*! \brief Use shape dimensions to scale points before drawing
      *
