@@ -13,18 +13,13 @@ string BillProperties::at( const char target[]  )
 
 bool BillProperties::isValidProperty( string line )
 {
-  bool valid = true;
-  if ( line[0] == '#' )
-  {
-    valid = false;
+  if ( line[0] == '#' ) {
+    return false;
+  } else if ( line.find('=') == string::npos ) {
+    return false;
+  } else {
+    return true;
   }
-
-  if ( line.find('=') == string::npos )
-  {
-    valid = false;
-  }
-
-  return valid;
 }
 
 void BillProperties::readProperties()
@@ -32,6 +27,7 @@ void BillProperties::readProperties()
   string line;
   string propName, propValue;
   ifstream propertiesFile;
+  // TODO Create separate instances, rather than this static hard-coded value.
   propertiesFile.open("simulation.properties", ios::in);
   int equalsPosition;
   while( getline(propertiesFile, line) )
