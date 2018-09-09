@@ -44,16 +44,12 @@ protected:
 	sgVec4 angVelocity;
 	sgVec4 prevAngVelocity;
 
-	sgVec3 angVel;
-
 	sgVec4 momentum;
 	sgVec4 prevMomentum;
 	float mass;
 	float density;
 
 	sgVec3 color;
-
-	bool ptsHighlighted;
 
 public:
 	/*! \brief Sets default values of members common to all shapes
@@ -66,17 +62,11 @@ public:
 	//! Set position of object to <newPos>
 	void setPos(const sgVec4 newPos);
 
-	//! Alter position of object by <dx, dy, dz>
-	void adjustPos(float dx, float dy, float dz);
 	//! Alter position of object by <dPos>
 	void adjustPos(const sgVec4 dPos);
 
 	//! Return position of object in retVec
 	void getPos(sgVec4 retVec) const;
-
-	//! Print position of object. Format: <##,##,##>
-  std::string getPosString() const;
-
 
 	/*! \brief Set orientation of object
 	 *
@@ -93,16 +83,11 @@ public:
 	 */
 	void adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis);
 
-	//! Calculates orientationMat based on orientationQuat
-	void calcRotMat();
-
 	//! Sets momentum of object to <inX, inY, inZ> * mass
 	void setVelocity(float inX, float inY, float inZ);
 	//! Sets momentum of object to <newVel> * mass
 	void setVelocity(const sgVec4 newVel);
 
-	//! Alters momentum of object by <dx, dy, dy> * mass
-	void adjustVelocity(float dx, float dy, float dz);
 	//! Alters momentum of object by <dVel> * mass
 	void adjustVelocity(const sgVec4 dVel);
 

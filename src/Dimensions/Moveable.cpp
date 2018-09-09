@@ -20,7 +20,6 @@ Moveable::Moveable()
           :mass(1)
           ,density(1)
           // ,color({0.5,1.0,0.0})
-          ,ptsHighlighted(true)
 {
   pos[0]=0.0;
   pos[1]=0.0;
@@ -59,12 +58,6 @@ void Moveable::setPos(float inX, float inY, float inZ) {
 
 void Moveable::setPos(const sgVec4 newPos) {
 	sgCopyVec4(this->pos, newPos);
-}
-
-void Moveable::adjustPos(float dx, float dy, float dz) {
-	pos[0] += dx;
-	pos[1] += dy;
-	pos[2] += dz;
 }
 
 void Moveable::adjustPos(const sgVec4 dPos) {
@@ -124,11 +117,6 @@ void Moveable::setVelocity(const sgVec4 newVel) {
 	sgCopyVec4(prevMomentum, momentum);
 
 }
-void Moveable::adjustVelocity(float dx, float dy, float dz) {
-	momentum[0] += dx/mass;
-	momentum[1] += dx/mass;
-	momentum[2] += dx/mass;
-}
 void Moveable::adjustVelocity(const sgVec4 dVel) {
 	sgVec4 tempVec;
 	sgScaleVec4(tempVec, momentum, 1/mass);
@@ -187,13 +175,6 @@ void Moveable::update(float dt) {
 	sgCopyVec4(prevAngVelocity, angVelocity);
 
 }
-
-std::string Moveable::getPosString() const
-{
-  string posString = "<" + lexical_cast<std::string>( pos[0] )  + ", " + lexical_cast<std::string>( pos[1] ) + ", " + lexical_cast<std::string>( pos[2] ) + ">";
-  return posString;
-}
-
 
 /*
 void Moveable::getUnitVecTo(Moveable * destination, sgVec4 unitv) {

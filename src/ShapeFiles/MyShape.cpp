@@ -300,6 +300,7 @@ bool MyShape::isTouching( shapePointer_t otherShape )
   return touching;
 }
 
+// TODO Don't implement this at MyShape. It should have separate implementations for Circles and Boxes (If boxes even need it)
 void MyShape::mergeWith( shapePointer_t otherShape ) 
 {
   float newMass = this->getMass() + otherShape->getMass();
