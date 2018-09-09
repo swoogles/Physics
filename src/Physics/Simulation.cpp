@@ -161,18 +161,6 @@ void Simulation::makeMixedElasticity() {
 	allInelastic = false;
 }
 
-void Simulation::adjustTotalMass(float dMass) {
-	totalMass += dMass;
-}
-
-float Simulation::getTotalMass() {
-	return totalMass;
-}
-
-void Simulation::setTotalMass(float newMass) {
-	totalMass=newMass;
-}
-
 void Simulation::updateMinsAndMaxes() {
     sgVec4 curPos;
     foreach_ ( shape_pointer curShape, getPhysicalObjects().getShapes() )

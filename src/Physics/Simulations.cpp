@@ -440,7 +440,6 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
 
   physicalObjects.addShapeToList( curShape );
   totalMass += curShape->getMass();
-  curSimulation->adjustTotalMass( totalMass );
 
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
@@ -500,7 +499,6 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
 
         totalMass += curShape->getMass();
     }
-  curSimulation->adjustTotalMass( totalMass );
 
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;
@@ -564,7 +562,6 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
     physicalObjects.addShapeToList( curShape );
 		totalMass += pieceMass;
 	}
-  curSimulation->adjustTotalMass( totalMass );
 
   curSimulation->setPhysicalObjects( physicalObjects );
   return curSimulation;

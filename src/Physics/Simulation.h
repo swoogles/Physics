@@ -53,7 +53,6 @@ class Simulation
     Simulation();
 
     inline int getCurStep() { return curStep; };
-    inline void setCurStep( int curStep ) { this->curStep = curStep; };
     inline void incCurStep() { curStep+= 1; };
 
     inline int getForceCalcMethod() { return forceCalcMethod; };
@@ -67,7 +66,6 @@ class Simulation
     inline void setDT(float newDT) { DT = newDT; };
     inline float getDT() const { return DT; };
 
-    void setTimeElapsed(double newTimeElapsed) { timeElapsed = newTimeElapsed; };
     void updateTimeElapsed() { timeElapsed += DT; };
     double getTimeElapsed() { return timeElapsed; };
 
@@ -80,11 +78,6 @@ class Simulation
 
     void resetXYMinsAndMaxes();
     void updateXYMinsAndMaxes(sgVec4 curPos);
-
-    inline float getMinX() { return minX; }
-    inline float getMinY() { return minY; }
-    inline float getMaxX() { return maxX; }
-    inline float getMaxY() { return maxY; }
 
     void refreshQuadrant();
     inline boost::shared_ptr<Quadrant> getQuadrant() { return quadrant; }
@@ -120,17 +113,6 @@ class Simulation
 	void makeAllInelastic();
 	//! Makes simulation treat collisions based on their characteristics
 	void makeMixedElasticity();
-
-	//TODO set up relavent mass functions and color-coding
-	/*! \brief Alters the total mass in the system
-	 *
-	 * Normally used when adding/deleting objects
-	 */
-	void adjustTotalMass(float dMass);
-	//! Returns total amount of mass in current system
-	float getTotalMass();
-	//! sets total amount of mass in current system
-	void setTotalMass(float newMass);
 
 } ;
 #endif 
