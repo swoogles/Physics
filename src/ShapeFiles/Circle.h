@@ -16,7 +16,14 @@ class Circle: public MyShape {
   private:
     GLdouble radius;
   public:
-    Circle();
+    Circle(
+            sgVec4 pos,
+            float mass,
+            float radius,
+            sgVec4 momentum,
+            float density,
+            sgVec3 color
+    );
     // Circle( Circle& );
     // Circle( const Circle& );
     virtual ~Circle();

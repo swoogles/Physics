@@ -7,8 +7,20 @@
 
 #include "Circle.h"
 
-Circle::Circle() {
-	radius = 1;
+Circle::Circle(
+		sgVec4 pos,
+		float mass,
+		float radius,
+		sgVec4 momentum,
+		float density,
+		sgVec3 color
+) {
+	sgCopyVec4(this->pos, pos);
+	this->mass = mass;
+	this->radius = radius;
+	sgCopyVec4(this->momentum, momentum);
+	this->density = density;
+	sgCopyVec3(this->color, color);
 }
 
 // Circle::Circle( const Circle& copyCircle )

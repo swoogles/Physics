@@ -61,35 +61,46 @@ void openShapes(char * fileName) {
 
 		curFile >> type;
 		if (type == 1) {
-			MyShape::shapes(i) = boost::make_shared<Circle>();
-			curShape = MyShape::shapes(i);
 
 			//Set start position
-			vecFileRead(curFile, curVec);
-			curVec[3] = 1;
-			curShape->setPos(curVec);
+			sgVec4 pos;
+			vecFileRead(curFile, pos);
+			pos[3] = 1;
 
 			//Set start mass
-			curFile >> curVar;
-			curShape->setMass(curVar);
+			float mass;
+			curFile >> mass;
 
 			//Set start momentum
-			vecFileRead(curFile, curVec);
-			curVec[3] = 0;
-			curShape->setMomentum(curVec);
+			sgVec4 momentum;
+			vecFileRead(curFile, momentum);
+			momentum[3] = 0;
 
 			//Set start angular momentum
-			vecFileRead(curFile, curVec);
-			curVec[3] = 0;
-			curShape->setAngMomentum(curVec);
+			sgVec4 angularMomentum;
+			vecFileRead(curFile, angularMomentum);
+			angularMomentum[3] = 0;
 
 			//Set start density
-			curFile >> curVar;
-			curShape->setDensity(curVar);
+			float density;
+			curFile >> density;
+
+			float bogusRadius = 1; // TODO Infer from density and mass
 
 			//Set start color
-			vecFileRead(curFile, curVec);
-			curShape->setColor(curVec);
+			sgVec4 color;
+			vecFileRead(curFile, color);
+
+			shape_pointer curShape = boost::make_shared<Circle>(
+					pos,
+					mass,
+					bogusRadius,
+					momentum,
+					density,
+					color
+					);
+			curShape->setAngMomentum(angularMomentum);
+			MyShape::shapes(i) = curShape;
 		}
 	}
 	glutPostRedisplay();

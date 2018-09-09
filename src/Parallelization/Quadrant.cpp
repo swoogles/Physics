@@ -62,11 +62,20 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   MyShape::addShapeToList( borders );
 
   sgVec3 CoMColor = { 0, 1, 0 };
+  sgVec4 comPos = { 0, 0, 0, 1};
+  float comMass = 0;
+  float comRadius = 1.0;
+  sgVec4 comMomentum = { 0, 0, 0 };
+  float comDensity = 1.0;
 
-  centerOfMassRepresentation = boost::make_shared<Circle>();
-  centerOfMassRepresentation->setPos( 0,0,0 );
-  centerOfMassRepresentation->setRadius( 1.0 );
-  centerOfMassRepresentation->setColor(CoMColor);
+  centerOfMassRepresentation = boost::make_shared<Circle>(
+          comPos,
+          comMass,
+          comRadius,
+          comMomentum,
+          comDensity,
+          CoMColor
+  );
 
   if ( level == 1 )
   {

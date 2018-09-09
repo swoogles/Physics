@@ -159,8 +159,6 @@ class Simulations
 
     static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
-    static SimulationPointer_t simpleCollision_ArbitraryList();
-
     static SimulationPointer_t createSimulation( char simNumber, int numShapes );
 };
 
