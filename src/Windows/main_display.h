@@ -1,25 +1,10 @@
-/*
- * main_display.h
- *
- *  Created on: Jul 19, 2011
- *      Author: brasure
- */
-
 #ifndef MAIN_DISPLAY_H_
 #define MAIN_DISPLAY_H_
 
-#include <iostream>
 #include <plib/pu.h>
 #include <plib/puAux.h>
-//#include "../ShapeFiles/MyShape.h"
-#include "../ShapeFiles/Box.h"
-#include "../ShapeFiles/Circle.h"
-#include <string.h>
-
-#include "../fileInteraction.h"
 
 #include "../Physics/WorldSettings.h"
-
 
 #include <GL/freeglut.h>
 
@@ -51,10 +36,6 @@ private:
 	puGroup * astronomicalTimeGroup;
 	puText * milleniaElapsed_label;
 	puInput * milleniaElapsed_value;
-	puText * centuriesElapsed_label;
-	puInput * centuriesElapsed_value;
-	puText * decadesElapsed_label;
-	puInput * decadesElapsed_value;
 	puText * yearsElapsed_label;
 	puInput * yearsElapsed_value;
 	puText * daysElapsed_label;
@@ -107,11 +88,5 @@ public:
 	 *  Ultimately should query user whether or not they want to save the initial/current shape list
 	 */
 	static void exit_cb(puObject *);
-
-	//! Displays file being saved in saveFile_cb
-	// static void mk_dialog(char *);
-	//! Deletes current dialogue box and sets dialog_box to NULL
-	// static void close_dialog_cb(puObject * caller);
-
 };
 #endif /* MAIN_DISPLAY_H_ */

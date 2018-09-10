@@ -1,10 +1,3 @@
-/*
- * main_display.cpp
- *
- *  Created on: Jul 20, 2011
- *      Author: brasure
- */
-
 #include "main_display.h"
 
 using namespace std;
@@ -28,6 +21,7 @@ main_window_UI::main_window_UI() {
 	*/
 }
 
+// TODO more good cleanup candidates in this file
 void main_window_UI::init( boost::shared_ptr<Simulation> simulation ) {
 	main_menu = new puMenuBar();
 	int winWidth = glutGet(GLUT_WINDOW_WIDTH);
@@ -82,7 +76,6 @@ void main_window_UI::init( boost::shared_ptr<Simulation> simulation ) {
 }
 
 void main_window_UI::update() {
-  // cout << "Updating." << endl;
 	double curTime = simulation->getTimeElapsed();
 	double intPart;
 	double fracPart;
@@ -96,15 +89,11 @@ void main_window_UI::update() {
 	modf(curTime, &intPart);
 	curTime = intPart;
 
-  // cout << "A." << endl;
-
 	curDiv = 24;
 	curTime /= curDiv;
 	fracPart = modf(curTime, &intPart);
-  // cout << "B." << endl;
 	curVal = fracPart*curDiv;
 	hoursElapsed_value->setValue(curVal);
-  // cout << "C." << endl;
 	curTime = intPart;
 
 
@@ -125,7 +114,6 @@ void main_window_UI::update() {
 	curVal = curTime;
 	milleniaElapsed_value->setValue(curVal);
 
-  // cout << "Done Updating." << endl;
 }
 
 void main_window_UI::open_cb(puObject * caller) {
@@ -171,7 +159,6 @@ void main_window_UI::saveFile_cb(puObject * caller) {
 }
 
 void main_window_UI::exit_cb(puObject * caller) {
-	cout << "Eh?" << endl;
 	exit(1);
 }
 
