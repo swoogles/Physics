@@ -32,11 +32,10 @@ void control_center::switchViewNow(puObject * caller) {
 
 void control_center::setSimulation( boost::shared_ptr<Simulation> simulation )
 {
-  // this->simulation = boost::make_shared<Simulation>( simulation );
   this->simulation =  simulation ;
-  cout << "setSimulation.dt.post: " << (this->simulation)->getDT() << endl;
 }
 
+// TODO Is there any better candidate for breaking things apart than this functino?
 void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
   showingRunTime = false;
   userDat[0]=2;
@@ -173,15 +172,12 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
   rotUp_button = new puArrowButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight, PUARROW_UP);
   rotUp_button->setCallback(rotUp);
 
-  //Put +Y rotation here
-
   curHeight -= elementHeight;
 
   curX = startX;
 
   dec_rotSide_button = new puArrowButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight, PUARROW_LEFT);
   curX += (placementWidth +gap);
-  //dec_rotSide_button->setLegend("-X Rotation");
   dec_rotSide_button->setCallback(rotRight);
 
   pause_rotSide_button = new puButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
@@ -193,7 +189,6 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
 
   inc_rotSide_button = new puArrowButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight, PUARROW_RIGHT);
   curX += (placementWidth +gap);
-  //inc_rotSide_button->setLegend("Faster");
   inc_rotSide_button->setCallback(rotLeft);
 
   curHeight -= elementHeight;
@@ -216,7 +211,6 @@ void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
   autoScale_button->setCallback(flipAutoScaling);
 
   runtime_group->close();
-  // runtime_group->hide();
 
 }
 
@@ -230,34 +224,21 @@ void control_center::flipAutoScaling(puObject * caller) {
   Observer * curObserver = Observer::getCurObserver();
 
   bool isAutoScaling = curObserver->isAutoScaling();
-  if (isAutoScaling) {
-    curObserver->setAutoScaling(false);
-    cout << "AutoScaling Off: " << curObserver->isAutoScaling() << endl;
-    //caller->setValue(0);
-  }
-  else {
-    curObserver->setAutoScaling(true);
-    cout << "AutoScaling On: " << curObserver->isAutoScaling() << endl;
-    //caller->setValue(1);
-  }
+  curObserver->setAutoScaling(! isAutoScaling);
 }
 
 void control_center::alterDT(puObject * caller) {
-  cout << "Altering DT..." << endl;
   boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)caller->getUserData();
   boost::shared_ptr<Simulation> curSimulation = boost::shared_ptr<Simulation>( *spPointer );
 
 
-  cout << "Alterdt.preDT: " << curSimulation->getDT() << endl;
   if (strcmp(caller->getLegend(), "Slower") == 0) {
     curSimulation->setDT(curSimulation->getDT() / 2);
-    cout << caller->getLegend() << endl;
   }
 
   if (strcmp(caller->getLegend(), "Faster") == 0) {
     curSimulation->setDT(curSimulation->getDT() * 2);
   }
-  cout << "Alterdt.postDT: " << curSimulation->getDT() << endl << endl;
 
 }
 

@@ -1,33 +1,15 @@
-/*
- * control_center.h
- *
- *  Created on: Jul 17, 2011
- *      Author: brasure
- */
-
-
 #ifndef CONTROL_CENTER_H_
 #define CONTROL_CENTER_H_
 
-
-
-#include <iostream>
 #include <plib/pu.h>
 #include <plib/puAux.h>
 #include <plib/sg.h>
-#include <boost/make_shared.hpp> 
 #include <boost/shared_ptr.hpp>
-//#include "../ShapeFiles/MyShape.h"
 #include "../Dimensions/Moveable.h"
-#include "../ShapeFiles/Box.h"
-#include "../ShapeFiles/Circle.h"
 
-#include "../Physics/WorldSettings.h"
 #include "../Physics/Simulation.h"
 
 #include "../Observation/Observer.h"
-
-#include <string>
 
 using boost::shared_ptr;
 
@@ -43,7 +25,6 @@ private:
   boost::shared_ptr<Simulation> simulation;
 
 	puGroup * placement_group;
-		puaSelectBox * pick_object;
 		puText * object_name_label;
 		puInput * object_name_input;
 
@@ -76,8 +57,17 @@ private:
 
 	puButton * viewSwitcher;
 
-
 	bool showingRunTime;
+
+    puInput * placementX_in;
+    puInput * placementY_in;
+    puInput * placementZ_in;
+
+    puInput * momentumX_in;
+    puInput * momentumY_in;
+    puInput * momentumZ_in;
+
+    puInput * mass_in;
 
 public:
 	//! Creates all UI elements and sets their values, positions, and callbacks
@@ -85,7 +75,6 @@ public:
 	void init( boost::shared_ptr<Simulation> residentSimulation );
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
-  inline void printDec_dt_buttonAddress() { std::cout << "&dec_dt_button: " << dec_dt_button << endl; };
 
   inline void showRunTimeGroup() { runtime_group->reveal(); };
   inline void showPlacementGroup() { placement_group->reveal(); };
@@ -97,25 +86,6 @@ public:
 	static void switchViewNow(puObject *);
 
 	sgVec3 userDat;
-
-	/*! \brief Creates a new object based on UI text boxes
-	 *
-	 * The values for the new object are collecting from the placement*_in, momentum*_in, and mass_in puInput boxes.
-	 * Look into changing text boxes to private members with appropriate accessor/mutator functions
-	 */
-	// static void makeNewObject(puObject *);
-
-	puInput * placementX_in;
-	puInput * placementY_in;
-	puInput * placementZ_in;
-
-	puInput * momentumX_in;
-	puInput * momentumY_in;
-	puInput * momentumZ_in;
-
-	puInput * mass_in;
-
-	//static void alterRotSide(puObject *);
 
 	//! Increases camera rotation around +Y axis
 	static void rotRight(puObject *);
@@ -145,7 +115,4 @@ public:
 	static void flipAutoScaling(puObject * caller);
 };
 
-
-
 #endif /* CONTROL_CENTER_H_ */
-
