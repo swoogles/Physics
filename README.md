@@ -1,7 +1,10 @@
 Physics 
 =======
 
-This is my main personal project. I have been contributing with varying intensity over the last 2 years.
+This is my main personal project. I have been contributing with varying intensity over the last 7 years.
+Once when I was trying to get my 1st real job, right out of school.
+2 years later when I wanted to re-visit it with Git and some reasonable software project knowledge.
+And 5 years later, after moving to CB, switching jobs, experimenting with multiple languages, getting into functional programming, and generally getting deeper into software.
 
 When it was originally conceived, I was only planning to figure out some graphics basics. At that point, I wasn't even using any of the OpenGL primitives, but was drawing everything point-by-point and transformation-by-transformation just for the sake of going through that process myself. After I was able to draw simple shapes, I decided a long-term direction for the project as physics simulation software.
 
