@@ -1,16 +1,7 @@
-/*
- * Observer.cpp
- *
- *  Created on: Jul 20, 2011
- *      Author: brasure
- */
-
 #include "Observer.h"
 
-using namespace std;
-
 compressed_vector<Observer *> Observer::observers(0);
-int Observer::curObserver;
+int Observer::curObserver; // TODO should be in .h file?
 
 void Observer::init() {
     observers.resize(Observer::observers.size()+1);
@@ -61,19 +52,6 @@ bool Observer::isAutoScaling() {
 	return autoScale;
 }
 
-void Observer::setId(int newId) {
-	id = newId;
-}
-
-int Observer::getId() {
-	return id;
-}
-
-void Observer::setCurObserver(int newLooker) {
-	//TODO Make sure newLooker is a valid observer
-	curObserver = newLooker;
-}
-
 Observer * Observer::getCurObserver() {
 	return observers(curObserver);
 }
@@ -89,37 +67,29 @@ void Observer::update(float dt) {
   adjustAngle(angVelocity[2], rotVec);
 }
 
-// void Observer::setCurObserver(int newLooker) {
 void Observer::calcMinPullback(float fov, float minX, float minY, float maxX, float maxY)
 {
-	  float absMaxX;
-	  float absMaxY;
-	  float pullBack;
+    float absMaxX;
+    float absMaxY;
+    float pullBack;
 
-	  if (abs(minX) > maxX)
-    {
-		  absMaxX = abs(minX);
-    }
-	  else
-    {
-		  absMaxX = maxX;
+    if (abs(minX) > maxX) {
+        absMaxX = abs(minX);
+    } else {
+        absMaxX = maxX;
     }
 
-	  if (abs(minY) > maxY)
-    {
-		  absMaxY = abs(minY);
-    }
-	  else
-    {
-		  absMaxY = maxY;
+    if (abs(minY) > maxY) {
+        absMaxY = abs(minY);
+    } else {
+        absMaxY = maxY;
     }
 
-	  if (absMaxY > absMaxX) {
-		  pullBack = absMaxY / tan(fov * M_PI / 360);
-	  }
-	  else {
-		  pullBack = absMaxX / tan(fov * M_PI / 360);
-	  }
+    if (absMaxY > absMaxX) {
+        pullBack = absMaxY / tan(fov * M_PI / 360);
+    } else {
+        pullBack = absMaxX / tan(fov * M_PI / 360);
+    }
 
     setPos(0,0,-pullBack*2);
 }

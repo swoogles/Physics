@@ -1,16 +1,8 @@
-/*
- * Observer.h
- *
- *  Created on: Jul 20, 2011
- *      Author: brasure
- */
-
 #ifndef OBSERVER_H_
 #define OBSERVER_H_
 
 #include <boost/numeric/ublas/vector_sparse.hpp>
 #include <GL/glut.h>
-#include <iostream>
 #include <plib/sg.h>
 
 #include "../Dimensions/Moveable.h"
@@ -56,13 +48,6 @@ public:
 	//! Returns true if Observer is currently set to autoscale with simulation
 	bool isAutoScaling();
 
-	//! Change ID number of observer to newId
-	void setId(int newId);
-	//! Returns ID number of observer
-	int getId();
-
-	//! Switches active Observer to newLooker
-	static void setCurObserver(int newLooker);
 	//! Returns an integer indicating the active Observer
 	static Observer * getCurObserver();
 
