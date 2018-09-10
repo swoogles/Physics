@@ -1,22 +1,11 @@
-/*
- * fileInteraction.h
- *
- *  Created on: Aug 7, 2011
- *      Author: brasure
- */
-
 #ifndef FILEINTERACTION_H_
 #define FILEINTERACTION_H_
 
- #include <iostream>
 #include <fstream>
 
 #include <boost/numeric/ublas/vector_sparse.hpp>
 #include <plib/sg.h>
 #include "ShapeFiles/Circle.h"
-#include "ShapeFiles/Box.h"
-
-#include "Physics/Simulations.h"
 
 typedef boost::shared_ptr<MyShape> shape_pointer;
 
