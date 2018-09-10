@@ -17,6 +17,13 @@ Box::Box()
   depth = 1;
 }
 
+Box::Box(sgVec4 pos, float sideLength, sgVec3 color) {
+	sgCopyVec4(this->pos, pos);
+	width = sideLength;
+	height = sideLength;
+	depth = sideLength;
+	sgCopyVec3(this->color, color);
+}
 
 Box::~Box() {
 }
@@ -40,26 +47,6 @@ void Box::setSideLength(float inSideLength) {
 
 float Box::getWidth() {
 	return width;
-}
-
-void Box::setWidth(float inWidth) {
-	width = inWidth;
-}
-
-float Box::getHeight() {
-	return height;
-}
-
-void Box::setHeight(float inHeight) {
-	height = inHeight;
-}
-
-float Box::getDepth() {
-	return depth;
-}
-
-void Box::setDepth(float inDepth) {
-	depth = inDepth;
 }
 
 int Box::getType() {

@@ -31,8 +31,6 @@ MyShape::MyShape()
 {
 	numPts = 16;
 	pts.resize(numPts, 4);
-
-	ptsHighlighted = true;
 }
 
 // MyShape::MyShape( const MyShape& copyShape )
@@ -123,12 +121,6 @@ void MyShape::getMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, momentum);
 }
 
-std::string MyShape::getMomentumString() 
-{
-  string posString = "<" + lexical_cast<std::string>( momentum[0] )  + ", " + lexical_cast<std::string>( momentum[0] ) + ", " + lexical_cast<std::string>( momentum[0] ) + ">";
-  return posString;
-}
-
 // Angular Momentum and Velocity
 float MyShape::getMomentOfInertia() { return 1;}
 
@@ -153,13 +145,6 @@ void MyShape::getAngMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, angMomentum);
 }
 
-std::string MyShape::getAngMomentumString() const
-{
-  string angMomString = "<" + lexical_cast<std::string>( angMomentum[0] )  + ", " + lexical_cast<std::string>( angMomentum[0] ) + ", " + lexical_cast<std::string>( angMomentum[0] ) + ">";
-  return angMomString;
-}
-
-
 void MyShape::setMass(float newMass) {
 	mass = newMass;
 }
@@ -178,39 +163,6 @@ void MyShape::setDensity(float newDensity){
 
 float MyShape::getDensity() {
 	return density;
-}
-
-bool MyShape::setKineticEnergy(float newKineticEnergy)
-{
-  bool moving;
-  sgVec4 curVelocity;
-  getVelocity( curVelocity );
-  if ( sgLengthVec4( curVelocity ) == 0 )
-  {
-    moving = false;
-  }
-  else
-  {
-    sgVec4 newVelocity;
-    sgNormaliseVec4(newVelocity, curVelocity );
-
-    float totalVelocity = sqrt( newKineticEnergy ) / mass * 2;
-    sgScaleVec4( newVelocity, totalVelocity );
-    setVelocity( newVelocity );
-    moving = true;
-  }
-
-  return moving;
-}
-
-//! Returns kineticEnergy of object
-float MyShape::getKineticEnergy()
-{
-  return kineticEnergy;
-}
-
-void MyShape::setColor(sgVec3 newColor) {
-	sgCopyVec3(color, newColor);
 }
 
 void MyShape::getColor(sgVec3 retVec) const{

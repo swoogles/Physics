@@ -39,7 +39,7 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   ,containsBody(false)
   ,level(level)
   // ,weightedPosition({0,0,0})
-  ,borders(boost::make_shared<Box>() )
+  ,borders(boost::make_shared<Box>(pos, dimensions[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
   ,quadOctree(extents[2][2][2])
   
 {
@@ -48,16 +48,6 @@ Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
   weightedPosition[2]=0.0;
   setPos( pos );
   sgCopyVec4( this->dimensions, dimensions );
-
-  borders->setPos(pos);
-
-  float redAmount = level*.10; 
-  float greenAmount = (1-level*.10);
-  float blueAmount = greenAmount;
-  sgVec3 newColor = { redAmount, greenAmount, blueAmount };
-
-  borders->setColor( newColor );
-  borders->setSideLength( dimensions[0] );
 
   MyShape::addShapeToList( borders );
 

@@ -9,9 +9,6 @@
 #define BOX_H_
 
 #include "MyShape.h"
-#include <iostream>
-
-using namespace std;
 
 class Box: public MyShape {
 private:
@@ -26,24 +23,19 @@ private:
 	static GLubyte * topIndices;
 	static GLubyte * bottomIndices;
 
-  float depth;
-  float width;
-  float height;
+	float depth;
+	float width;
+	float height;
 public:
 	Box();
+    Box(sgVec4 pos, float sideLength, sgVec3 color);
 	virtual ~Box();
 
 	void drawUnit();
-  void drawScale();
+	void drawScale();
 
-  float getSideLength();
-  void setSideLength(float);
-  float getWidth();
-  void setWidth(float inWidth);
-  float getHeight();
-  void setHeight(float inHeight);
-  float getDepth();
-  void setDepth(float inDepth);
+	void setSideLength(float);
+	float getWidth();
 
 	int getType();
 };

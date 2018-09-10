@@ -13,7 +13,7 @@
 #include <cmath>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp> 
+#include <boost/make_shared.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/foreach.hpp>
 #include "../Dimensions/Moveable.h"
@@ -47,8 +47,6 @@ class MyShape : public Moveable {
   protected:
     GLint numPts;
     matrix<double> pts;
-    bool ptsHighlighted;
-    float kineticEnergy;
 
   public:
     /*! \brief Sets default values of members common to all shapes
@@ -97,9 +95,6 @@ class MyShape : public Moveable {
     //! Purely virtual method used by Circle
     virtual float getRadius();
 
-    //! Calculates orientationMat based on orientationQuat
-    void calcRotMat();
-
     //! Sets momentum of object to <inX, inY, inZ>
     void setMomentum(float inX, float inY, float inZ);
     //! Sets momentum of object to <newMomentum>
@@ -112,9 +107,6 @@ class MyShape : public Moveable {
 
     //! Returns momentum of object in retVec
     void getMomentum(sgVec4 retVec);
-
-    //! Print momentum of object. Format: <##,##,##>
-    std::string getMomentumString();
 
     /*! \brief Calculates the moment of inertia for the object
      *
@@ -129,8 +121,6 @@ class MyShape : public Moveable {
     void adjustAngMomentum(const sgVec4 dAngMomentum);
     //! Returns angular momentum of object in retVec
     void getAngMomentum(sgVec4 retVec);
-    //! Print angular momentum of object. Format: <##,##,##>
-    std::string getAngMomentumString() const;
 
     //! Sets mass of object to newMass
     void setMass(float newMass);
@@ -144,13 +134,6 @@ class MyShape : public Moveable {
     //! Returns density of object
     float getDensity();
 
-    //! Sets kineticEnergy of object to newDensity
-    bool setKineticEnergy(float newKineticEnergy);
-    //! Returns kineticEnergy of object
-    float getKineticEnergy();
-
-    //! Sets color of object to <newColor>
-    void setColor(sgVec3 newColor);
     //! Returns color of object in retVec
     void getColor(sgVec3 retVec) const;
 
