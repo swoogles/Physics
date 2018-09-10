@@ -1,14 +1,6 @@
-/*
- * Simulations.h
- *
- *  Created on: Jul 22, 2011
- *      Author: brasure
- */
-
 #ifndef SIMULATION_H_
 #define SIMULATION_H_
 
-#include <iostream>
 #include <boost/ref.hpp>
 #include <plib/sg.h>
 #include "../ShapeFiles/ShapeList.h"
@@ -40,7 +32,6 @@ class Simulation
     bool constGravField;
     sgVec4 gravField;
     bool gravBetweenObjects;
-    sgVec4 dimensions;
 
     boost::shared_ptr<Quadrant> quadrant;
 
@@ -97,22 +88,16 @@ class Simulation
 	//! Set to true to calculate gravity between objects
 	void setGravBetweenObjects(bool);
 
+	// TODO Replaced with "getElasticity" method that returns an enum of ELASTIC, INELASTIC, or MIXED
 	//! Returns true if every collision is treated as completely elastic
 	bool isAllElastic();
 	//! Returns true if every collision is treated as competely inelastic
 	bool isAllInelastic();
-	/*! \brief Returns true if if isAllElastic() and isAllInelastic both return false
-	 *
-	 *  Indicates if collision action must be determined on a case-by-case basis
-	 */
-	bool isMixedElasticity();
 
 	//! Makes simulation treat all collisions as completely elastic
 	void makeAllElastic();
 	//! Makes simulation treat all collisions as completely inelastic
 	void makeAllInelastic();
-	//! Makes simulation treat collisions based on their characteristics
-	void makeMixedElasticity();
 
 } ;
 #endif 

@@ -60,7 +60,6 @@ void Simulation::refreshQuadrant()
 
 void Simulation::setForceCalcMethodByString( const string& forceCalcMethod )
 {
-    cout <<  forceCalcMethod << endl;
   if ( forceCalcMethod.compare( Simulation::FORCE_CALC_METHOD_OCTREE_STRING ) )
   {
     setForceCalcMethod( Simulation::FORCE_CALC_METHOD_OCTREE );
@@ -68,10 +67,6 @@ void Simulation::setForceCalcMethodByString( const string& forceCalcMethod )
   else if ( forceCalcMethod.compare( Simulation::FORCE_CALC_METHOD_NAIVE_STRING ) )
   {
     setForceCalcMethod( Simulation::FORCE_CALC_METHOD_NAIVE );
-  }
-  else
-  {
-    cout << "Unrecognized string! forceCalcMethod not set. Using default/current value." << endl;
   }
 }
 
@@ -142,10 +137,6 @@ bool Simulation::isAllInelastic() {
 	return allInelastic;
 }
 
-bool Simulation::isMixedElasticity() {
-	return !(allElastic || allInelastic);
-}
-
 void Simulation::makeAllElastic() {
 	allElastic = true;
 	allInelastic = false;
@@ -154,11 +145,6 @@ void Simulation::makeAllElastic() {
 void Simulation::makeAllInelastic() {
 	allInelastic = true;
 	allElastic = false;
-}
-
-void Simulation::makeMixedElasticity() {
-	allElastic = false;
-	allInelastic = false;
 }
 
 void Simulation::updateMinsAndMaxes() {
