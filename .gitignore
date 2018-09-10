@@ -6,3 +6,9 @@ ShapesLibrary
 *.gdb
 core
 *.files
+build/*
+Physics.cbp
+CMakeLists.txt
+cmake-build-debug/
+Makefile
+.idea/*
