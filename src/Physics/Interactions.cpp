@@ -1,10 +1,3 @@
-/*
- * Interactions.cpp
- *
- *  Created on: Jul 21, 2011
- *      Author: brasure
- */
-
 #include "Interactions.h"
 
 using namespace std;
@@ -121,7 +114,6 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
         shapeList.removeShapeFromList( curShape );
         MyShape::removeShapeFromList( curShape );
       }
-      cout << endl << endl;
     }
 
     curSimulation->setPhysicalObjects( shapeList ) ;
@@ -214,10 +206,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
   ShapeList deleteList;
 
   ShapeList physicalObjects = curSimulation->getPhysicalObjects();
-  if ( curSimulation->getCurStep() % 100 == 0 )
-  {
-    cout << "Shapelist.size: " << physicalObjects.getShapes().size() << endl;
-  }
 
   if ( curSimulation->getForceCalcMethod() != Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
@@ -234,14 +222,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
         deleteList.addList( calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() ) );
       }
       calcCollisionsAll( curSimulation );
-    }
-    if ( deleteList.getShapes().size() > 0 )
-    {
-      cout << "Shapes to delete: " << endl;
-      foreach_ ( shape_pointer curShape, deleteList.getShapes() )
-      {
-        cout << "CurShape: " << curShape << endl;
-      }
     }
   }
 }
