@@ -2,13 +2,11 @@
 
 void Timer::startTiming()
 {
-  // Clock::time_point t1 = Clock::now();
   start = boost::chrono::system_clock::now();
 }
 
 void Timer::stopTiming()
 {
-  // Clock::time_point t1 = Clock::now();
   duration = boost::chrono::system_clock::now() - start;
   std::cout << "Process took: " << duration.count() << " seconds\n";
 }

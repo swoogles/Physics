@@ -346,32 +346,27 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
   return curSimulation;
 }
 
-SimulationPointer_t Simulations::QuadrantTestingNonRandom() 
+SimulationPointer_t Simulations::QuadrantTestingNonRandom()
 {
-  SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
-  curSimulation->setDT(1000);
-	curSimulation->makeAllInelastic();
-  ShapeList physicalObjects;
+    SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
+    curSimulation->setDT(1000);
+    curSimulation->makeAllInelastic();
+    ShapeList physicalObjects;
 
-  int numPieces=5;
-	float objectDensity = DENSITY_SUN;
-	float bodyVolume = (MASS_SUN)/(objectDensity);
-	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	sgVec4 startMomentum = { 0, 0, 0 };
+    int numPieces=5;
+    float objectDensity = DENSITY_SUN;
+    float bodyVolume = (MASS_SUN)/(objectDensity);
+    float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+    sgVec4 startMomentum = { 0, 0, 0 };
 
-	sgVec3 newColor = { 1, 1, 1 };
+    sgVec3 newColor = { 1, 1, 1 };
 
-	float pieceMass = pow(pieceRadius, 3.0);
-	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
+    float pieceMass = (pow(pieceRadius, 3.0) / 2) * (4.0/3.0) * M_PI * (objectDensity);
 
-  pieceRadius /= 2;
+    shape_pointer curShape;
+    float d= 1.8e3;
 
-	float totalMass = 0.0;
-
-  shape_pointer curShape;
-  float d= 1.8e3;
-
-  //#0
+    //#0
     sgVec4 startPlacement = {  (float) -(7/8.0 * d), + (float) (3/8.0 * d), 1, 1};
     curShape = boost::make_shared<Circle>(
             startPlacement,
@@ -382,11 +377,10 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
             newColor
     );
 
-  physicalObjects.addShapeToList( curShape );
-  totalMass += curShape->getMass();
+    physicalObjects.addShapeToList( curShape );
 
-  //#1
-  sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
+    //#1
+    sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
     curShape = boost::make_shared<Circle>(
             object1Placement,
             pieceMass,
@@ -396,10 +390,9 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
             newColor
     );
 
-  physicalObjects.addShapeToList( curShape );
-  totalMass += curShape->getMass();
+    physicalObjects.addShapeToList( curShape );
 
-  //#2
+    //#2
     sgVec4 object2Placement = {  (float) +(7/8.0 * d), (float) +(7/8.0 * d), 1, 1};
     curShape = boost::make_shared<Circle>(
             object2Placement,
@@ -410,10 +403,9 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
             newColor
     );
 
-  physicalObjects.addShapeToList( curShape );
-  totalMass += curShape->getMass();
+    physicalObjects.addShapeToList( curShape );
 
-  //#3
+    //#3
     sgVec4 object3Placement = {  (float) +(7/8.0 * d), (float) +(2/8.0 * d), 1, 1};
     curShape = boost::make_shared<Circle>(
             object3Placement,
@@ -424,10 +416,9 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
             newColor
     );
 
-  physicalObjects.addShapeToList( curShape );
-  totalMass += curShape->getMass();
+    physicalObjects.addShapeToList( curShape );
 
-  //#4
+    //#4
     sgVec4 object4Placement = {  (float) -(5/8.0 * d), (float) +(1/8.0 * d), 1, 1};
     curShape = boost::make_shared<Circle>(
             object4Placement,
@@ -438,35 +429,32 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
             newColor
     );
 
-  physicalObjects.addShapeToList( curShape );
-  totalMass += curShape->getMass();
+    physicalObjects.addShapeToList( curShape );
 
-  curSimulation->setPhysicalObjects( physicalObjects );
-  return curSimulation;
+    curSimulation->setPhysicalObjects( physicalObjects );
+    return curSimulation;
 }
 
-SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces) 
+SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
 {
-    cout << "Calling the correct function" << endl;
-  SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
-  curSimulation->setDT(1000);
-	curSimulation->makeAllInelastic();
-  ShapeList physicalObjects;
+    const SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
+    curSimulation->setDT(1000);
+    curSimulation->makeAllInelastic();
+    ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
-	float objectDensity = DENSITY_SUN;
-	float bodyVolume = (MASS_SUN * 10)/(objectDensity);
-	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	sgVec4 startPlacement, startMomentum;
-	sgVec4 target = { 1000, 0, 0, 1};
+    const float objectDensity = DENSITY_SUN;
+    const float bodyVolume = (MASS_SUN * 10)/(objectDensity);
+    const float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+    sgVec4 startPlacement, startMomentum;
+    sgVec4 target = { 1000, 0, 0, 1};
 
-	sgVec3 newColor = { 1, 1, 1 };
+    sgVec3 newColor = { 1, 1, 1 };
 
-	float pieceMass = pow(pieceRadius, 3.0);
-	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
+    const float pieceMass = pow(pieceRadius, 3.0) * (4.0/3.0) * M_PI * (objectDensity);
 
-	float totalMass = 0.0;
+    float totalMass = 0.0;
 
-	srand ( time(NULL) );
+    srand ( time(NULL) );
 
     for (int i = 0; i < numPieces; i++) {
         shape_pointer curShape;
@@ -500,8 +488,8 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
         totalMass += curShape->getMass();
     }
 
-  curSimulation->setPhysicalObjects( physicalObjects );
-  return curSimulation;
+    curSimulation->setPhysicalObjects( physicalObjects );
+    return curSimulation;
 }
 
 SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) 
