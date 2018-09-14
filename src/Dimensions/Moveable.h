@@ -15,6 +15,8 @@
 #include <plib/sg.h>
 #include <boost/geometry/arithmetic/dot_product.hpp>
 #include <boost/geometry/geometries/point.hpp>
+#include <boost/shared_ptr.hpp>
+#include "../Dimensions/Moveable.h"
 
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
@@ -110,5 +112,15 @@ public:
 
 	//! Moves object based on current normal and angular momentum
 	void update(float);
+
+/*!
+ * \relates MyShape
+ *  \brief Finds a vector pointing from object1 to object2
+ *
+ *  \param object1 Start Object
+ *  \param object2 End Object
+ *  \param sepVector Calculated separation vector
+ */
+void getVectorToObject(boost::shared_ptr<Moveable> object2, sgVec4 sepVector);
 };
 #endif /* MOVEABLE_H_ */

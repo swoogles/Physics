@@ -6,16 +6,10 @@
  */
 
 #include "MyShape.h"
+#include "Moveable.h"
 
 typedef boost::shared_ptr<MyShape> shapePointer_t;
 compressed_vector< shapePointer_t > MyShape::shapes(0);
-
-void MyShape::getVectorToObject( shapePointer_t object2, sgVec4 sepVector) {
-  sgVec4 pos1, pos2;
-  this->getPos(pos1);
-  object2->getCenterOfMass( pos2 );
-  sgSubVec4(sepVector, pos2, pos1);
-}
 
 float MyShape::getDistanceToObject( shapePointer_t object2 ) {
   sgVec4 sepVec;
@@ -329,6 +323,3 @@ float MyShape::calcMergedRadius(float massBoth, float density) {
 void MyShape::setRadius(float) {}
 float MyShape::getRadius() { return 1;}
 
-void MyShape::getCenterOfMass(sgVec4 retVec) {
-	sgCopyVec4(retVec, pos);
-}
