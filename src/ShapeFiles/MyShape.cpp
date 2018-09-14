@@ -6,7 +6,6 @@
  */
 
 #include "MyShape.h"
-#include "Moveable.h"
 
 typedef boost::shared_ptr<MyShape> shapePointer_t;
 compressed_vector< shapePointer_t > MyShape::shapes(0);
@@ -21,11 +20,7 @@ float MyShape::getDistanceToObject( shapePointer_t object2 ) {
   return distance;
 }
 
-MyShape::MyShape()
-{
-	numPts = 16;
-	pts.resize(numPts, 4);
-}
+MyShape::MyShape() { }
 
 // MyShape::MyShape( const MyShape& copyShape )
 // {

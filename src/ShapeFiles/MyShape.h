@@ -1,10 +1,3 @@
-/*
- * MyShape.h
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #ifndef MYSHAPE_H_
 #define MYSHAPE_H_
 
@@ -46,7 +39,6 @@ using boost::shared_ptr;
 class MyShape : public Moveable {
   protected:
     GLint numPts;
-    matrix<double> pts;
 
   public:
     /*! \brief Sets default values of members common to all shapes
