@@ -56,12 +56,6 @@ class MyShape : public Moveable {
 
     virtual ~MyShape();
 
-    /*! \brief Returns points used for outline markers
-     *
-     *  This was useful when originally getting the linear algebra figured out for openGL, but has been put on the shelf for the time being
-     */
-    virtual matrix<double> getPts();
-
     /*! \brief The key MyShape function called in the display function
      *
      *  Steps:
@@ -95,13 +89,6 @@ class MyShape : public Moveable {
     //! Purely virtual method used by Circle
     virtual float getRadius();
 
-    //! Sets momentum of object to <inX, inY, inZ>
-    void setMomentum(float inX, float inY, float inZ);
-    //! Sets momentum of object to <newMomentum>
-    void setMomentum(const sgVec4 newMomentum);
-
-    //! Alters momentum by <dx, dy, dz>
-    void adjustMomentum(float dx, float dy, float dz);
     //! Alters momentum by <dMomentum>
     void adjustMomentum(const sgVec4 dMomentum);
 
@@ -129,22 +116,20 @@ class MyShape : public Moveable {
     //! Returns mass of object
     float getMass();
 
-    //! Sets density of object to newDensity
-    void setDensity(float newDensity);
     //! Returns density of object
     float getDensity();
 
     //! Returns color of object in retVec
     void getColor(sgVec3 retVec) const;
 
-    /*! \brief Calculates color of object based on how a star of that mass/density would burn
+    /*!
+     * TODO This should at *least* go to the circle class, but I think it really belongs in the Physics package
+     *
+     * \brief Calculates color of object based on how a star of that mass/density would burn
      *
      *  Right now this function only handles stars near the size of the Sun
      */
     void calcColor();
-
-    //! Another relic from figuring out the linear algebra, keeping around just in case
-    virtual float getMarkerSize();
 
     /*! \brief Returns an integer indicating the type of shape
      *

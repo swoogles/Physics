@@ -56,10 +56,6 @@ MyShape::~MyShape() {
 	//cout << "Killing MyShape" << endl;
 }
 
-matrix<double> MyShape::getPts() {
-	return pts;
-}
-
 // TODO Figure out how to get the OpenGL crud out of this class. That should be handled elsewhere.
 void MyShape::draw(){
 	glPushMatrix();
@@ -89,29 +85,6 @@ void MyShape::drawAllShapes() {
 
 void MyShape::drawScale(){}
 void MyShape::drawUnit(){}
-
-float MyShape::getMarkerSize() {
-	return 0;
-}
-
-void MyShape::setMomentum(float inX, float inY, float inZ) {
-	sgCopyVec4(prevMomentum, momentum);
-	momentum[0] = inX;
-	momentum[1] = inY;
-	momentum[2] = inZ;
-	momentum[3] = 0;
-}
-
-void MyShape::setMomentum(const sgVec4 newMomentum) {
-	sgCopyVec4(prevMomentum, momentum);
-	sgCopyVec4(momentum, newMomentum);
-}
-
-void MyShape::adjustMomentum(float dx, float dy, float dz) {
-	momentum[0] += dx;
-	momentum[1] += dy;
-	momentum[2] += dz;
-}
 
 void MyShape::adjustMomentum(const sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
@@ -155,10 +128,6 @@ void MyShape::adjustMass(float dMass) {
 
 float MyShape::getMass() {
 	return mass;
-}
-
-void MyShape::setDensity(float newDensity){
-	density = newDensity;
 }
 
 float MyShape::getDensity() {

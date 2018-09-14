@@ -3,8 +3,6 @@
 
 #include "MyShape.h"
 
-#define PI 3.14159265
-
 class Circle: public MyShape {
   private:
     GLdouble radius;
@@ -20,11 +18,6 @@ class Circle: public MyShape {
     // Circle( Circle& );
     // Circle( const Circle& );
     virtual ~Circle();
-
-    matrix<double> getPts();
-
-    float getMarkerSize();
-    void scaleMembers(float);
 
     void drawScale();
     void drawUnit();
