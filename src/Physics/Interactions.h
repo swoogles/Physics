@@ -28,8 +28,6 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation );
  *
  *  Loops through the shapes vector, calculating all currently active forces on and between each object. Can include drag, a constant gravity field,  and
  *  gravity between objects.
- *
- *  \param dt Determines time over which each force acts
  */
 void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation );
 

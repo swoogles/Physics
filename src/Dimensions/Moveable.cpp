@@ -1,19 +1,4 @@
-/*
- * Moveable.cpp
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #include "Moveable.h"
-
-using namespace std;
-using namespace boost::numeric::ublas;
-
-ostream& operator<<(ostream& os, sgVec4 outputVec) {
-	cout << "<" << outputVec[0] << ", " << outputVec[1] << ", " << outputVec[2] << ">";
-	return os;
-}
 
 Moveable::Moveable()
           // :pos({0.0,0.0,0.0,1.0})
@@ -60,36 +45,8 @@ void Moveable::setPos(const sgVec4 newPos) {
 	sgCopyVec4(this->pos, newPos);
 }
 
-void Moveable::adjustPos(const sgVec4 dPos) {
-	pos[0] += dPos[0];
-	pos[2] += dPos[1];
-	pos[1] += dPos[2];
-}
-
-
 void Moveable::getPos(sgVec4 retVec) const {
 	sgCopyVec4(retVec, pos);
-}
-
-void Moveable::setAngle(float xAngle, float yAngle, float zAngle) {
-	sgMakeIdentQuat(orientationQuat);
-
-	sgQuat tempQuat;
-	sgVec3 xAxis, yAxis, zAxis;
-	xAxis[0] = 1; xAxis[1] = 0; xAxis[2] = 0;
-	yAxis[0] = 0; yAxis[1] = 1; yAxis[2] = 0;
-	zAxis[0] = 0; zAxis[1] = 0; zAxis[2] = 1;
-
-	sgAngleAxisToQuat(tempQuat, xAngle, xAxis);
-	sgPostMultQuat(orientationQuat, tempQuat);
-
-	sgAngleAxisToQuat(tempQuat, yAngle, yAxis);
-	sgPostMultQuat(orientationQuat, tempQuat);
-
-	sgAngleAxisToQuat(tempQuat, zAngle, zAxis);
-  sgPostMultQuat(orientationQuat, tempQuat);
-
-  sgQuatToMatrix(orientationMat, orientationQuat);
 }
 
 void Moveable::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
@@ -101,22 +58,6 @@ void Moveable::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
 	sgQuatToMatrix(orientationMat, orientationQuat);
 }
 
-void Moveable::setVelocity(float inX, float inY, float inZ) {
-	momentum[0] = inX * mass;
-	momentum[1] = inY * mass;
-	momentum[2] = inZ * mass;
-	momentum[3] = 0;
-	sgCopyVec4(prevMomentum, momentum);
-}
-
-void Moveable::setVelocity(const sgVec4 newVel) {
-	momentum[0] = newVel[0] * mass;
-	momentum[1] = newVel[1] * mass;
-	momentum[2] = newVel[2] * mass;
-	momentum[3] = 0;
-	sgCopyVec4(prevMomentum, momentum);
-
-}
 void Moveable::adjustVelocity(const sgVec4 dVel) {
 	sgVec4 tempVec;
 	sgScaleVec4(tempVec, momentum, 1/mass);
