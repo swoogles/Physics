@@ -1,14 +1,4 @@
-/*
- * Box.cpp
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #include "Box.h"
-
-//Initializing the static variables needed for drawing
-GLfloat * Box::cube_vertices = new GLfloat[48];
 
 Box::Box()
 {
@@ -37,12 +27,6 @@ void Box::drawUnit(){
 
 void Box::drawScale(){
 	glScalef(width, height, depth);
-}
-
-void Box::setSideLength(float inSideLength) {
-	width = inSideLength;
-	height = inSideLength;
-	depth = inSideLength;
 }
 
 float Box::getWidth() {

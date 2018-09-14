@@ -34,11 +34,10 @@ Quadrant::~Quadrant()
 }
 
 
-Quadrant::Quadrant(int numCells, int level, sgVec4 pos, sgVec4 dimensions)
+Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions)
   :isLeaf(true)
   ,containsBody(false)
   ,level(level)
-  // ,weightedPosition({0,0,0})
   ,borders(boost::make_shared<Box>(pos, dimensions[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
   ,quadOctree(extents[2][2][2])
   
@@ -93,7 +92,7 @@ QuadrantPointer_t Quadrant::operator() ( const sgVec3 targets )
   }
 }
 
-void Quadrant::subDivideAll( int levels, int numCells )
+void Quadrant::subDivideAll( int levels )
 {
   sgVec4 newPos;
   sgVec4 newDimensions;
@@ -128,9 +127,9 @@ void Quadrant::subDivideAll( int levels, int numCells )
 
 
           QuadrantPointer_t insertionQuadrant;
-          quadOctree[x][y][z] = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
+          quadOctree[x][y][z] = boost::make_shared<Quadrant>( this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
           targetQuadrant = quadOctree[x][y][z];
-          targetQuadrant->subDivideAll(levels, 4);
+          targetQuadrant->subDivideAll(levels);
 
         }
       }
@@ -304,14 +303,12 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
       targets[1] != INVALID_OCTREE_INDEX &&
       targets[2] != INVALID_OCTREE_INDEX )
   {
-    int numCells = 8;
 
-    // quadOctree(targets);
     insertionQuadrant = quadOctree[targets[0]][targets[1]][targets[2]];
 
     if ( insertionQuadrant == nullptr )
     {
-      insertionQuadrant = boost::make_shared<Quadrant>( numCells, this->level + 1, boost::ref(newPos), boost::ref(newDimensions) ) ;
+      insertionQuadrant = boost::make_shared<Quadrant>( this->level + 1, boost::ref(newPos), boost::ref(newDimensions) ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }

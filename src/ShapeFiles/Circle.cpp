@@ -1,10 +1,3 @@
-/*
- * Circle.cpp
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #include "Circle.h"
 
 Circle::Circle(
@@ -40,10 +33,6 @@ Circle::~Circle() {
 
 float Circle::getMarkerSize() {
 	return (radius)/50;
-}
-
-void Circle::scaleMembers(float scalarFac) {
-	radius *= scalarFac;
 }
 
 matrix<double> Circle::getPts() {

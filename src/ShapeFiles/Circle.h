@@ -1,10 +1,3 @@
-/*
- * Circle.h
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #ifndef CIRCLE_H_
 #define CIRCLE_H_
 
@@ -43,4 +36,4 @@ class Circle: public MyShape {
 
     int getType();
 };
-#endif /* CIRCLE_H_ */
+#endif

@@ -50,7 +50,7 @@ void Simulation::refreshQuadrant()
   // float side = quadrant->getWidth(); //Formation Value
   float side = 10e5; //Formation Value
   sgVec3 dimensions = { side, side, side };
-  quadrant = boost::make_shared<Quadrant>( 4, 1, boost::ref(pos), boost::ref(dimensions) ) ;
+  quadrant = boost::make_shared<Quadrant>( 1, boost::ref(pos), boost::ref(dimensions) ) ;
 
   foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
   {
@@ -58,6 +58,7 @@ void Simulation::refreshQuadrant()
   }
 }
 
+// TODO The string to real enum value should happen elsewhere, and then pass the enum in to this function
 void Simulation::setForceCalcMethodByString( const string& forceCalcMethod )
 {
   if ( forceCalcMethod.compare( Simulation::FORCE_CALC_METHOD_OCTREE_STRING ) )

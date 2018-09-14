@@ -1,10 +1,3 @@
-/*
- * Box.h
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #ifndef BOX_H_
 #define BOX_H_
 
@@ -12,17 +5,6 @@
 
 class Box: public MyShape {
 private:
-	static GLfloat * cube_vertices;
-
-	static GLubyte * frontIndices;
-	static GLubyte * backIndices;
-
-	static GLubyte * rightIndices;
-	static GLubyte * leftIndices;
-
-	static GLubyte * topIndices;
-	static GLubyte * bottomIndices;
-
 	float depth;
 	float width;
 	float height;
@@ -34,10 +16,9 @@ public:
 	void drawUnit();
 	void drawScale();
 
-	void setSideLength(float);
 	float getWidth();
 
 	int getType();
 };
 
-#endif /* BOX_H_ */
+#endif
