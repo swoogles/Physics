@@ -1,17 +1,5 @@
-/*
- * WorldSettings.h
- *
- *  Created on: Jul 28, 2011
- *      Author: brasure
- */
-
 #ifndef WORLDSETTINGS_H_
 #define WORLDSETTINGS_H_
-
-#include <plib/sg.h>
-
-#include <boost/numeric/ublas/vector_sparse.hpp>
-
 
 /*! \brief Handles values and settings used for various physical interactions
  *
@@ -31,4 +19,4 @@ public:
 
 };
 
-#endif /* WORLDSETTINGS_H_ */
+#endif
