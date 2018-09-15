@@ -16,6 +16,11 @@
 #include <boost/geometry/arithmetic/dot_product.hpp>
 #include <boost/geometry/geometries/point.hpp>
 
+
+struct VecStruct {
+	sgVec4 vec;
+};
+
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
 using boost::lexical_cast;
@@ -64,6 +69,9 @@ public:
 
 	//! Alter position of object by <dPos>
 	void adjustPos(const sgVec4 dPos);
+
+    //! Return position of object in retVec
+    VecStruct * getPosNew() const;
 
 	//! Return position of object in retVec
 	void getPos(sgVec4 retVec) const;

@@ -66,6 +66,12 @@ void Moveable::adjustPos(const sgVec4 dPos) {
 	pos[1] += dPos[2];
 }
 
+VecStruct * Moveable::getPosNew() const {
+	VecStruct * vecStruct = new VecStruct();
+    sgCopyVec4(vecStruct->vec, pos);
+    return vecStruct;
+}
+
 
 void Moveable::getPos(sgVec4 retVec) const {
 	sgCopyVec4(retVec, pos);
