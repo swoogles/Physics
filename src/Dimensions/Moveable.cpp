@@ -182,8 +182,3 @@ void Moveable::getUnitVecTo(Moveable * destination, sgVec4 unitv) {
 	sgNormaliseVec4(unitv);
 }
 */
-void Moveable::getVectorToObject( boost::shared_ptr<Moveable> object2, sgVec4 sepVector) {
-  sgVec4 pos1, pos2;
-  this->getPos(pos1);
-  sgSubVec4(sepVector, pos2, pos1);
-}
