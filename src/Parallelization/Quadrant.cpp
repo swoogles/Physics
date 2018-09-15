@@ -1,7 +1,5 @@
 #include "Quadrant.h"
 
-using namespace std;
-
 typedef boost::shared_ptr<Quadrant> QuadrantPointer_t;
 
 bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundaries )
@@ -68,6 +66,7 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions)
 
   if ( level == 1 )
   {
+      // TODO This is bad. It should go away.
     MyShape::addShapeToList( centerOfMassRepresentation );
   }
 
@@ -76,66 +75,6 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions)
 QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z )
 {
   return quadOctree[x][y][z];
-}
-
-QuadrantPointer_t Quadrant::operator() ( const sgVec3 targets )
-{
-  if ( targets[0] == INVALID_OCTREE_INDEX &&
-      targets[1] == INVALID_OCTREE_INDEX &&
-      targets[2] == INVALID_OCTREE_INDEX ) 
-  {
-
-    return nullptr;
-  }
-  else {
-    return quadOctree[targets[0]][targets[1]][targets[2]];
-  }
-}
-
-void Quadrant::subDivideAll( int levels )
-{
-  sgVec4 newPos;
-  sgVec4 newDimensions;
-  sgVec4 scaleFactors;
-  sgVec4 halfNewDimensions;
-  sgVec3 crossProduct;
-
-  QuadrantPointer_t targetQuadrant;
-
-  if ( this->level < levels )
-  {
-
-    for ( int x = 0; x < 2; x++ )
-    {
-      for ( int y = 0; y < 2; y++ )
-      {
-        for ( int z = 0; z < 2; z++ )
-        {
-          scaleFactors[0] = ( x ) ?  1 : -1;
-          scaleFactors[1] = ( y ) ?  1 : -1;
-          scaleFactors[2] = ( z ) ?  1 : -1;
-           
-          sgScaleVec3  ( newDimensions, dimensions, .5 );
-          sgScaleVec3  ( halfNewDimensions, newDimensions, .5 );
-          
-          sgVectorProductVec3 ( crossProduct, scaleFactors, halfNewDimensions );
-
-          newPos[0]=pos[0]+( crossProduct[0] );
-          newPos[1]=pos[1]+( crossProduct[1] );
-          newPos[2]=pos[2]+( crossProduct[2] );
-          newPos[3]=1;
-
-
-          QuadrantPointer_t insertionQuadrant;
-          quadOctree[x][y][z] = boost::make_shared<Quadrant>( this->level + 1, boost::ref(newPos), boost::ref(newDimensions) );
-          targetQuadrant = quadOctree[x][y][z];
-          targetQuadrant->subDivideAll(levels);
-
-        }
-      }
-    }
-
-  }
 }
 
 void Quadrant::getWeightedPosition( sgVec4 weightedPosition )
@@ -316,41 +255,3 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
   return insertionQuadrant;
 }
 
-//Get all objects in octree and return them in list
-ShapeList Quadrant::getShapesRecursive()
-{
-  shape_pointer curShape;
-
-  ShapeList totalShapeList;
-  ShapeList targetShapeList;
-
-  if ( this->getShapeInQuadrant() )
-  {
-    totalShapeList.addShapeToList( this->getShapeInQuadrant() );
-  }
-
-  QuadrantPointer_t targetQuadrant;
-
-  for ( int x = 0; x < 2; x++ )
-  {
-    for ( int y = 0; y < 2; y++ )
-    {
-      for ( int z = 0; z < 2; z++ )
-      {
-
-        targetQuadrant = quadOctree[x][y][z];
-        if ( targetQuadrant != nullptr )
-        {
-          targetShapeList = targetQuadrant->getShapesRecursive();
-          foreach_ ( shape_pointer curShape, targetShapeList.getShapes() )
-          {
-            totalShapeList.addShapeToList( curShape );
-          }
-        }
-
-      }
-    }
-  }
-
-  return totalShapeList;
-}

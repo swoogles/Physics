@@ -1,18 +1,7 @@
-/*
- * ShapeList.cpp
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #include "ShapeList.h"
-
-using namespace std;
 
 bool ShapeList::hasConflictsWith( shape_pointer insertShape )
 {
-  sgVec4 sepVec;
-  SGfloat distanceSquared, distance, minSep;
   bool conflict = false;
 
   boost::shared_ptr<MyShape> object1;
