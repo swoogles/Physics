@@ -94,6 +94,13 @@ void MyShape::getMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, momentum);
 }
 
+VecStruct * MyShape::getMomentum() {
+    VecStruct * vecStruct = new VecStruct();
+    sgCopyVec4(vecStruct->vec, momentum);
+    return vecStruct;
+}
+
+
 // Angular Momentum and Velocity
 float MyShape::getMomentOfInertia() { return 1;}
 
@@ -201,7 +208,6 @@ void MyShape::removeShapeFromList( shapePointer_t shapeToRemove )
 
 bool MyShape::isTouching( shapePointer_t otherShape )
 {
-  bool touching = false;
   sgVec4 sepVec;
   SGfloat distanceSquared, distance, minSep;
 
@@ -213,12 +219,7 @@ bool MyShape::isTouching( shapePointer_t otherShape )
   minSep = this->getRadius() + otherShape->getRadius();
 
 
-  if (distance < minSep) 
-  {
-    touching = true;
-  }
-
-  return touching;
+  return (distance < minSep);
 }
 
 // TODO Don't implement this at MyShape. It should have separate implementations for Circles and Boxes (If boxes even need it)
@@ -234,28 +235,22 @@ void MyShape::mergeWith( shapePointer_t otherShape )
   calcMergedAngMomentum( otherShape, totalAngMom );
 
   // COM start
-  sgVec4 aPos, bPos;
-  sgVec4 tempVec, tempVec2, COM;
+  vecPtr tempVec(this->getPosNew());
+  vecPtr tempVec2(otherShape->getPosNew());
+  sgVec4 COM;
 
-  this->getPos(aPos);
-  otherShape->getPos(bPos);
+  sgScaleVec4(tempVec->vec, this->getMass());
+  sgScaleVec4(tempVec2->vec, otherShape->getMass());
 
-  sgCopyVec4(tempVec, aPos);
-  sgCopyVec4(tempVec2, bPos);
-
-  sgScaleVec4(tempVec, this->getMass());
-  sgScaleVec4(tempVec2, otherShape->getMass());
-
-  sgAddVec4(COM,tempVec, tempVec2);
+  sgAddVec4(COM,tempVec->vec, tempVec2->vec);
   sgScaleVec4(COM, 1/(this->getMass() + otherShape->getMass()) );
   // COM end
 
-  sgVec4 otherShapeMomentum;
-  otherShape->getMomentum(otherShapeMomentum);
+  vecPtr otherShapeMomentum(otherShape->getMomentum());
 
   this->setMass(newMass);
   this->setRadius(newRadius);
-  this->adjustMomentum( otherShapeMomentum );
+  this->adjustMomentum( otherShapeMomentum->vec );
 
   this->setAngMomentum(totalAngMom);
   sgVec3 angVel;
@@ -267,48 +262,40 @@ void MyShape::mergeWith( shapePointer_t otherShape )
   this->setPos(COM);
 }
 
+// TODO This should return totalAngMom, instead of mutating parameter.
 void MyShape::calcMergedAngMomentum( shapePointer_t otherShape, sgVec4 totalAngMom )
 {
-  sgVec4 sepVec, sepVecUnit;
+  sgVec4 sepVecUnit;
 
-  sgVec4 aPos, bPos;
-  sgVec4 aMomentum, bMomentum;
+  vecPtr aPos(this->getPosNew());
+  vecPtr bPos(otherShape->getPosNew());
+  vecPtr aMomentum(this->getMomentum());
+  vecPtr bMomentum(otherShape->getMomentum());
   sgVec4 tempVec;
   sgVec4 hitPt;
 
-  sgVec3 r, aMom3, bMom3;
-  sgVec3 crossed = { 0, 0, 0 };
+  sgVec3 r;
+  sgVec3 crossed;
 
-  this->getPos(aPos);
-  otherShape->getPos(bPos);
-  sgSubVec4( sepVec, aPos, bPos );
-  sgNormaliseVec4( sepVecUnit, sepVec );
+  vecPtr sepVec(VecStruct::vecFromAtoB(aPos.get(), bPos.get()));
+  sgNormaliseVec4( sepVecUnit, sepVec->vec );
 
   sgScaleVec4(tempVec, sepVecUnit, this->getRadius());
-  sgAddVec4(hitPt, aPos, tempVec);
+  sgAddVec4(hitPt, aPos->vec, tempVec);
   
-  sgSubVec3( r, aPos, hitPt );
+  sgSubVec3( r, aPos->vec, hitPt );
 
   for (int i = 0; i < 4; i++) {
     totalAngMom[i] = 0;
   }
 
-  this->getMomentum(aMomentum);
-  otherShape->getMomentum(bMomentum);
-
-  aMom3[0] = aMomentum[0];
-  aMom3[1] = aMomentum[1];
-  aMom3[2] = aMomentum[2];
-  sgVectorProductVec3(crossed, r, aMom3);
+  sgVectorProductVec3(crossed, r, aMomentum->vec);
 
   sgAddVec4(totalAngMom, crossed);
 
-  sgSubVec3( r, bPos, hitPt );
+  sgSubVec3( r, bPos->vec, hitPt );
 
-  bMom3[0] = bMomentum[0];
-  bMom3[1] = bMomentum[1];
-  bMom3[2] = bMomentum[2];
-  sgVectorProductVec3(crossed, r, bMom3);
+  sgVectorProductVec3(crossed, r, bMomentum->vec);
 
   sgAddVec3(totalAngMom, crossed);
 

@@ -15,11 +15,8 @@
 #include <plib/sg.h>
 #include <boost/geometry/arithmetic/dot_product.hpp>
 #include <boost/geometry/geometries/point.hpp>
+#include "VecStruct.h"
 
-
-struct VecStruct {
-	sgVec4 vec;
-};
 
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;

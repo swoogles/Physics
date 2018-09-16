@@ -17,6 +17,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/foreach.hpp>
 #include "../Dimensions/Moveable.h"
+#include "../Dimensions/VecStruct.h"
 #include "../Physics/WorldSettings.h"
 
 #include <iostream>
@@ -94,6 +95,9 @@ class MyShape : public Moveable {
 
     //! Returns momentum of object in retVec
     void getMomentum(sgVec4 retVec);
+
+    //! Returns momentum of object in retVec
+    VecStruct * getMomentum();
 
     /*! \brief Calculates the moment of inertia for the object
      *
