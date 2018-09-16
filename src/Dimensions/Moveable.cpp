@@ -2,27 +2,18 @@
 
 Moveable::Moveable()
            :pos{0.0,0.0,0.0,1.0}
+           ,orientationQuat{0, 0, 0, 1.0} // Identity Quaternion
+           ,orientationMat{{1, 0, 0, 0},
+                           {0, 1, 0, 0},
+                           {0, 0, 1, 0},
+                           {0, 0, 0, 1}}
           ,momentum{0, 0, 0, 0}
           ,angMomentum{0, 0, 0, 0}
           ,angVelocity{0, 0, 0, 0}
           ,mass(1)
           ,density(1)
           ,color{0.5,1.0,0.0}
-{
-	sgMakeIdentQuat(orientationQuat);
-
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (i == j) {
-				orientationMat[i][j] = 1;
-			}
-			else {
-				orientationMat[i][j] = 0;
-			}
-		}
-	}
-
-}
+{}
 
 Moveable::~Moveable() {
 	//cout << "Killing Moveable" << endl;
