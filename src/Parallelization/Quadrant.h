@@ -63,4 +63,5 @@ class Quadrant : public Box
     void setCenterOfMass( sgVec4 centerOfMass );
 
 };
+typedef boost::shared_ptr<Quadrant> QuadrantPointer_t;
 #endif

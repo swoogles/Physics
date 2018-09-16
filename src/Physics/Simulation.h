@@ -102,4 +102,5 @@ class Simulation
 	void makeAllInelastic();
 
 } ;
-#endif 
+typedef boost::shared_ptr<Simulation> SimulationPtr_t;
+#endif

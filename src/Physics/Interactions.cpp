@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void elasticCollision( boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt) {
+void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt) {
 	sgVec4 sepVec;
 	sgVec4 sepVecUnit;
 
@@ -44,11 +44,11 @@ void elasticCollision( boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyS
 // I'm working on this method because I think there are some basic
 // structural changes that I can make so that it will be more legible and
 // more suitable for later parallelization
-void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation ) 
+void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 {
   float dt = curSimulation->getDT();
   sgVec4 gravVec;
-  boost::shared_ptr<MyShape> object1, object2;
+  shapePointer_t object1, object2;
   SGfloat distance, minSep;
 
   sgVec4 gravField = {0, 0, 0, 0};
@@ -121,13 +121,12 @@ void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation )
 
 }
 
-ShapeList calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt) 
+ShapeList calcForceOnObject_Octree(shape_pointer curObject, QuadrantPointer_t curQuadrant, float dt)
 {
   sgVec4 gravVec;
-  boost::shared_ptr<MyShape> object1, shapeInQuadrant;
+  shapePointer_t object1, shapeInQuadrant;
   SGfloat distance;
   SGfloat theta = 0.5;
-  typedef boost::shared_ptr<Quadrant> quad_pointer;
 
   ShapeList deleteList;
 
@@ -177,7 +176,7 @@ ShapeList calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Qu
     //3.
     else
     {
-      quad_pointer targetQuadrant;
+      QuadrantPointer_t targetQuadrant;
       for ( int x = 0; x < 2; x++ )
       {
         for ( int y = 0; y < 2; y++ )
@@ -201,7 +200,7 @@ ShapeList calcForceOnObject_Octree(shape_pointer curObject, boost::shared_ptr<Qu
 
 }
 
-void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
+void calcForcesAll( SimulationPtr_t curSimulation )
 {
   ShapeList deleteList;
 
@@ -226,10 +225,10 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation )
   }
 }
 
-void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation) 
+void calcCollisionsAll(SimulationPtr_t curSimulation)
 {
   ShapeList shapeList = curSimulation->getPhysicalObjects() ;
-  boost::shared_ptr<MyShape> object1, object2;
+  shapePointer_t object1, object2;
   SGfloat distance, minSep;
 
   compressed_vector<shape_pointer> physicalObjects = shapeList.getShapes();
@@ -273,7 +272,7 @@ void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation)
   curSimulation->setPhysicalObjects( shapeList ) ;
 }
 
-void calcForceGrav( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::shared_ptr<MyShape> object2, float dt ) 
+void calcForceGrav( sgVec4 gravVec, shapePointer_t object1, shapePointer_t object2, float dt )
 {
   float forceMagnitude;
   SGfloat rSquared;

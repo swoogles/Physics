@@ -7,7 +7,6 @@
 #include "../ShapeFiles/ShapeList.h"
 #include "Simulations.h"
 
-using boost::shared_ptr;
 using boost::numeric::ublas::compressed_vector;
 
 /*! \brief Calculates new velocities after a collision
@@ -18,9 +17,9 @@ using boost::numeric::ublas::compressed_vector;
  */
 void elasticCollision( shape_pointer object1, shape_pointer object2, float dt);
 
-ShapeList calcForceOnObject_Octree( shape_pointer curObject, boost::shared_ptr<Quadrant> curQuadrant, float dt);
+ShapeList calcForceOnObject_Octree( shape_pointer curObject, QuadrantPointer_t curQuadrant, float dt);
 
-void calcForcesAll( boost::shared_ptr<Simulation> curSimulation );
+void calcForcesAll( SimulationPtr_t curSimulation );
 
 /*! \brief Calculates forces on all current objects
  *
@@ -29,13 +28,13 @@ void calcForcesAll( boost::shared_ptr<Simulation> curSimulation );
  *
  *  \param dt Determines time over which each force acts
  */
-void calcForcesAll_LessNaive( boost::shared_ptr<Simulation> curSimulation );
+void calcForcesAll_LessNaive( SimulationPtr_t curSimulation );
 
 /*! \brief Determines if any objects are colliding and responds appropriately.
  *
  *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
  */
-void calcCollisionsAll(boost::shared_ptr<Simulation> curSimulation);
+void calcCollisionsAll(SimulationPtr_t curSimulation);
 
 /*! \brief Calculates magnitude of the force of gravity between 2 objects
  *
