@@ -1,6 +1,7 @@
 #include "Quadrant.h"
 
 typedef boost::shared_ptr<Quadrant> QuadrantPointer_t;
+typedef boost::scoped_ptr<VecStruct> vecPtr;
 
 bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundaries )
 {
@@ -117,9 +118,8 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     shapeInQuadrant = insertedShape;
     containsBody = true;
     this->setMass( insertedShape->getMass() );
-    sgVec4 pos;
-    insertedShape->getPos(pos);
-    this->setCenterOfMass( pos );
+    vecPtr pos(insertedShape->getPosNew());
+    this->setCenterOfMass( pos->vec );
   }
   // 2. a
   else if ( ! isLeaf )
@@ -129,11 +129,10 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     sgVec4 quadrantWeightedPosition;
     this->getWeightedPosition( quadrantWeightedPosition );
 
-    sgVec4 shapeWeightedPosition;
-    insertedShape->getPos( shapeWeightedPosition );
-    sgScaleVec4( shapeWeightedPosition, insertedShape->getMass() );
+    vecPtr shapeWeightedPosition(insertedShape->getPosNew());
+    sgScaleVec4( shapeWeightedPosition->vec, insertedShape->getMass() );
 
-    sgAddVec4( quadrantWeightedPosition, shapeWeightedPosition );
+    sgAddVec4( quadrantWeightedPosition, shapeWeightedPosition->vec );
     this->setWeightedPosition( quadrantWeightedPosition );
 
     // 2. b
@@ -157,11 +156,10 @@ void Quadrant::insertShape( shape_pointer insertedShape )
     sgVec4 quadrantWeightedPosition;
     this->getWeightedPosition( quadrantWeightedPosition );
 
-    sgVec4 shapeWeightedPosition;
-    insertedShape->getPos( shapeWeightedPosition );
-    sgScaleVec4( shapeWeightedPosition, insertedShape->getMass() );
+    vecPtr shapeWeightedPosition(insertedShape->getPosNew());
+    sgScaleVec4( shapeWeightedPosition->vec, insertedShape->getMass() );
 
-    sgAddVec4(quadrantWeightedPosition, shapeWeightedPosition );
+    sgAddVec4(quadrantWeightedPosition, shapeWeightedPosition->vec );
     this->setWeightedPosition( quadrantWeightedPosition );
 
     // Consider removing this check. It's only an issue when you're out of
@@ -187,13 +185,12 @@ void Quadrant::insertShape( shape_pointer insertedShape )
 // Guaranteed to hand back an instantiated Quadrant
 QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
-  sgVec4 insertPos;
+  vecPtr insertPos(shapeToInsert->getPosNew());
+
   sgVec4 newPos;
   sgVec4 newDimensions;
   sgVec4 offsets;
   sgVec3 targets;
-
-  shapeToInsert->getPos( insertPos ); 
 
   // Each dimension is cut in half as you go down
   sgScaleVec4 ( newDimensions, dimensions, .5 );
@@ -215,13 +212,13 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
   // TODO make one function that will take 2 vectors and return
   // true if one falls completely within the bounds of another
-  bool validInsertPosition = withinBoundaries( insertPos, minBoundaries, maxBoundaries );
+  bool validInsertPosition = withinBoundaries( insertPos->vec, minBoundaries, maxBoundaries );
 
   if ( validInsertPosition )
   {
     for ( int i = 0; i < 3; i++ )
     {
-      if ( insertPos[i] < pos[i] )
+      if ( insertPos->vec[i] < pos[i] )
       {
         targets[i] = 0; 
         newPos[i] -= offsets[i];

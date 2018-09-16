@@ -279,9 +279,6 @@ void calcForceGrav( sgVec4 gravVec, boost::shared_ptr<MyShape> object1, boost::s
   SGfloat rSquared;
   sgVec4 sepVec, unitVec;
 
-  sgVec4 pos;
-  object1->getPos(pos);
-
   object1->getVectorToObject( object2, sepVec);
 
   rSquared = sgLengthSquaredVec4(sepVec);

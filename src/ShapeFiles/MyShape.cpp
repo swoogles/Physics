@@ -253,9 +253,7 @@ void MyShape::mergeWith( shapePointer_t otherShape )
   this->adjustMomentum( otherShapeMomentum->vec );
 
   this->setAngMomentum(totalAngMom);
-  sgVec3 angVel;
   this->getAngMomentum(totalAngMom);
-  this->getAngVelocity(angVel);
 
   this->calcColor();
 

@@ -72,11 +72,6 @@ VecStruct * Moveable::getPosNew() const {
     return vecStruct;
 }
 
-
-void Moveable::getPos(sgVec4 retVec) const {
-	sgCopyVec4(retVec, pos);
-}
-
 void Moveable::setAngle(float xAngle, float yAngle, float zAngle) {
 	sgMakeIdentQuat(orientationQuat);
 

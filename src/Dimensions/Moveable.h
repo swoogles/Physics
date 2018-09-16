@@ -70,9 +70,6 @@ public:
     //! Return position of object in retVec
     VecStruct * getPosNew() const;
 
-	//! Return position of object in retVec
-	void getPos(sgVec4 retVec) const;
-
 	/*! \brief Set orientation of object
 	 *
 	 *  /param xAngle Degrees from X-axis

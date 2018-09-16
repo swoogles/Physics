@@ -149,11 +149,10 @@ void Simulation::makeAllInelastic() {
 }
 
 void Simulation::updateMinsAndMaxes() {
-    sgVec4 curPos;
     foreach_ ( shape_pointer curShape, getPhysicalObjects().getShapes() )
     {
-        curShape->getPos(curPos);
-        updateXYMinsAndMaxes(curPos);
+        vecPtr curPos(curShape->getPosNew());
+        updateXYMinsAndMaxes(curPos->vec);
     }
 }
 

@@ -65,14 +65,11 @@ void display(void)
   glClearColor(0,0,0,0);
   glClear(GL_COLOR_BUFFER_BIT);
 
-  sgVec4 curPos;
-
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
 
   Observer * curObserver = Observer::getCurObserver();
   curObserver->getView();
-  curObserver->getPos(curPos);
 
   sgVec3 curColor = { 1.0, 0.0, 0.0 };
   glColor3fv(curColor);
