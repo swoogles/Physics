@@ -2,10 +2,7 @@
 #define MOVEABLE_H_
 
 #include <plib/sg.h>
-#include <boost/geometry/arithmetic/dot_product.hpp>
-#include <boost/geometry/geometries/point.hpp>
 #include "VecStruct.h"
-
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -25,11 +22,11 @@ protected:
 	sgQuat orientationQuat;
 	sgMat4 orientationMat;
 
+    sgVec4 momentum; // TODO This gots'ta go.
 	sgVec4 angMomentum;
 	sgVec4 angVelocity;
 	sgVec4 prevAngVelocity;
 
-	sgVec4 momentum; // TODO This gots'ta go.
 	sgVec4 prevMomentum;
 	float mass; // TODO This gots'ta go.
 	float density;
@@ -47,8 +44,7 @@ public:
 	//! Set position of object to <newPos>
 	void setPos(const sgVec4 newPos);
 
-	//! Return position of object in retVec
-	void getPos(sgVec4 retVec) const;
+    VecStruct * getPosNew() const;
 
 	/*! \brief Rotate object around a specified axis
 	 *
@@ -75,8 +71,6 @@ public:
 	void setAngVelocity(const sgVec4 newAngVelocity);
 	//! Alters angular velocity of object by <dAngVelocity>
 	void adjustAngVelocity(const sgVec4 dangVelocity);
-	//! Returns angular velocity of object in retVec
-	void getAngVelocity(sgVec4 retVec) const;
 
 	//! Moves object based on current normal and angular momentum
 	void update(float);
