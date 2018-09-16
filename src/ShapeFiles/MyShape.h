@@ -31,6 +31,8 @@ using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
 using boost::shared_ptr;
 
+typedef boost::scoped_ptr<VecStruct> vecPtr;
+
 /*! \brief The class at the heart of all the physical calculations
  *
  *  This class holds all the attributes needed to model real world objects:
@@ -219,4 +221,6 @@ class MyShape : public Moveable {
 
     VecStruct * getCenterOfMass();
 };
+
+typedef boost::shared_ptr<MyShape> shapePointer_t;
 #endif /* MYSHAPE_H_ */

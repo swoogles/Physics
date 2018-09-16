@@ -7,8 +7,6 @@
 
 #include "MyShape.h"
 
-typedef boost::shared_ptr<MyShape> shapePointer_t;
-typedef boost::scoped_ptr<VecStruct> vecPtr;
 compressed_vector< shapePointer_t > MyShape::shapes(0);
 
 void MyShape::getVectorToObject( shapePointer_t object2, sgVec4 sepVector) {

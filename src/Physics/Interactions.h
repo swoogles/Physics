@@ -1,7 +1,6 @@
 #ifndef INTERACTIONS_H_
 #define INTERACTIONS_H_
 
-#include <boost/numeric/ublas/vector_sparse.hpp>
 #include <plib/sg.h>
 
 #include "../Parallelization/Quadrant.h"
@@ -10,7 +9,6 @@
 
 using boost::shared_ptr;
 using boost::numeric::ublas::compressed_vector;
-typedef boost::shared_ptr<MyShape> shape_pointer;
 
 /*! \brief Calculates new velocities after a collision
  *
