@@ -7,8 +7,6 @@
 
 #include "MyShape.h"
 
-compressed_vector< shapePointer_t > MyShape::shapes(0);
-
 void MyShape::getVectorToObject( shapePointer_t object2, sgVec4 sepVector) {
     vecPtr pos1(this->getPosNew());
     vecPtr pos2(object2->getCenterOfMass());
@@ -27,8 +25,6 @@ float MyShape::getDistanceToObject( shapePointer_t object2 ) {
 
 MyShape::MyShape()
 {
-	numPts = 16;
-	pts.resize(numPts, 4);
 }
 
 // MyShape::MyShape( const MyShape& copyShape )
@@ -71,14 +67,6 @@ void MyShape::draw(){
 
 	drawUnit();
 	glPopMatrix();
-}
-
-void MyShape::drawAllShapes() {
-    foreach_ ( shapePointer_t curShape, MyShape::shapes )
-    {
-        curShape->draw();
-    }
-
 }
 
 void MyShape::drawShapes(compressed_vector<shapePointer_t> shapes) {
@@ -168,49 +156,7 @@ void MyShape::calcColor() {
 	color[1] = greenAmount;
 }
 
-void MyShape::clearShapes() {
-  shapes.clear();
-	shapes.resize(0);
-}
-
 int MyShape::getType() { return 1;}
-
-int MyShape::addShapeToList( shapePointer_t insertShape, compressed_vector< shapePointer_t > shapes )
-{
-  int curSize = shapes.size();
-  shapes.resize(curSize + 1);
-  shapes(curSize) = insertShape;
-  return curSize;
-}
-
-void MyShape::removeShapeFromList( shapePointer_t shapeToRemove, compressed_vector< shapePointer_t > shapes  )
-{
-  compressed_vector<shapePointer_t> newShapeVector;
-  int newSize =  shapes.size();
-  newShapeVector.resize(newSize);
-  bool removedShape = false;
-
-  int curIndex = 0;
-  foreach_( shapePointer_t curShape, shapes)
-  {
-    if ( curShape.get() != shapeToRemove.get() )
-    {
-      newShapeVector.insert_element(curIndex, curShape);
-      curIndex++;
-    }
-    else
-    {
-      removedShape = true;
-      newShapeVector.resize(newSize-1);
-    }
-  }
-  if ( removedShape )
-  {
-    //TODO PHYS-17 Do a more appropriate vector copy
-    // compressed_vector<shapePointer_t> localShapeList =  newShapeVector ;
-    shapes = newShapeVector;
-  }
-}
 
 bool MyShape::isTouching( shapePointer_t otherShape )
 {

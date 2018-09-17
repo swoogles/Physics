@@ -33,7 +33,7 @@ typedef boost::scoped_ptr<VecStruct> vecPtr;
  *  \n -Density (float)
  *  \n -Color (float float float)
  */
-void saveShapes(char * fileName);
+void saveShapes(char * fileName, compressed_vector<shape_pointer> shapes);
 
 
 /*! \brief Opens a saved file and loads WorldSettings info and shapes info
@@ -53,7 +53,7 @@ void saveShapes(char * fileName);
  *  \n -Color (float float float)
  *
  */
-void openShapes(char * fileName);
+void openShapes(char * fileName, compressed_vector<shape_pointer> shapes);
 
 /*! \interface sgVec
  *  \brief Vector class used in several places throughout the project

@@ -6,6 +6,7 @@
 class Circle: public MyShape {
   private:
     GLdouble radius;
+    GLint numPts;
   public:
     Circle(
             sgVec4 pos,

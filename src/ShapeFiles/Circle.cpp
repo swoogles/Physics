@@ -14,6 +14,7 @@ Circle::Circle(
 	sgCopyVec4(this->momentum, momentum);
 	this->density = density;
 	sgCopyVec3(this->color, color);
+	numPts = 16;
 }
 
 // Circle::Circle( const Circle& copyCircle )

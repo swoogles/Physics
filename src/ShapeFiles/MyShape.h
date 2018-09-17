@@ -13,8 +13,6 @@
 #include <cmath>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/numeric/ublas/matrix.hpp>
 #include <boost/foreach.hpp>
 #include "../Dimensions/Moveable.h"
 #include "../Dimensions/VecStruct.h"
@@ -24,7 +22,7 @@
 #include <string>
 
 #include <plib/sg.h>
-#define foreach_  BOOST_FOREACH                                                                                              
+#define foreach_  BOOST_FOREACH
 
 using namespace std;
 using namespace boost::numeric::ublas;
@@ -47,9 +45,6 @@ typedef boost::scoped_ptr<VecStruct> vecPtr;
  *  \n \n Currently Circles are the only objects that have been really developed, as they are the easiest starting point physically
  */
 class MyShape : public Moveable {
-  protected:
-    GLint numPts;
-    matrix<double> pts;
 
   public:
     /*! \brief Sets default values of members common to all shapes
@@ -71,12 +66,6 @@ class MyShape : public Moveable {
      *  \n -Pop matrix from the stack
      */
     void draw();
-
-    /*
-     * Refer to draw() docs.
-     */
-    static void drawAllShapes();
-
 
     /*! \brief Use shape dimensions to scale points before drawing
      *
@@ -153,20 +142,8 @@ class MyShape : public Moveable {
     // static vector<MyShape *> shapes;
     //PHYS-7
     typedef boost::shared_ptr<MyShape> shapePointer_t;
-    static compressed_vector<shapePointer_t> shapes;
 
     static void drawShapes(compressed_vector<shapePointer_t> shapes);
-
-    static void clearShapes();
-
-    /*! \brief Returns a moveable from the main moveables list
-     *
-     *  /param moveableIndex The index of the moveable you want to retrieve from the main moveables list
-     *  \return Pointer to desired moveable
-     */
-    static int addShapeToList( shapePointer_t insertShape, compressed_vector< shapePointer_t > shapes );
-
-    static void removeShapeFromList( shapePointer_t shapeToRemove, compressed_vector< shapePointer_t > shapes );
 
     /*! \relates MyShape
      *  \brief Finds a vector pointing from object1 to object2

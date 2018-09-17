@@ -7,14 +7,14 @@
 
 #include "fileInteraction.h"
 
-void saveShapes(char * fileName) {
+void saveShapes(char * fileName, compressed_vector<shape_pointer> shapes) {
 	shape_pointer curShape;
 	sgVec4 curField;
 	ofstream myfile;
 	myfile.open (fileName);
-	myfile << MyShape::shapes.size() << endl;
-	for (unsigned int i = 0; i < MyShape::shapes.size(); i++) {
-		curShape = MyShape::shapes(i);
+	myfile << shapes.size() << endl;
+	for (unsigned int i = 0; i < shapes.size(); i++) {
+		curShape = shapes(i);
 
 		myfile << curShape->getType() << endl;
 
@@ -40,7 +40,7 @@ void saveShapes(char * fileName) {
 
 }
 
-void openShapes(char * fileName) {
+void openShapes(char * fileName, compressed_vector<shape_pointer> shapes) {
 	ifstream curFile;
 	sgVec4 curVec;
 	float curVar;
@@ -56,7 +56,7 @@ void openShapes(char * fileName) {
 
 	curFile >> numShapes;
 
-	MyShape::shapes.resize(numShapes);
+	shapes.resize(numShapes);
 
 	for (int i = 0; i < numShapes; i++) {
 
@@ -101,7 +101,7 @@ void openShapes(char * fileName) {
 					color
 					);
 			curShape->setAngMomentum(angularMomentum);
-			MyShape::shapes(i) = curShape;
+			shapes(i) = curShape;
 		}
 	}
 	glutPostRedisplay();

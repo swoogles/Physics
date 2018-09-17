@@ -299,7 +299,7 @@ void calcDrag(float dt, compressed_vector<shape_pointer> shapes) {
   float dragConstant = -30;
   sgVec4 dragForce;
 
-  foreach_ ( shape_pointer curShape, MyShape::shapes ) {
+  foreach_ ( shape_pointer curShape, shapes ) {
     curShape->getVelocity(dragForce);
     sgScaleVec4(dragForce, dragConstant);
     sgScaleVec4(dragForce, dt);
