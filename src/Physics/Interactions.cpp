@@ -111,12 +111,11 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
     {
       foreach_ ( shape_pointer curShape, deleteList )
       {
-        shapeList.removeShapeFromList( curShape );
-        MyShape::removeShapeFromList( curShape );
+        // TODO This is some funky duplicate bullshit here. Fix it.
+        curSimulation->shapes.removeShapeFromList(curShape);
       }
     }
 
-    curSimulation->setPhysicalObjects( shapeList ) ;
   }
 
 }
@@ -206,7 +205,7 @@ void calcForcesAll( SimulationPtr_t curSimulation )
 
   ShapeList physicalObjects = curSimulation->getPhysicalObjects();
 
-  if ( curSimulation->getForceCalcMethod() != Simulation::FORCE_CALC_METHOD_NAIVE  )
+  if ( curSimulation->getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
     calcForcesAll_LessNaive( curSimulation );
   }
@@ -262,11 +261,11 @@ void calcCollisionsAll(SimulationPtr_t curSimulation)
   }
   if ( deleteList.size() > 0 )
   {
-    foreach_ ( shape_pointer curShape, deleteList )
-    {
-      shapeList.removeShapeFromList( curShape );
-      MyShape::removeShapeFromList( curShape );
-    }
+    foreach_ ( shape_pointer curShape, deleteList ) {
+            shapeList.removeShapeFromList(curShape);
+
+            curSimulation->shapes.removeShapeFromList(curShape);
+          }
   }
 
   curSimulation->setPhysicalObjects( shapeList ) ;

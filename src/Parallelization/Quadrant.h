@@ -42,9 +42,10 @@ class Quadrant : public Box
     array_typeNew  quadOctree;
 
     QuadrantPointer_t determineShapeQuadrant( shape_pointer shapeToInsert );
+    ShapeList shapes;
 
   public:
-    Quadrant(int level, sgVec4 pos, sgVec4 dimensions);
+    Quadrant(int level, sgVec4 pos, sgVec4 dimensions, ShapeList shapes );
     ~Quadrant();
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 

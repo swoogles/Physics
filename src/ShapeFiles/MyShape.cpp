@@ -81,6 +81,14 @@ void MyShape::drawAllShapes() {
 
 }
 
+void MyShape::drawShapes(compressed_vector<shapePointer_t> shapes) {
+            foreach_ ( shapePointer_t curShape, shapes )
+                {
+                    curShape->draw();
+                }
+
+}
+
 void MyShape::drawScale(){}
 void MyShape::drawUnit(){}
 
@@ -167,7 +175,7 @@ void MyShape::clearShapes() {
 
 int MyShape::getType() { return 1;}
 
-int MyShape::addShapeToList( shapePointer_t insertShape )
+int MyShape::addShapeToList( shapePointer_t insertShape, compressed_vector< shapePointer_t > shapes )
 {
   int curSize = shapes.size();
   shapes.resize(curSize + 1);
@@ -175,7 +183,7 @@ int MyShape::addShapeToList( shapePointer_t insertShape )
   return curSize;
 }
 
-void MyShape::removeShapeFromList( shapePointer_t shapeToRemove )
+void MyShape::removeShapeFromList( shapePointer_t shapeToRemove, compressed_vector< shapePointer_t > shapes  )
 {
   compressed_vector<shapePointer_t> newShapeVector;
   int newSize =  shapes.size();

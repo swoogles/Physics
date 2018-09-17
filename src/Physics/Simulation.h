@@ -35,9 +35,11 @@ class Simulation
     sgVec4 gravField;
     bool gravBetweenObjects;
 
-    boost::shared_ptr<Quadrant> quadrant;
+    QuadrantPointer_t quadrant;
 
   public:
+	// TODO make private
+    ShapeList shapes;
     static const char FORCE_CALC_METHOD_NAIVE_STRING[];
     static const char FORCE_CALC_METHOD_OCTREE_STRING[];
     static const int FORCE_CALC_METHOD_NAIVE = 0;
@@ -73,7 +75,7 @@ class Simulation
     void updateXYMinsAndMaxes(sgVec4 curPos);
 
     void refreshQuadrant();
-    inline boost::shared_ptr<Quadrant> getQuadrant() { return quadrant; }
+    inline QuadrantPointer_t getQuadrant() { return quadrant; }
     void getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY );
 
 	//! Returns true if a ubiquitous force from gravity affects the entire system

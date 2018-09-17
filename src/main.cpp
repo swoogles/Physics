@@ -50,12 +50,16 @@ static int main_window;
 
 static int control_center_num;
 
+using boost::numeric::ublas::compressed_vector;
+
 // GLOBALS
-boost::shared_ptr<Simulation> globalSimulation;
+SimulationPtr_t globalSimulation;
 boost::shared_ptr<BillProperties> globalProperties;
 
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
+
+compressed_vector<shapePointer_t> shapes;
 
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
@@ -75,7 +79,7 @@ void display(void)
   glColor3fv(curColor);
 
   glMatrixMode(GL_MODELVIEW);
-  MyShape::drawAllShapes();
+  MyShape::drawShapes(shapes);
 
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
@@ -103,7 +107,7 @@ void openGlInit() {
   glLoadIdentity();
 }
 
-void determineViewBasedOnSimulation(boost::shared_ptr<Simulation> simulation, Observer * observer) {
+void determineViewBasedOnSimulation(SimulationPtr_t simulation, Observer * observer) {
   float minX, minY, maxX, maxY;
   globalSimulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
   observer->calcMinPullback( 45.0, minX, minY, maxX, maxY);
@@ -122,7 +126,7 @@ void init(char simulation) {
 
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation, numShapes );
-  MyShape::shapes = globalSimulation->getPhysicalObjects().getShapes() ;
+  shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
   globalSimulation->setForceCalcMethodByString( globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD ) );
   globalSimulation->updateMinsAndMaxes();

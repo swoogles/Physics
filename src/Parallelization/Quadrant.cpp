@@ -28,12 +28,12 @@ boost::shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
 
 Quadrant::~Quadrant()
 {
-  MyShape::removeShapeFromList( borders );
-  MyShape::removeShapeFromList( centerOfMassRepresentation );
+  shapes.removeShapeFromList(borders);
+  shapes.removeShapeFromList(centerOfMassRepresentation);
 }
 
 
-Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions)
+Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions, ShapeList shapes )
   :isLeaf(true)
   ,containsBody(false)
   ,level(level)
@@ -47,7 +47,7 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions)
   setPos( pos );
   sgCopyVec4( this->dimensions, dimensions );
 
-  MyShape::addShapeToList( borders );
+  shapes.addShapeToList(borders);
 
   sgVec3 CoMColor = { 0, 1, 0 };
   sgVec4 comPos = { 0, 0, 0, 1};
@@ -64,12 +64,7 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions)
           comDensity,
           CoMColor
   );
-
-  if ( level == 1 )
-  {
-      // TODO This is bad. It should go away.
-    MyShape::addShapeToList( centerOfMassRepresentation );
-  }
+  this->shapes = shapes;
 
 }
 
@@ -244,7 +239,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
     if ( insertionQuadrant == nullptr )
     {
-      insertionQuadrant = boost::make_shared<Quadrant>( this->level + 1, boost::ref(newPos), boost::ref(newDimensions) ) ;
+      insertionQuadrant = boost::make_shared<Quadrant>( this->level + 1, boost::ref(newPos), boost::ref(newDimensions), shapes ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }
