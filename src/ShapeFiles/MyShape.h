@@ -16,6 +16,7 @@
 #include <boost/foreach.hpp>
 #include "../Dimensions/Moveable.h"
 #include "../Dimensions/VecStruct.h"
+#include "../Dimensions/MatrixStruct.h"
 #include "../Physics/WorldSettings.h"
 
 #include <iostream>
@@ -53,19 +54,6 @@ class MyShape : public Moveable {
     // MyShape( const MyShape& );
 
     virtual ~MyShape();
-
-    /*! \brief The key MyShape function called in the display function
-     *
-     *  Steps:
-     *  \n -Push current matrix onto the stack
-     *  \n -Translate using the pos vector
-     *  \n -Rotate using orientationMat
-     *  \n -Scale using drawScale()
-     *  \n -Call glColor3fv(float *) using color vector
-     *  \n -Call drawUnit() to draw a unit square, circle, etc.
-     *  \n -Pop matrix from the stack
-     */
-    void draw();
 
     /*! \brief Use shape dimensions to scale points before drawing
      *
@@ -116,6 +104,7 @@ class MyShape : public Moveable {
 
     //! Returns color of object in retVec
     void getColor(sgVec3 retVec) const;
+    VecStruct * getColor() const;
 
     /*!
      * TODO This should at *least* go to the circle class, but I think it really belongs in the Physics package
@@ -142,8 +131,6 @@ class MyShape : public Moveable {
     // static vector<MyShape *> shapes;
     //PHYS-7
     typedef boost::shared_ptr<MyShape> shapePointer_t;
-
-    static void drawShapes(compressed_vector<shapePointer_t> shapes);
 
     /*! \relates MyShape
      *  \brief Finds a vector pointing from object1 to object2

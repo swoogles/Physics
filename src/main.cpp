@@ -32,6 +32,8 @@
 #include "Physics/Simulations.h"
 #include "Physics/WorldSettings.h"
 
+#include "ShapeFiles/Drawing.h"
+
 #define WW 5
 #define WH 5
 #define FPS 1
@@ -79,7 +81,7 @@ void display(void)
   glColor3fv(curColor);
 
   glMatrixMode(GL_MODELVIEW);
-  MyShape::drawShapes(shapes);
+  Drawing::drawShapes(shapes);
 
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();

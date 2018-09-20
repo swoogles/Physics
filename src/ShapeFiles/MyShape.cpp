@@ -50,33 +50,6 @@ MyShape::~MyShape() {
 	//cout << "Killing MyShape" << endl;
 }
 
-// TODO Figure out how to get the OpenGL crud out of this class. That should be handled elsewhere.
-void MyShape::draw(){
-	glPushMatrix();
-
-	//Translate
-	glTranslatef(pos[0], pos[1], pos[2]);
-
-	//Rotate
-	glMultMatrixf( (const GLfloat*)orientationMat);
-
-	//Scale
-	drawScale();
-
-	glColor3fv(color);
-
-	drawUnit();
-	glPopMatrix();
-}
-
-void MyShape::drawShapes(compressed_vector<shapePointer_t> shapes) {
-            foreach_ ( shapePointer_t curShape, shapes )
-                {
-                    curShape->draw();
-                }
-
-}
-
 void MyShape::drawScale(){}
 void MyShape::drawUnit(){}
 
@@ -137,6 +110,13 @@ float MyShape::getDensity() {
 
 void MyShape::getColor(sgVec3 retVec) const{
 	sgCopyVec3(retVec, color);
+}
+
+VecStruct * MyShape::getColor() const {
+    VecStruct * vecStruct = new VecStruct();
+    sgCopyVec4(vecStruct->vec, color);
+    return vecStruct;
+
 }
 
 void MyShape::calcColor() {

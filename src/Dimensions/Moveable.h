@@ -3,6 +3,12 @@
 
 #include <plib/sg.h>
 #include "VecStruct.h"
+#include "MatrixStruct.h"
+
+#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
+
+typedef boost::scoped_ptr<MatrixStruct> matPtr;
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -53,6 +59,9 @@ public:
 	 *  \param rotAxis Axis to rotate around
 	 */
 	void adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis);
+
+	MatrixStruct * getOrientationMat() const;
+
 
 	//! Alters momentum of object by <dVel> * mass
 	void adjustVelocity(const sgVec4 dVel);

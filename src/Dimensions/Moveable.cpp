@@ -35,6 +35,12 @@ VecStruct * Moveable::getPosNew() const {
     return vecStruct;
 }
 
+MatrixStruct * Moveable::getOrientationMat() const {
+	MatrixStruct * matrixStruct = new MatrixStruct();
+	sgCopyMat4(matrixStruct->orientationMat, orientationMat);
+	return matrixStruct;
+}
+
 void Moveable::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
 	sgQuat tempRotQuat;
 	sgAngleAxisToQuat(tempRotQuat, dAngle,  rotAxis);
