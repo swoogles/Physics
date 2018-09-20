@@ -15,12 +15,17 @@ void Drawing::draw(shapePointer_t myShape){
     glMultMatrixf( (const GLfloat*) myShape->getOrientationMat());
 
     //Scale
-    myShape->drawScale();
+    float scale = myShape->getScale();
+    glScalef(scale, scale, scale);
 
     vecPtr color(myShape->getColor());
     glColor3fv(color->vec);
 
-    myShape->drawUnit();
+    int numPts = 16;
+    switch (myShape->getType()) {
+        case box: glutWireCube( 1.0 );
+        case circle:glutWireSphere( 1, numPts, numPts);
+    }
     glPopMatrix();
 }
 

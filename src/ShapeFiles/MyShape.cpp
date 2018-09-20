@@ -50,8 +50,7 @@ MyShape::~MyShape() {
 	//cout << "Killing MyShape" << endl;
 }
 
-void MyShape::drawScale(){}
-void MyShape::drawUnit(){}
+float MyShape::getScale(){}
 
 void MyShape::adjustMomentum(const sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
@@ -136,7 +135,7 @@ void MyShape::calcColor() {
 	color[1] = greenAmount;
 }
 
-int MyShape::getType() { return 1;}
+ShapeType MyShape::getType() { }
 
 bool MyShape::isTouching( shapePointer_t otherShape )
 {

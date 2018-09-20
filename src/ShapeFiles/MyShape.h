@@ -8,8 +8,6 @@
 #ifndef MYSHAPE_H_
 #define MYSHAPE_H_
 
-#include <GL/gl.h>
-#include <GL/glut.h>
 #include <cmath>
 
 #include <boost/shared_ptr.hpp>
@@ -18,6 +16,7 @@
 #include "../Dimensions/VecStruct.h"
 #include "../Dimensions/MatrixStruct.h"
 #include "../Physics/WorldSettings.h"
+#include "ShapeType.h"
 
 #include <iostream>
 #include <string>
@@ -55,14 +54,7 @@ class MyShape : public Moveable {
 
     virtual ~MyShape();
 
-    /*! \brief Use shape dimensions to scale points before drawing
-     *
-     *  Implementation varies depending on shape: will use side for squares, radius for circles, etc
-     */
-    virtual void drawScale();
-
-    //! Draw unit shape (should be called last in draw() )
-    virtual void drawUnit();
+    virtual float getScale();
 
     //! Purely virtual method used by Circle
     virtual void setRadius(float );
@@ -122,7 +114,7 @@ class MyShape : public Moveable {
      *  \n 2: Box
      *  \n Rest to be determined
      */
-    virtual int getType();
+    virtual ShapeType getType();
 
     /*! \brief Vector that holds all currently active shapes
      *

@@ -14,7 +14,6 @@ Circle::Circle(
 	sgCopyVec4(this->momentum, momentum);
 	this->density = density;
 	sgCopyVec3(this->color, color);
-	numPts = 16;
 }
 
 // Circle::Circle( const Circle& copyCircle )
@@ -32,13 +31,8 @@ Circle::Circle(
 Circle::~Circle() {
 }
 
-void Circle::drawScale(){
-	glScalef(radius, radius, radius);
-}
-
-void Circle::drawUnit(){
-	glutWireSphere( 1, numPts, numPts);
-	//glutSolidSphere( 1, numPts, numPts);
+float Circle::getScale() {
+    return radius;
 }
 
 float Circle::getRadius() {
@@ -49,8 +43,8 @@ void Circle::setRadius(float inRadius) {
 	radius = inRadius;
 }
 
-int Circle::getType() {
-	return 2;
+ShapeType Circle::getType() {
+	return ShapeType::circle;
 }
 
 float Circle::getMomentOfInertia() {

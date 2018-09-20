@@ -5,6 +5,9 @@
 #ifndef PHYSICS_DRAWING_H
 #define PHYSICS_DRAWING_H
 
+#include <GL/gl.h>
+#include <GL/glut.h>
+
 #include "MyShape.h"
 
 #define foreach_  BOOST_FOREACH

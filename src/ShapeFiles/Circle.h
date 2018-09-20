@@ -5,8 +5,7 @@
 
 class Circle: public MyShape {
   private:
-    GLdouble radius;
-    GLint numPts;
+    float radius;
   public:
     Circle(
             sgVec4 pos,
@@ -20,14 +19,13 @@ class Circle: public MyShape {
     // Circle( const Circle& );
     virtual ~Circle();
 
-    void drawScale();
-    void drawUnit();
+    float getScale();
 
     float getRadius();
     void setRadius(float);
 
     float getMomentOfInertia();
 
-    int getType();
+    ShapeType getType();
 };
 #endif

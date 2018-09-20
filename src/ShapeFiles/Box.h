@@ -13,12 +13,11 @@ public:
     Box(sgVec4 pos, float sideLength, sgVec3 color);
 	virtual ~Box();
 
-	void drawUnit();
-	void drawScale();
+    float getScale();
 
 	float getWidth();
 
-	int getType();
+	ShapeType getType();
 };
 
 #endif
