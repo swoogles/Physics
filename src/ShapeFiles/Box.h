@@ -5,9 +5,7 @@
 
 class Box: public MyShape {
 private:
-	float depth;
-	float width;
-	float height;
+	float sideLength;
 public:
 	Box();
     Box(sgVec4 pos, float sideLength, sgVec3 color);

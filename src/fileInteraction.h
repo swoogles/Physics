@@ -9,7 +9,6 @@
 #include "ShapeFiles/Circle.h"
 
 typedef boost::shared_ptr<MyShape> shape_pointer;
-typedef boost::scoped_ptr<VecStruct> vecPtr;
 
 /*  README: Out of all the functions written so far, I believe the save/open functions are the ones that need the most hardening
  *  Right now they are very particular about what they can do and how they can do it, with NO error checking of any kind in play.

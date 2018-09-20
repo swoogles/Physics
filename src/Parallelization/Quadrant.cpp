@@ -1,7 +1,6 @@
 #include "Quadrant.h"
 
 typedef boost::shared_ptr<Quadrant> QuadrantPointer_t;
-typedef boost::scoped_ptr<VecStruct> vecPtr;
 
 bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundaries )
 {
