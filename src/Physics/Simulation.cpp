@@ -30,24 +30,7 @@ Simulation::Simulation()
 
 void Simulation::refreshQuadrant()
 {
-  int magnitude;
-  magnitude = maxX;
-  if ( -minX > magnitude )
-  {
-    magnitude = -minX;
-  }
-
-  if ( maxY > magnitude )
-  {
-    magnitude = maxY;
-    if ( -minY > magnitude )
-    {
-      magnitude = -minY;
-    }
-  }
-
   sgVec4 pos = {0,0,0,1};
-  // float side = quadrant->getWidth(); //Formation Value
   float side = 10e5; //Formation Value
   sgVec3 dimensions = { side, side, side };
   quadrant = boost::make_shared<Quadrant>( 1, boost::ref(pos), boost::ref(dimensions), shapes ) ;
