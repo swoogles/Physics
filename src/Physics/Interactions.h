@@ -15,9 +15,9 @@ using boost::numeric::ublas::compressed_vector;
  *  both objects have their elastic bools on.
  *
  */
-void elasticCollision( shape_pointer object1, shape_pointer object2, float dt);
+void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt);
 
-ShapeList calcForceOnObject_Octree( shape_pointer curObject, QuadrantPointer_t curQuadrant, float dt);
+ShapeList calcForceOnObject_Octree( shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt);
 
 void calcForcesAll( SimulationPtr_t curSimulation );
 
@@ -39,7 +39,7 @@ void calcCollisionsAll(SimulationPtr_t curSimulation);
 /*! \brief Calculates magnitude of the force of gravity between 2 objects
  *
  */
-void calcForceGrav( sgVec4 gravVec, shape_pointer object1, shape_pointer object2, float dt ) ;
+void calcForceGrav( sgVec4 gravVec, shapePointer_t object1, shapePointer_t object2, float dt ) ;
 
 /*! \brief Will eventually calculate drag force on a single object
  */

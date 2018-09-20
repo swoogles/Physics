@@ -1,7 +1,5 @@
 #include "Interactions.h"
 
-using namespace std;
-
 void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt) {
 	sgVec4 sepVec;
 	sgVec4 sepVecUnit;
@@ -54,8 +52,8 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
   sgVec4 gravField = {0, 0, 0, 0};
 
   ShapeList shapeList = curSimulation->getPhysicalObjects() ;
-  compressed_vector<shape_pointer> physicalObjects = shapeList.getShapes();
-  compressed_vector<shape_pointer> deleteList;
+  compressed_vector<shapePointer_t> physicalObjects = shapeList.getShapes();
+  compressed_vector<shapePointer_t> deleteList;
 
   if (curSimulation->isConstGravField() ) {
     curSimulation->getConstGravFieldVal(gravField);
@@ -109,7 +107,7 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 
     if ( deleteList.size() > 0 )
     {
-      foreach_ ( shape_pointer curShape, deleteList )
+      foreach_ ( shapePointer_t curShape, deleteList )
       {
         // TODO This is some funky duplicate bullshit here. Fix it.
         curSimulation->shapes.removeShapeFromList(curShape);
@@ -120,7 +118,7 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 
 }
 
-ShapeList calcForceOnObject_Octree(shape_pointer curObject, QuadrantPointer_t curQuadrant, float dt)
+ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt)
 {
   sgVec4 gravVec;
   shapePointer_t object1, shapeInQuadrant;
@@ -215,7 +213,7 @@ void calcForcesAll( SimulationPtr_t curSimulation )
     {
       ShapeList shapeList;
 
-      foreach_ ( shape_pointer curShape, physicalObjects.getShapes() )
+      foreach_ ( shapePointer_t curShape, physicalObjects.getShapes() )
       {
         deleteList.addList( calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() ) );
       }
@@ -230,8 +228,8 @@ void calcCollisionsAll(SimulationPtr_t curSimulation)
   shapePointer_t object1, object2;
   SGfloat distance, minSep;
 
-  compressed_vector<shape_pointer> physicalObjects = shapeList.getShapes();
-  compressed_vector<shape_pointer> deleteList;
+  compressed_vector<shapePointer_t> physicalObjects = shapeList.getShapes();
+  compressed_vector<shapePointer_t> deleteList;
 
   for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
   {
@@ -261,7 +259,7 @@ void calcCollisionsAll(SimulationPtr_t curSimulation)
   }
   if ( deleteList.size() > 0 )
   {
-    foreach_ ( shape_pointer curShape, deleteList ) {
+    foreach_ ( shapePointer_t curShape, deleteList ) {
             shapeList.removeShapeFromList(curShape);
 
             curSimulation->shapes.removeShapeFromList(curShape);
@@ -295,11 +293,11 @@ void calcForceGrav( sgVec4 gravVec, shapePointer_t object1, shapePointer_t objec
 }
 
 //TODO Fix and only apply to a single shape
-void calcDrag(float dt, compressed_vector<shape_pointer> shapes) {
+void calcDrag(float dt, compressed_vector<shapePointer_t> shapes) {
   float dragConstant = -30;
   sgVec4 dragForce;
 
-  foreach_ ( shape_pointer curShape, shapes ) {
+  foreach_ ( shapePointer_t curShape, shapes ) {
     curShape->getVelocity(dragForce);
     sgScaleVec4(dragForce, dragConstant);
     sgScaleVec4(dragForce, dt);

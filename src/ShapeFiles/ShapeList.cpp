@@ -1,10 +1,10 @@
 #include "ShapeList.h"
 
-bool ShapeList::hasConflictsWith( shape_pointer insertShape )
+bool ShapeList::hasConflictsWith( shapePointer_t insertShape )
 {
   bool conflict = false;
 
-  boost::shared_ptr<MyShape> object1;
+  shapePointer_t object1;
 
   for (int i = 0; i < shapes.size() && conflict == false; i++) 
   {
@@ -14,7 +14,7 @@ bool ShapeList::hasConflictsWith( shape_pointer insertShape )
   return conflict;
 }
 
-int ShapeList::addShapeToList( shape_pointer insertShape )
+int ShapeList::addShapeToList( shapePointer_t insertShape )
 {
   int curSize = shapes.size();
   shapes.resize(curSize + 1);
@@ -24,11 +24,11 @@ int ShapeList::addShapeToList( shape_pointer insertShape )
 
 int ShapeList::addList( ShapeList addList )
 {
-  compressed_vector<shape_pointer> addShapes = addList.getShapes();
+  compressed_vector<shapePointer_t> addShapes = addList.getShapes();
   int additionSize = addShapes.size();
   int curSize = shapes.size();
   shapes.resize( curSize + additionSize );
-  foreach_( shape_pointer curShape, addShapes )
+  foreach_( shapePointer_t curShape, addShapes )
   {
     this->addShapeToList( curShape );
   }
@@ -38,9 +38,9 @@ int ShapeList::addList( ShapeList addList )
   return shapes.size();
 }
 
-int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
+int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
 {
-  compressed_vector<shape_pointer> newShapeVector;
+  compressed_vector<shapePointer_t> newShapeVector;
   int newSize =  shapes.size();
   newShapeVector.resize(newSize);
   bool removedShape = false;
@@ -48,7 +48,7 @@ int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
 
   int curIndex = 0;
   int removedIndex = -1;
-  foreach_( shape_pointer curShape, shapes)
+  foreach_( shapePointer_t curShape, shapes)
   {
     if ( curShape.get() != shapeToRemove.get() )
     {
@@ -64,7 +64,7 @@ int ShapeList::removeShapeFromList( shape_pointer shapeToRemove )
   }
   if ( removedShape )
   {
-    shapes = compressed_vector<shape_pointer>( newShapeVector );
+    shapes = compressed_vector<shapePointer_t>( newShapeVector );
   }
 
   return removedIndex;
@@ -76,14 +76,14 @@ int ShapeList::clearShapes() {
   return shapes.size();
 }
 
-compressed_vector<shape_pointer> ShapeList::getShapes()
+compressed_vector<shapePointer_t> ShapeList::getShapes()
 {
   return shapes;
 }
 
 void ShapeList::update(const float dt)
 {
-  foreach_ ( shape_pointer curShape, shapes )
+  foreach_ ( shapePointer_t curShape, shapes )
   {
     curShape->update( dt );
   }

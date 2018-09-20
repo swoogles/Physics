@@ -14,7 +14,6 @@ using boost::make_shared;
 class Simulation
 {
   private:
-    typedef boost::shared_ptr<MyShape> shape_pointer;
     int forceCalcMethod;
     ShapeList physicalObjects;
 
@@ -54,7 +53,7 @@ class Simulation
 
     inline ShapeList getPhysicalObjects() { return physicalObjects; };
     inline void setPhysicalObjects( ShapeList physicalObjects ) { this->physicalObjects = physicalObjects; };
-    inline void addPhysicalObjectToList( shape_pointer newShape ) { physicalObjects.addShapeToList( newShape ); };
+    inline void addPhysicalObjectToList( shapePointer_t newShape ) { physicalObjects.addShapeToList( newShape ); };
 
     inline void setDT(float newDT) { DT = newDT; };
     inline float getDT() const { return DT; };
