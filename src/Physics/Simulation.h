@@ -5,6 +5,7 @@
 #include <plib/sg.h>
 #include "../ShapeFiles/ShapeList.h"
 #include "../Parallelization/Quadrant.h"
+#include "ForceCalculationMethod.h"
 #include <stdexcept>
 
 
@@ -16,7 +17,7 @@ using boost::make_shared;
 class Simulation
 {
   private:
-    int forceCalcMethod;
+    ForceCalculationMethod forceCalcMethod;
     ShapeList physicalObjects;
 
     int curStep;
@@ -39,19 +40,14 @@ class Simulation
   public:
 	// TODO make private
     ShapeList shapes;
-    static const std::string FORCE_CALC_METHOD_NAIVE_STRING;
-    static const std::string FORCE_CALC_METHOD_OCTREE_STRING;
-    static const int FORCE_CALC_METHOD_NAIVE = 0;
-    static const int FORCE_CALC_METHOD_OCTREE = 1;
 
     Simulation();
 
     inline int getCurStep() { return curStep; };
     inline void incCurStep() { curStep+= 1; };
 
-    inline int getForceCalcMethod() { return forceCalcMethod; };
-    inline void setForceCalcMethod( const int forceCalcMethod ) { this->forceCalcMethod = forceCalcMethod; };
-    void setForceCalcMethodByString( const string& forceCalcMethod );
+    inline ForceCalculationMethod getForceCalcMethod() { return forceCalcMethod; };
+    inline void setForceCalcMethod( const ForceCalculationMethod forceCalcMethod ) { this->forceCalcMethod = forceCalcMethod; };
 
     inline ShapeList getPhysicalObjects() { return physicalObjects; };
     inline void setPhysicalObjects( ShapeList physicalObjects ) { this->physicalObjects = physicalObjects; };

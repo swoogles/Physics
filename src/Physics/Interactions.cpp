@@ -158,8 +158,7 @@ ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t c
         for ( int y = 0; y < 2; y++ ) {
           for ( int z = 0; z < 2; z++ ) {
             targetQuadrant = curQuadrant->getQuadrantFromCell( x, y, z );
-            if ( targetQuadrant != nullptr )
-            {
+            if ( targetQuadrant != nullptr ) {
               deleteList.addList( calcForceOnObject_Octree(curObject, targetQuadrant, dt) ) ;
             }
           }
@@ -175,22 +174,24 @@ ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t c
 
 void calcForcesAll( SimulationPtr_t curSimulation )
 {
-  if ( curSimulation->getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_NAIVE  )
-  {
-    calcForcesAll_LessNaive( curSimulation );
-  }
-  else //Calculations with Octree
-  {
-      ShapeList deleteList;
+  switch(curSimulation->getForceCalcMethod()) {
+      // TODO are these getting inverted somewhere along the way?
+      case ForceCalculationMethod ::NAIVE:
+        calcForcesAll_LessNaive( curSimulation );
+        break;
+      case ForceCalculationMethod ::OCTREE:
+        ShapeList deleteList;
 
-      foreach_ ( shapePointer_t curShape, curSimulation->getPhysicalObjects().getShapes() ) {
+        foreach_ ( shapePointer_t curShape, curSimulation->getPhysicalObjects().getShapes() ) {
           // TODO actually *use* the deleteList in some way. That should help avoid drawing merged/dead shapes.
-        deleteList.addList( calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() ) );
-      }
+          deleteList.addList( calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() ) );
+        }
 
-      foreach_ ( shapePointer_t curShape, deleteList.getShapes() ) {
-        curSimulation->shapes.removeShapeFromList(curShape);
-      }
+        foreach_ ( shapePointer_t curShape, deleteList.getShapes() ) {
+          curSimulation->shapes.removeShapeFromList(curShape);
+        }
+        break;
+
   }
 }
 
@@ -199,10 +200,8 @@ vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float d
   vecPtr gravVec(new VecStruct());
 
   sgVec4 unitVec;
-  Moveable * obj1 = object1.get();
-  Moveable * obj2 = object2.get();
 
-  vecPtr sepVec(obj1->getVectorToObject( obj2));
+  vecPtr sepVec(object1->getVectorToObject(object2.get()));
 
   SGfloat rSquared = sgLengthSquaredVec4(sepVec->vec);
 
