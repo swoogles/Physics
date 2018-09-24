@@ -41,6 +41,8 @@ void calcCollisionsAll(SimulationPtr_t curSimulation);
  */
 void calcForceGrav( sgVec4 gravVec, shapePointer_t object1, shapePointer_t object2, float dt ) ;
 
+vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float dt ) ;
+
 /*! \brief Will eventually calculate drag force on a single object
  */
 void calcDrag(float dt);

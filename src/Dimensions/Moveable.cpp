@@ -35,6 +35,14 @@ VecStruct * Moveable::getPosNew() const {
     return vecStruct;
 }
 
+vecPtr Moveable::getVectorToObject( Moveable * object2) {
+	vecPtr vec(new VecStruct());
+	vecPtr pos1(this->getPosNew());
+	vecPtr pos2(object2->getPosNew());
+	sgSubVec4(vec->vec, pos2->vec, pos1->vec);
+	return vec;
+}
+
 MatrixStruct * Moveable::getOrientationMat() const {
 	MatrixStruct * matrixStruct = new MatrixStruct();
 	sgCopyMat4(matrixStruct->orientationMat, orientationMat);

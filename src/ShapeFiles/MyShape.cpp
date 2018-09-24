@@ -7,18 +7,11 @@
 
 #include "MyShape.h"
 
-void MyShape::getVectorToObject( shapePointer_t object2, sgVec4 sepVector) {
-    vecPtr pos1(this->getPosNew());
-    vecPtr pos2(object2->getCenterOfMass());
-    sgSubVec4(sepVector, pos2->vec, pos1->vec);
-}
-
 float MyShape::getDistanceToObject( shapePointer_t object2 ) {
-  sgVec4 sepVec;
-  float distance;
+  Moveable * obj2 = object2.get();
 
-  this->getVectorToObject( object2, sepVec);
-  distance = sgLengthVec4( sepVec );
+  vecPtr sepVec(this->getVectorToObject(obj2));
+  float distance = sgLengthVec4( sepVec->vec );
 
   return distance;
 }
@@ -139,15 +132,12 @@ ShapeType MyShape::getType() { }
 
 bool MyShape::isTouching( shapePointer_t otherShape )
 {
-  sgVec4 sepVec;
-  SGfloat distanceSquared, distance, minSep;
+  vecPtr sepVec(this->getVectorToObject(otherShape.get()));
 
-  this->getVectorToObject( otherShape, sepVec);
+  SGfloat distanceSquared = sgLengthSquaredVec4(sepVec->vec);
+  SGfloat distance = sqrt(distanceSquared);
 
-  distanceSquared = sgLengthSquaredVec4(sepVec);
-  distance = sqrt(distanceSquared);
-
-  minSep = this->getRadius() + otherShape->getRadius();
+  SGfloat minSep = this->getRadius() + otherShape->getRadius();
 
 
   return (distance < minSep);

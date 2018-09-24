@@ -29,7 +29,6 @@ using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
 using boost::shared_ptr;
 
-typedef boost::scoped_ptr<VecStruct> vecPtr;
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -124,16 +123,7 @@ class MyShape : public Moveable {
     //PHYS-7
     typedef boost::shared_ptr<MyShape> shapePointer_t;
 
-    /*! \relates MyShape
-     *  \brief Finds a vector pointing from object1 to object2
-     *
-     *  \param object1 Start Object
-     *  \param object2 End Object
-     *  \param sepVector Calculated separation vector
-     */
-    void getVectorToObject( shapePointer_t object2, sgVec4 sepVector);
-
-    /*! 
+    /*!
       * Simple method for getting distance between 2 objects
       */
     float getDistanceToObject( shapePointer_t object2 );

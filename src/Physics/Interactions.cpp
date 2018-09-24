@@ -1,7 +1,6 @@
 #include "Interactions.h"
 
 void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt) {
-	sgVec4 sepVec;
 	sgVec4 sepVecUnit;
 
 	sgVec4 aVel, bVel;
@@ -11,8 +10,8 @@ void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt)
 
 	float c;
 
-	object1->getVectorToObject( object2, sepVec);
-	sgNormaliseVec4(sepVecUnit, sepVec);
+	vecPtr sepVec(object1->getVectorToObject(object2.get()));
+	sgNormaliseVec4(sepVecUnit, sepVec->vec);
 
 	object1->getVelocity(aVel);
 	object2->getVelocity(bVel);
@@ -45,7 +44,6 @@ void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt)
 void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 {
   float dt = curSimulation->getDT();
-  sgVec4 gravVec;
   shapePointer_t object1, object2;
   SGfloat distance, minSep;
 
@@ -71,11 +69,11 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 
 
         if (curSimulation->isGravBetweenObjects() ) {
-          calcForceGrav(gravVec, object1, object2, dt );
+          vecPtr gravVec = calcForceGravNew(object1, object2, dt );
 
-          object1->adjustMomentum(gravVec);
-          sgNegateVec4(gravVec);
-          object2->adjustMomentum(gravVec);
+          object1->adjustMomentum(gravVec->vec);
+          sgNegateVec4(gravVec->vec);
+          object2->adjustMomentum(gravVec->vec);
         }
 
         distance = object1->getDistanceToObject( object2 );
@@ -108,11 +106,9 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 
 ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt)
 {
-  sgVec4 gravVec;
-  shapePointer_t object1, shapeInQuadrant;
-  SGfloat distance;
-  SGfloat theta = 0.5;
+  vecPtr gravVec;
 
+  // Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
   ShapeList deleteList;
 
   //1. 
@@ -129,29 +125,31 @@ ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t c
   //1.
   //a. 
   if ( curQuadrant->isExternal() ) {
-    shapeInQuadrant = curQuadrant->getShapeInQuadrant();
+    shapePointer_t shapeInQuadrant = curQuadrant->getShapeInQuadrant();
 
     //b.
     if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant ) {
       //c.
-      calcForceGrav( gravVec, curObject, shapeInQuadrant, dt);
 
       if ( curObject->isTouching( shapeInQuadrant ) ) {
+//        curObject->mergeWith(shapeInQuadrant);
         deleteList.addShapeToList( shapeInQuadrant );
+      } else {
+        gravVec = calcForceGravNew( curObject, shapeInQuadrant, dt);
+        curObject->adjustMomentum(gravVec->vec);
       }
-
-      curObject->adjustMomentum(gravVec);
     }
   }
   else {
-    distance = curObject->getDistanceToObject( curQuadrant );
+    SGfloat distance = curObject->getDistanceToObject( curQuadrant );
+    SGfloat theta = 0.5;
     //2.
     //a.
     if ( curQuadrant->getWidth() / distance < theta ) {
-      calcForceGrav( gravVec, curObject, curQuadrant, dt);
+      gravVec = calcForceGravNew( curObject, curQuadrant, dt);
 
       //b.
-      curObject->adjustMomentum(gravVec);
+      curObject->adjustMomentum(gravVec->vec);
     }
     //3.
     else {
@@ -196,27 +194,29 @@ void calcForcesAll( SimulationPtr_t curSimulation )
   }
 }
 
-void calcForceGrav( sgVec4 gravVec, shapePointer_t object1, shapePointer_t object2, float dt )
+vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float dt )
 {
-  float forceMagnitude;
-  SGfloat rSquared;
-  sgVec4 sepVec, unitVec;
+  vecPtr gravVec(new VecStruct());
 
-  object1->getVectorToObject( object2, sepVec);
+  sgVec4 unitVec;
+  Moveable * obj1 = object1.get();
+  Moveable * obj2 = object2.get();
 
-  rSquared = sgLengthSquaredVec4(sepVec);
+  vecPtr sepVec(obj1->getVectorToObject( obj2));
 
-  if (rSquared < .00001)
-  {
+  SGfloat rSquared = sgLengthSquaredVec4(sepVec->vec);
+
+  if (rSquared < .00001) {
     rSquared = .00001;
   }
-  forceMagnitude = (Simulations::G * object1->getMass() * object2->getMass()) / rSquared;
+  float forceMagnitude = (Simulations::G * object1->getMass() * object2->getMass()) / rSquared;
 
-  sgNormaliseVec4(unitVec, sepVec);
+  sgNormaliseVec4(unitVec, sepVec->vec);
 
-  sgScaleVec4(gravVec, unitVec, forceMagnitude);
-  sgScaleVec4(gravVec, dt);
+  sgScaleVec4(gravVec->vec, unitVec, forceMagnitude);
+  sgScaleVec4(gravVec->vec, dt);
 
+  return  gravVec;
 }
 
 //TODO Fix and only apply to a single shape

@@ -9,6 +9,7 @@
 #include <boost/scoped_ptr.hpp>
 
 typedef boost::scoped_ptr<MatrixStruct> matPtr;
+typedef boost::shared_ptr<VecStruct> vecPtr;
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -51,6 +52,8 @@ public:
 	void setPos(const sgVec4 newPos);
 
     VecStruct * getPosNew() const;
+
+	vecPtr getVectorToObject( Moveable * object2);
 
 	/*! \brief Rotate object around a specified axis
 	 *
