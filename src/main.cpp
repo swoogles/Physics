@@ -115,24 +115,61 @@ void determineViewBasedOnSimulation(SimulationPtr_t simulation, Observer * obser
   observer->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 }
 
+ForceCalculationMethod parseForceCalculationProperty(string value) {
+    cout << "force value: " << value << endl;
+  if ( value == Simulation::FORCE_CALC_METHOD_OCTREE_STRING  )
+  {
+    return ForceCalculationMethod::OCTREE;
+  }
+  else if ( value == Simulation::FORCE_CALC_METHOD_NAIVE_STRING )
+  {
+    return ForceCalculationMethod::NAIVE;
+  } else {
+    std::cout << "badness?" << std::endl;
+    throw ( "That is not a real force-calculation method: " );
+  }
+}
+
+int parseNumShapes(string value) {
+  return atoi(value.c_str());
+}
+
+struct ApplicationProperties {
+    ForceCalculationMethod forceCalculationMethod;
+    int numShapes;
+};
+
+ApplicationProperties parseProperties(BillProperties properties) {
+  ApplicationProperties applicationProperties;
+  cout << "1" << endl;
+  applicationProperties.forceCalculationMethod = parseForceCalculationProperty(properties.at(BillProperties::FORCE_CALCULATION_METHOD));
+  cout << "2" << endl;
+  applicationProperties.numShapes = parseNumShapes(properties.at( BillProperties::NUM_SHAPES ));
+  return applicationProperties;
+}
+
 void init(char simulation) {
   openGlInit();
 
+  BillProperties billProperties;
+  billProperties.readProperties(); // Yech! What a shitty way to handle that loading.
   globalProperties = boost::make_shared<BillProperties>();
   globalProperties->readProperties();
 
   Observer::init();
   Observer * curObserver = Observer::getCurObserver();
 
-  int numShapes = atoi(globalProperties->at( BillProperties::NUM_SHAPES ).c_str()); //value = 45
+  ApplicationProperties properties  = parseProperties(billProperties);
 
   // Determine and create simulation
-  globalSimulation = Simulations::createSimulation( simulation, numShapes );
+  globalSimulation = Simulations::createSimulation( simulation, properties.numShapes );
   shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
   try {
     cout << globalProperties->at(BillProperties::FORCE_CALCULATION_METHOD) << endl;
-    globalSimulation->setForceCalcMethodByString(globalProperties->at(BillProperties::FORCE_CALCULATION_METHOD));
+    cout << "3" << endl;
+    globalSimulation->setForceCalcMethod(properties.forceCalculationMethod);
+    cout << "4" << endl;
   } catch ( const std::invalid_argument & ex ) {
     cout << "Bad argument: " << ex.what() << endl;
     exit(1);
@@ -152,7 +189,6 @@ void idle() {
     {
       globalSimulation->resetXYMinsAndMaxes();
     }
-    string forceCalculations = globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD );
 
     calcForcesAll( globalSimulation );
 
@@ -226,7 +262,6 @@ void postSimulationGlInit() {
 }
 
 int main(int argcp, char **argv) {
-    cout << "WTF" << endl;
   mainGlut(argcp, argv);
   puInit();
   char simulation = argv[2][0];
