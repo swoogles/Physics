@@ -7,8 +7,8 @@
 
 #include "Simulation.h"
 
-const char Simulation::FORCE_CALC_METHOD_OCTREE_STRING[] = "octree";
-const char Simulation::FORCE_CALC_METHOD_NAIVE_STRING[] = "naive";
+const std::string Simulation::FORCE_CALC_METHOD_OCTREE_STRING = "octree";
+const std::string Simulation::FORCE_CALC_METHOD_NAIVE_STRING = "naive";
 
 Simulation::Simulation()
             :forceCalcMethod(FORCE_CALC_METHOD_OCTREE)
@@ -44,13 +44,20 @@ void Simulation::refreshQuadrant()
 // TODO The string to real enum value should happen elsewhere, and then pass the enum in to this function
 void Simulation::setForceCalcMethodByString( const string& forceCalcMethod )
 {
-  if ( forceCalcMethod.compare( Simulation::FORCE_CALC_METHOD_OCTREE_STRING ) )
+  if ( forceCalcMethod == Simulation::FORCE_CALC_METHOD_OCTREE_STRING  )
   {
+      std::cout << "octree" << std::endl;
+
     setForceCalcMethod( Simulation::FORCE_CALC_METHOD_OCTREE );
   }
-  else if ( forceCalcMethod.compare( Simulation::FORCE_CALC_METHOD_NAIVE_STRING ) )
+  else if ( forceCalcMethod == Simulation::FORCE_CALC_METHOD_NAIVE_STRING )
   {
+      std::cout << "naive" << std::endl;
     setForceCalcMethod( Simulation::FORCE_CALC_METHOD_NAIVE );
+  } else {
+      std::cout << "badness?" << std::endl;
+      throw ( "That is not a real force-calculation method: " );
+
   }
 }
 

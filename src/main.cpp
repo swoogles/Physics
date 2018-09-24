@@ -130,12 +130,19 @@ void init(char simulation) {
   globalSimulation = Simulations::createSimulation( simulation, numShapes );
   shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
-  globalSimulation->setForceCalcMethodByString( globalProperties->at( BillProperties::FORCE_CALCULATION_METHOD ) );
+  try {
+    cout << globalProperties->at(BillProperties::FORCE_CALCULATION_METHOD) << endl;
+    globalSimulation->setForceCalcMethodByString(globalProperties->at(BillProperties::FORCE_CALCULATION_METHOD));
+  } catch ( const std::invalid_argument & ex ) {
+    cout << "Bad argument: " << ex.what() << endl;
+    exit(1);
+  }
   globalSimulation->updateMinsAndMaxes();
   determineViewBasedOnSimulation(globalSimulation, curObserver);
 
   // This is the first "n" part in "n log(n)"
   globalSimulation->refreshQuadrant();
+
 }
 
 void idle() {
@@ -219,6 +226,7 @@ void postSimulationGlInit() {
 }
 
 int main(int argcp, char **argv) {
+    cout << "WTF" << endl;
   mainGlut(argcp, argv);
   puInit();
   char simulation = argv[2][0];

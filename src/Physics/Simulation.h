@@ -5,6 +5,8 @@
 #include <plib/sg.h>
 #include "../ShapeFiles/ShapeList.h"
 #include "../Parallelization/Quadrant.h"
+#include <stdexcept>
+
 
 using boost::numeric::ublas::compressed_vector;
 using boost::shared_ptr;
@@ -37,8 +39,8 @@ class Simulation
   public:
 	// TODO make private
     ShapeList shapes;
-    static const char FORCE_CALC_METHOD_NAIVE_STRING[];
-    static const char FORCE_CALC_METHOD_OCTREE_STRING[];
+    static const std::string FORCE_CALC_METHOD_NAIVE_STRING;
+    static const std::string FORCE_CALC_METHOD_OCTREE_STRING;
     static const int FORCE_CALC_METHOD_NAIVE = 0;
     static const int FORCE_CALC_METHOD_OCTREE = 1;
 
