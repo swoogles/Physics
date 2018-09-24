@@ -56,12 +56,11 @@ using boost::numeric::ublas::compressed_vector;
 
 // GLOBALS
 SimulationPtr_t globalSimulation;
-boost::shared_ptr<BillProperties> globalProperties;
 
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
-compressed_vector<shapePointer_t> shapes;
+compressed_vector<shapePointer_t> shapes; // TODO Replace with a ShapeList instance.
 
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
@@ -111,7 +110,7 @@ void openGlInit() {
 
 void determineViewBasedOnSimulation(SimulationPtr_t simulation, Observer * observer) {
   float minX, minY, maxX, maxY;
-  globalSimulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
+  simulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
   observer->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 }
 
@@ -141,9 +140,7 @@ struct ApplicationProperties {
 
 ApplicationProperties parseProperties(BillProperties properties) {
   ApplicationProperties applicationProperties;
-  cout << "1" << endl;
   applicationProperties.forceCalculationMethod = parseForceCalculationProperty(properties.at(BillProperties::FORCE_CALCULATION_METHOD));
-  cout << "2" << endl;
   applicationProperties.numShapes = parseNumShapes(properties.at( BillProperties::NUM_SHAPES ));
   return applicationProperties;
 }
@@ -153,8 +150,6 @@ void init(char simulation) {
 
   BillProperties billProperties;
   billProperties.readProperties(); // Yech! What a shitty way to handle that loading.
-  globalProperties = boost::make_shared<BillProperties>();
-  globalProperties->readProperties();
 
   Observer::init();
   Observer * curObserver = Observer::getCurObserver();
@@ -166,10 +161,7 @@ void init(char simulation) {
   shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
   try {
-    cout << globalProperties->at(BillProperties::FORCE_CALCULATION_METHOD) << endl;
-    cout << "3" << endl;
     globalSimulation->setForceCalcMethod(properties.forceCalculationMethod);
-    cout << "4" << endl;
   } catch ( const std::invalid_argument & ex ) {
     cout << "Bad argument: " << ex.what() << endl;
     exit(1);
