@@ -7,8 +7,6 @@
 
 #include "Simulations.h"
 
-typedef boost::shared_ptr<Simulation> SimulationPointer_t;
-
 float Simulations::G = 6.67384e-11;
 // compressed_vector< boost::shared_ptr<MyShape> > Simulations::physicalObjects(0);
 int Simulations::curStep;
@@ -555,7 +553,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
   return curSimulation;
 }
 
-SimulationPointer_t Simulations::createSimulation( char simNumber, int numShapes )
+SimulationPointer_t Simulations::createSimulation( char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod)
 {
   SimulationPointer_t newSimulation;
 
@@ -602,6 +600,11 @@ SimulationPointer_t Simulations::createSimulation( char simNumber, int numShapes
   if ( simNumber == '9' ) {
     newSimulation = Simulations::billiards3_ArbitraryList( 5 );
   }
+
+  newSimulation->updateMinsAndMaxes();
+  newSimulation->setForceCalcMethod(forceCalculationMethod);
+  // This is the first "n" part in "n log(n)"
+  newSimulation->refreshQuadrant();
 
   return newSimulation;
 }

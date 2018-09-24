@@ -21,6 +21,7 @@
 #include "../Parallelization/Quadrant.h"
 #include "Simulation.h"
 #include "Interactions.h"
+#include "ForceCalculationMethod.h"
 
 #define MASS_VAR 1e21
 //#define MASS_SUN 1989100000
@@ -77,6 +78,8 @@ using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
 using boost::shared_ptr;
 using boost::make_shared;
+
+typedef boost::shared_ptr<Simulation> SimulationPointer_t;
 
 class Simulations
 {
@@ -159,7 +162,7 @@ class Simulations
 
     static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
-    static SimulationPointer_t createSimulation( char simNumber, int numShapes );
+    static SimulationPointer_t createSimulation( char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod );
 };
 
 

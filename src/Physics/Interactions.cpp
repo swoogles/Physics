@@ -140,47 +140,37 @@ ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t c
 
   //1.
   //a. 
-  if ( curQuadrant->isExternal() ) 
-  {
+  if ( curQuadrant->isExternal() ) {
     shapeInQuadrant = curQuadrant->getShapeInQuadrant();
 
     //b.
-    if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant )
-    {
+    if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant ) {
       //c.
       calcForceGrav( gravVec, curObject, shapeInQuadrant, dt);
 
-      if ( curObject->isTouching( shapeInQuadrant ) )
-      {
+      if ( curObject->isTouching( shapeInQuadrant ) ) {
         deleteList.addShapeToList( shapeInQuadrant );
       }
 
       curObject->adjustMomentum(gravVec);
     }
   }
-  else
-  {
+  else {
     distance = curObject->getDistanceToObject( curQuadrant );
     //2.
     //a.
-    if ( curQuadrant->getWidth() / distance < theta )
-    {
+    if ( curQuadrant->getWidth() / distance < theta ) {
       calcForceGrav( gravVec, curObject, curQuadrant, dt);
 
       //b.
       curObject->adjustMomentum(gravVec);
     }
     //3.
-    else
-    {
+    else {
       QuadrantPointer_t targetQuadrant;
-      for ( int x = 0; x < 2; x++ )
-      {
-        for ( int y = 0; y < 2; y++ )
-        {
-          for ( int z = 0; z < 2; z++ )
-          {
-
+      for ( int x = 0; x < 2; x++ ) {
+        for ( int y = 0; y < 2; y++ ) {
+          for ( int z = 0; z < 2; z++ ) {
             targetQuadrant = curQuadrant->getQuadrantFromCell( x, y, z );
             if ( targetQuadrant != nullptr )
             {
@@ -215,6 +205,7 @@ void calcForcesAll( SimulationPtr_t curSimulation )
 
       foreach_ ( shapePointer_t curShape, physicalObjects.getShapes() )
       {
+          // TODO actually *use* the deleteList in some way. That should help avoid drawing merged/dead shapes.
         deleteList.addList( calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() ) );
       }
       calcCollisionsAll( curSimulation );

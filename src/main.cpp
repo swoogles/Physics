@@ -61,7 +61,7 @@ SimulationPtr_t globalSimulation;
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
-compressed_vector<shapePointer_t> shapes; // TODO Replace with a ShapeList instance.
+ShapeList shapes;
 
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
@@ -81,7 +81,7 @@ void display(void)
   glColor3fv(curColor);
 
   glMatrixMode(GL_MODELVIEW);
-  Drawing::drawShapes(shapes);
+  Drawing::drawShapes(shapes.getShapes());
 
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
@@ -123,21 +123,13 @@ void init(char simulation) {
   Observer::init();
   Observer * curObserver = Observer::getCurObserver();
 
-  cout << "1" << endl;
   PhysicsSandboxProperties properties(billProperties);
-  cout << "2" << endl;
 
-  // Determine and create simulation
-  globalSimulation = Simulations::createSimulation( simulation, properties.numShapes );
-  shapes = globalSimulation->getPhysicalObjects().getShapes() ;
+  globalSimulation = Simulations::createSimulation( simulation, properties.numShapes, properties.forceCalculationMethod);
+  // TODO How about just use simulationPtr here?
+  shapes = globalSimulation->getPhysicalObjects();
 
-  globalSimulation->setForceCalcMethod(properties.forceCalculationMethod);
-  globalSimulation->updateMinsAndMaxes();
   determineViewBasedOnSimulation(globalSimulation, curObserver);
-
-  // This is the first "n" part in "n log(n)"
-  globalSimulation->refreshQuadrant();
-
 }
 
 void idle() {

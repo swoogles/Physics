@@ -14,7 +14,6 @@ public:
     const int numShapes;
 
     PhysicsSandboxProperties(BillProperties billProperties);
-
 };
 
-#endif //PHYSICS_PHYSICSSANDBOXPROPERTIES_H
+#endif

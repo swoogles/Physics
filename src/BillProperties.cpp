@@ -1,8 +1,5 @@
 #include "BillProperties.h"
 
-const char BillProperties::FORCE_CALCULATION_METHOD[] = "forceCalculationMethod";
-const char BillProperties::NUM_SHAPES[] = "numShapes";
-
 BillProperties::BillProperties(string fileName)
 : fileName(fileName) {
   readProperties();
@@ -26,19 +23,18 @@ bool BillProperties::isValidProperty( string line )
 
 void BillProperties::readProperties()
 {
-  string line;
-  string propName, propValue;
   ifstream propertiesFile;
   // TODO Create separate instances, rather than this static hard-coded value.
   propertiesFile.open(fileName, ios::in);
-  int equalsPosition;
+
+  string line;
   while( getline(propertiesFile, line) )
   {
     if ( BillProperties::isValidProperty( line ) )
     {
-      equalsPosition = line.find('=');
-      propName=line.substr(0,equalsPosition);
-      propValue=line.substr(equalsPosition+1);
+      unsigned long equalsPosition = line.find('=');
+      string propName = line.substr(0,equalsPosition);
+      string propValue = line.substr(equalsPosition+1);
       properties.insert( make_pair( propName, propValue ) );
     } else {
 

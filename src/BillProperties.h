@@ -15,8 +15,6 @@ class BillProperties
     void readProperties();
   public:
     explicit BillProperties(string fileName);
-    static const char FORCE_CALCULATION_METHOD[];
-    static const char  NUM_SHAPES[];
 
     bool static isValidProperty( string line );
     string at( const char target[] );
