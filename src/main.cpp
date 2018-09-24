@@ -13,7 +13,6 @@
 #include <float.h>
 #include <string>
 
-#include "BillProperties.h"
 #include "inputFunctions.h"
 
 //GUI stuff
@@ -31,8 +30,10 @@
 #include "Physics/Interactions.h"
 #include "Physics/Simulations.h"
 #include "Physics/WorldSettings.h"
+#include "Physics/PhysicsSandboxProperties.h"
 
 #include "ShapeFiles/Drawing.h"
+#include "BillProperties.h"
 
 #define WW 5
 #define WH 5
@@ -114,36 +115,6 @@ void determineViewBasedOnSimulation(SimulationPtr_t simulation, Observer * obser
   observer->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 }
 
-ForceCalculationMethod parseForceCalculationProperty(string value) {
-    cout << "force value: " << value << endl;
-  if ( value == Simulation::FORCE_CALC_METHOD_OCTREE_STRING  )
-  {
-    return ForceCalculationMethod::OCTREE;
-  }
-  else if ( value == Simulation::FORCE_CALC_METHOD_NAIVE_STRING )
-  {
-    return ForceCalculationMethod::NAIVE;
-  } else {
-    throw ( "That is not a real force-calculation method: " );
-  }
-}
-
-int parseNumShapes(string value) {
-  return atoi(value.c_str());
-}
-
-struct ApplicationProperties {
-    ForceCalculationMethod forceCalculationMethod;
-    int numShapes;
-};
-
-ApplicationProperties parseProperties(BillProperties properties) {
-  ApplicationProperties applicationProperties;
-  applicationProperties.forceCalculationMethod = parseForceCalculationProperty(properties.at(BillProperties::FORCE_CALCULATION_METHOD));
-  applicationProperties.numShapes = parseNumShapes(properties.at( BillProperties::NUM_SHAPES ));
-  return applicationProperties;
-}
-
 void init(char simulation) {
   openGlInit();
 
@@ -152,7 +123,9 @@ void init(char simulation) {
   Observer::init();
   Observer * curObserver = Observer::getCurObserver();
 
-  ApplicationProperties properties  = parseProperties(billProperties);
+  cout << "1" << endl;
+  PhysicsSandboxProperties properties(billProperties);
+  cout << "2" << endl;
 
   // Determine and create simulation
   globalSimulation = Simulations::createSimulation( simulation, properties.numShapes );
