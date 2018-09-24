@@ -45,8 +45,4 @@ void calcForceGrav( sgVec4 gravVec, shapePointer_t object1, shapePointer_t objec
  */
 void calcDrag(float dt);
 
-enum ForceCalculationMethod {
-    OCTREE, NAIVE
-};
-
 #endif /* INTERACTIONS_H_ */
