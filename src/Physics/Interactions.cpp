@@ -53,23 +53,20 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 
   ShapeList shapeList = curSimulation->getPhysicalObjects() ;
   compressed_vector<shapePointer_t> physicalObjects = shapeList.getShapes();
-  compressed_vector<shapePointer_t> deleteList;
+  ShapeList deleteList;
 
   if (curSimulation->isConstGravField() ) {
     curSimulation->getConstGravFieldVal(gravField);
     sgScaleVec4(gravField, 1/dt);
   }
   
-  if ( physicalObjects.size() > 0 )
-  {
-    for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
-    {
+  if ( physicalObjects.size() > 0 ) {
+    for (unsigned int i = 0; i < physicalObjects.size()-1; i++) {
       object1 = physicalObjects(i);
 
       object1->adjustMomentum(gravField);
 
-      for (unsigned int j = i + 1; j < physicalObjects.size(); j++)
-      {
+      for (unsigned int j = i + 1; j < physicalObjects.size(); j++) {
         object2 = physicalObjects(j);
 
 
@@ -84,16 +81,13 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
         distance = object1->getDistanceToObject( object2 );
         minSep = object1->getRadius() + object2->getRadius();
 
-        if (distance < minSep)
-        {
-          if (curSimulation->isAllElastic() )
-          {
-            elasticCollision( object1, object2, curSimulation->getDT() );
+        if (distance < minSep) {
+          if (curSimulation->isAllElastic() ) {
+            elasticCollision( object1, object2, dt );
           }
           else if (curSimulation->isAllInelastic() ){
             object1->mergeWith( object2 );
-            deleteList.resize(deleteList.size()+1);
-            deleteList.insert_element(deleteList.size()-1, object2);
+            deleteList.addShapeToList(object2);
           }
         }
 
@@ -102,16 +96,10 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 
     // Add unary forces to last object
     object1 = physicalObjects(physicalObjects.size()-1);
-
     object1->adjustMomentum(gravField);
 
-    if ( deleteList.size() > 0 )
-    {
-      foreach_ ( shapePointer_t curShape, deleteList )
-      {
-        // TODO This is some funky duplicate bullshit here. Fix it.
-        curSimulation->shapes.removeShapeFromList(curShape);
-      }
+    foreach_ ( shapePointer_t curShape, deleteList.getShapes() ) {
+      curSimulation->shapes.removeShapeFromList(curShape);
     }
 
   }
@@ -189,75 +177,23 @@ ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t c
 
 void calcForcesAll( SimulationPtr_t curSimulation )
 {
-  ShapeList deleteList;
-
-  ShapeList physicalObjects = curSimulation->getPhysicalObjects();
-
   if ( curSimulation->getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_NAIVE  )
   {
     calcForcesAll_LessNaive( curSimulation );
   }
   else //Calculations with Octree
   {
-    if ( physicalObjects.getShapes().size() > 0 )
-    {
-      ShapeList shapeList;
+      ShapeList deleteList;
 
-      foreach_ ( shapePointer_t curShape, physicalObjects.getShapes() )
-      {
+      foreach_ ( shapePointer_t curShape, curSimulation->getPhysicalObjects().getShapes() ) {
           // TODO actually *use* the deleteList in some way. That should help avoid drawing merged/dead shapes.
         deleteList.addList( calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() ) );
       }
-      calcCollisionsAll( curSimulation );
-    }
-  }
-}
 
-void calcCollisionsAll(SimulationPtr_t curSimulation)
-{
-  ShapeList shapeList = curSimulation->getPhysicalObjects() ;
-  shapePointer_t object1, object2;
-  SGfloat distance, minSep;
-
-  compressed_vector<shapePointer_t> physicalObjects = shapeList.getShapes();
-  compressed_vector<shapePointer_t> deleteList;
-
-  for (unsigned int i = 0; i < physicalObjects.size()-1; i++)
-  {
-    object1 = physicalObjects(i);
-
-    for (unsigned int j = i + 1; j < physicalObjects.size(); j++)
-    {
-      object2 = physicalObjects(j);
-
-      distance = object1->getDistanceToObject( object2 );
-      minSep = object1->getRadius() + object2->getRadius();
-
-      if (distance < minSep)
-      {
-        if (curSimulation->isAllElastic() )
-        {
-          elasticCollision( object1, object2, curSimulation->getDT() );
-        }
-        else if (curSimulation->isAllInelastic() ){
-          object1->mergeWith( object2 );
-          deleteList.resize(deleteList.size()+1);
-          deleteList.insert_element(deleteList.size()-1, object2);
-        }
+      foreach_ ( shapePointer_t curShape, deleteList.getShapes() ) {
+        curSimulation->shapes.removeShapeFromList(curShape);
       }
-
-    }
   }
-  if ( deleteList.size() > 0 )
-  {
-    foreach_ ( shapePointer_t curShape, deleteList ) {
-            shapeList.removeShapeFromList(curShape);
-
-            curSimulation->shapes.removeShapeFromList(curShape);
-          }
-  }
-
-  curSimulation->setPhysicalObjects( shapeList ) ;
 }
 
 void calcForceGrav( sgVec4 gravVec, shapePointer_t object1, shapePointer_t object2, float dt )
