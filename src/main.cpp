@@ -124,7 +124,6 @@ ForceCalculationMethod parseForceCalculationProperty(string value) {
   {
     return ForceCalculationMethod::NAIVE;
   } else {
-    std::cout << "badness?" << std::endl;
     throw ( "That is not a real force-calculation method: " );
   }
 }
@@ -148,8 +147,7 @@ ApplicationProperties parseProperties(BillProperties properties) {
 void init(char simulation) {
   openGlInit();
 
-  BillProperties billProperties;
-  billProperties.readProperties(); // Yech! What a shitty way to handle that loading.
+  BillProperties billProperties("simulation.properties");
 
   Observer::init();
   Observer * curObserver = Observer::getCurObserver();
@@ -160,12 +158,7 @@ void init(char simulation) {
   globalSimulation = Simulations::createSimulation( simulation, properties.numShapes );
   shapes = globalSimulation->getPhysicalObjects().getShapes() ;
 
-  try {
-    globalSimulation->setForceCalcMethod(properties.forceCalculationMethod);
-  } catch ( const std::invalid_argument & ex ) {
-    cout << "Bad argument: " << ex.what() << endl;
-    exit(1);
-  }
+  globalSimulation->setForceCalcMethod(properties.forceCalculationMethod);
   globalSimulation->updateMinsAndMaxes();
   determineViewBasedOnSimulation(globalSimulation, curObserver);
 
