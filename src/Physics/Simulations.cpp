@@ -9,9 +9,6 @@
 
 float Simulations::G = 6.67384e-11;
 // compressed_vector< boost::shared_ptr<MyShape> > Simulations::physicalObjects(0);
-int Simulations::curStep;
-
-using namespace std;
 
 void Simulations::simpleOrbit() {
 
@@ -26,7 +23,7 @@ void Simulations::simpleOrbit() {
 	float earthVolume = (MASS_EARTH*MASS_VAR)/(DENSITY_EARTH*CONVERSION_CONST);
 	float earthRadius = getSplitBodyRadius(earthVolume, 1);
 
-  shape_pointer curShape;
+  shapePointer_t curShape;
 
 	sgVec3 sunColor = { 255, 255, 0 };
 
@@ -88,7 +85,7 @@ SimulationPointer_t Simulations::billiards1(int numRows) {
 
     float bogusDensity = 1; // TODO This should be calculated from radius & mass
 
-    shape_pointer curShape;
+    shapePointer_t curShape;
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
     curShape = boost::make_shared<Circle>(
@@ -145,7 +142,7 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows)
 
     sgVec3 newColor = { 1, 0, 1 };
 
-    shape_pointer shapeForInsertion;
+    shapePointer_t shapeForInsertion;
     float bogusDensity = 1; // TODO This should be calculated from radius & mass
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
@@ -203,7 +200,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows) {
     sgVec3 newColor = { 1, 1, 1 };
     float bogusDensity = 1; // TODO This should be calculated from radius & mass
 
-    shape_pointer shapeForInsertion;
+    shapePointer_t shapeForInsertion;
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*5, 0, 1};
     shapeForInsertion = boost::make_shared<Circle>(
@@ -259,7 +256,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList()
 
     sgVec4 startPlacement = { -pieceRadius * 30, 0, 0, 1};
 
-    shape_pointer curShape = boost::make_shared<Circle>(
+    shapePointer_t curShape = boost::make_shared<Circle>(
             startPlacement,
             pieceMass,
             pieceRadius,
@@ -297,8 +294,7 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
 
   float totalMass = 0.0;
 
-  shape_pointer curShape;
-  circle_pointer curCircle;
+  shapePointer_t curShape;
 
   float offset = 8e4;
   startPlacement[0]= offset;
@@ -306,7 +302,7 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
   startPlacement[2]= offset;
   startPlacement[3]= 0;
 
-  circle_pointer oldCircle = boost::make_shared<Circle>(
+  shapePointer_t oldCircle = boost::make_shared<Circle>(
             startPlacement,
             pieceMass,
             pieceRadius,
@@ -316,10 +312,6 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
     );
 
   physicalObjects.addShapeToList( oldCircle );
-  totalMass += curCircle->getMass();
-
-  // curCircle = boost::make_shared<Circle>(*oldCircle);
-
 
   startPlacement[0]= -offset;
 
@@ -361,7 +353,7 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
 
     float pieceMass = (pow(pieceRadius, 3.0) / 2) * (4.0/3.0) * M_PI * (objectDensity);
 
-    shape_pointer curShape;
+    shapePointer_t curShape;
     float d= 1.8e3;
 
     //#0
@@ -455,7 +447,7 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
     srand ( time(NULL) );
 
     for (int i = 0; i < numPieces; i++) {
-        shape_pointer curShape;
+        shapePointer_t curShape;
 
         if (i % 2 == 0) {
             startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
@@ -515,7 +507,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
     newColor[2] = 1;
 
 
-    shape_pointer curShape;
+    shapePointer_t curShape;
 	for (int i = 0; i < numPieces; i++) {
 
 		if (i % 2 == 0) {

@@ -1,26 +1,12 @@
-/*
- * Simulations.h
- *
- *  Created on: Jul 22, 2011
- *      Author: brasure
- */
-
 #ifndef SIMULATIONS_H_
 #define SIMULATIONS_H_
 
-#include <iostream>
-#include <boost/numeric/ublas/vector_sparse.hpp>
-#include <boost/ref.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp> 
 #include <plib/sg.h>
-//#include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Circle.h"
-#include "../ShapeFiles/Box.h"
 #include "../ShapeFiles/ShapeList.h"
-#include "../Parallelization/Quadrant.h"
 #include "Simulation.h"
-#include "Interactions.h"
 #include "ForceCalculationMethod.h"
 
 #define MASS_VAR 1e21
@@ -84,16 +70,6 @@ typedef boost::shared_ptr<Simulation> SimulationPointer_t;
 class Simulations
 {
   private:
-    // Eg. Observers::getObserverFromList, Quadrant
-    /*! \brief Vector that holds all currently active shapes
-     *
-     *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
-     */
-    typedef boost::shared_ptr<MyShape> shape_pointer;
-    typedef boost::shared_ptr<Circle> circle_pointer;
-    // static compressed_vector< shape_pointer > physicalObjects;
-    static int curStep;
-
     /*! \relates Circle
      * \brief SplitRadius!
      *
@@ -135,11 +111,8 @@ class Simulations
 
     typedef boost::shared_ptr<Simulation> SimulationPointer_t;
   public:
+    // TODO put this in a more appropriate "Physical Constants" location
     static float G;
-
-    inline static int getCurStep() { return curStep; };
-    inline static void setCurStep( int inCurStep ) { Simulations::curStep = inCurStep; };
-    inline static void incCurStep() { curStep+= 1; };
 
     static void largeGridAlternating();
 
@@ -159,8 +132,6 @@ class Simulations
     static SimulationPointer_t billiards2_ReturnSimulation(int);
 
     static SimulationPointer_t billiards3_ArbitraryList(int);
-
-    static boost::shared_ptr<Quadrant> octreeDemonstration(int);
 
     static SimulationPointer_t createSimulation( char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod );
 };
