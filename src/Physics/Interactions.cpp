@@ -3,23 +3,20 @@
 void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt) {
 	sgVec4 sepVecUnit;
 
-	sgVec4 aVel, bVel;
 	sgVec4 tempVec, n, vdiff;
 
 	SGfloat multiplier;
 
-	float c;
-
 	vecPtr sepVec(object1->getVectorToObject(object2.get()));
 	sgNormaliseVec4(sepVecUnit, sepVec->vec);
 
-	object1->getVelocity(aVel);
-	object2->getVelocity(bVel);
+	vecPtr aVel(object1->getVelocity());
+	vecPtr bVel(object2->getVelocity());
 
 	sgCopyVec4(n, sepVecUnit);
-	sgSubVec4(vdiff, aVel, bVel);
+	sgSubVec4(vdiff, aVel->vec, bVel->vec);
 
-	c = sgScalarProductVec4(n, vdiff);
+	float c = sgScalarProductVec4(n, vdiff);
 
 	multiplier = -2 * ( object2->getMass() * c ) / (object2->getMass() + object1->getMass());
 	sgScaleVec4(tempVec, n, multiplier);
@@ -105,6 +102,8 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 }
 
 ShapeList calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt) {
+  //1.
+  //a.
   ShapeList deleteList;
   shapePointer_t shapeInQuadrant = curQuadrant->getShapeInQuadrant();
 
@@ -138,8 +137,6 @@ ShapeList calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPointer
 ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt)
 {
 
-  //1.
-  //a. 
   if ( curQuadrant->isExternal() ) {
     return calculateForceOnExternalNode(curObject, curQuadrant, dt);
   }
@@ -177,7 +174,7 @@ void calcForcesAll( SimulationPtr_t curSimulation )
 {
   switch(curSimulation->getForceCalcMethod()) {
       // TODO are these getting inverted somewhere along the way?
-      case ForceCalculationMethod ::NAIVE:
+      case ForceCalculationMethod::NAIVE:
         calcForcesAll_LessNaive( curSimulation );
         break;
       case ForceCalculationMethod ::OCTREE:
@@ -222,12 +219,11 @@ vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float d
 //TODO Fix and only apply to a single shape
 void calcDrag(float dt, compressed_vector<shapePointer_t> shapes) {
   float dragConstant = -30;
-  sgVec4 dragForce;
 
   foreach_ ( shapePointer_t curShape, shapes ) {
-    curShape->getVelocity(dragForce);
-    sgScaleVec4(dragForce, dragConstant);
-    sgScaleVec4(dragForce, dt);
-    curShape->adjustMomentum(dragForce);
+    vecPtr dragForce(curShape->getVelocity());
+    sgScaleVec4(dragForce->vec, dragConstant);
+    sgScaleVec4(dragForce->vec, dt);
+    curShape->adjustMomentum(dragForce->vec);
   }
 }

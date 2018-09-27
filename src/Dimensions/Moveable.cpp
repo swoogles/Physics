@@ -65,11 +65,12 @@ void Moveable::adjustVelocity(const sgVec4 dVel) {
 	sgScaleVec4(momentum, tempVec, mass);
 }
 
-void Moveable::getVelocity(sgVec4 retVec) const {
-	sgVec4 tempVec;
-	sgCopyVec4(tempVec, momentum);
-	sgScaleVec4(tempVec, 1/mass);
-	sgCopyVec4(retVec, tempVec);
+vecPtr Moveable::getVelocity() const {
+	vecPtr vecStruct(new VecStruct());
+	sgCopyVec4(vecStruct->vec, momentum);
+	sgScaleVec4(vecStruct->vec, 1/mass);
+
+	return vecStruct;
 }
 
 // Angular Momentum and Velocity

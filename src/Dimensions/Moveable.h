@@ -69,8 +69,7 @@ public:
 	//! Alters momentum of object by <dVel> * mass
 	void adjustVelocity(const sgVec4 dVel);
 
-	//! Returns velocity of object in retVec
-	void getVelocity(sgVec4 retVec) const;
+	vecPtr getVelocity() const;
 
 	/*! \brief Calculates the moment of inertia for the object
 	 *
