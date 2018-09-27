@@ -104,71 +104,72 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 
 }
 
-ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt)
-{
-  vecPtr gravVec;
-
-  // Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
+ShapeList calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt) {
   ShapeList deleteList;
+  shapePointer_t shapeInQuadrant = curQuadrant->getShapeInQuadrant();
 
-  //1. 
-    //a. If the current node is an external node 
-    //b. (and it is not body b), 
-    //c. calculate the force exerted by the current node on b
-    //d. add this amount to b’s net force.
-  //2. 
-    //a. Otherwise, calculate the ratio s/d. If s/d < θ, treat this internal node as a single body, and calculate the force it exerts on body b
-    //b. add this amount to b’s net force.
-  //3. Otherwise, run the procedure recursively on each of the current node’s children.
+  //b.
+  if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant ) {
+    //c.
 
-
-  //1.
-  //a. 
-  if ( curQuadrant->isExternal() ) {
-    shapePointer_t shapeInQuadrant = curQuadrant->getShapeInQuadrant();
-
-    //b.
-    if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant ) {
-      //c.
-
-      if ( curObject->isTouching( shapeInQuadrant ) ) {
-//        curObject->mergeWith(shapeInQuadrant);
-        deleteList.addShapeToList( shapeInQuadrant );
-      } else {
-        gravVec = calcForceGravNew( curObject, shapeInQuadrant, dt);
-        curObject->adjustMomentum(gravVec->vec);
-      }
-    }
-  }
-  else {
-    SGfloat distance = curObject->getDistanceToObject( curQuadrant );
-    SGfloat theta = 0.5;
-    //2.
-    //a.
-    if ( curQuadrant->getWidth() / distance < theta ) {
-      gravVec = calcForceGravNew( curObject, curQuadrant, dt);
-
-      //b.
+    if ( curObject->isTouching( shapeInQuadrant ) ) {
+      curObject->mergeWith(shapeInQuadrant);
+      deleteList.addShapeToList( shapeInQuadrant );
+    } else {
+      vecPtr gravVec = calcForceGravNew( curObject, shapeInQuadrant, dt);
       curObject->adjustMomentum(gravVec->vec);
-    }
-    //3.
-    else {
-      QuadrantPointer_t targetQuadrant;
-      for ( int x = 0; x < 2; x++ ) {
-        for ( int y = 0; y < 2; y++ ) {
-          for ( int z = 0; z < 2; z++ ) {
-            targetQuadrant = curQuadrant->getQuadrantFromCell( x, y, z );
-            if ( targetQuadrant != nullptr ) {
-              deleteList.addList( calcForceOnObject_Octree(curObject, targetQuadrant, dt) ) ;
-            }
-          }
-        }
-      }
-
     }
   }
 
   return deleteList;
+}
+//1.
+//a. If the current node is an external node
+//b. (and it is not body b),
+//c. calculate the force exerted by the current node on b
+//d. add this amount to b’s net force.
+//2.
+//a. Otherwise, calculate the ratio s/d. If s/d < θ, treat this internal node as a single body, and calculate the force it exerts on body b
+//b. add this amount to b’s net force.
+//3. Otherwise, run the procedure recursively on each of the current node’s children.
+
+
+// TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
+ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt)
+{
+
+  //1.
+  //a. 
+  if ( curQuadrant->isExternal() ) {
+    return calculateForceOnExternalNode(curObject, curQuadrant, dt);
+  }
+  else {
+      ShapeList deleteList;
+      SGfloat distance = curObject->getDistanceToObject( curQuadrant );
+      SGfloat theta = 0.5;
+      //2.
+      //a.
+      if ( curQuadrant->getWidth() / distance < theta ) {
+          vecPtr gravVec = calcForceGravNew( curObject, curQuadrant, dt);
+          //b.
+          curObject->adjustMomentum(gravVec->vec);
+      } else { //3.
+          QuadrantPointer_t targetQuadrant;
+          for ( int x = 0; x < 2; x++ ) {
+              for ( int y = 0; y < 2; y++ ) {
+                  for ( int z = 0; z < 2; z++ ) {
+                      targetQuadrant = curQuadrant->getQuadrantFromCell( x, y, z );
+                      if ( targetQuadrant != nullptr ) {
+                          deleteList.addList( calcForceOnObject_Octree(curObject, targetQuadrant, dt) ) ;
+                      }
+                  }
+              }
+          }
+
+      }
+      return deleteList;
+  }
+
 
 }
 
