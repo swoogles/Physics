@@ -5,6 +5,8 @@
 
 #include "../src/ShapeFiles/Circle.h"
 #include "../src/Physics/Simulation.h"
+#include "../src/Physics/Simulations.h"
+#include "../src/Physics/Interactions.h"
 
 unsigned int Factorial( unsigned int number ) {
   return number > 1 ? Factorial(number-1)*number : 1;
@@ -12,6 +14,11 @@ unsigned int Factorial( unsigned int number ) {
 
 TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[removing items]" ) {
   bool testWritten = false;
+  SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest();
+  simulation->setForceCalcMethod(ForceCalculationMethod::OCTREE);
+  // TODO put this in Interactions namespace
+  calcForcesAll(simulation);
+  simulation->update();
   REQUIRE( testWritten );
 }
 

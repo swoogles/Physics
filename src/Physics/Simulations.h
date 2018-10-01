@@ -120,6 +120,7 @@ class Simulations
 
     static SimulationPointer_t bodyFormation_NonRandom();
     static SimulationPointer_t QuadrantTestingNonRandom();
+    static SimulationPointer_t QuadrantTesting_simplest();
 
     static SimulationPointer_t bodyFormation_ArbitraryList( int numPieces );
 

@@ -425,6 +425,56 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
     return curSimulation;
 }
 
+SimulationPointer_t Simulations::QuadrantTesting_simplest()
+{
+    SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
+    curSimulation->setDT(1000);
+    curSimulation->makeAllInelastic();
+    ShapeList physicalObjects;
+
+    int numPieces=5;
+    float objectDensity = DENSITY_SUN;
+    float bodyVolume = (MASS_SUN)/(objectDensity);
+    float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+    sgVec4 startMomentum = { 0, 0, 0 };
+
+    sgVec3 newColor = { 1, 1, 1 };
+
+    double pieceMass = (pow(pieceRadius, 3.0) / 2) * (4.0/3.0) * M_PI * (objectDensity);
+
+    shapePointer_t curShape;
+    float d= 1.8e3;
+
+    //#1
+    sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
+    curShape = boost::make_shared<Circle>(
+            object1Placement,
+            pieceMass,
+            pieceRadius,
+            startMomentum,
+            objectDensity,
+            newColor
+    );
+
+    physicalObjects.addShapeToList( curShape );
+
+    //#2
+    sgVec4 object2Placement = {  (float) +(7/8.0 * d), (float) +(7/8.0 * d), 1, 1};
+    curShape = boost::make_shared<Circle>(
+            object2Placement,
+            pieceMass,
+            pieceRadius,
+            startMomentum,
+            objectDensity,
+            newColor
+    );
+
+    physicalObjects.addShapeToList( curShape );
+
+    curSimulation->setPhysicalObjects( physicalObjects );
+    return curSimulation;
+}
+
 SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
 {
     const SimulationPointer_t curSimulation = boost::make_shared<Simulation>();
@@ -584,6 +634,7 @@ SimulationPointer_t Simulations::createSimulation( char simNumber, int numShapes
 	  Simulations::bodyFormationGeneric_ArbitraryList( numShapes, target, groupMomentum );
   }
   if ( simNumber == '7' ) {
+      newSimulation = Simulations::QuadrantTesting_simplest();
   }
 
   if ( simNumber == '8' ) {
