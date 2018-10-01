@@ -8,10 +8,7 @@
 #include <GL/glut.h>
 #include <GL/glu.h>
 
-#include <boost/foreach.hpp>
-
 #include <float.h>
-#include <string>
 
 #include "inputFunctions.h"
 
@@ -39,10 +36,7 @@
 #define WH 5
 #define FPS 1
 
-#define foreach_  BOOST_FOREACH                                                                                              
-
-using boost::shared_ptr;
-using boost::make_shared; // TODO Target this for removal
+using std::size_t;
 
 void myTimer(int v) {
   glutPostRedisplay();
@@ -178,10 +172,10 @@ void configureControlWindow(
 }
 
 void mainGlut(int argcp, char **argv) {
-  int mainWinPosX = 100;
-  int mainWinPosY = 50;
-  int mainWinHeight = 720;
-  int mainWinWidth = 1280;
+  size_t mainWinPosX = 100;
+  size_t mainWinPosY = 50;
+  size_t mainWinHeight = 720;
+  size_t mainWinWidth = 1280;
 
   glutInit(&argcp, argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
