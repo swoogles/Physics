@@ -56,12 +56,12 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
   }
   
   if ( physicalObjects.size() > 0 ) {
-    for (unsigned int i = 0; i < physicalObjects.size()-1; i++) {
+    for (size_t i = 0; i < physicalObjects.size()-1; i++) {
       object1 = physicalObjects(i);
 
       object1->adjustMomentum(gravField);
 
-      for (unsigned int j = i + 1; j < physicalObjects.size(); j++) {
+      for (size_t j = i + 1; j < physicalObjects.size(); j++) {
         object2 = physicalObjects(j);
 
 

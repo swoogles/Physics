@@ -8,6 +8,7 @@
 #include "Simulations.h"
 
 using boost::numeric::ublas::compressed_vector;
+using std::size_t;
 
 /*! \brief Calculates new velocities after a collision
  *
