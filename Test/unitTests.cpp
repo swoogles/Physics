@@ -15,10 +15,16 @@ unsigned int Factorial( unsigned int number ) {
 TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[removing items]" ) {
   bool testWritten = false;
   SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest();
+  // TODO these should *NOT* be necessary after constructing the simulation
+  simulation->updateMinsAndMaxes();
   simulation->setForceCalcMethod(ForceCalculationMethod::OCTREE);
+  simulation->refreshQuadrant();
   // TODO put this in Interactions namespace
   calcForcesAll(simulation);
   simulation->update();
+  // Even though the simulation shapes list is updated, something is still wrong. Possibly I'm losing the handle on
+  // the shapes elsewhere?
+  REQUIRE(simulation->shapes.getShapes().size() == 1);
   REQUIRE( testWritten );
 }
 
