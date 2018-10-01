@@ -12,16 +12,18 @@
 
 using boost::numeric::ublas::compressed_vector;
 
+using std::size_t;
+
 class ShapeList {
   private:
     compressed_vector<shapePointer_t> shapes;
 
   public:
     bool hasConflictsWith( shapePointer_t insertShape );
-    int addShapeToList( shapePointer_t insertShape );
-    int addList( ShapeList addList );
+    size_t addShapeToList(shapePointer_t insertShape);
+    size_t addList(ShapeList addList);
     int removeShapeFromList( shapePointer_t shapeToRemove );
-    int clearShapes();
+    size_t clearShapes();
     compressed_vector<shapePointer_t> getShapes();
     void update(const float dt);
 };

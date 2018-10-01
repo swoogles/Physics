@@ -55,8 +55,6 @@ enum bodies {
 
 int NUM_BODIES = LAST_BODY+1;
 
-SGfloat massList[NUM_BODIES] = {
-
 };
 */
 
