@@ -10,6 +10,11 @@ unsigned int Factorial( unsigned int number ) {
   return number > 1 ? Factorial(number-1)*number : 1;
 }
 
+TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[removing items]" ) {
+  bool testWritten = false;
+  REQUIRE( testWritten );
+}
+
 TEST_CASE( "Factorials are computed", "[factorial]" ) {
   REQUIRE( Factorial(0) == 1 );
   REQUIRE( Factorial(1) == 1 );
