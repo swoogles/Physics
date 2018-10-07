@@ -31,8 +31,7 @@ void Simulation::refreshQuadrant()
   sgVec3 dimensions = { side, side, side };
   quadrant = boost::make_shared<Quadrant>( 1, boost::ref(pos), boost::ref(dimensions), shapes ) ;
 
-  foreach_ ( shapePointer_t curShape, physicalObjects.getShapes() )
-  {
+  for ( const auto & curShape : physicalObjects.getShapes() ) {
     quadrant->insertShape( curShape );
   }
 }
@@ -115,8 +114,7 @@ void Simulation::makeAllInelastic() {
 }
 
 void Simulation::updateMinsAndMaxes() {
-    foreach_ ( shapePointer_t curShape, getPhysicalObjects().getShapes() )
-    {
+    for ( const auto & curShape : getPhysicalObjects().getShapes() ) {
         vecPtr curPos(curShape->getPosNew());
         updateXYMinsAndMaxes(curPos->vec);
     }

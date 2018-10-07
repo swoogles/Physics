@@ -1,7 +1,3 @@
-//
-// Created by bfrasure on 19/09/18.
-//
-
 #ifndef PHYSICS_DRAWING_H
 #define PHYSICS_DRAWING_H
 
@@ -9,8 +5,6 @@
 #include <GL/glut.h>
 
 #include "MyShape.h"
-
-#define foreach_  BOOST_FOREACH
 
 using boost::numeric::ublas::compressed_vector;
 
@@ -32,5 +26,4 @@ public:
 
 };
 
-
-#endif //PHYSICS_DRAWING_H
+#endif

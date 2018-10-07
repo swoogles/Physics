@@ -28,8 +28,7 @@ size_t ShapeList::addList(ShapeList addList)
   size_t additionSize = addShapes.size();
   size_t curSize = shapes.size();
   shapes.resize( curSize + additionSize );
-  foreach_( shapePointer_t curShape, addShapes )
-  {
+  for( const auto & curShape : addShapes ) {
     this->addShapeToList( curShape );
   }
 
@@ -48,15 +47,12 @@ int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
 
   size_t curIndex = 0;
   int removedIndex = -1;
-  foreach_( shapePointer_t curShape, shapes)
-  {
-    if ( curShape.get() != shapeToRemove.get() )
-    {
+  for( const auto & curShape : shapes) {
+    if ( curShape.get() != shapeToRemove.get() ) {
       newShapeVector.insert_element(curIndex, curShape);
       curIndex++;
     }
-    else
-    {
+    else {
       removedShape = true;
       newShapeVector.resize(newSize-1);
       removedIndex = curIndex;
@@ -80,7 +76,7 @@ compressed_vector<shapePointer_t> ShapeList::getShapes() {
 }
 
 void ShapeList::update(const float dt) {
-  foreach_ ( shapePointer_t curShape, shapes ) {
+  for (const auto & curShape : shapes ) {
     curShape->update( dt );
   }
 }

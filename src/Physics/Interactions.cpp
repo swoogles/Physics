@@ -93,7 +93,7 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
     object1 = physicalObjects(physicalObjects.size()-1);
     object1->adjustMomentum(gravField);
 
-    foreach_ ( shapePointer_t curShape, deleteList.getShapes() ) {
+    for ( const auto & curShape : deleteList.getShapes() ) {
       curSimulation->shapes.removeShapeFromList(curShape);
     }
 
@@ -184,12 +184,12 @@ void calcForcesAll( SimulationPtr_t curSimulation )
           std::cout << "calculating via octree" << std::endl;
         ShapeList deleteList;
 
-        foreach_ ( shapePointer_t curShape, curSimulation->getPhysicalObjects().getShapes() ) {
+        for ( const auto & curShape : curSimulation->getPhysicalObjects().getShapes() ) {
           // TODO actually *use* the deleteList in some way. That should help avoid drawing merged/dead shapes.
           deleteList.addList( calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() ) );
         }
 
-        foreach_ ( shapePointer_t curShape, deleteList.getShapes() ) {
+        for ( const auto & curShape : deleteList.getShapes() ) {
             std::cout << "deleting a shape!" << std::endl;
           curSimulation->shapes.removeShapeFromList(curShape);
         }
@@ -225,7 +225,7 @@ vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float d
 void calcDrag(float dt, compressed_vector<shapePointer_t> shapes) {
   float dragConstant = -30;
 
-  foreach_ ( shapePointer_t curShape, shapes ) {
+  for ( const auto & curShape : shapes ) {
     vecPtr dragForce(curShape->getVelocity());
     sgScaleVec4(dragForce->vec, dragConstant);
     sgScaleVec4(dragForce->vec, dt);

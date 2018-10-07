@@ -1,7 +1,3 @@
-//
-// Created by bfrasure on 19/09/18.
-//
-
 #include "Drawing.h"
 
 void Drawing::draw(shapePointer_t myShape){
@@ -30,7 +26,7 @@ void Drawing::draw(shapePointer_t myShape){
 }
 
 void Drawing::drawShapes(compressed_vector<shapePointer_t> shapes) {
-    foreach_ ( shapePointer_t curShape, shapes ) {
+    for ( const auto & curShape : shapes ) {
         draw(curShape);
     }
 }
