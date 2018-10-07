@@ -2,13 +2,8 @@
 #define SHAPE_LIST_H
 
 #include <boost/numeric/ublas/vector_sparse.hpp>
-#include <boost/foreach.hpp>
 
 #include "MyShape.h"
-#include "../Physics/WorldSettings.h"
-
-#define PI 3.14159265
-#define foreach_  BOOST_FOREACH                                                                                              
 
 using boost::numeric::ublas::compressed_vector;
 
