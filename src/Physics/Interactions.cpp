@@ -112,7 +112,7 @@ ShapeList calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPointer
     //c.
 
     if ( curObject->isTouching( shapeInQuadrant ) ) {
-        std::cout << "touching!" << std::endl;
+        // std::cout << "touching!" << std::endl;
       curObject->mergeWith(shapeInQuadrant);
       deleteList.addShapeToList( shapeInQuadrant );
     } else {
@@ -173,15 +173,15 @@ ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t c
 
 void calcForcesAll( SimulationPtr_t curSimulation )
 {
-    std::cout << "doing anything?!" << std::endl;
+    // std::cout << "doing anything?!" << std::endl;
   switch(curSimulation->getForceCalcMethod()) {
       // TODO are these getting inverted somewhere along the way?
       case ForceCalculationMethod::NAIVE:
-          std::cout << "calculating naively" << std::endl;
+          // std::cout << "calculating naively" << std::endl;
         calcForcesAll_LessNaive( curSimulation );
         break;
       case ForceCalculationMethod ::OCTREE:
-          std::cout << "calculating via octree" << std::endl;
+          // std::cout << "calculating via octree" << std::endl;
         ShapeList deleteList;
 
         for ( const auto & curShape : curSimulation->getPhysicalObjects().getShapes() ) {
@@ -190,7 +190,7 @@ void calcForcesAll( SimulationPtr_t curSimulation )
         }
 
         for ( const auto & curShape : deleteList.getShapes() ) {
-            std::cout << "deleting a shape!" << std::endl;
+            // std::cout << "deleting a shape!" << std::endl;
           curSimulation->shapes.removeShapeFromList(curShape);
         }
         break;

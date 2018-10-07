@@ -29,6 +29,7 @@ Circle::Circle(
 // }
 
 Circle::~Circle() {
+	cout << "Theoretically deleting this circle." << endl;
 }
 
 float Circle::getScale() {
