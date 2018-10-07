@@ -25,7 +25,7 @@ BOOST_LIBS := -lboost_system -lboost_timer -lboost_chrono -lboost_thread
 LIBS :=  $(OPENGL_LIBS) $(PLIB_LIBS) $(BOOST_LIBS) -ljpeg  -lrt -fopenmp -Wc++0x-compat
 
 COMPILE_ONLY_OPTION := -c
-STANDARD_OPTIONS := -std=c++11 
+STANDARD_OPTIONS := -std=c++14 
 WARNINGS_OPTIONS := -Wall 
 DEBUG_OPTIONS := -g -O3 
 
