@@ -28,7 +28,7 @@ shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
 Quadrant::~Quadrant()
 {
   shapes.removeShapeFromList(borders);
-  shapes.removeShapeFromList(centerOfMassRepresentation);
+//  shapes.removeShapeFromList(centerOfMassRepresentation);
 }
 
 
@@ -55,6 +55,7 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions, ShapeList shapes )
   sgVec4 comMomentum = { 0, 0, 0 };
   float comDensity = 1.0;
 
+  /*
   centerOfMassRepresentation = make_shared<Circle>(
           comPos,
           comMass,
@@ -63,6 +64,7 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions, ShapeList shapes )
           comDensity,
           CoMColor
   );
+   */
   this->shapes = shapes;
 
 }
@@ -172,7 +174,7 @@ void Quadrant::insertShape( shape_pointer insertedShape )
   sgVec4 CoMPosition;
   this->getCenterOfMass( CoMPosition );
 
-  centerOfMassRepresentation->setPos( CoMPosition );
+//  centerOfMassRepresentation->setPos( CoMPosition );
 }
 
 

@@ -36,7 +36,7 @@ class Quadrant : public Box
     sgVec4 dimensions;
 
     shared_ptr<Box> borders;
-    shared_ptr<Circle> centerOfMassRepresentation;
+//    shared_ptr<Circle> centerOfMassRepresentation;
 
     array_typeNew  quadOctree;
 
