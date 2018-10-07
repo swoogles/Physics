@@ -104,24 +104,30 @@ TEST_CASE("normalize list of pairs", "[pair]") {
         ca
     };
 
-    std::vector<TouchingPair> normalizedPairs;
-    auto acFunc = [&ac](const TouchingPair pair) { return ac.sameItems(pair); };
-    auto result = std::any_of(originalPairs.begin(), originalPairs.end(), acFunc);
-    REQUIRE(result);
+    SECTION("Can find a pair in a vector") {
+        auto acFunc = [&ac](const TouchingPair pair) { return ac.sameItems(pair); };
+        auto result = std::any_of(originalPairs.begin(), originalPairs.end(), acFunc);
+        REQUIRE(result);
+    }
 
-    auto result2 = std::any_of(originalPairs.begin(), originalPairs.end(), [&ad](const TouchingPair pair) { return ad.sameItems(pair); });
-    REQUIRE_FALSE(result2);
+    SECTION("Won't find a pair that is not in a vector") {
+        auto result2 = std::any_of(originalPairs.begin(), originalPairs.end(),
+                                   [&ad](const TouchingPair pair) { return ad.sameItems(pair); });
+        REQUIRE_FALSE(result2);
+    }
 
-    for (auto const & curPair : originalPairs) {
-        auto pairFunc = [&curPair](const TouchingPair pair) { return curPair.sameItems(pair); };
-        auto foundInDestination = std::any_of(normalizedPairs.begin(), normalizedPairs.end(), pairFunc);
-        if (!foundInDestination) {
-            cout << "Inserting" << endl;
-            normalizedPairs.push_back(curPair);
+    SECTION("Only insert unique elements into destination vector") {
+        std::vector<TouchingPair> normalizedPairs;
+        for (auto const &curPair : originalPairs) {
+            auto pairFunc = [&curPair](const TouchingPair pair) { return curPair.sameItems(pair); };
+            auto foundInDestination = std::any_of(normalizedPairs.begin(), normalizedPairs.end(), pairFunc);
+            if (!foundInDestination) {
+                cout << "Inserting" << endl;
+                normalizedPairs.push_back(curPair);
+            }
+            cout << "Found: " << foundInDestination << endl;
         }
-        cout << "Found: " << foundInDestination << endl;
-
-
+        REQUIRE(normalizedPairs.size() == 2);
     }
 
 }
