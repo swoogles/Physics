@@ -15,11 +15,12 @@ List(
 
 class TouchingPair {
 private:
-    Circle a;
-    Circle b;
+    shared_ptr<Circle> a;
+    shared_ptr<Circle> b;
 
 public:
-    bool sameItems(TouchingPair touchingPair);
+    bool sameItems(const TouchingPair & touchingPair) const;
+    TouchingPair(const shared_ptr<Circle> aIn, const shared_ptr<Circle> bIn);
 };
 
 
