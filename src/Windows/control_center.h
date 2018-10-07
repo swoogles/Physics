@@ -4,14 +4,11 @@
 #include <plib/pu.h>
 #include <plib/puAux.h>
 #include <plib/sg.h>
-#include <boost/shared_ptr.hpp>
 #include "../Dimensions/Moveable.h"
 
 #include "../Physics/Simulation.h"
 
 #include "../Observation/Observer.h"
-
-using boost::shared_ptr;
 
 /*! \brief Main UI for making objects and controlling simulation
  *
@@ -22,7 +19,7 @@ using boost::shared_ptr;
  */
 class control_center {
 private:
-  boost::shared_ptr<Simulation> simulation;
+  shared_ptr<Simulation> simulation;
 
 	puGroup * placement_group;
 		puText * object_name_label;
@@ -71,8 +68,8 @@ private:
 
 public:
 	//! Creates all UI elements and sets their values, positions, and callbacks
-  void setSimulation( boost::shared_ptr<Simulation> simulation );
-	void init( boost::shared_ptr<Simulation> residentSimulation );
+  void setSimulation( shared_ptr<Simulation> simulation );
+	void init( shared_ptr<Simulation> residentSimulation );
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
 

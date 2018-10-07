@@ -10,8 +10,6 @@
 
 #include "control_center.h"
 
-using boost::shared_ptr;
-
 /*! \brief UI class that handles everything in the main window
  *
  *  Right now this only contains the Main Menu bar, but will eventually display some additional bits of information;
@@ -23,7 +21,7 @@ using boost::shared_ptr;
  */
 class main_window_UI {
 private:
-  boost::shared_ptr<Simulation> simulation;
+  shared_ptr<Simulation> simulation;
 
 	puMenuBar * main_menu;
 	puaFileSelector * open_selector;
@@ -48,13 +46,13 @@ public:
 	//! Unnecessary constructor for entirely static class
 	main_window_UI();
 
-  void setSimulation( boost::shared_ptr<Simulation> simulation );
+  void setSimulation( shared_ptr<Simulation> simulation );
 
 	/*! \brief Initializes values for the Main Window interface
 	 *
 	 *  Creates the Main Menu puMenuBar and populates it with open, save, etc. funcitnos
 	 */
-	void init( boost::shared_ptr<Simulation> residentSimulation );
+	void init( shared_ptr<Simulation> residentSimulation );
 
 	/*! \brief Updates the time values
 	 *

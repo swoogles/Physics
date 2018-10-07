@@ -11,20 +11,19 @@
 #include <boost/multi_array/multi_array_ref.hpp>
 #include <boost/multi_array.hpp>
 #include <boost/ref.hpp>
-#include <boost/foreach.hpp>
 
 #define INVALID_OCTREE_INDEX -1
 
-using boost::shared_ptr;
-using boost::make_shared;
 using boost::extents;
 using boost::multi_array;
+
+using std::make_shared;
 
 class Quadrant : public Box
 {
   private:
-    typedef boost::shared_ptr<MyShape> shape_pointer;
-    typedef boost::shared_ptr<Quadrant> QuadrantPointer_t;
+    typedef shared_ptr<MyShape> shape_pointer;
+    typedef shared_ptr<Quadrant> QuadrantPointer_t;
     typedef multi_array< QuadrantPointer_t, 3> array_typeNew;
 
     bool isLeaf;
@@ -36,8 +35,8 @@ class Quadrant : public Box
     sgVec4 weightedPosition;
     sgVec4 dimensions;
 
-    boost::shared_ptr<Box> borders;
-    boost::shared_ptr<Circle> centerOfMassRepresentation;
+    shared_ptr<Box> borders;
+    shared_ptr<Circle> centerOfMassRepresentation;
 
     array_typeNew  quadOctree;
 
@@ -55,7 +54,7 @@ class Quadrant : public Box
 
     inline bool isExternal() { return isLeaf; }
 
-    boost::shared_ptr<MyShape> getShapeInQuadrant();
+    shared_ptr<MyShape> getShapeInQuadrant();
 
     void getWeightedPosition(sgVec4 weightedPosition);
     void setWeightedPosition(sgVec4 weightedPosition);
@@ -64,5 +63,5 @@ class Quadrant : public Box
     void setCenterOfMass( sgVec4 centerOfMass );
 
 };
-typedef boost::shared_ptr<Quadrant> QuadrantPointer_t;
+typedef shared_ptr<Quadrant> QuadrantPointer_t;
 #endif

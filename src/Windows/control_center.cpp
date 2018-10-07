@@ -10,8 +10,8 @@
 using namespace std;
 
 void control_center::clearShapes(puObject * caller) {
-  boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)caller->getUserData();
-  boost::shared_ptr<Simulation> curSimulation = boost::shared_ptr<Simulation>( *spPointer );
+  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
+  shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
   curSimulation->getPhysicalObjects().clearShapes();
 }
 
@@ -30,13 +30,13 @@ void control_center::switchViewNow(puObject * caller) {
 
 }
 
-void control_center::setSimulation( boost::shared_ptr<Simulation> simulation )
+void control_center::setSimulation( shared_ptr<Simulation> simulation )
 {
   this->simulation =  simulation ;
 }
 
 // TODO Is there any better candidate for breaking things apart than this functino?
-void control_center::init( boost::shared_ptr<Simulation> residentSimulation ) {
+void control_center::init( shared_ptr<Simulation> residentSimulation ) {
   showingRunTime = false;
   userDat[0]=2;
   userDat[1]=-1;
@@ -228,8 +228,8 @@ void control_center::flipAutoScaling(puObject * caller) {
 }
 
 void control_center::alterDT(puObject * caller) {
-  boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)caller->getUserData();
-  boost::shared_ptr<Simulation> curSimulation = boost::shared_ptr<Simulation>( *spPointer );
+  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
+  shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
 
 
   if (strcmp(caller->getLegend(), "Slower") == 0) {
@@ -243,8 +243,8 @@ void control_center::alterDT(puObject * caller) {
 }
 
 void control_center::pause_cb(puObject * caller) {
-  boost::shared_ptr<Simulation> * spPointer = (boost::shared_ptr<Simulation> *)caller->getUserData();
-  boost::shared_ptr<Simulation> curSimulation = boost::shared_ptr<Simulation>( *spPointer );
+  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
+  shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
   if (caller->getIntegerValue() == 0) {
     curSimulation->Pause();
   }

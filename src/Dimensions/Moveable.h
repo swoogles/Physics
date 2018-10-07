@@ -2,14 +2,15 @@
 #define MOVEABLE_H_
 
 #include <plib/sg.h>
+#include <memory>
 #include "VecStruct.h"
 #include "MatrixStruct.h"
 
-#include <boost/shared_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
+using namespace std;
 
-typedef boost::scoped_ptr<MatrixStruct> matPtr;
-typedef boost::shared_ptr<VecStruct> vecPtr;
+using std::shared_ptr;
+
+typedef std::shared_ptr<VecStruct> vecPtr;
 
 /*! \brief The class at the heart of all the physical calculations
  *

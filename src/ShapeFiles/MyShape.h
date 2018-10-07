@@ -1,17 +1,8 @@
-/*
- * MyShape.h
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #ifndef MYSHAPE_H_
 #define MYSHAPE_H_
 
 #include <cmath>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/foreach.hpp>
 #include "../Dimensions/Moveable.h"
 #include "../Dimensions/VecStruct.h"
 #include "../Dimensions/MatrixStruct.h"
@@ -22,12 +13,11 @@
 #include <string>
 
 #include <plib/sg.h>
-#define foreach_  BOOST_FOREACH
 
 using namespace std;
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
-using boost::shared_ptr;
+using std::shared_ptr;
 
 
 /*! \brief The class at the heart of all the physical calculations
@@ -121,7 +111,7 @@ class MyShape : public Moveable {
      */
     // static vector<MyShape *> shapes;
     //PHYS-7
-    typedef boost::shared_ptr<MyShape> shapePointer_t;
+    typedef shared_ptr<MyShape> shapePointer_t;
 
     /*!
       * Simple method for getting distance between 2 objects
@@ -170,5 +160,5 @@ class MyShape : public Moveable {
     VecStruct * getCenterOfMass();
 };
 
-typedef boost::shared_ptr<MyShape> shapePointer_t;
+typedef shared_ptr<MyShape> shapePointer_t;
 #endif /* MYSHAPE_H_ */

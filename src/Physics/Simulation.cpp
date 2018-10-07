@@ -29,7 +29,7 @@ void Simulation::refreshQuadrant()
   sgVec4 pos = {0,0,0,1};
   float side = 10e5; //Formation Value
   sgVec3 dimensions = { side, side, side };
-  quadrant = boost::make_shared<Quadrant>( 1, boost::ref(pos), boost::ref(dimensions), shapes ) ;
+  quadrant = std::make_shared<Quadrant>( 1, boost::ref(pos), boost::ref(dimensions), shapes ) ;
 
   for ( const auto & curShape : physicalObjects.getShapes() ) {
     quadrant->insertShape( curShape );

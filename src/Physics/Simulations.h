@@ -1,8 +1,6 @@
 #ifndef SIMULATIONS_H_
 #define SIMULATIONS_H_
 
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp> 
 #include <plib/sg.h>
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/ShapeList.h"
@@ -60,10 +58,8 @@ int NUM_BODIES = LAST_BODY+1;
 
 using namespace boost::numeric::ublas;
 using boost::numeric::ublas::compressed_vector;
-using boost::shared_ptr;
-using boost::make_shared;
 
-typedef boost::shared_ptr<Simulation> SimulationPointer_t;
+typedef shared_ptr<Simulation> SimulationPointer_t;
 
 class Simulations
 {
@@ -107,7 +103,7 @@ class Simulations
      */
     static void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass);
 
-    typedef boost::shared_ptr<Simulation> SimulationPointer_t;
+    typedef shared_ptr<Simulation> SimulationPointer_t;
   public:
     // TODO put this in a more appropriate "Physical Constants" location
     static float G;

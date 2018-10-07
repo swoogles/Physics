@@ -1,6 +1,6 @@
 #include "Quadrant.h"
 
-typedef boost::shared_ptr<Quadrant> QuadrantPointer_t;
+typedef shared_ptr<Quadrant> QuadrantPointer_t;
 
 bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundaries )
 {
@@ -20,7 +20,7 @@ bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundar
   return withinBoundaries;
 }
 
-boost::shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
+shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
 {
   return shapeInQuadrant;
 }
@@ -36,7 +36,7 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions, ShapeList shapes )
   :isLeaf(true)
   ,containsBody(false)
   ,level(level)
-  ,borders(boost::make_shared<Box>(pos, dimensions[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
+  ,borders(make_shared<Box>(pos, dimensions[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
   ,quadOctree(extents[2][2][2])
   
 {
@@ -55,7 +55,7 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions, ShapeList shapes )
   sgVec4 comMomentum = { 0, 0, 0 };
   float comDensity = 1.0;
 
-  centerOfMassRepresentation = boost::make_shared<Circle>(
+  centerOfMassRepresentation = make_shared<Circle>(
           comPos,
           comMass,
           comRadius,
@@ -238,7 +238,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
     if ( insertionQuadrant == nullptr )
     {
-      insertionQuadrant = boost::make_shared<Quadrant>( this->level + 1, boost::ref(newPos), boost::ref(newDimensions), shapes ) ;
+      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, boost::ref(newPos), boost::ref(newDimensions), shapes ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }
