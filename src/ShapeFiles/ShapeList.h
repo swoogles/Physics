@@ -12,6 +12,8 @@ class ShapeList {
     std::vector<shapePointer_t> shapes;
 
   public:
+    ShapeList();
+    ShapeList(vectorT shapesIn);
     bool hasConflictsWith( shapePointer_t insertShape );
     size_t addShapeToList(shapePointer_t insertShape);
     size_t addList(ShapeList addList);
@@ -19,5 +21,7 @@ class ShapeList {
     size_t clearShapes();
     std::vector<shapePointer_t> getShapes();
     void update(const float dt);
+    inline size_t size() { return shapes.size(); };
+    bool contains(shapePointer_t searchShape);
 };
 #endif

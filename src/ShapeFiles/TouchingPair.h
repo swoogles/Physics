@@ -21,8 +21,8 @@ private:
 public:
     bool sameItems(const TouchingPair & touchingPair) const;
     TouchingPair(const shared_ptr<MyShape> aIn, const shared_ptr<MyShape> bIn);
-    inline shared_ptr<MyShape> getA() { return a; };
-    inline shared_ptr<MyShape> getB() { return b; };
+    inline shared_ptr<MyShape> getA() const { return a; };
+    inline shared_ptr<MyShape> getB() const { return b; };
 };
 
 

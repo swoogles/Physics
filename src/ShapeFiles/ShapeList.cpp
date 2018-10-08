@@ -1,5 +1,13 @@
 #include "ShapeList.h"
 
+ShapeList::ShapeList() { }
+
+ShapeList::ShapeList(vectorT shapesIn)
+:shapes(shapesIn.begin(), shapesIn.end()) {
+  cout << "in counstructor" << endl;
+  std::for_each(this->shapes.begin(), this->shapes.end(), [] (shapePointer_t shape) { cout << "shape: " << shape << endl; });
+}
+
 bool ShapeList::hasConflictsWith( shapePointer_t insertShape )
 {
   bool conflict = false;
@@ -77,4 +85,10 @@ void ShapeList::update(const float dt) {
   for (const auto & curShape : shapes ) {
     curShape->update( dt );
   }
+}
+
+bool ShapeList::contains(shapePointer_t searchShape) {
+  return std::any_of(shapes.begin(), shapes.end(), [searchShape](auto curShape) {
+    return curShape == searchShape;
+  });
 }
