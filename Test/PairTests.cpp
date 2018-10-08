@@ -98,16 +98,29 @@ TEST_CASE("normalize list of pairs", "[pair]") {
     const TouchingPair ca(c, a);
     const TouchingPair ad(c, d);
 
+    std::vector<shared_ptr<Circle>> originalCircles = {a, b, c, d};
+    /*
+     * Original:
+     * (a, b, c, d)
+     *
+     * Colliding Pairs:
+     * (a, b)
+     *
+     * Remaining Items:
+     * (a, c, d)
+     *
+     * Deleted Items:
+     * (b)
+     */
+
     std::vector<TouchingPair> originalPairs{
         ab,
-        ba,
-        ac,
-        ca
+        ba
     };
 
     SECTION("Can find a pair in a vector") {
-        auto acFunc = [&ac](const TouchingPair pair) { return ac.sameItems(pair); };
-        auto result = std::any_of(originalPairs.begin(), originalPairs.end(), acFunc);
+        auto baFunc = [&ba](const TouchingPair pair) { return ba.sameItems(pair); };
+        auto result = std::any_of(originalPairs.begin(), originalPairs.end(), baFunc);
         REQUIRE(result);
     }
 
@@ -122,6 +135,6 @@ TEST_CASE("normalize list of pairs", "[pair]") {
         for (auto const &curPair : originalPairs) {
             pairCollection.insertIfUnique(curPair);
         }
-        REQUIRE(pairCollection.size() == 2);
+        REQUIRE(pairCollection.size() == 1);
     }
 }
