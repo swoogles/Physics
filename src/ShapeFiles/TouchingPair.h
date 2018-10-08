@@ -21,6 +21,8 @@ private:
 public:
     bool sameItems(const TouchingPair & touchingPair) const;
     TouchingPair(const shared_ptr<Circle> aIn, const shared_ptr<Circle> bIn);
+    inline shared_ptr<Circle> getA() { return a; };
+    inline shared_ptr<Circle> getB() { return b; };
 };
 
 
