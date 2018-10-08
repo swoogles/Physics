@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include "../src/ShapeFiles/TouchingPair.h"
+#include "../src/ShapeFiles/PairCollection.h"
 #include <plib/sg.h>
 
 #include <memory>
@@ -117,17 +118,10 @@ TEST_CASE("normalize list of pairs", "[pair]") {
     }
 
     SECTION("Only insert unique elements into destination vector") {
-        std::vector<TouchingPair> normalizedPairs;
+        PairCollection pairCollection;
         for (auto const &curPair : originalPairs) {
-            auto pairFunc = [&curPair](const TouchingPair pair) { return curPair.sameItems(pair); };
-            auto foundInDestination = std::any_of(normalizedPairs.begin(), normalizedPairs.end(), pairFunc);
-            if (!foundInDestination) {
-                cout << "Inserting" << endl;
-                normalizedPairs.push_back(curPair);
-            }
-            cout << "Found: " << foundInDestination << endl;
+            pairCollection.insertIfUnique(curPair);
         }
-        REQUIRE(normalizedPairs.size() == 2);
+        REQUIRE(pairCollection.size() == 2);
     }
-
 }
