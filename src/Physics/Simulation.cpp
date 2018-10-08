@@ -7,7 +7,7 @@
 
 #include "Simulation.h"
 
-Simulation::Simulation()
+Simulation::Simulation(float sideLength)
             :curStep(0)
             ,DT(1)
             ,timeElapsed(0)

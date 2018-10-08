@@ -39,7 +39,7 @@ class Simulation
 	// TODO make private
     ShapeList shapes;
 
-    Simulation();
+    Simulation(float sideLength);
 
     inline int getCurStep() { return curStep; };
     inline void incCurStep() { curStep+= 1; };
