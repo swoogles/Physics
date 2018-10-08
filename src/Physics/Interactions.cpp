@@ -135,8 +135,12 @@ ShapeList calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPointer
 
 
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
-ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt)
+ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel)
 {
+
+    if (recursionLevel > 100) {
+        exit(1);
+    }
 
   if ( curQuadrant->isExternal() ) {
     return calculateForceOnExternalNode(curObject, curQuadrant, dt);
@@ -158,7 +162,7 @@ ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t c
                   for ( int z = 0; z < 2; z++ ) {
                       targetQuadrant = curQuadrant->getQuadrantFromCell( x, y, z );
                       if ( targetQuadrant != nullptr ) {
-                          deleteList.addList( calcForceOnObject_Octree(curObject, targetQuadrant, dt) ) ;
+                          deleteList.addList(calcForceOnObject_Octree(curObject, targetQuadrant, dt, recursionLevel + 1)) ;
                       }
                   }
               }
@@ -181,12 +185,12 @@ void calcForcesAll( SimulationPtr_t curSimulation )
         calcForcesAll_LessNaive( curSimulation );
         break;
       case ForceCalculationMethod ::OCTREE:
-          // std::cout << "calculating via octree" << std::endl;
+           std::cout << "calculating via octree" << std::endl;
         ShapeList deleteList;
 
         for ( const auto & curShape : curSimulation->getPhysicalObjects().getShapes() ) {
           // TODO actually *use* the deleteList in some way. That should help avoid drawing merged/dead shapes.
-          deleteList.addList( calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT() ) );
+          deleteList.addList(calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT(), 0));
         }
 
         for ( const auto & curShape : deleteList.getShapes() ) {

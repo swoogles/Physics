@@ -18,7 +18,8 @@ using std::size_t;
  */
 void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt);
 
-ShapeList calcForceOnObject_Octree( shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt);
+ShapeList
+calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
 
 void calcForcesAll( SimulationPtr_t curSimulation );
 
