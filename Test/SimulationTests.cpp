@@ -7,7 +7,7 @@
 #include "../src/Physics/Simulations.h"
 #include "../src/Physics/Interactions.h"
 
-TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[removing items]" ) {
+TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[XXX]" ) {
     bool testWritten = false;
     SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest();
     // TODO these should *NOT* be necessary after constructing the simulation

@@ -3,6 +3,7 @@
 #include "../src/ShapeFiles/TouchingPair.h"
 #include "../src/ShapeFiles/PairCollection.h"
 #include "../src/ShapeFiles/Circle.h"
+#include "TestUtils.h"
 #include <plib/sg.h>
 
 #include <memory>
@@ -14,60 +15,10 @@ std::unique_ptr<Circle> pass_through(std::unique_ptr<Circle> p)
     return p;
 }
 
-auto mass = 100;
-float radius = 10;
-float density = 1;
-
-TEST_CASE( "Simple pair test", "[pair]" ) {
-    sgVec4 startPos = { 0, 0, 0, 1 };
-    sgVec4 startMom = { 0, 0, 0, 0 };
-    sgVec3 color = { 255, 255, 0 };
-//    unique_ptr
-    Circle a(
-            startPos,
-            mass,
-            radius,
-            startMom,
-            density,
-            color
-    );
-
-    auto p = std::make_unique<Circle>( // p is a unique_ptr that owns a D
-            startPos,
-            mass,
-            radius,
-            startMom,
-            density,
-            color
-            );
-
-    auto q = pass_through(std::move(p));
-    assert(!p); // now p owns nothing and holds a null pointer
-    q->getScale();   // and q owns the D object
-
-
-}
-
-shared_ptr<Circle> testCircle() {
-    sgVec4 aPos = { 0, 0, 0, 1 };
-    sgVec4 bPos = { 1, 0, 0, 1 };
-    sgVec4 startMom = { 0, 0, 0, 0 };
-    sgVec3 color = { 255, 255, 0 };
-
-    return std::make_shared<Circle>(
-            aPos,
-            mass,
-            radius,
-            startMom,
-            density,
-            color
-    );
-}
-
 TEST_CASE( "sameItems tests", "[pair]" ) {
-    auto a = testCircle();
-    auto b = testCircle();
-    auto c = testCircle();
+    auto a = TestUtils::testCircle();
+    auto b = TestUtils::testCircle();
+    auto c = TestUtils::testCircle();
 
     TouchingPair pair1(a, b);
 
@@ -87,11 +38,11 @@ TEST_CASE( "sameItems tests", "[pair]" ) {
     }
 }
 
-TEST_CASE("basic checks", "[pair]") {
-    auto a = testCircle();
-    auto b = testCircle();
-    auto c = testCircle();
-    auto d = testCircle();
+TEST_CASE("basic checks", "[green]") {
+    auto a = TestUtils::testCircle();
+    auto b = TestUtils::testCircle();
+    auto c = TestUtils::testCircle();
+    auto d = TestUtils::testCircle();
 
     const TouchingPair ab(a, b);
     const TouchingPair ba(b, a);
@@ -125,73 +76,28 @@ TEST_CASE("basic checks", "[pair]") {
     }
 }
 
-TEST_CASE("normalize list of pairs", "[pair]") {
-    auto a = testCircle();
-    auto b = testCircle();
-    auto c = testCircle();
-    auto d = testCircle();
+TEST_CASE("add collections", "[green]") {
+    auto a = TestUtils::testCircle();
+    auto b = TestUtils::testCircle();
+    auto c = TestUtils::testCircle();
 
     const TouchingPair ab(a, b);
     const TouchingPair ba(b, a);
     const TouchingPair ac(a, c);
     const TouchingPair ca(c, a);
-    const TouchingPair ad(c, d);
 
-    std::vector<shared_ptr<Circle>> originalCircles = {a, b, c, d};
-    /*
-     * Original:
-     * (a, b, c, d)
-     *
-     * Colliding Pairs:
-     * (a, b)
-     *
-     * Remaining Items:
-     * (a, c, d)
-     *
-     * Deleted Items:
-     * (b)
-     */
-
-    std::vector<TouchingPair> originalPairs{
-            ab,
-            ba
-    };
-
-    SECTION("existence checking section") {
-        PairCollection uniquePairs;
-        for (auto const &curPair : originalPairs) {
-            cout << "inserting" << endl;
-            uniquePairs.insertIfUnique(curPair);
-        }
-
-        auto survivors = uniquePairs.survivors();
-        REQUIRE(survivors.size() == 1);
-        REQUIRE(survivors.contains(a));
-        auto doomed = uniquePairs.doomed();
-        REQUIRE(doomed.size() == 1);
-        REQUIRE(doomed.contains(b));
-
-        auto brittlePairs = uniquePairs.brittlePairs();
-
-        // YES! Ugly as fuck, but this is generally what I need.
-        std::vector<shared_ptr<MyShape>> nonCollidingObjects(originalCircles.size());
-        auto it = std::copy_if(originalCircles.begin(), originalCircles.end(), nonCollidingObjects.begin(), [brittlePairs] (const auto & circle) {
-            return ! std::any_of(brittlePairs.begin(), brittlePairs.end(), [circle](const TouchingPair &pair) {
-                return pair.getA() == circle || pair.getB() == circle;
-            });
-        });
-        nonCollidingObjects.resize(std::distance(nonCollidingObjects.begin(), it));
-
-        ShapeList nonColliders(nonCollidingObjects);
-        REQUIRE(nonCollidingObjects.size() == 2);
-        REQUIRE(nonColliders.contains(c));
-        REQUIRE(nonColliders.contains(d));
-
-        std::vector<shared_ptr<Circle>> resultCircles(originalCircles.size());
-        std::for_each(nonCollidingObjects.begin(), nonCollidingObjects.end(), [](auto circle) { cout << "Use count: " << circle.use_count() << endl; });
-
-        std::for_each(originalCircles.begin(), originalCircles.end(), [](auto circle) { circle.reset(); });
-        std::for_each(nonCollidingObjects.begin(), nonCollidingObjects.end(), [](auto circle) { cout << "Use count: " << circle.use_count() << endl; });
-        cout << "Done manually releasing" << endl;
+    SECTION("Add collection to collection") {
+        PairCollection destination;
+        cout << "1" << endl;
+        PairCollection source;
+        source.insertIfUnique(ab);
+        source.insertIfUnique(ac);
+        cout << "2" << endl;
+        destination.insertUniqueElements(source);
+        cout << "3" << endl;
+        REQUIRE(destination.survivors().contains(a));
+        REQUIRE(destination.doomed().contains(b));
+        REQUIRE(destination.doomed().contains(c));
     }
 }
+
