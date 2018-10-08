@@ -2,6 +2,7 @@
 
 #include "../src/ShapeFiles/TouchingPair.h"
 #include "../src/ShapeFiles/PairCollection.h"
+#include "../src/ShapeFiles/Circle.h"
 #include <plib/sg.h>
 
 #include <memory>

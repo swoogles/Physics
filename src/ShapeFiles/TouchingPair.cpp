@@ -13,7 +13,7 @@ bool TouchingPair::sameItems(const TouchingPair & other)  const {
     } else return false;
 }
 
-TouchingPair::TouchingPair(const shared_ptr<Circle> aIn, const shared_ptr<Circle> bIn)
+TouchingPair::TouchingPair(const shared_ptr<MyShape> aIn, const shared_ptr<MyShape> bIn)
         :a(aIn)
         ,b(bIn)
 { }

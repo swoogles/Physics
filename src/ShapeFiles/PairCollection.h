@@ -13,8 +13,8 @@ public:
 
 private:
     std::vector<TouchingPair> pairs;
-    std::vector<shared_ptr<Circle>> survivors();
-    std::vector<shared_ptr<Circle>> doomed();
+    std::vector<shared_ptr<MyShape>> survivors();
+    std::vector<shared_ptr<MyShape>> doomed();
 
 };
 

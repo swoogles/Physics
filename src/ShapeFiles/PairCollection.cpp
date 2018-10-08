@@ -18,11 +18,11 @@ size_t PairCollection::size() const {
     return pairs.size();
 }
 
-std::vector<shared_ptr<Circle>>  PairCollection::survivors() {
-    std::vector<shared_ptr<Circle>> survivors;
+std::vector<shared_ptr<MyShape>>  PairCollection::survivors() {
+    std::vector<shared_ptr<MyShape>> survivors;
     std::transform (pairs.begin(), pairs.end(), survivors.begin(), [](TouchingPair pair) { return pair.getA();});
     return survivors;
 }
-std::vector<shared_ptr<Circle>> PairCollection::doomed() {
+std::vector<shared_ptr<MyShape>> PairCollection::doomed() {
     exit(1);
 }
