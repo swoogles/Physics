@@ -47,8 +47,6 @@ static int main_window;
 
 static int control_center_num;
 
-using boost::numeric::ublas::compressed_vector;
-
 // GLOBALS
 SimulationPtr_t globalSimulation;
 

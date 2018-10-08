@@ -8,9 +8,6 @@
 #include "ForceCalculationMethod.h"
 #include <stdexcept>
 
-
-using boost::numeric::ublas::compressed_vector;
-
 // TODO This is a great place to use some abstractions. It needs to know a *lot* about its inner details.
 class Simulation
 {

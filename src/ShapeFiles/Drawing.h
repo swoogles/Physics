@@ -6,8 +6,6 @@
 
 #include "MyShape.h"
 
-using boost::numeric::ublas::compressed_vector;
-
 class Drawing {
 public:
     /*! \brief The key MyShape function called in the display function
@@ -22,7 +20,7 @@ public:
      *  \n -Pop matrix from the stack
      */
     static void draw(shapePointer_t myShape);
-    static void drawShapes(compressed_vector<shapePointer_t> shapes);
+    static void drawShapes(vectorT shapes);
 
 };
 

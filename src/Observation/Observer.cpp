@@ -1,12 +1,11 @@
 #include "Observer.h"
 
-compressed_vector<Observer *> Observer::observers(0);
+std::vector<Observer *> Observer::observers(0);
 int Observer::curObserver; // TODO should be in .h file?
 
 void Observer::init() {
-    observers.resize(Observer::observers.size()+1);
-    observers(0) = new Observer;
-    curObserver = 0;
+    observers.push_back(new Observer);
+    curObserver = observers.size() - 1;
 }
 
 Observer::Observer() 
@@ -53,7 +52,7 @@ bool Observer::isAutoScaling() {
 }
 
 Observer * Observer::getCurObserver() {
-	return observers(curObserver);
+	return observers.at(curObserver);
 }
 
 void Observer::update(float dt) {

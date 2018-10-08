@@ -8,7 +8,7 @@
 #include <plib/sg.h>
 #include "ShapeFiles/Circle.h"
 
-typedef boost::shared_ptr<MyShape> shape_pointer;
+typedef typename std::vector<shapePointer_t> vectorT;
 
 /*  README: Out of all the functions written so far, I believe the save/open functions are the ones that need the most hardening
  *  Right now they are very particular about what they can do and how they can do it, with NO error checking of any kind in play.
@@ -33,7 +33,7 @@ typedef boost::shared_ptr<MyShape> shape_pointer;
  *  \n -Density (float)
  *  \n -Color (float float float)
  */
-void saveShapes(char * fileName, compressed_vector<shape_pointer> shapes);
+void saveShapes(char * fileName, vectorT shapes);
 
 
 /*! \brief Opens a saved file and loads WorldSettings info and shapes info
@@ -53,7 +53,7 @@ void saveShapes(char * fileName, compressed_vector<shape_pointer> shapes);
  *  \n -Color (float float float)
  *
  */
-void openShapes(char * fileName, compressed_vector<shape_pointer> shapes);
+void openShapes(char * fileName, vectorT shapes);
 
 /*! \interface sgVec
  *  \brief Vector class used in several places throughout the project

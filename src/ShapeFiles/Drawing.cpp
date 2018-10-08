@@ -25,7 +25,7 @@ void Drawing::draw(shapePointer_t myShape){
     glPopMatrix();
 }
 
-void Drawing::drawShapes(compressed_vector<shapePointer_t> shapes) {
+void Drawing::drawShapes(vectorT shapes) {
     for ( const auto & curShape : shapes ) {
         draw(curShape);
     }

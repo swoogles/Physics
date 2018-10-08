@@ -56,9 +56,6 @@ int NUM_BODIES = LAST_BODY+1;
 };
 */
 
-using namespace boost::numeric::ublas;
-using boost::numeric::ublas::compressed_vector;
-
 typedef shared_ptr<Simulation> SimulationPointer_t;
 
 class Simulations

@@ -7,8 +7,6 @@
 
 #include "../Dimensions/Moveable.h"
 
-using boost::numeric::ublas::compressed_vector;
-
 /*! \brief Moveable "camera" entities that can give views from different frames of reference
  *
  *  This class allows normal simulations to be observed from different positions and orientations, but was really created for eventually helping to
@@ -52,7 +50,7 @@ public:
 	static Observer * getCurObserver();
 
 	//! Stores all created Observers
-	static compressed_vector<Observer *> observers;
+	static std::vector<Observer *> observers;
 
   void calcMinPullback(float fov, float minX, float minY, float maxX, float maxY);
 

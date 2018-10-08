@@ -7,14 +7,14 @@
 
 #include "fileInteraction.h"
 
-void saveShapes(char * fileName, compressed_vector<shape_pointer> shapes) {
-	shape_pointer curShape;
+void saveShapes(char * fileName, vectorT shapes) {
+	shapePointer_t curShape;
 	sgVec4 curField;
 	ofstream myfile;
 	myfile.open (fileName);
 	myfile << shapes.size() << endl;
 	for (unsigned int i = 0; i < shapes.size(); i++) {
-		curShape = shapes(i);
+		curShape = shapes.at(i);
 
 		myfile << curShape->getType() << endl;
 
@@ -40,11 +40,11 @@ void saveShapes(char * fileName, compressed_vector<shape_pointer> shapes) {
 
 }
 
-void openShapes(char * fileName, compressed_vector<shape_pointer> shapes) {
+void openShapes(char * fileName, vectorT shapes) {
 	ifstream curFile;
 	sgVec4 curVec;
 	float curVar;
-	shape_pointer curShape;
+	shapePointer_t curShape;
 
 	float newDT;
 	int type;
@@ -92,7 +92,7 @@ void openShapes(char * fileName, compressed_vector<shape_pointer> shapes) {
 			sgVec4 color;
 			vecFileRead(curFile, color);
 
-			shape_pointer curShape = boost::make_shared<Circle>(
+			shapePointer_t curShape = std::make_shared<Circle>(
 					pos,
 					mass,
 					bogusRadius,
@@ -101,7 +101,7 @@ void openShapes(char * fileName, compressed_vector<shape_pointer> shapes) {
 					color
 					);
 			curShape->setAngMomentum(angularMomentum);
-			shapes(i) = curShape;
+			shapes.push_back(curShape);
 		}
 	}
 	glutPostRedisplay();

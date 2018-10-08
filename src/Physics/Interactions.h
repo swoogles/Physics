@@ -7,7 +7,6 @@
 #include "../ShapeFiles/ShapeList.h"
 #include "Simulations.h"
 
-using boost::numeric::ublas::compressed_vector;
 using std::size_t;
 
 /*! \brief Calculates new velocities after a collision
@@ -18,8 +17,7 @@ using std::size_t;
  */
 void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt);
 
-ShapeList
-calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
+ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
 
 void calcForcesAll( SimulationPtr_t curSimulation );
 

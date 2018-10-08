@@ -14,11 +14,7 @@
 
 #include <plib/sg.h>
 
-using namespace std;
-using namespace boost::numeric::ublas;
-using boost::numeric::ublas::compressed_vector;
 using std::shared_ptr;
-
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -161,4 +157,6 @@ class MyShape : public Moveable {
 };
 
 typedef shared_ptr<MyShape> shapePointer_t;
+typedef typename std::vector<shapePointer_t> vectorT;
+
 #endif /* MYSHAPE_H_ */

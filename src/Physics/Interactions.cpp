@@ -47,7 +47,7 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
   sgVec4 gravField = {0, 0, 0, 0};
 
   ShapeList shapeList = curSimulation->getPhysicalObjects() ;
-  compressed_vector<shapePointer_t> physicalObjects = shapeList.getShapes();
+  vectorT physicalObjects = shapeList.getShapes();
   ShapeList deleteList;
 
   if (curSimulation->isConstGravField() ) {
@@ -57,12 +57,12 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
   
   if ( physicalObjects.size() > 0 ) {
     for (size_t i = 0; i < physicalObjects.size()-1; i++) {
-      object1 = physicalObjects(i);
+      object1 = physicalObjects.at(i);
 
       object1->adjustMomentum(gravField);
 
       for (size_t j = i + 1; j < physicalObjects.size(); j++) {
-        object2 = physicalObjects(j);
+        object2 = physicalObjects.at(j);
 
 
         if (curSimulation->isGravBetweenObjects() ) {
@@ -90,7 +90,7 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
     }
 
     // Add unary forces to last object
-    object1 = physicalObjects(physicalObjects.size()-1);
+    object1 = physicalObjects.at(physicalObjects.size()-1);
     object1->adjustMomentum(gravField);
 
     for ( const auto & curShape : deleteList.getShapes() ) {
@@ -226,7 +226,7 @@ vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float d
 }
 
 //TODO Fix and only apply to a single shape
-void calcDrag(float dt, compressed_vector<shapePointer_t> shapes) {
+void calcDrag(float dt, vectorT shapes) {
   float dragConstant = -30;
 
   for ( const auto & curShape : shapes ) {

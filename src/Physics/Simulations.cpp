@@ -11,7 +11,6 @@ float Simulations::G = 6.67384e-11;
 float astronomicalSideLength = 10e5; //Formation Value
 float billiardsSideLength = 200;
 float smallAstronomicalSideLength = 1.8e4;
-// compressed_vector< boost::shared_ptr<MyShape> > Simulations::physicalObjects(0);
 
 void Simulations::simpleOrbit() {
 

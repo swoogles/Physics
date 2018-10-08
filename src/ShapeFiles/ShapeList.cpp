@@ -8,7 +8,7 @@ bool ShapeList::hasConflictsWith( shapePointer_t insertShape )
 
   for (size_t i = 0; i < shapes.size() && conflict == false; i++)
   {
-    object1 = shapes(i);
+    object1 = shapes.at(i);
     conflict = object1->isTouching( insertShape  );
   }
   return conflict;
@@ -16,15 +16,13 @@ bool ShapeList::hasConflictsWith( shapePointer_t insertShape )
 
 size_t ShapeList::addShapeToList(shapePointer_t insertShape)
 {
-  size_t curSize = shapes.size();
-  shapes.resize(curSize + 1);
-  shapes(curSize) = insertShape;
-  return curSize;
+  shapes.push_back(insertShape);
+  return shapes.size();
 }
 
 size_t ShapeList::addList(ShapeList addList)
 {
-  compressed_vector<shapePointer_t> addShapes = addList.getShapes();
+  std::vector<shapePointer_t> addShapes = addList.getShapes();
   size_t additionSize = addShapes.size();
   size_t curSize = shapes.size();
   shapes.resize( curSize + additionSize );
@@ -39,7 +37,7 @@ size_t ShapeList::addList(ShapeList addList)
 
 int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
 {
-  compressed_vector<shapePointer_t> newShapeVector;
+  std::vector<shapePointer_t> newShapeVector;
   size_t newSize =  shapes.size();
   newShapeVector.resize(newSize);
   bool removedShape = false;
@@ -49,7 +47,7 @@ int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
   int removedIndex = -1;
   for( const auto & curShape : shapes) {
     if ( curShape.get() != shapeToRemove.get() ) {
-      newShapeVector.insert_element(curIndex, curShape);
+      newShapeVector.push_back(curShape);
       curIndex++;
     }
     else {
@@ -59,7 +57,7 @@ int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
     }
   }
   if ( removedShape ) {
-    shapes = compressed_vector<shapePointer_t>( newShapeVector );
+    shapes = std::vector<shapePointer_t>( newShapeVector );
   }
 
   return removedIndex;
@@ -71,7 +69,7 @@ size_t ShapeList::clearShapes() {
   return shapes.size();
 }
 
-compressed_vector<shapePointer_t> ShapeList::getShapes() {
+std::vector<shapePointer_t> ShapeList::getShapes() {
   return shapes;
 }
 
