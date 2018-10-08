@@ -8,7 +8,9 @@ using std::vector;
 
 class PairCollection {
 public:
+    PairCollection();
     void insertIfUnique(const TouchingPair & newPair);
+    void insertUniqueElements(PairCollection newPairs);
     size_t size() const;
     ShapeList survivors();
     ShapeList doomed();
