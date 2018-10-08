@@ -25,7 +25,8 @@ TEST_CASE( "Items are being removed from Simulation when Octree force calculatio
 
 TEST_CASE( "Simulation is made", "[simulation]" ) {
 
-    Simulation testSimulation;
+    int sideLength = 100;
+    Simulation testSimulation(sideLength);
 
     // REQUIRE( testSimulation.getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_OCTREE );
     REQUIRE( testSimulation.getCurStep() == 0 );
