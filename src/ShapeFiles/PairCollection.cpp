@@ -17,3 +17,12 @@ void PairCollection::insertIfUnique(const TouchingPair & newPair) {
 size_t PairCollection::size() const {
     return pairs.size();
 }
+
+std::vector<shared_ptr<Circle>>  PairCollection::survivors() {
+    std::vector<shared_ptr<Circle>> survivors;
+    std::transform (pairs.begin(), pairs.end(), survivors.begin(), [](TouchingPair pair) { return pair.getA();});
+    return survivors;
+}
+std::vector<shared_ptr<Circle>> PairCollection::doomed() {
+    exit(1);
+}

@@ -2,6 +2,7 @@
 #define PHYSICS_PAIRCOLLECTION_H
 
 #include "TouchingPair.h"
+#include "ShapeList.h"
 
 using std::vector;
 
@@ -12,6 +13,8 @@ public:
 
 private:
     std::vector<TouchingPair> pairs;
+    std::vector<shared_ptr<Circle>> survivors();
+    std::vector<shared_ptr<Circle>> doomed();
 
 };
 
