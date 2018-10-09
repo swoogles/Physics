@@ -29,7 +29,8 @@ void Simulation::refreshQuadrant()
   sgVec4 pos = {0,0,0,1};
   float side = 10e5; //Formation Value
   sgVec3 dimensions = { side, side, side };
-  quadrant = std::make_shared<Quadrant>( 1, boost::ref(pos), boost::ref(dimensions), shapes ) ;
+  // Uh oh.  I think this is it.
+  quadrant = std::make_shared<Quadrant>( 1, boost::ref(pos), boost::ref(dimensions) ) ;
 
   for ( const auto & curShape : physicalObjects.getShapes() ) {
     quadrant->insertShape( curShape );
@@ -122,10 +123,14 @@ void Simulation::updateMinsAndMaxes() {
 
 void Simulation::update()
 {
+    cout << "1" << endl;
   physicalObjects.update(DT);
   updateTimeElapsed();
   incCurStep();
 
+    cout << "2" << endl;
   updateMinsAndMaxes();
+    cout << "3" << endl;
   refreshQuadrant();
+    cout << "4" << endl;
 }

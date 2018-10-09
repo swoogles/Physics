@@ -5,13 +5,13 @@
 #include "TouchingPair.h"
 
 bool TouchingPair::contains(shapePointer_t shape) const {
-    return (this->a.lock() == shape || this->b.lock() == shape);
+    return (this->a == shape || this->b == shape);
 }
 
 bool TouchingPair::sameItems(const TouchingPair & other)  const {
     if (
-            (other.a.lock() == this->a.lock() && other.b.lock() == this->b.lock())
-            || (other.b.lock() == this->a.lock() && other.a.lock() == this->b.lock())
+            (other.a == this->a && other.b == this->b)
+            || (other.b == this->a && other.a == this->b)
             ) {
         return true;
     } else return false;

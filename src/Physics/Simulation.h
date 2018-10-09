@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifndef SIMULATION_H_
 #define SIMULATION_H_
 
@@ -33,10 +35,7 @@ class Simulation
     QuadrantPointer_t quadrant;
 
   public:
-	// TODO make private
-    ShapeList shapes;
-
-    Simulation(float sideLength);
+	Simulation(float sideLength);
 
     inline int getCurStep() { return curStep; };
     inline void incCurStep() { curStep+= 1; };
@@ -45,8 +44,9 @@ class Simulation
     inline void setForceCalcMethod( const ForceCalculationMethod forceCalcMethod ) { this->forceCalcMethod = forceCalcMethod; };
 
     inline ShapeList getPhysicalObjects() { return physicalObjects; };
-    inline void setPhysicalObjects( ShapeList physicalObjects ) { this->physicalObjects = physicalObjects; };
-    inline void addPhysicalObjectToList( shapePointer_t newShape ) { physicalObjects.addShapeToList( newShape ); };
+    inline void setPhysicalObjects( ShapeList physicalObjects ) { this->physicalObjects = std::move(physicalObjects); };
+    inline void addPhysicalObjectToList( shapePointer_t newShape ) { physicalObjects.addShapeToList(std::move(newShape)); };
+    inline void removePhysicalObject( shapePointer_t newShape ) { physicalObjects.removeShapeFromList(std::move(newShape)); };
 
     inline void setDT(float newDT) { DT = newDT; };
     inline float getDT() const { return DT; };

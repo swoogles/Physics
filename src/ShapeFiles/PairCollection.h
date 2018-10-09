@@ -3,7 +3,6 @@
 
 #include "TouchingPair.h"
 #include "ShapeList.h"
-#include "WeakShapeList.h"
 
 using std::vector;
 
@@ -13,8 +12,8 @@ public:
     void insertIfUnique(const TouchingPair & newPair);
     void insertUniqueElements(PairCollection newPairs);
     size_t size() const;
-    WeakShapeList survivors();
-    WeakShapeList doomed();
+    ShapeList survivors();
+    ShapeList doomed();
 //    bool any_of( std::function< bool(const TouchingPair &)>& const lambda );
     inline std::vector<TouchingPair> brittlePairs() { return pairs; }
 
