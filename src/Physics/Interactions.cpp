@@ -94,17 +94,17 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
     object1->adjustMomentum(gravField);
 
     for ( const auto & curShape : deleteList.getShapes() ) {
-      curSimulation->shapes.removeShapeFromList(curShape);
+      curSimulation->removePhysicalObject(curShape);
     }
 
   }
 
 }
 
-ShapeList calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt) {
+PairCollection calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt) {
   //1.
   //a.
-  ShapeList deleteList;
+  PairCollection deleteList;
   shapePointer_t shapeInQuadrant = curQuadrant->getShapeInQuadrant();
 
   //b.
@@ -114,7 +114,8 @@ ShapeList calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPointer
     if ( curObject->isTouching( shapeInQuadrant ) ) {
         // std::cout << "touching!" << std::endl;
       curObject->mergeWith(shapeInQuadrant);
-      deleteList.addShapeToList( shapeInQuadrant );
+      TouchingPair pair(curObject, shapeInQuadrant);
+      deleteList.insertIfUnique(pair);
     } else {
       vecPtr gravVec = calcForceGravNew( curObject, shapeInQuadrant, dt);
       curObject->adjustMomentum(gravVec->vec);
@@ -135,7 +136,7 @@ ShapeList calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPointer
 
 
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
-ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel)
+PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel)
 {
 
     if (recursionLevel > 100) {
@@ -146,7 +147,7 @@ ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t c
     return calculateForceOnExternalNode(curObject, curQuadrant, dt);
   }
   else {
-      ShapeList deleteList;
+      PairCollection deleteList;
       SGfloat distance = curObject->getDistanceToObject( curQuadrant );
       SGfloat theta = 0.5;
       //2.
@@ -162,7 +163,7 @@ ShapeList calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t c
                   for ( int z = 0; z < 2; z++ ) {
                       targetQuadrant = curQuadrant->getQuadrantFromCell( x, y, z );
                       if ( targetQuadrant != nullptr ) {
-                          deleteList.addList(calcForceOnObject_Octree(curObject, targetQuadrant, dt, recursionLevel + 1)) ;
+                          deleteList.insertUniqueElements(calcForceOnObject_Octree(curObject, targetQuadrant, dt, recursionLevel + 1)) ;
                       }
                   }
               }
@@ -186,16 +187,17 @@ void calcForcesAll( SimulationPtr_t curSimulation )
         break;
       case ForceCalculationMethod ::OCTREE:
            std::cout << "calculating via octree" << std::endl;
-        ShapeList deleteList;
+        PairCollection deleteList;
 
         for ( const auto & curShape : curSimulation->getPhysicalObjects().getShapes() ) {
           // TODO actually *use* the deleteList in some way. That should help avoid drawing merged/dead shapes.
-          deleteList.addList(calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT(), 0));
+          deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT(), 0));
         }
 
-        for ( const auto & curShape : deleteList.getShapes() ) {
+        cout << "about to start nuking doomed objects" << endl;
+        for ( const auto & curShape : deleteList.doomed().getShapes() ) {
             // std::cout << "deleting a shape!" << std::endl;
-          curSimulation->shapes.removeShapeFromList(curShape);
+          curSimulation->removePhysicalObject(curShape);
         }
         break;
 
