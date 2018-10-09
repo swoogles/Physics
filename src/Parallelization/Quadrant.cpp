@@ -27,12 +27,14 @@ shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
 
 Quadrant::~Quadrant()
 {
-  shapes.removeShapeFromList(borders);
+    // TODO maybe a leak now that I've pulled this out?
+    shapeInQuadrant.reset();
+//  shapes.removeShapeFromList(borders);
 //  shapes.removeShapeFromList(centerOfMassRepresentation);
 }
 
 
-Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions, ShapeList shapes )
+Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions )
   :isLeaf(true)
   ,containsBody(false)
   ,level(level)
@@ -45,8 +47,6 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions, ShapeList shapes )
   weightedPosition[2]=0.0;
   setPos( pos );
   sgCopyVec4( this->dimensions, dimensions );
-
-  shapes.addShapeToList(borders);
 
   sgVec3 CoMColor = { 0, 1, 0 };
   sgVec4 comPos = { 0, 0, 0, 1};
@@ -65,7 +65,6 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions, ShapeList shapes )
           CoMColor
   );
    */
-  this->shapes = shapes;
 
 }
 
@@ -240,7 +239,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
     if ( insertionQuadrant == nullptr )
     {
-      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, boost::ref(newPos), boost::ref(newDimensions), shapes ) ;
+      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, boost::ref(newPos), boost::ref(newDimensions) ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }

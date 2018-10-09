@@ -45,7 +45,7 @@ class Quadrant : public Box
     ShapeList shapes;
 
   public:
-    Quadrant(int level, sgVec4 pos, sgVec4 dimensions, ShapeList shapes );
+    Quadrant(int level, sgVec4 pos, sgVec4 dimensions );
     ~Quadrant();
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 
