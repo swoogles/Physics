@@ -13,7 +13,7 @@
 
 #include <memory>
 
-TEST_CASE("normalize list of pairs", "[current]") {
+TEST_CASE("normalize list of pairs", "[green]") {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     auto c = TestUtils::testCircle();

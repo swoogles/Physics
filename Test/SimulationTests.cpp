@@ -14,12 +14,18 @@ TEST_CASE( "Items are being removed from Simulation when Octree force calculatio
     simulation->updateMinsAndMaxes();
     simulation->setForceCalcMethod(ForceCalculationMethod::OCTREE);
     simulation->refreshQuadrant();
+
+    auto shapes = simulation->getPhysicalObjects().getShapes();
+    cout << "test case shapes size: " << shapes.size() << endl;
+    std::for_each(shapes.begin(), shapes.end(), [](const auto & shape) { cout << shape->getMass(); });
     // TODO put this in Interactions namespace
     calcForcesAll(simulation);
     simulation->update();
+
+    simulation->refreshQuadrant();
     // Even though the simulation shapes list is updated, something is still wrong. Possibly I'm losing the handle on
     // the shapes elsewhere?
-    REQUIRE(simulation->shapes.getShapes().size() == 1);
+    REQUIRE(simulation->getPhysicalObjects().getShapes().size() == 1);
     REQUIRE( testWritten );
 }
 
