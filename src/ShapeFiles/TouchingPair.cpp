@@ -4,10 +4,14 @@
 
 #include "TouchingPair.h"
 
+bool TouchingPair::contains(shapePointer_t shape) const {
+    return (this->a.lock() == shape || this->b.lock() == shape);
+}
+
 bool TouchingPair::sameItems(const TouchingPair & other)  const {
     if (
-            (other.a == this->a && other.b == this->b)
-            || (other.b == this->a && other.a == this->b)
+            (other.a.lock() == this->a.lock() && other.b.lock() == this->b.lock())
+            || (other.b.lock() == this->a.lock() && other.a.lock() == this->b.lock())
             ) {
         return true;
     } else return false;

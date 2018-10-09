@@ -9,7 +9,7 @@ typedef typename std::vector<shapePointer_t> vectorT;
 
 class ShapeList {
   private:
-    std::vector<shapePointer_t> shapes;
+    vectorT shapes;
 
   public:
     ShapeList();
@@ -19,7 +19,7 @@ class ShapeList {
     size_t addList(ShapeList addList);
     int removeShapeFromList( shapePointer_t shapeToRemove );
     size_t clearShapes();
-    std::vector<shapePointer_t> getShapes();
+    vectorT getShapes();
     void update(const float dt);
     inline size_t size() { return shapes.size(); };
     bool contains(shapePointer_t searchShape);

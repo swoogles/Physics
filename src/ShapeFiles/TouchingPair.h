@@ -15,14 +15,16 @@ List(
 
 class TouchingPair {
 private:
-    shared_ptr<MyShape> a;
-    shared_ptr<MyShape> b;
+    weak_ptr<MyShape> a;
+    weak_ptr<MyShape> b;
 
 public:
+    TouchingPair(shared_ptr<MyShape> aIn, shared_ptr<MyShape> bIn);
+
     bool sameItems(const TouchingPair & touchingPair) const;
-    TouchingPair(const shared_ptr<MyShape> aIn, const shared_ptr<MyShape> bIn);
-    inline shared_ptr<MyShape> getA() const { return a; };
-    inline shared_ptr<MyShape> getB() const { return b; };
+    bool contains(shapePointer_t shape) const;
+    inline weak_ptr<MyShape> getA() const { return a; };
+    inline weak_ptr<MyShape> getB() const { return b; };
 };
 
 

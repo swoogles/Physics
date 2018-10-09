@@ -7,24 +7,23 @@
 #include "../src/ShapeFiles/TouchingPair.h"
 #include "../src/ShapeFiles/PairCollection.h"
 #include "../src/ShapeFiles/Circle.h"
+#include "../src/ShapeFiles/ComplicatedFunctions.h"
 #include "TestUtils.h"
 #include <plib/sg.h>
 
 #include <memory>
 
-TEST_CASE("normalize list of pairs", "[green]") {
+TEST_CASE("normalize list of pairs", "[current]") {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     auto c = TestUtils::testCircle();
     auto d = TestUtils::testCircle();
 
+    cout << "a uses outter start: " << a.use_count() << endl;
     const TouchingPair ab(a, b);
     const TouchingPair ba(b, a);
-    const TouchingPair ac(a, c);
-    const TouchingPair ca(c, a);
-    const TouchingPair ad(c, d);
 
-    std::vector<shared_ptr<Circle>> originalCircles = {a, b, c, d};
+    vectorT originalCircles = {a, b, c, d};
 /*
  * Original:
  * (a, b, c, d)
@@ -51,6 +50,8 @@ TEST_CASE("normalize list of pairs", "[green]") {
             uniquePairs.insertIfUnique(curPair);
         }
 
+        cout << "a uses inner: " << a.use_count() << endl;
+
         SECTION("provide correct survivors and doomed entries") {
             auto survivors = uniquePairs.survivors();
             REQUIRE(survivors.size() == 1);
@@ -61,31 +62,15 @@ TEST_CASE("normalize list of pairs", "[green]") {
         }
 
         SECTION("manage the non-colliding objects") {
-            auto brittlePairs = uniquePairs.brittlePairs();
-
-            // YES! Ugly as fuck, but this is generally what I need.
-            std::vector<shared_ptr<MyShape>> nonCollidingObjects(originalCircles.size());
-            auto it = std::copy_if(
-                    originalCircles.begin(),
-                    originalCircles.end(),
-                    nonCollidingObjects.begin(),
-                    [brittlePairs](const auto &circle) {
-                        return !std::any_of(
-                                brittlePairs.begin(),
-                                brittlePairs.end(),
-                                [circle](const TouchingPair &pair) {
-                                    return pair.getA() == circle || pair.getB() == circle;
-                                });
-                    });
-
-            nonCollidingObjects.resize(std::distance(nonCollidingObjects.begin(), it));
-
-            ShapeList nonColliders(nonCollidingObjects);
-            REQUIRE(nonCollidingObjects.size() == 2);
+            ShapeList originalShapes(originalCircles);
+            auto nonColliders = ComplicatedFunctions::nonCollidingObjects(originalShapes, uniquePairs);
+            // call new function here
+            REQUIRE(nonColliders.size() == 2);
             REQUIRE(nonColliders.contains(c));
             REQUIRE(nonColliders.contains(d));
 
             std::vector<shared_ptr<Circle>> resultCircles(originalCircles.size());
+            /*
             std::for_each(nonCollidingObjects.begin(), nonCollidingObjects.end(),
                           [](auto circle) { cout << "Use count: " << circle.use_count() << endl; });
 
@@ -93,6 +78,9 @@ TEST_CASE("normalize list of pairs", "[green]") {
             std::for_each(nonCollidingObjects.begin(), nonCollidingObjects.end(),
                           [](auto circle) { cout << "Use count: " << circle.use_count() << endl; });
             cout << "Done manually releasing" << endl;
+             */
         }
     }
+
+    cout << "a uses outter end: " << a.use_count() << endl;
 }

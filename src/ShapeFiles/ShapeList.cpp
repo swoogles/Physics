@@ -30,7 +30,7 @@ size_t ShapeList::addShapeToList(shapePointer_t insertShape)
 
 size_t ShapeList::addList(ShapeList addList)
 {
-  std::vector<shapePointer_t> addShapes = addList.getShapes();
+  vectorT addShapes = addList.getShapes();
   size_t additionSize = addShapes.size();
   size_t curSize = shapes.size();
   shapes.resize( curSize + additionSize );
@@ -45,7 +45,7 @@ size_t ShapeList::addList(ShapeList addList)
 
 int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
 {
-  std::vector<shapePointer_t> newShapeVector;
+  vectorT newShapeVector;
   size_t newSize =  shapes.size();
   newShapeVector.resize(newSize);
   bool removedShape = false;
@@ -65,7 +65,7 @@ int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
     }
   }
   if ( removedShape ) {
-    shapes = std::vector<shapePointer_t>( newShapeVector );
+    shapes = vectorT ( newShapeVector );
   }
 
   return removedIndex;
@@ -77,7 +77,7 @@ size_t ShapeList::clearShapes() {
   return shapes.size();
 }
 
-std::vector<shapePointer_t> ShapeList::getShapes() {
+vectorT ShapeList::getShapes() {
   return shapes;
 }
 

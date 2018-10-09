@@ -7,6 +7,7 @@
 #include "../ShapeFiles/Box.h"
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/ShapeList.h"
+#include "../ShapeFiles/PairCollection.h"
 
 #include <boost/multi_array/multi_array_ref.hpp>
 #include <boost/multi_array.hpp>

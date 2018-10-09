@@ -25,20 +25,17 @@ size_t PairCollection::size() const {
     return pairs.size();
 }
 
-ShapeList  PairCollection::survivors() {
-    cout << "Getting number of survivors: " << pairs.size() << endl;
+WeakShapeList  PairCollection::survivors() {
     // Yikes, this was what was killing me
-    std::vector<shared_ptr<MyShape>> survivors(pairs.size());
+    weakVecT survivors(pairs.size());
     std::transform (pairs.begin(), pairs.end(), survivors.begin(), [](TouchingPair pair) { return pair.getA();});
-    cout << "transformed without dying" << endl;
-    ShapeList retSurvivors(survivors);
-    cout << "ret number of survivors: " << retSurvivors.size() << endl;
+    WeakShapeList retSurvivors(survivors);
     return retSurvivors;
 }
-ShapeList PairCollection::doomed() {
-    std::vector<shared_ptr<MyShape>> doomed(pairs.size());
+WeakShapeList PairCollection::doomed() {
+    weakVecT doomed(pairs.size());
     std::transform (pairs.begin(), pairs.end(), doomed.begin(), [](TouchingPair pair) { return pair.getB();});
-    return ShapeList (doomed);
+    return WeakShapeList (doomed);
 }
 
 //bool any_of( std::function< bool(const TouchingPair &)>& const lambda ) {

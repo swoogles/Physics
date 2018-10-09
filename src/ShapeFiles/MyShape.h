@@ -157,6 +157,7 @@ class MyShape : public Moveable {
 };
 
 typedef shared_ptr<MyShape> shapePointer_t;
+typedef weak_ptr<MyShape> weakShapePointer_t;
 typedef typename std::vector<shapePointer_t> vectorT;
 
 #endif /* MYSHAPE_H_ */
