@@ -13,7 +13,7 @@
 
 #include <memory>
 
-TEST_CASE("normalize list of pairs", "[green]") {
+TEST_CASE("normalize list of pairs", "[red]") {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     auto c = TestUtils::testCircle();
@@ -79,6 +79,17 @@ TEST_CASE("normalize list of pairs", "[green]") {
                           [](auto circle) { cout << "Use count: " << circle.use_count() << endl; });
             cout << "Done manually releasing" << endl;
              */
+        }
+
+        SECTION("Merge the pairs") {
+            /*
+             * Merge them
+             * make sure doomed ones are gone
+             * ensure that merged items have reasonable properties
+             */
+            ShapeList result = uniquePairs.mergePairs();
+            REQUIRE(result.size() == 1);
+            REQUIRE(result.getShapes()[0]->getMass() == d->getMass() * 2);
         }
     }
 

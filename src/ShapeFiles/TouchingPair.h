@@ -25,6 +25,7 @@ public:
     bool contains(shapePointer_t shape) const;
     inline shared_ptr<MyShape> getA() const { return a; };
     inline shared_ptr<MyShape> getB() const { return b; };
+    shapePointer_t merge();
 };
 
 

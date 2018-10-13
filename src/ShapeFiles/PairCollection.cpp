@@ -37,6 +37,14 @@ ShapeList PairCollection::doomed() {
     return ShapeList (doomed);
 }
 
+ShapeList PairCollection::mergePairs() {
+    vectorT results(pairs.size());
+    std::transform (pairs.begin(), pairs.end(), results.begin(), [](TouchingPair pair) {
+        return pair.merge();
+    });
+    return ShapeList (results);
+}
+
 //bool any_of( std::function< bool(const TouchingPair &)>& const lambda ) {
 //    return std::any_of(pairs.begin(), pairs.end(), lambda);
 //}
