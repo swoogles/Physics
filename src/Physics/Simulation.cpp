@@ -123,14 +123,14 @@ void Simulation::updateMinsAndMaxes() {
 
 void Simulation::update()
 {
-    cout << "1" << endl;
+    cout << "Simulation.update: 1" << endl;
   physicalObjects.update(DT);
   updateTimeElapsed();
   incCurStep();
 
-    cout << "2" << endl;
+    cout << "Simulation.update: 2" << endl;
   updateMinsAndMaxes();
-    cout << "3" << endl;
+    cout << "Simulation.update: 3" << endl;
   refreshQuadrant();
-    cout << "4" << endl;
+    cout << "Simulation.update: 4" << endl;
 }

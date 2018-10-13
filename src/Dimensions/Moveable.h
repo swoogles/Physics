@@ -3,6 +3,7 @@
 
 #include <plib/sg.h>
 #include <memory>
+#include <iostream>
 #include "VecStruct.h"
 #include "MatrixStruct.h"
 

@@ -113,7 +113,8 @@ PairCollection calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPo
 
     if ( curObject->isTouching( shapeInQuadrant ) ) {
         // std::cout << "touching!" << std::endl;
-      curObject->mergeWith(shapeInQuadrant);
+        // TODO handle merging in outter code
+//      curObject->mergeWith(shapeInQuadrant);
       TouchingPair pair(curObject, shapeInQuadrant);
       deleteList.insertIfUnique(pair);
     } else {
@@ -190,13 +191,16 @@ void calcForcesAll( SimulationPtr_t curSimulation )
         PairCollection deleteList;
 
         for ( const auto & curShape : curSimulation->getPhysicalObjects().getShapes() ) {
-          // TODO actually *use* the deleteList in some way. That should help avoid drawing merged/dead shapes.
           deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT(), 0));
         }
 
+        // TODO do merging here.
+
+        // TODO curSimulation.quadrant needs to die *before* any of my shapes will actually go away!
+
         cout << "about to start nuking doomed objects" << endl;
         for ( const auto & curShape : deleteList.doomed().getShapes() ) {
-            // std::cout << "deleting a shape!" << std::endl;
+          std::cout << "removing shape: " << curShape << std::endl;
           curSimulation->removePhysicalObject(curShape);
         }
         break;

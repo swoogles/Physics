@@ -441,36 +441,43 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest()
 
     sgVec3 newColor = { 1, 1, 1 };
 
-    double pieceMass = (pow(pieceRadius, 3.0) / 2) * (4.0/3.0) * M_PI * (objectDensity);
+
+    cout << "pieceRadius: " << pieceRadius << endl;
+    cout << "M_PI: " << M_PI << endl;
+    cout << "objectDensity: " << objectDensity << endl;
+    float pieceMass = 1.0e10;
+    cout << "pieceMass: " << pieceMass << endl;
 
     shapePointer_t curShape;
     float d= 1.8e3;
 
     //#1
     sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
-    curShape = make_shared<Circle>(
-            object1Placement,
-            pieceMass,
-            pieceRadius,
-            startMomentum,
-            objectDensity,
-            newColor
-    );
 
-    physicalObjects.addShapeToList( curShape );
+    physicalObjects.addShapeToList(
+            make_shared<Circle>(
+                    object1Placement,
+                    pieceMass,
+                    pieceRadius,
+                    startMomentum,
+                    objectDensity,
+                    newColor
+            )
+            );
 
     //#2
     sgVec4 object2Placement = {  (float) +(7/8.0 * d), (float) +(7/8.0 * d), 1, 1};
-    curShape = make_shared<Circle>(
-            object2Placement,
-            pieceMass,
-            pieceRadius,
-            startMomentum,
-            objectDensity,
-            newColor
-    );
 
-    physicalObjects.addShapeToList( curShape );
+    physicalObjects.addShapeToList(
+            make_shared<Circle>(
+                    object2Placement,
+                    pieceMass,
+                    pieceRadius,
+                    startMomentum,
+                    objectDensity,
+                    newColor
+            )
+    );
 
     curSimulation->setPhysicalObjects( physicalObjects );
     return curSimulation;
@@ -645,7 +652,6 @@ SimulationPointer_t Simulations::createSimulation( char simNumber, int numShapes
     newSimulation = Simulations::billiards3_ArbitraryList( 5 );
   }
 
-  newSimulation->updateMinsAndMaxes();
   newSimulation->setForceCalcMethod(forceCalculationMethod);
   // This is the first "n" part in "n log(n)"
   newSimulation->refreshQuadrant();

@@ -11,9 +11,7 @@ TEST_CASE( "Items are being removed from Simulation when Octree force calculatio
     bool testWritten = false;
     SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest();
     // TODO these should *NOT* be necessary after constructing the simulation
-    simulation->updateMinsAndMaxes();
     simulation->setForceCalcMethod(ForceCalculationMethod::OCTREE);
-    simulation->refreshQuadrant();
 
     auto shapes = simulation->getPhysicalObjects().getShapes();
     cout << "test case shapes size: " << shapes.size() << endl;

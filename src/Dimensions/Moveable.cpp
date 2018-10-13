@@ -92,10 +92,19 @@ void Moveable::adjustAngVelocity(const sgVec4 dAngVelocity) {
 }
 
 void Moveable::update(float dt) {
+	if (this == nullptr) {
+		fprintf(stderr, "Error: Null Shape \n");
+		exit(1);
+	}
+	cout << "Moveable.update 1: " << this << endl;
 	sgVec4 velocity;
 	sgVec4 prevVelocity;
+    cout << "Moveable.update 2 " << endl;
+    cout << "Moveable.update mass: " << this->mass << endl;
 	sgScaleVec4(velocity, momentum, 1/mass);
+    cout << "Moveable.update 3 " << endl;
 	sgScaleVec4(prevVelocity, prevMomentum, 1/mass);
+    cout << "Moveable.update 4 " << endl;
 	sgAddVec4(velocity, prevVelocity); //Sum current and previous velocities
 	sgScaleVec4(velocity, .5); //Get avg velocity
 	sgScaleVec4(velocity, dt);
@@ -112,6 +121,7 @@ void Moveable::update(float dt) {
 	sgCopyVec4(prevMomentum, momentum);
 	sgCopyVec4(prevAngVelocity, angVelocity);
 
+	cout << "moveable 5 " << endl;
 }
 
 /*

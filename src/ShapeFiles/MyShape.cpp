@@ -144,8 +144,9 @@ bool MyShape::isTouching( shapePointer_t otherShape )
 }
 
 // TODO Don't implement this at MyShape. It should have separate implementations for Circles and Boxes (If boxes even need it)
-void MyShape::mergeWith( shapePointer_t otherShape ) 
+void MyShape::mergeWith( shapePointer_t otherShape )
 {
+    cout << "MERGING" << endl;
   float newMass = this->getMass() + otherShape->getMass();
   float density = this->getDensity();
 

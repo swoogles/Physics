@@ -24,7 +24,7 @@ bool ShapeList::hasConflictsWith( shapePointer_t insertShape )
 
 size_t ShapeList::addShapeToList(shapePointer_t insertShape)
 {
-  shapes.push_back(insertShape);
+  shapes.push_back(std::move(insertShape));
   return shapes.size();
 }
 
@@ -45,6 +45,7 @@ size_t ShapeList::addList(ShapeList addList)
 
 int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
 {
+    cout << "removeShapeFromList invocation" << endl;
   vectorT newShapeVector;
   size_t newSize =  shapes.size();
   newShapeVector.resize(newSize);
@@ -52,23 +53,24 @@ int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
 
 
   size_t curIndex = 0;
-  int removedIndex = -1;
-  for( const auto & curShape : shapes) {
-    if ( curShape.get() != shapeToRemove.get() ) {
-      newShapeVector.push_back(curShape);
+  for( auto & curShape : shapes) {
+    if ( curShape != shapeToRemove) {
+      newShapeVector.push_back(std::move(curShape));
       curIndex++;
     }
     else {
       removedShape = true;
       newShapeVector.resize(newSize-1);
-      removedIndex = curIndex;
     }
   }
+  cout << "A" << endl;
   if ( removedShape ) {
     shapes = vectorT ( newShapeVector );
   }
+  cout << "B" << endl;
 
-  return removedIndex;
+//    shapes.erase(std::remove(shapes.begin(), shapes.end(), shapeToRemove), shapes.end());
+    return 0;
 }
 
 size_t ShapeList::clearShapes() {
@@ -82,9 +84,15 @@ vectorT ShapeList::getShapes() {
 }
 
 void ShapeList::update(const float dt) {
+    cout << "Shapelist.update numShapes: " << shapes.size() << endl;
   for (const auto & curShape : shapes ) {
+      if (curShape == nullptr) {
+          fprintf(stderr, "Error: Null Shape in ShapeList::update\n");
+          exit(1);
+      }
     curShape->update( dt );
   }
+  cout << "Shapelist.update finished update " << endl;
 }
 
 bool ShapeList::contains(shapePointer_t searchShape) {
