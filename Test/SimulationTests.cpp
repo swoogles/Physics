@@ -18,7 +18,6 @@ TEST_CASE( "Items are being removed from Simulation when Octree force calculatio
     std::for_each(shapes.begin(), shapes.end(), [](const auto & shape) { cout << shape->getMass(); });
     // TODO put this in Interactions namespace
     calcForcesAll(simulation);
-    simulation->update();
 
     simulation->refreshQuadrant();
     // Even though the simulation shapes list is updated, something is still wrong. Possibly I'm losing the handle on

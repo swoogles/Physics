@@ -27,6 +27,7 @@ shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
 
 Quadrant::~Quadrant()
 {
+    // TODO Make sure I have a working implementation here.
     // TODO maybe a leak now that I've pulled this out?
     shapeInQuadrant.reset();
 //  shapes.removeShapeFromList(borders);

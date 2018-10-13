@@ -38,6 +38,7 @@ void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt)
 // I'm working on this method because I think there are some basic
 // structural changes that I can make so that it will be more legible and
 // more suitable for later parallelization
+// TODO This should return the deleted list, so that it can coexist with the Octree version
 void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 {
   float dt = curSimulation->getDT();
@@ -194,6 +195,7 @@ void calcForcesAll( SimulationPtr_t curSimulation )
           deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT(), 0));
         }
 
+        curSimulation->update();
         // TODO do merging here.
 
         // TODO curSimulation.quadrant needs to die *before* any of my shapes will actually go away!
