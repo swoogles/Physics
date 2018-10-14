@@ -2,6 +2,8 @@
 #define SHAPE_LIST_H
 
 #include "MyShape.h"
+#include <list>
+
 
 using std::size_t;
 
@@ -10,6 +12,7 @@ typedef typename std::vector<shapePointer_t> vectorT;
 class ShapeList {
   private:
     vectorT shapes;
+    void ensureNoNullEntries(string caller);
 
   public:
     ShapeList();

@@ -23,7 +23,7 @@ TEST_CASE( "Items are being removed from Simulation when Octree force calculatio
     // Even though the simulation shapes list is updated, something is still wrong. Possibly I'm losing the handle on
     // the shapes elsewhere?
     REQUIRE(simulation->getPhysicalObjects().getShapes().size() == 1);
-    REQUIRE( testWritten );
+    simulation->update();
 }
 
 TEST_CASE( "Simulation is made", "[simulation]" ) {

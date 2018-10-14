@@ -1,11 +1,21 @@
 #include "ShapeList.h"
 
+void ShapeList::ensureNoNullEntries(string caller) {
+  for (const auto & curShape : this->shapes ) {
+    if (curShape == nullptr) {
+      fprintf(stderr, "Error: Null Shape in %s \n", caller.c_str());
+      exit(1);
+    }
+  }
+
+}
+
 ShapeList::ShapeList() { }
+
 
 ShapeList::ShapeList(vectorT shapesIn)
 :shapes(shapesIn.begin(), shapesIn.end()) {
-  cout << "in counstructor" << endl;
-  std::for_each(this->shapes.begin(), this->shapes.end(), [] (shapePointer_t shape) { cout << "shape: " << shape << endl; });
+    ensureNoNullEntries("ShapeList(vectorT)");
 }
 
 bool ShapeList::hasConflictsWith( shapePointer_t insertShape )
@@ -45,30 +55,23 @@ size_t ShapeList::addList(ShapeList addList)
 
 int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
 {
-    cout << "removeShapeFromList invocation" << endl;
-  vectorT newShapeVector;
-  size_t newSize =  shapes.size();
-  newShapeVector.resize(newSize);
-  bool removedShape = false;
+  size_t newSize =  shapes.size() - 1;
+  std::list<shapePointer_t> newShapeList;
 
-
-  size_t curIndex = 0;
   for( auto & curShape : shapes) {
     if ( curShape != shapeToRemove) {
-      newShapeVector.push_back(std::move(curShape));
-      curIndex++;
-    }
-    else {
-      removedShape = true;
-      newShapeVector.resize(newSize-1);
+//      newShapeVector.push_back(std::move(curShape));
+      newShapeList.push_front(curShape);
     }
   }
-  cout << "A" << endl;
-  if ( removedShape ) {
-    shapes = vectorT ( newShapeVector );
-  }
-  cout << "B" << endl;
 
+  std::vector<shapePointer_t> newShapeVector{ std::make_move_iterator(std::begin(newShapeList)),
+                    std::make_move_iterator(std::end(newShapeList)) };
+
+  shapes.resize(newSize);
+  shapes = vectorT ( newShapeVector );
+
+    ensureNoNullEntries("removeShapeFromList");
 //    shapes.erase(std::remove(shapes.begin(), shapes.end(), shapeToRemove), shapes.end());
     return 0;
 }
@@ -84,7 +87,6 @@ vectorT ShapeList::getShapes() {
 }
 
 void ShapeList::update(const float dt) {
-    cout << "Shapelist.update numShapes: " << shapes.size() << endl;
   for (const auto & curShape : shapes ) {
       if (curShape == nullptr) {
           fprintf(stderr, "Error: Null Shape in ShapeList::update\n");
@@ -92,7 +94,6 @@ void ShapeList::update(const float dt) {
       }
     curShape->update( dt );
   }
-  cout << "Shapelist.update finished update " << endl;
 }
 
 bool ShapeList::contains(shapePointer_t searchShape) {

@@ -188,25 +188,23 @@ void calcForcesAll( SimulationPtr_t curSimulation )
         calcForcesAll_LessNaive( curSimulation );
         break;
       case ForceCalculationMethod ::OCTREE:
-           std::cout << "calculating via octree" << std::endl;
         PairCollection deleteList;
 
         for ( const auto & curShape : curSimulation->getPhysicalObjects().getShapes() ) {
           deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT(), 0));
         }
 
-        curSimulation->update();
+        // TODO whoops, I'm dropping all items that *didn't* merge here. Bit of an oversite.
+          curSimulation->update();
+
+          for ( const auto & curShape : deleteList.doomed().getShapes() ) {
+              curSimulation->removePhysicalObject(curShape);
+          }
+          deleteList.mergePairs();
+          break;
         // TODO do merging here.
 
         // TODO curSimulation.quadrant needs to die *before* any of my shapes will actually go away!
-
-        cout << "about to start nuking doomed objects" << endl;
-        for ( const auto & curShape : deleteList.doomed().getShapes() ) {
-          std::cout << "removing shape: " << curShape << std::endl;
-          curSimulation->removePhysicalObject(curShape);
-        }
-        break;
-
   }
 }
 

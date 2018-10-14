@@ -45,19 +45,17 @@ class Simulation
 
     inline ShapeList getPhysicalObjects() { return physicalObjects; };
     inline void setPhysicalObjects( ShapeList physicalObjects ) {
-		for (const auto & shape : physicalObjects.getShapes() ) {
-			cout << "Individual shape " << shape << " mass before move: " << shape->getMass() << endl;
-		}
     	this->physicalObjects = std::move(physicalObjects);
     	// TODO these might have a better location, but at least the caller of this method doesn't have to remember to hit them afterwards now.
-		for (const auto & shape : this->physicalObjects.getShapes() ) {
-			cout << "moved shape " << shape << " mass after move: " << shape->getMass() << endl;
-		}
     	this->updateMinsAndMaxes();
     	this->refreshQuadrant();
     };
     inline void addPhysicalObjectToList( shapePointer_t newShape ) { physicalObjects.addShapeToList(std::move(newShape)); };
-    inline void removePhysicalObject( shapePointer_t newShape ) { physicalObjects.removeShapeFromList(std::move(newShape)); };
+    inline void removePhysicalObject( shapePointer_t newShape ) {
+        // TODO reinstate?
+        physicalObjects.removeShapeFromList(std::move(newShape));
+//		physicalObjects.removeShapeFromList(newShape);
+    };
 
     inline void setDT(float newDT) { DT = newDT; };
     inline float getDT() const { return DT; };
