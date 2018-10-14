@@ -36,6 +36,7 @@ class Simulation
 
   public:
 	Simulation(float sideLength);
+    Simulation(ShapeList physicalObjects);
 
     inline int getCurStep() { return curStep; };
     inline void incCurStep() { curStep+= 1; };

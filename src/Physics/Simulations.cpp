@@ -428,9 +428,6 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
 
 SimulationPointer_t Simulations::QuadrantTesting_simplest()
 {
-    SimulationPointer_t curSimulation = make_shared<Simulation>(smallAstronomicalSideLength);
-    curSimulation->setDT(1000);
-    curSimulation->makeAllInelastic();
     ShapeList physicalObjects;
 
     int numPieces=5;
@@ -479,7 +476,9 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest()
             )
     );
 
-    curSimulation->setPhysicalObjects( physicalObjects );
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects);
+    curSimulation->setDT(1000);
+    curSimulation->makeAllInelastic();
     return curSimulation;
 }
 

@@ -24,6 +24,28 @@ Simulation::Simulation(float sideLength)
 {
 }
 
+Simulation::Simulation(ShapeList physicalObjects)
+        :physicalObjects(physicalObjects)
+        ,curStep(0)
+        ,DT(1)
+        ,timeElapsed(0)
+        ,paused(true)
+        ,totalMass(0)
+        ,minX(FLT_MAX)
+        ,maxX(FLT_MIN)
+        ,minY(FLT_MAX)
+        ,maxY(FLT_MIN)
+        ,allElastic(false)
+        ,allInelastic(true)
+        ,constGravField(false)
+        ,gravBetweenObjects(true)
+{
+//    this->physicalObjects = std::move(physicalObjects);
+    // TODO these might have a better location, but at least the caller of this method doesn't have to remember to hit them afterwards now.
+    this->updateMinsAndMaxes();
+    this->refreshQuadrant();
+}
+
 void Simulation::refreshQuadrant()
 {
   sgVec4 pos = {0,0,0,1};
@@ -130,3 +152,4 @@ void Simulation::update()
   updateMinsAndMaxes();
   refreshQuadrant();
 }
+
