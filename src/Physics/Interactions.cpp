@@ -78,13 +78,17 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
         minSep = object1->getRadius() + object2->getRadius();
 
         if (distance < minSep) {
-          if (curSimulation->isAllElastic() ) {
+          if (curSimulation->getCollisionType() == CollisionType::ELASTIC) {
             elasticCollision( object1, object2, dt );
           }
-          else if (curSimulation->isAllInelastic() ){
+          else if (curSimulation->getCollisionType() == CollisionType::INELASTIC){
             object1->mergeWith( object2 );
             deleteList.addShapeToList(object2);
           }
+          else {
+              // TODO throw in some way.
+          }
+
         }
 
       }
@@ -194,7 +198,7 @@ void calcForcesAll( SimulationPtr_t curSimulation )
           deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT(), 0));
         }
 
-        // TODO whoops, I'm dropping all items that *didn't* merge here. Bit of an oversite.
+        // Before merging, update all positions. May or may not be correct.
           curSimulation->update();
 
           for ( const auto & curShape : deleteList.doomed().getShapes() ) {
@@ -202,7 +206,6 @@ void calcForcesAll( SimulationPtr_t curSimulation )
           }
           deleteList.mergePairs();
           break;
-        // TODO do merging here.
 
         // TODO curSimulation.quadrant needs to die *before* any of my shapes will actually go away!
   }

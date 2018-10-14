@@ -1,30 +1,6 @@
 #include <utility>
 
-/*
- * Simulation.cpp
- *
- *  Created on: Jul 22, 2011
- *      Author: bfrasure
- */
-
 #include "Simulation.h"
-
-Simulation::Simulation(float sideLength)
-            :curStep(0)
-            ,DT(1)
-            ,timeElapsed(0)
-            ,paused(true)
-            ,totalMass(0)
-            ,minX(FLT_MAX)
-            ,maxX(FLT_MIN)
-            ,minY(FLT_MAX)
-            ,maxY(FLT_MIN)
-            ,allElastic(false)
-            ,allInelastic(true)
-            ,constGravField(false)
-            ,gravBetweenObjects(true)
-{
-}
 
 Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects)
         :physicalObjects(std::move(physicalObjects))
@@ -41,8 +17,7 @@ Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, f
         ,gravBetweenObjects(gravityBetweenObjects)
 {
     // TODO Get rid of bools completely
-    allElastic = collisionType == CollisionType::ELASTIC;
-    allInelastic = collisionType == CollisionType::INELASTIC;
+    this->collisionType = collisionType;
     this->updateMinsAndMaxes();
     this->refreshQuadrant();
 }
@@ -99,42 +74,12 @@ bool Simulation::isConstGravField() {
 	return constGravField;
 }
 
-void Simulation::setConstGravField(bool useGravField) {
-	constGravField = useGravField;
-}
-
-void Simulation::setConstGravFieldVal(sgVec4 newGravField) {
-	sgCopyVec4(gravField, newGravField);
-}
-
 void Simulation::getConstGravFieldVal(sgVec4 retGravField) {
 	sgCopyVec4(retGravField, gravField);
 }
 
 bool Simulation::isGravBetweenObjects() {
 	return gravBetweenObjects;
-}
-
-void Simulation::setGravBetweenObjects(bool newVal) {
-	gravBetweenObjects = newVal;
-}
-
-bool Simulation::isAllElastic() {
-	return allElastic;
-}
-
-bool Simulation::isAllInelastic() {
-	return allInelastic;
-}
-
-void Simulation::makeAllElastic() {
-	allElastic = true;
-	allInelastic = false;
-}
-
-void Simulation::makeAllInelastic() {
-	allInelastic = true;
-	allElastic = false;
 }
 
 void Simulation::updateMinsAndMaxes() {
@@ -152,5 +97,9 @@ void Simulation::update()
 
   updateMinsAndMaxes();
   refreshQuadrant();
+}
+
+CollisionType Simulation::getCollisionType() const {
+    return collisionType;
 }
 

@@ -17,17 +17,18 @@ class Simulation
   private:
     ForceCalculationMethod forceCalcMethod;
     ShapeList physicalObjects;
+    CollisionType collisionType;
+public:
+	CollisionType getCollisionType() const;
 
-    int curStep;
+private:
+	int curStep;
     float DT;
     double timeElapsed;
     bool paused;
     float totalMass;
 
     float minX, maxX, minY, maxY;
-
-    bool allElastic;
-    bool allInelastic;
 
     bool constGravField;
     sgVec4 gravField;
@@ -36,10 +37,7 @@ class Simulation
     QuadrantPointer_t quadrant;
 
   public:
-	Simulation(float sideLength);
-    Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects);
-
-    inline int getCurStep() { return curStep; };
+    Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects);;
     inline void incCurStep() { curStep+= 1; };
 
     inline ForceCalculationMethod getForceCalcMethod() { return forceCalcMethod; };
@@ -75,28 +73,12 @@ class Simulation
 
 	//! Returns true if a ubiquitous force from gravity affects the entire system
 	bool isConstGravField();
-	//! Set to true to enact a constant gravity vector
-	void setConstGravField(bool useGravField);
-	//! Set gravity field vector to newGravField
-	void setConstGravFieldVal(sgVec4 newGravField);
-	//! Return gravity field vector in retGravField
+
+    //! Return gravity field vector in retGravField
 	void getConstGravFieldVal(sgVec4 retGravField);
 
 	//! Returns true if simulation is calculating gravity between objects
 	bool isGravBetweenObjects();
-	//! Set to true to calculate gravity between objects
-	void setGravBetweenObjects(bool);
-
-	// TODO Replaced with "getElasticity" method that returns an enum of ELASTIC, INELASTIC, or MIXED
-	//! Returns true if every collision is treated as completely elastic
-	bool isAllElastic();
-	//! Returns true if every collision is treated as competely inelastic
-	bool isAllInelastic();
-
-	//! Makes simulation treat all collisions as completely elastic
-	void makeAllElastic();
-	//! Makes simulation treat all collisions as completely inelastic
-	void makeAllInelastic();
 
 } ;
 typedef shared_ptr<Simulation> SimulationPtr_t;
