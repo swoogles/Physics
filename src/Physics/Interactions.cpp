@@ -56,7 +56,7 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
     sgScaleVec4(gravField, 1/dt);
   }
   
-  if ( physicalObjects.size() > 0 ) {
+  if (!physicalObjects.empty()) {
     for (size_t i = 0; i < physicalObjects.size()-1; i++) {
       object1 = physicalObjects.at(i);
 
@@ -115,11 +115,7 @@ PairCollection calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPo
   //b.
   if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant ) {
     //c.
-
     if ( curObject->isTouching( shapeInQuadrant ) ) {
-        // std::cout << "touching!" << std::endl;
-        // TODO handle merging in outter code
-//      curObject->mergeWith(shapeInQuadrant);
       TouchingPair pair(curObject, shapeInQuadrant);
       deleteList.insertIfUnique(pair);
     } else {
@@ -185,30 +181,30 @@ PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointe
 void calcForcesAll( SimulationPtr_t curSimulation )
 {
     // std::cout << "doing anything?!" << std::endl;
-  switch(curSimulation->getForceCalcMethod()) {
-      // TODO are these getting inverted somewhere along the way?
-      case ForceCalculationMethod::NAIVE:
-          // std::cout << "calculating naively" << std::endl;
-        calcForcesAll_LessNaive( curSimulation );
-        break;
-      case ForceCalculationMethod ::OCTREE:
-        PairCollection deleteList;
+    switch(curSimulation->getForceCalcMethod()) {
+        // TODO are these getting inverted somewhere along the way?
+        case ForceCalculationMethod::NAIVE:
+            // std::cout << "calculating naively" << std::endl;
+            calcForcesAll_LessNaive( curSimulation );
+            break;
+        case ForceCalculationMethod ::OCTREE:
+            PairCollection deleteList;
 
-        for ( const auto & curShape : curSimulation->getPhysicalObjects().getShapes() ) {
-          deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT(), 0));
-        }
+            for ( const auto & curShape : curSimulation->getPhysicalObjects().getShapes() ) {
+                deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, curSimulation->getQuadrant(), curSimulation->getDT(), 0));
+            }
 
-        // Before merging, update all positions. May or may not be correct.
-          curSimulation->update();
+            // Before merging, update all positions. May or may not be correct.
+            curSimulation->update();
 
-          for ( const auto & curShape : deleteList.doomed().getShapes() ) {
-              curSimulation->removePhysicalObject(curShape);
-          }
-          deleteList.mergePairs();
-          break;
+            for ( const auto & curShape : deleteList.doomed().getShapes() ) {
+                curSimulation->removePhysicalObject(curShape);
+            }
+            deleteList.mergePairs();
+            break;
 
-        // TODO curSimulation.quadrant needs to die *before* any of my shapes will actually go away!
-  }
+            // TODO curSimulation.quadrant needs to die *before* any of my shapes will actually go away!
+    }
 }
 
 vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float dt )
