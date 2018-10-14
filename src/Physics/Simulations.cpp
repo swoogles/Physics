@@ -55,11 +55,6 @@ void Simulations::simpleOrbit() {
 }
 
 SimulationPointer_t Simulations::billiards1(int numRows) {
-    SimulationPointer_t curSimulation = make_shared<Simulation>(billiardsSideLength);
-    curSimulation->setDT(0);
-    curSimulation->makeAllElastic();
-    curSimulation->setGravBetweenObjects(false);
-    curSimulation->setConstGravField(false);
     ShapeList physicalObjects;
 
     int numPieces = 0;
@@ -120,16 +115,12 @@ SimulationPointer_t Simulations::billiards1(int numRows) {
     }
 
     // return physicalObjects;
-    curSimulation->setPhysicalObjects( physicalObjects );
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false);
     return curSimulation;
 }
 
 SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows)
 {
-    SimulationPointer_t curSimulation = make_shared<Simulation>(billiardsSideLength);
-    curSimulation->setDT(.003);
-    curSimulation->makeAllElastic();
-    curSimulation->setGravBetweenObjects(false);
     ShapeList physicalObjects;
 
     float cueMass = 100.0;
@@ -176,16 +167,12 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows)
         }
     }
 
-    curSimulation->setPhysicalObjects( physicalObjects );
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false);
     return curSimulation;
 }
 
 
 SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows) {
-    SimulationPointer_t curSimulation = make_shared<Simulation>(billiardsSideLength);
-    curSimulation->setDT(.003);
-    curSimulation->makeAllElastic();
-    curSimulation->setGravBetweenObjects(false);
     ShapeList physicalObjects;
 
     float cueMass = 100.0;
@@ -239,7 +226,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows) {
         }
     }
 
-    curSimulation->setPhysicalObjects( physicalObjects );
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false);
     return curSimulation;
 }
 
@@ -274,11 +261,6 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
 {
   float dt = 1000;
   int numPieces = 2;
-
-  SimulationPointer_t curSimulation = make_shared<Simulation>(astronomicalSideLength);
-  curSimulation->setDT( dt );
-	curSimulation->makeAllInelastic();
-	curSimulation->setGravBetweenObjects(true);
 
   ShapeList physicalObjects;
 
@@ -333,15 +315,13 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
   startPlacement[0]= -offset;
   startPlacement[1]= -offset;
 
-  curSimulation->setPhysicalObjects( physicalObjects );
+
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, dt, true);
   return curSimulation;
 }
 
 SimulationPointer_t Simulations::QuadrantTestingNonRandom()
 {
-    SimulationPointer_t curSimulation = make_shared<Simulation>(smallAstronomicalSideLength);
-    curSimulation->setDT(1000);
-    curSimulation->makeAllInelastic();
     ShapeList physicalObjects;
 
     int numPieces=5;
@@ -422,7 +402,7 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
 
     physicalObjects.addShapeToList( curShape );
 
-    curSimulation->setPhysicalObjects( physicalObjects );
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType ::INELASTIC, 1000, true);
     return curSimulation;
 }
 
@@ -438,13 +418,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest()
 
     sgVec3 newColor = { 1, 1, 1 };
 
-
-    cout << "pieceRadius: " << pieceRadius << endl;
-    cout << "M_PI: " << M_PI << endl;
-    cout << "objectDensity: " << objectDensity << endl;
     float pieceMass = 1.0e10;
-    cout << "pieceMass: " << pieceMass << endl;
-
     shapePointer_t curShape;
     float d= 1.8e3;
 
@@ -476,17 +450,12 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest()
             )
     );
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects);
-    curSimulation->setDT(1000);
-    curSimulation->makeAllInelastic();
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true);
     return curSimulation;
 }
 
 SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
 {
-    const SimulationPointer_t curSimulation = make_shared<Simulation>(astronomicalSideLength);
-    curSimulation->setDT(1000);
-    curSimulation->makeAllInelastic();
     ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
     const float objectDensity = DENSITY_SUN;
@@ -535,15 +504,12 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
         totalMass += curShape->getMass();
     }
 
-    curSimulation->setPhysicalObjects( physicalObjects );
+    const SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true);
     return curSimulation;
 }
 
 SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) 
 {
-  SimulationPointer_t curSimulation = make_shared<Simulation>(astronomicalSideLength);
-	curSimulation->setDT(1000);
-	curSimulation->makeAllInelastic();
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -598,7 +564,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 		totalMass += pieceMass;
 	}
 
-  curSimulation->setPhysicalObjects( physicalObjects );
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true);
   return curSimulation;
 }
 

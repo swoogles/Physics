@@ -8,6 +8,7 @@
 #include "../ShapeFiles/ShapeList.h"
 #include "../Parallelization/Quadrant.h"
 #include "ForceCalculationMethod.h"
+#include "CollisionType.h"
 #include <stdexcept>
 
 // TODO This is a great place to use some abstractions. It needs to know a *lot* about its inner details.
@@ -36,7 +37,7 @@ class Simulation
 
   public:
 	Simulation(float sideLength);
-    Simulation(ShapeList physicalObjects);
+    Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects);
 
     inline int getCurStep() { return curStep; };
     inline void incCurStep() { curStep+= 1; };
@@ -45,12 +46,6 @@ class Simulation
     inline void setForceCalcMethod( const ForceCalculationMethod forceCalcMethod ) { this->forceCalcMethod = forceCalcMethod; };
 
     inline ShapeList getPhysicalObjects() { return physicalObjects; };
-    inline void setPhysicalObjects( ShapeList physicalObjects ) {
-    	this->physicalObjects = std::move(physicalObjects);
-    	// TODO these might have a better location, but at least the caller of this method doesn't have to remember to hit them afterwards now.
-    	this->updateMinsAndMaxes();
-    	this->refreshQuadrant();
-    };
     inline void addPhysicalObjectToList( shapePointer_t newShape ) { physicalObjects.addShapeToList(std::move(newShape)); };
     inline void removePhysicalObject( shapePointer_t newShape ) {
         // TODO reinstate?

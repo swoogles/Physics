@@ -5,6 +5,7 @@
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/ShapeList.h"
 #include "Simulation.h"
+#include "CollisionType.h"
 #include "ForceCalculationMethod.h"
 
 #define MASS_VAR 1e21

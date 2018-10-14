@@ -26,10 +26,10 @@ Simulation::Simulation(float sideLength)
 {
 }
 
-Simulation::Simulation(ShapeList physicalObjects)
+Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects)
         :physicalObjects(std::move(physicalObjects))
         ,curStep(0)
-        ,DT(1)
+        ,DT(dt)
         ,timeElapsed(0)
         ,paused(true)
         ,totalMass(0)
@@ -37,11 +37,12 @@ Simulation::Simulation(ShapeList physicalObjects)
         ,maxX(FLT_MIN)
         ,minY(FLT_MAX)
         ,maxY(FLT_MIN)
-        ,allElastic(false)
-        ,allInelastic(true)
         ,constGravField(false)
-        ,gravBetweenObjects(true)
+        ,gravBetweenObjects(gravityBetweenObjects)
 {
+    // TODO Get rid of bools completely
+    allElastic = collisionType == CollisionType::ELASTIC;
+    allInelastic = collisionType == CollisionType::INELASTIC;
     this->updateMinsAndMaxes();
     this->refreshQuadrant();
 }
