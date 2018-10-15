@@ -106,7 +106,7 @@ void calcForcesAll_LessNaive( SimulationPtr_t curSimulation )
 
 }
 
-PairCollection calculateForceOnExternalNode(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt) {
+PairCollection calculateForceOnExternalNode(const shapePointer_t &curObject, const QuadrantPointer_t &curQuadrant, float dt) {
   //1.
   //a.
   PairCollection deleteList;
@@ -207,7 +207,7 @@ vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float d
 {
   vecPtr gravVec(new VecStruct());
 
-  sgVec4 unitVec;
+  sgVec4 unitVec{};
 
   vecPtr sepVec(object1->getVectorToObject(object2.get()));
 

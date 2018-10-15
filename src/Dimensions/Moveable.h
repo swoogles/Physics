@@ -53,7 +53,7 @@ public:
 	//! Set position of object to <newPos>
 	void setPos(const sgVec4 newPos);
 
-    VecStruct * getPosNew() const;
+    shared_ptr<VecStruct> getPosNew() const;
 
 	vecPtr getVectorToObject( Moveable * object2);
 
@@ -65,7 +65,7 @@ public:
 	 */
 	void adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis);
 
-	MatrixStruct * getOrientationMat() const;
+	shared_ptr<MatrixStruct> getOrientationMat() const;
 
 
 	//! Alters momentum of object by <dVel> * mass

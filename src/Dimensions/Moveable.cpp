@@ -29,8 +29,8 @@ void Moveable::setPos(const sgVec4 newPos) {
 	sgCopyVec4(this->pos, newPos);
 }
 
-VecStruct * Moveable::getPosNew() const {
-	VecStruct * vecStruct = new VecStruct();
+shared_ptr<VecStruct> Moveable::getPosNew() const {
+	shared_ptr<VecStruct> vecStruct = make_shared<VecStruct>();
     sgCopyVec4(vecStruct->vec, pos);
     return vecStruct;
 }
@@ -43,8 +43,9 @@ vecPtr Moveable::getVectorToObject( Moveable * object2) {
 	return vec;
 }
 
-MatrixStruct * Moveable::getOrientationMat() const {
-	MatrixStruct * matrixStruct = new MatrixStruct();
+shared_ptr<MatrixStruct> Moveable::getOrientationMat() const {
+	shared_ptr<MatrixStruct> matrixStruct = make_shared<MatrixStruct>();
+
 	sgCopyMat4(matrixStruct->orientationMat, orientationMat);
 	return matrixStruct;
 }

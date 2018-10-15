@@ -41,8 +41,10 @@ Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions )
   ,level(level)
   ,borders(make_shared<Box>(pos, dimensions[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
   ,quadOctree(extents[2][2][2])
+  ,dimensions()
   
 {
+  // TODO Require shapeToInsert in constructor.
   weightedPosition[0]=0.0;
   weightedPosition[1]=0.0;
   weightedPosition[2]=0.0;
@@ -240,7 +242,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
     if ( insertionQuadrant == nullptr )
     {
-      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, boost::ref(newPos), boost::ref(newDimensions) ) ;
+      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, std::ref(newPos), std::ref(newDimensions) ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }

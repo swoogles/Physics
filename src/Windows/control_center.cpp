@@ -46,10 +46,6 @@ void control_center::init( shared_ptr<Simulation> residentSimulation ) {
 
   int curHeight = winHeight;
   int elementHeight = 30;
-  int *textWidth = new int;
-  int *textHeight = new int;
-  *textWidth = 0;
-  *textHeight = 0;
 
   int vsXinit = 5;
   int vsYinit = 5;

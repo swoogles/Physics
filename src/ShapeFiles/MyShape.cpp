@@ -236,6 +236,3 @@ float MyShape::calcMergedRadius(float massBoth, float density) {
 void MyShape::setRadius(float) {}
 float MyShape::getRadius() { return 1;}
 
-VecStruct * MyShape::getCenterOfMass() {
-    return this->getPosNew();
-}

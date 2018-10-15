@@ -153,7 +153,6 @@ class MyShape : public Moveable {
      */
     float calcMergedRadius(float massBoth, float density);
 
-    VecStruct * getCenterOfMass();
 };
 
 typedef shared_ptr<MyShape> shapePointer_t;

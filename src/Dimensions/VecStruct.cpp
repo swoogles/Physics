@@ -3,9 +3,13 @@
 //
 
 #include "VecStruct.h"
-VecStruct * VecStruct::vecFromAtoB(VecStruct * a, VecStruct * b) {
-    VecStruct * sepVec = new VecStruct();
+
+VecStruct::VecStruct()
+: vec()
+{}
+
+shared_ptr<VecStruct> VecStruct::vecFromAtoB(VecStruct * a, VecStruct * b) {
+    shared_ptr<VecStruct> sepVec = make_shared<VecStruct>();
     sgSubVec4( sepVec->vec, a->vec, b->vec );
     return sepVec;
-
 }

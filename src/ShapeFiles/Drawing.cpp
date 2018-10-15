@@ -8,7 +8,7 @@ void Drawing::draw(shapePointer_t myShape){
     glTranslatef(pos->x(), pos->y(), pos->z());
 
     //Rotate
-    glMultMatrixf( (const GLfloat*) myShape->getOrientationMat());
+    glMultMatrixf( (const GLfloat*) myShape->getOrientationMat().get());
 
     //Scale
     float scale = myShape->getScale();
@@ -19,8 +19,12 @@ void Drawing::draw(shapePointer_t myShape){
 
     int numPts = 16;
     switch (myShape->getType()) {
-        case box: glutWireCube( 1.0 );
-        case circle:glutWireSphere( 1, numPts, numPts);
+        case box:
+            glutWireCube( 1.0 );
+            break;
+        case circle:
+            glutWireSphere( 1, numPts, numPts);
+            break;
     }
     glPopMatrix();
 }
