@@ -36,22 +36,18 @@ void Simulation::refreshQuadrant()
 }
 
 void Simulation::updateXYMinsAndMaxes(sgVec4 curPos) {
-	if (curPos[0] < minX)
-  {
-		minX = curPos[0];
-  }
-	if (curPos[0] > maxX)
-  {
-		maxX = curPos[0];
-  }
-	if (curPos[1] < minY)
-  {
-		minY = curPos[1];
-  }
-	if (curPos[1] > maxY)
-  {
-		maxY = curPos[1];
-  }
+    if (curPos[0] < minX) {
+        minX = curPos[0];
+    }
+    if (curPos[0] > maxX) {
+        maxX = curPos[0];
+    }
+    if (curPos[1] < minY) {
+        minY = curPos[1];
+    }
+    if (curPos[1] > maxY) {
+        maxY = curPos[1];
+    }
 }
 
 void Simulation::getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY ) {

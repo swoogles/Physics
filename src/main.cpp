@@ -135,6 +135,7 @@ void idle() {
     calcForcesAll( globalSimulation );
 
     globalSimulation->update();
+    shapes = globalSimulation->getPhysicalObjects();
     globalMainDisplay.update();
   }
 

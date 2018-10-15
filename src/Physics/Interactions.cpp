@@ -178,13 +178,9 @@ PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointe
 
 }
 
-void calcForcesAll( SimulationPtr_t curSimulation )
-{
-    // std::cout << "doing anything?!" << std::endl;
+void calcForcesAll( SimulationPtr_t curSimulation ) {
     switch(curSimulation->getForceCalcMethod()) {
-        // TODO are these getting inverted somewhere along the way?
         case ForceCalculationMethod::NAIVE:
-            // std::cout << "calculating naively" << std::endl;
             calcForcesAll_LessNaive( curSimulation );
             break;
         case ForceCalculationMethod ::OCTREE:
