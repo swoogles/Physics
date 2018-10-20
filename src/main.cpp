@@ -132,7 +132,7 @@ void idle() {
       globalSimulation->resetXYMinsAndMaxes();
     }
 
-    calcForcesAll( globalSimulation );
+    globalSimulation->calcForcesAll();
 
     globalSimulation->update();
     shapes = globalSimulation->getPhysicalObjects();

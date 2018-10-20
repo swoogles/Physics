@@ -13,7 +13,7 @@ TEST_CASE( "Items are being removed from Simulation when Octree force calculatio
 
     auto shapes = simulation->getPhysicalObjects().getShapes();
     // TODO put this in Interactions namespace
-    calcForcesAll(simulation);
+    simulation->calcForcesAll();
 
     simulation->refreshQuadrant();
     REQUIRE(simulation->getPhysicalObjects().getShapes().size() == 1);
@@ -22,15 +22,14 @@ TEST_CASE( "Items are being removed from Simulation when Octree force calculatio
 
 TEST_CASE( "Simulation is made", "[simulation]" ) {
     SimulationPointer_t  testSimulationPtr = Simulations::QuadrantTesting_simplest();
-    Simulation testSimulation = *testSimulationPtr;
 
     // REQUIRE( testSimulation.getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_OCTREE );
-    REQUIRE( testSimulation.getDT() == 1000.0 );
-    REQUIRE( testSimulation.getTimeElapsed() == 0 );
-    REQUIRE( testSimulation.isPaused() );
-    REQUIRE( testSimulation.getCollisionType() == CollisionType::INELASTIC );
-    REQUIRE_FALSE( testSimulation.isConstGravField() );
-    REQUIRE( testSimulation.isGravBetweenObjects() );
+    REQUIRE( testSimulationPtr->getDT() == 1000.0 );
+    REQUIRE( testSimulationPtr->getTimeElapsed() == 0 );
+    REQUIRE( testSimulationPtr->isPaused() );
+    REQUIRE( testSimulationPtr->getCollisionType() == CollisionType::INELASTIC );
+    REQUIRE_FALSE( testSimulationPtr->isConstGravField() );
+    REQUIRE( testSimulationPtr->isGravBetweenObjects() );
 
     float distance = 3000;
     SECTION( "Update dimensions" ) {
@@ -38,7 +37,7 @@ TEST_CASE( "Simulation is made", "[simulation]" ) {
         pos[0] = distance;
         pos[1] = distance;
         pos[2] = distance;
-        testSimulation.updateXYMinsAndMaxes( pos );
+        testSimulationPtr->updateXYMinsAndMaxes( pos );
 
     }
 

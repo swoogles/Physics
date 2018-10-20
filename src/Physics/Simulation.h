@@ -77,6 +77,15 @@ private:
 	//! Returns true if simulation is calculating gravity between objects
 	bool isGravBetweenObjects();
 
+	typedef shared_ptr<Simulation> SimulationPtr_t;
+
+	PairCollection calculateForceOnExternalNode(const shapePointer_t &curObject, const QuadrantPointer_t &curQuadrant, float dt);
+    PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
+
+    void calcForcesAll_LessNaive();
+	void calcForcesAll();
+
+	static float G;
 } ;
 typedef shared_ptr<Simulation> SimulationPtr_t;
 #endif
