@@ -38,37 +38,34 @@ private:
 
   public:
     Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects);;
-    inline void incCurStep() { curStep+= 1; };
+    Simulation(Simulation && originalSimulation);
+    void incCurStep();
 
-    inline ForceCalculationMethod getForceCalcMethod() { return forceCalcMethod; };
-    inline void setForceCalcMethod( const ForceCalculationMethod forceCalcMethod ) { this->forceCalcMethod = forceCalcMethod; };
+    ForceCalculationMethod getForceCalcMethod();
+    void setForceCalcMethod( const ForceCalculationMethod forceCalcMethod );
 
-    inline ShapeList getPhysicalObjects() { return physicalObjects; };
-    inline void addPhysicalObjectToList( shapePointer_t newShape ) { physicalObjects.addShapeToList(std::move(newShape)); };
-    inline void removePhysicalObject( shapePointer_t newShape ) {
-        // TODO reinstate?
-        physicalObjects.removeShapeFromList(std::move(newShape));
-//		physicalObjects.removeShapeFromList(newShape);
-    };
+    ShapeList getPhysicalObjects();
+    void addPhysicalObjectToList( shapePointer_t newShape );
+    void removePhysicalObject( shapePointer_t newShape );
 
-    inline void setDT(float newDT) { DT = newDT; };
-    inline float getDT() const { return DT; };
+    void setDT(float newDT);
+    float getDT() const;
 
-    void updateTimeElapsed() { timeElapsed += DT; };
-    double getTimeElapsed() { return timeElapsed; };
+    void updateTimeElapsed();
+    double getTimeElapsed();
 
     void updateMinsAndMaxes();
     void update();
 
-    void Pause() { paused = true; };
-    void unPause() { paused = false; };
-    bool isPaused() { return paused; };
+    void Pause();
+    void unPause();
+    bool isPaused();
 
     void resetXYMinsAndMaxes();
     void updateXYMinsAndMaxes(sgVec4 curPos);
 
     void refreshQuadrant();
-    inline QuadrantPointer_t getQuadrant() { return quadrant; }
+    QuadrantPointer_t getQuadrant();
     void getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY );
 
 	//! Returns true if a ubiquitous force from gravity affects the entire system

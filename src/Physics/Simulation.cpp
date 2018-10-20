@@ -99,3 +99,39 @@ CollisionType Simulation::getCollisionType() const {
     return collisionType;
 }
 
+ForceCalculationMethod Simulation::getForceCalcMethod() { return forceCalcMethod; }
+
+void Simulation::setForceCalcMethod(const ForceCalculationMethod forceCalcMethod) { this->forceCalcMethod = forceCalcMethod; }
+
+void Simulation::removePhysicalObject(shapePointer_t newShape) {
+    // TODO reinstate?
+    physicalObjects.removeShapeFromList(std::move(newShape));
+//		physicalObjects.removeShapeFromList(newShape);
+}
+
+void Simulation::addPhysicalObjectToList(shapePointer_t newShape) { physicalObjects.addShapeToList(std::move(newShape)); }
+
+ShapeList Simulation::getPhysicalObjects() { return physicalObjects; }
+
+void Simulation::updateTimeElapsed() { timeElapsed += DT; }
+
+double Simulation::getTimeElapsed() { return timeElapsed; }
+
+float Simulation::getDT() const { return DT; }
+
+void Simulation::setDT(float newDT) { DT = newDT; }
+
+Simulation::Simulation(Simulation && originalSimulation) {
+
+}
+
+void Simulation::incCurStep() { curStep+= 1; }
+
+void Simulation::Pause() { paused = true; }
+
+void Simulation::unPause() { paused = false; }
+
+bool Simulation::isPaused() { return paused; }
+
+QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
+
