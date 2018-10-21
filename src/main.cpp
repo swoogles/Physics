@@ -132,8 +132,6 @@ void idle() {
       globalSimulation->resetXYMinsAndMaxes();
     }
 
-    globalSimulation->calcForcesAll();
-
     globalSimulation->update();
     shapes = globalSimulation->getPhysicalObjects();
     globalMainDisplay.update();

@@ -89,6 +89,7 @@ void Simulation::updateMinsAndMaxes() {
 
 void Simulation::update()
 {
+  calcForcesAll();
   physicalObjects.update(DT);
   updateTimeElapsed();
   incCurStep();
@@ -351,9 +352,6 @@ void Simulation::calcForcesAll() {
             for ( const auto & curShape : this->getPhysicalObjects().getShapes() ) {
                 deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, this->getQuadrant(), this->getDT(), 0));
             }
-
-            // Before merging, update all positions. May or may not be correct.
-            this->update();
 
             for ( const auto & curShape : deleteList.doomed().getShapes() ) {
                 this->removePhysicalObject(curShape);

@@ -11,13 +11,8 @@ TEST_CASE( "Items are being removed from Simulation when Octree force calculatio
     SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest();
     simulation->setForceCalcMethod(ForceCalculationMethod::OCTREE);
 
-    auto shapes = simulation->getPhysicalObjects().getShapes();
-    // TODO put this in Interactions namespace
-    simulation->calcForcesAll();
-
-    simulation->refreshQuadrant();
-    REQUIRE(simulation->getPhysicalObjects().getShapes().size() == 1);
     simulation->update();
+    REQUIRE(simulation->getPhysicalObjects().getShapes().size() == 1);
 }
 
 TEST_CASE( "Simulation is made", "[simulation]" ) {
