@@ -26,14 +26,4 @@ TEST_CASE( "Simulation is made", "[simulation]" ) {
     REQUIRE_FALSE( testSimulationPtr->isConstGravField() );
     REQUIRE( testSimulationPtr->isGravBetweenObjects() );
 
-    float distance = 3000;
-    SECTION( "Update dimensions" ) {
-        sgVec4 pos;
-        pos[0] = distance;
-        pos[1] = distance;
-        pos[2] = distance;
-        testSimulationPtr->updateXYMinsAndMaxes( pos );
-
-    }
-
 }

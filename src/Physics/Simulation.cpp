@@ -38,6 +38,7 @@ void Simulation::refreshQuadrant()
 }
 
 void Simulation::updateXYMinsAndMaxes(sgVec4 curPos) {
+    resetXYMinsAndMaxes();
     if (curPos[0] < minX) {
         minX = curPos[0];
     }
@@ -95,6 +96,7 @@ void Simulation::update()
   incCurStep();
 
   updateMinsAndMaxes();
+  // This is the first "n" part in "n log(n)"
   refreshQuadrant();
 }
 

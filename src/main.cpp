@@ -127,10 +127,12 @@ void init(char simulation) {
 void idle() {
 
   if (! globalSimulation->isPaused()  ) {
+    /* TODO autoscaling should be part of the simulation, to avoid the temptation to reset values here
     if (WorldSettings::isAutoScaling())
     {
       globalSimulation->resetXYMinsAndMaxes();
     }
+     */
 
     globalSimulation->update();
     shapes = globalSimulation->getPhysicalObjects();

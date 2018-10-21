@@ -32,6 +32,12 @@ private:
     ShapeList physicalObjects;
     CollisionType collisionType;
 
+	void updateMinsAndMaxes();
+    void resetXYMinsAndMaxes();
+    void updateXYMinsAndMaxes(sgVec4 curPos);
+
+	void removePhysicalObject( shapePointer_t newShape );
+
 	PairCollection calculateForceOnExternalNode(const shapePointer_t &curObject, const QuadrantPointer_t &curQuadrant, float dt);
 	PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
 
@@ -50,7 +56,6 @@ private:
 
     ShapeList getPhysicalObjects();
     void addPhysicalObjectToList( shapePointer_t newShape );
-    void removePhysicalObject( shapePointer_t newShape );
 
     void setDT(float newDT);
     float getDT() const;
@@ -58,15 +63,11 @@ private:
     void updateTimeElapsed();
     double getTimeElapsed();
 
-    void updateMinsAndMaxes();
     void update();
 
     void Pause();
     void unPause();
     bool isPaused();
-
-    void resetXYMinsAndMaxes();
-    void updateXYMinsAndMaxes(sgVec4 curPos);
 
     void refreshQuadrant();
     QuadrantPointer_t getQuadrant();

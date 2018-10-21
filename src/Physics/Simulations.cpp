@@ -618,8 +618,6 @@ SimulationPointer_t Simulations::createSimulation( char simNumber, int numShapes
   }
 
   newSimulation->setForceCalcMethod(forceCalculationMethod);
-  // This is the first "n" part in "n log(n)"
-  newSimulation->refreshQuadrant();
 
   return newSimulation;
 }
