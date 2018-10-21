@@ -12,15 +12,7 @@
 #include <stdexcept>
 
 // TODO This is a great place to use some abstractions. It needs to know a *lot* about its inner details.
-class Simulation
-{
-  private:
-    ForceCalculationMethod forceCalcMethod;
-    ShapeList physicalObjects;
-    CollisionType collisionType;
-public:
-	CollisionType getCollisionType() const;
-
+class Simulation {
 private:
 	int curStep;
     float DT;
@@ -36,6 +28,10 @@ private:
 
     QuadrantPointer_t quadrant;
 
+    ForceCalculationMethod forceCalcMethod;
+    ShapeList physicalObjects;
+    CollisionType collisionType;
+
 	PairCollection calculateForceOnExternalNode(const shapePointer_t &curObject, const QuadrantPointer_t &curQuadrant, float dt);
 	PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
 
@@ -46,6 +42,8 @@ private:
     Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects);;
     Simulation(Simulation && originalSimulation);
     void incCurStep();
+
+	CollisionType getCollisionType() const;
 
     ForceCalculationMethod getForceCalcMethod();
     void setForceCalcMethod( const ForceCalculationMethod forceCalcMethod );
