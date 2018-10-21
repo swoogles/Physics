@@ -11,7 +11,6 @@
 #include "CollisionType.h"
 #include <stdexcept>
 
-// TODO This is a great place to use some abstractions. It needs to know a *lot* about its inner details.
 class Simulation {
 private:
 	int curStep;
@@ -32,11 +31,29 @@ private:
     ShapeList physicalObjects;
     CollisionType collisionType;
 
+	void incCurStep();
+	void updateTimeElapsed();
+
 	void updateMinsAndMaxes();
     void resetXYMinsAndMaxes();
     void updateXYMinsAndMaxes(sgVec4 curPos);
 
 	void removePhysicalObject( shapePointer_t newShape );
+
+	ForceCalculationMethod getForceCalcMethod();
+	CollisionType getCollisionType() const;
+
+	//! Returns true if a ubiquitous force from gravity affects the entire system
+	bool isConstGravField();
+
+    //! Return gravity field vector in retGravField
+    void getConstGravFieldVal(sgVec4 retGravField);
+
+	//! Returns true if simulation is calculating gravity between objects
+	bool isGravBetweenObjects();
+
+	void refreshQuadrant();
+	QuadrantPointer_t getQuadrant();
 
 	PairCollection calculateForceOnExternalNode(const shapePointer_t &curObject, const QuadrantPointer_t &curQuadrant, float dt);
 	PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
@@ -47,11 +64,7 @@ private:
   public:
     Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects);;
     Simulation(Simulation && originalSimulation);
-    void incCurStep();
 
-	CollisionType getCollisionType() const;
-
-    ForceCalculationMethod getForceCalcMethod();
     void setForceCalcMethod( const ForceCalculationMethod forceCalcMethod );
 
     ShapeList getPhysicalObjects();
@@ -60,7 +73,6 @@ private:
     void setDT(float newDT);
     float getDT() const;
 
-    void updateTimeElapsed();
     double getTimeElapsed();
 
     void update();
@@ -69,22 +81,8 @@ private:
     void unPause();
     bool isPaused();
 
-    void refreshQuadrant();
-    QuadrantPointer_t getQuadrant();
     void getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY );
 
-	//! Returns true if a ubiquitous force from gravity affects the entire system
-	bool isConstGravField();
-
-    //! Return gravity field vector in retGravField
-	void getConstGravFieldVal(sgVec4 retGravField);
-
-	//! Returns true if simulation is calculating gravity between objects
-	bool isGravBetweenObjects();
-
-	typedef shared_ptr<Simulation> SimulationPtr_t;
-
-	static float G;
 } ;
 typedef shared_ptr<Simulation> SimulationPtr_t;
 #endif

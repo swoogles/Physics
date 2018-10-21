@@ -2,8 +2,6 @@
 
 #include "Simulation.h"
 
-float Simulation::G = 6.67384e-11;
-
 Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects)
         :physicalObjects(std::move(physicalObjects))
         ,curStep(0)
@@ -153,7 +151,8 @@ vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float d
     if (rSquared < .00001) {
         rSquared = .00001;
     }
-    float forceMagnitude = (Simulation::G * object1->getMass() * object2->getMass()) / rSquared;
+    float G = 6.67384e-11;
+    float forceMagnitude = (G * object1->getMass() * object2->getMass()) / rSquared;
 
     sgNormaliseVec4(unitVec, sepVec->vec);
 

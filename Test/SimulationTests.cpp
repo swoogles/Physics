@@ -22,8 +22,4 @@ TEST_CASE( "Simulation is made", "[simulation]" ) {
     REQUIRE( testSimulationPtr->getDT() == 1000.0 );
     REQUIRE( testSimulationPtr->getTimeElapsed() == 0 );
     REQUIRE( testSimulationPtr->isPaused() );
-    REQUIRE( testSimulationPtr->getCollisionType() == CollisionType::INELASTIC );
-    REQUIRE_FALSE( testSimulationPtr->isConstGravField() );
-    REQUIRE( testSimulationPtr->isGravBetweenObjects() );
-
 }
