@@ -230,16 +230,16 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows) {
     return curSimulation;
 }
 
-SimulationPointer_t Simulations::disruption_ArbitraryList() 
+SimulationPointer_t Simulations::disruption_ArbitraryList()
 {
-  SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList( 1000 );
+    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList( 1000 );
 
-  int numPieces = 1;
-	float objectDensity = DENSITY_SUN;
-	float bodyVolume = (MASS_SUN)/(objectDensity)/3;
-	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	float pieceMass = pow(pieceRadius, 3.0);
-	sgVec4 startMomentum = { pieceMass/35, 0, 0 };
+    int numPieces = 1;
+    float objectDensity = DENSITY_SUN;
+    float bodyVolume = (MASS_SUN)/(objectDensity)/3;
+    float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+    float pieceMass = pow(pieceRadius, 3.0);
+    sgVec4 startMomentum = { 0, 0, 0 };
     sgVec3 newColor = { 1, 0, 1 };
 
     sgVec4 startPlacement = { -pieceRadius * 30, 0, 0, 1};
@@ -253,8 +253,11 @@ SimulationPointer_t Simulations::disruption_ArbitraryList()
             newColor
     );
 
-  curSimulation->addPhysicalObjectToList( curShape );
-  return curSimulation;
+    ShapeList disruptingObject(curShape);
+    Simulation & sim = *curSimulation;
+    Simulation disruptedSimulation(std::move(sim), disruptingObject);
+    curSimulation->addPhysicalObjectToList( curShape );
+    return curSimulation;
 }
 
 SimulationPointer_t Simulations::bodyFormation_NonRandom() 

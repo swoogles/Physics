@@ -22,6 +22,26 @@ Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, f
     this->refreshQuadrant();
 }
 
+Simulation::Simulation(Simulation &&originalSimulation, ShapeList newObjects)
+        :physicalObjects(std::move(originalSimulation.physicalObjects))
+        ,curStep(0)
+        ,DT(originalSimulation.getDT())
+        ,timeElapsed(0)
+        ,paused(true)
+        ,totalMass(0)
+        ,minX(FLT_MAX)
+        ,maxX(FLT_MIN)
+        ,minY(FLT_MAX)
+        ,maxY(FLT_MIN)
+        ,constGravField(false)
+        ,gravBetweenObjects(originalSimulation.isGravBetweenObjects())
+{
+    cout << "size after move: " << physicalObjects.size() << endl;
+    cout << "number of new objects: " << newObjects.size() << endl;
+    physicalObjects.addList(std::move(newObjects));
+    cout << "size after new items: " << physicalObjects.size() << endl;
+}
+
 void Simulation::refreshQuadrant()
 {
   sgVec4 pos = {0,0,0,1};

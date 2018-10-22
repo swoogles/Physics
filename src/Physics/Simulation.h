@@ -63,6 +63,7 @@ private:
 
   public:
     Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects);;
+	Simulation(Simulation && originalSimulation, ShapeList newObjects);
     Simulation(Simulation && originalSimulation);
 
     void setForceCalcMethod( const ForceCalculationMethod forceCalcMethod );

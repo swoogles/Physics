@@ -7,12 +7,24 @@
 #include "../src/Physics/Simulations.h"
 #include "../src/Physics/Interactions.h"
 
-TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[XXX]" ) {
+#include "TestUtils.h"
+
+TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[green]" ) {
     SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest();
     simulation->setForceCalcMethod(ForceCalculationMethod::OCTREE);
 
     simulation->update();
     REQUIRE(simulation->getPhysicalObjects().getShapes().size() == 1);
+}
+
+TEST_CASE( "New simulation is created from original Simulation and additional shapes", "[XXX]" ) {
+    SimulationPointer_t simulation = Simulations::QuadrantTesting_simplest();
+    REQUIRE(simulation->getPhysicalObjects().getShapes().size() == 2);
+    auto a = TestUtils::testCircle();
+    ShapeList newShapes(a);
+    Simulation & simRef = *simulation;
+    Simulation newSimulation(std::move(simRef), newShapes);
+    REQUIRE(newSimulation.getPhysicalObjects().getShapes().size() == 3);
 }
 
 TEST_CASE( "Simulation is made", "[simulation]" ) {
