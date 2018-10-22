@@ -13,11 +13,17 @@
 #include "../src/Physics/Interactions.h"
 
 TEST_CASE( "Ensure that ShapeList.remove invokes destructor", "[current]" ) {
-
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     ShapeList shapes(vectorT { a, b});
     a.reset();
     shapes.removeShapeFromList(a);
     cout << "ending test" << endl;
+}
+
+TEST_CASE( "Construct a list with a single item", "[green]" ) {
+    auto a = TestUtils::testCircle();
+    ShapeList singleItemList(a);
+    REQUIRE(singleItemList.size() == 1);
+    REQUIRE(singleItemList.getShapes()[0]->getMass() == 100);
 }

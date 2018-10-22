@@ -10,8 +10,11 @@ void ShapeList::ensureNoNullEntries(string caller) {
 
 }
 
-ShapeList::ShapeList() { }
+ShapeList::ShapeList() = default;
 
+
+ShapeList::ShapeList(shapePointer_t initialShape): shapes{initialShape} {
+}
 
 ShapeList::ShapeList(vectorT shapesIn)
 :shapes(shapesIn.begin(), shapesIn.end()) {

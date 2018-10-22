@@ -16,6 +16,7 @@ class ShapeList {
 
   public:
     ShapeList();
+    ShapeList(shapePointer_t initialShape);
     ShapeList(vectorT shapesIn);
     bool hasConflictsWith( shapePointer_t insertShape );
     size_t addShapeToList(shapePointer_t insertShape);
