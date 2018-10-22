@@ -54,7 +54,7 @@ void Simulations::simpleOrbit() {
     );
 }
 
-SimulationPointer_t Simulations::billiards1(int numRows) {
+SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
 
     int numPieces = 0;
@@ -115,11 +115,11 @@ SimulationPointer_t Simulations::billiards1(int numRows) {
     }
 
     // return physicalObjects;
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false);
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
     return curSimulation;
 }
 
-SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows)
+SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceCalculationMethod forceCalculationMethod)
 {
     ShapeList physicalObjects;
 
@@ -167,12 +167,12 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows)
         }
     }
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false);
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
     return curSimulation;
 }
 
 
-SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows) {
+SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
 
     float cueMass = 100.0;
@@ -226,13 +226,13 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows) {
         }
     }
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false);
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
     return curSimulation;
 }
 
-SimulationPointer_t Simulations::disruption_ArbitraryList()
+SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod)
 {
-    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList( 1000 );
+    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, NAIVE);
 
     int numPieces = 1;
     float objectDensity = DENSITY_SUN;
@@ -255,12 +255,13 @@ SimulationPointer_t Simulations::disruption_ArbitraryList()
 
     ShapeList disruptingObject(curShape);
     Simulation & sim = *curSimulation;
+    // TODO actually use this, once I can prevent the initial sharedPtr from killing it when this function exits
     Simulation disruptedSimulation(std::move(sim), disruptingObject);
     curSimulation->addPhysicalObjectToList( curShape );
     return curSimulation;
 }
 
-SimulationPointer_t Simulations::bodyFormation_NonRandom() 
+SimulationPointer_t Simulations::bodyFormation_NonRandom(ForceCalculationMethod forceCalculationMethod)
 {
   float dt = 1000;
   int numPieces = 2;
@@ -319,11 +320,11 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom()
   startPlacement[1]= -offset;
 
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, dt, true);
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, dt, true, forceCalculationMethod);
   return curSimulation;
 }
 
-SimulationPointer_t Simulations::QuadrantTestingNonRandom()
+SimulationPointer_t Simulations::QuadrantTestingNonRandom(ForceCalculationMethod forceCalculationMethod)
 {
     ShapeList physicalObjects;
 
@@ -405,11 +406,11 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom()
 
     physicalObjects.addShapeToList( curShape );
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType ::INELASTIC, 1000, true);
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType ::INELASTIC, 1000, true, forceCalculationMethod);
     return curSimulation;
 }
 
-SimulationPointer_t Simulations::QuadrantTesting_simplest()
+SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod)
 {
     ShapeList physicalObjects;
 
@@ -453,11 +454,58 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest()
             )
     );
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true);
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
     return curSimulation;
 }
 
-SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
+Simulation Simulations::QuadrantTesting_simplest_move(ForceCalculationMethod forceCalculationMethod)
+{
+    ShapeList physicalObjects;
+
+    int numPieces=5;
+    float objectDensity = DENSITY_SUN;
+    float bodyVolume = (MASS_SUN)/(objectDensity);
+    float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+    sgVec4 startMomentum = { 0, 0, 0 };
+
+    sgVec3 newColor = { 1, 1, 1 };
+
+    float pieceMass = 1.0e10;
+    shapePointer_t curShape;
+    float d= 1.8e3;
+
+    //#1
+    sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
+
+    physicalObjects.addShapeToList(
+            make_shared<Circle>(
+                    object1Placement,
+                    pieceMass,
+                    pieceRadius,
+                    startMomentum,
+                    objectDensity,
+                    newColor
+            )
+    );
+
+    //#2
+    sgVec4 object2Placement = {  (float) +(7/8.0 * d), (float) +(7/8.0 * d), 1, 1};
+
+    physicalObjects.addShapeToList(
+            make_shared<Circle>(
+                    object2Placement,
+                    pieceMass,
+                    pieceRadius,
+                    startMomentum,
+                    objectDensity,
+                    newColor
+            )
+    );
+
+    return Simulation(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
+}
+
+SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod)
 {
     ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
@@ -507,11 +555,12 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces)
         totalMass += curShape->getMass();
     }
 
-    const SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true);
+    const SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
     return curSimulation;
 }
 
-SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, sgVec4 target, sgVec4 groupMomentum) 
+SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, float *target, float *groupMomentum,
+                                                                    ForceCalculationMethod forceCalculationMethod)
 {
   ShapeList physicalObjects;
 
@@ -567,62 +616,45 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 		totalMass += pieceMass;
 	}
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true);
+    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
   return curSimulation;
 }
 
 SimulationPointer_t Simulations::createSimulation( char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod)
 {
-  SimulationPointer_t newSimulation;
-
 	//******CURRENT SIMULATION*****
   if ( simNumber == '0' ) {
-	  newSimulation = Simulations::bodyFormation_NonRandom();
-  }
-  if ( simNumber == '1' ) {
-    newSimulation = Simulations::bodyFormation_ArbitraryList( numShapes );
-  }
-  if ( simNumber == '2' ) {
-	  newSimulation = Simulations::disruption_ArbitraryList();
-  }
-  if ( simNumber == '3' ) {
-    newSimulation = Simulations::QuadrantTestingNonRandom();
-  }
-  if ( simNumber == '4' ) {
-    newSimulation = Simulations::billiards1(15);
-  }
-  if ( simNumber == '5' ) {
-    newSimulation = Simulations::billiards2_ReturnSimulation(15);
-  }
-
-  if ( simNumber == '6' ) {
+	  return Simulations::bodyFormation_NonRandom(forceCalculationMethod);
+  } else if ( simNumber == '1' ) {
+    return Simulations::bodyFormation_ArbitraryList(numShapes, forceCalculationMethod);
+  } else if ( simNumber == '2' ) {
+	  return Simulations::disruption_ArbitraryList(forceCalculationMethod);
+  } else if ( simNumber == '3' ) {
+    return Simulations::QuadrantTestingNonRandom(forceCalculationMethod);
+  } else if ( simNumber == '4' ) {
+    return Simulations::billiards1(15, forceCalculationMethod);
+  } else if ( simNumber == '5' ) {
+    return Simulations::billiards2_ReturnSimulation(15, forceCalculationMethod);
+  } else if ( simNumber == '6' ) {
     sgVec4 groupMomentum;
     groupMomentum[0]=0;
     groupMomentum[1]=2800;
     groupMomentum[2]=0;
     groupMomentum[3]=1;
     sgVec4 target = { -2000, 0, 0, 1 };
-	  Simulations::bodyFormationGeneric_ArbitraryList( numShapes, target, groupMomentum );
+      Simulations::bodyFormationGeneric_ArbitraryList(numShapes, target, groupMomentum, forceCalculationMethod);
 
     target[0]=-target[0];
     groupMomentum[1]*=-1;
 
-	  Simulations::bodyFormationGeneric_ArbitraryList( numShapes, target, groupMomentum );
+      Simulations::bodyFormationGeneric_ArbitraryList(numShapes, target, groupMomentum, forceCalculationMethod);
+  } else if ( simNumber == '7' ) {
+      return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
+  } else if ( simNumber == '8' ) {
+      return Simulations::billiards3_ArbitraryList(5, forceCalculationMethod);
+  } else {
+      exit(1);
   }
-  if ( simNumber == '7' ) {
-      newSimulation = Simulations::QuadrantTesting_simplest();
-  }
-
-  if ( simNumber == '8' ) {
-  }
-
-  if ( simNumber == '9' ) {
-    newSimulation = Simulations::billiards3_ArbitraryList( 5 );
-  }
-
-  newSimulation->setForceCalcMethod(forceCalculationMethod);
-
-  return newSimulation;
 }
 
 float Simulations::getSplitBodyRadius(float volume, int numPieces ) {

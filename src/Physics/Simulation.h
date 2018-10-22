@@ -62,7 +62,8 @@ private:
 	void calcForcesAll();
 
   public:
-    Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects);;
+    Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects,
+				   ForceCalculationMethod forceCalculationMethod);;
 	Simulation(Simulation && originalSimulation, ShapeList newObjects);
     Simulation(Simulation && originalSimulation);
 

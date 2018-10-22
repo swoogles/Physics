@@ -2,7 +2,8 @@
 
 #include "Simulation.h"
 
-Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects)
+Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects,
+                       ForceCalculationMethod forceCalculationMethod)
         :physicalObjects(std::move(physicalObjects))
         ,curStep(0)
         ,DT(dt)
@@ -15,9 +16,9 @@ Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, f
         ,maxY(FLT_MIN)
         ,constGravField(false)
         ,gravBetweenObjects(gravityBetweenObjects)
+        ,forceCalcMethod(forceCalculationMethod)
+        ,collisionType(collisionType)
 {
-    // TODO Get rid of bools completely
-    this->collisionType = collisionType;
     this->updateMinsAndMaxes();
     this->refreshQuadrant();
 }
@@ -35,11 +36,9 @@ Simulation::Simulation(Simulation &&originalSimulation, ShapeList newObjects)
         ,maxY(FLT_MIN)
         ,constGravField(false)
         ,gravBetweenObjects(originalSimulation.isGravBetweenObjects())
+        ,forceCalcMethod(originalSimulation.forceCalcMethod)
 {
-    cout << "size after move: " << physicalObjects.size() << endl;
-    cout << "number of new objects: " << newObjects.size() << endl;
     physicalObjects.addList(std::move(newObjects));
-    cout << "size after new items: " << physicalObjects.size() << endl;
 }
 
 void Simulation::refreshQuadrant()
