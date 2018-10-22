@@ -27,3 +27,24 @@ TEST_CASE( "Construct a list with a single item", "[green]" ) {
     REQUIRE(singleItemList.size() == 1);
     REQUIRE(singleItemList.getShapes()[0]->getMass() == 100);
 }
+
+TEST_CASE( "Adding a ShapeList to ShapeList", "[green]" ) {
+    auto a = TestUtils::testCircle();
+    auto b = TestUtils::testCircle();
+    auto c = TestUtils::testCircle();
+    auto d = TestUtils::testCircle();
+    ShapeList aList(a);
+    ShapeList bList(b);
+    ShapeList cList(c);
+    ShapeList dList(d);
+    ShapeList resultList;
+    resultList.addList(aList);
+    resultList.addList(bList);
+    resultList.addList(cList);
+    resultList.addList(dList);
+    REQUIRE(resultList.size() == 4);
+    REQUIRE(resultList.contains(a));
+    REQUIRE(resultList.contains(b));
+    REQUIRE(resultList.contains(c));
+    REQUIRE(resultList.contains(d));
+}

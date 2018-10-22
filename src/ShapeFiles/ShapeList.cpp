@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "ShapeList.h"
 
 void ShapeList::ensureNoNullEntries(string caller) {
@@ -13,7 +15,7 @@ void ShapeList::ensureNoNullEntries(string caller) {
 ShapeList::ShapeList() = default;
 
 
-ShapeList::ShapeList(shapePointer_t initialShape): shapes{initialShape} {
+ShapeList::ShapeList(shapePointer_t initialShape): shapes{std::move(initialShape)} {
 }
 
 ShapeList::ShapeList(vectorT shapesIn)
@@ -43,17 +45,21 @@ size_t ShapeList::addShapeToList(shapePointer_t insertShape)
 
 size_t ShapeList::addList(ShapeList addList)
 {
-  vectorT addShapes = addList.getShapes();
-  size_t additionSize = addShapes.size();
-  size_t curSize = shapes.size();
-  shapes.resize( curSize + additionSize );
-  for( const auto & curShape : addShapes ) {
-    this->addShapeToList( curShape );
-  }
-
-  addList.clearShapes();
-
-  return shapes.size();
+    vectorT & addedItems = addList.shapes;
+    if (shapes.empty())
+    {
+        cout << "XXX empty case" << endl;
+        shapes = std::move(addedItems);
+    }
+    else
+    {
+        cout << "XXX existing items case" << endl;
+        shapes.reserve(shapes.size() + addedItems.size());
+        std::move(std::begin(addedItems), std::end(addedItems), std::back_inserter(shapes));
+        // TODO see if I can re-add at some point
+        // addedItems.clear();
+    }
+    return shapes.size();
 }
 
 int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
