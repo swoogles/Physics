@@ -6,8 +6,6 @@
 
 #include "../Physics/WorldSettings.h"
 
-#include <GL/freeglut.h>
-
 /*! \brief UI class that handles everything in the main window
  *
  *  Right now this only contains the Main Menu bar, but will eventually display some additional bits of information;
@@ -46,7 +44,7 @@ public:
        *
        *  Creates the Main Menu puMenuBar and populates it with open, save, etc. funcitnos
        */
-	void init();
+	void init(int windowWidth);
 
 	/*! \brief Updates the time values
 	 *

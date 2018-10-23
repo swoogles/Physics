@@ -63,7 +63,7 @@ private:
     puInput * mass_in;
 
 public:
-	void init(float dt);
+	void init(float dt, int windowWidth, int windowHeight);
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
 

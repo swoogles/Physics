@@ -28,16 +28,14 @@ void control_center::switchViewNow(puObject * caller) {
 }
 
 // TODO Is there any better candidate for breaking things apart than this functino?
-void control_center::init(float dt) {
+void control_center::init(float dt, int windowWidth, int windowHeight) {
   control_center::dt = dt;
   showingRunTime = false;
   userDat[0]=2;
   userDat[1]=-1;
   userDat[2]=0;
 
-  int winHeight = glutGet(GLUT_WINDOW_HEIGHT);
-
-  int curHeight = winHeight;
+  int curHeight = windowHeight;
   int elementHeight = 30;
 
   int vsXinit = 5;
@@ -60,7 +58,7 @@ void control_center::init(float dt) {
   curHeight -= elementHeight;
 
   curHeight = 200;
-  int startX = glutGet(GLUT_WINDOW_WIDTH)/2;
+  int startX = windowWidth/2;
   int curX = startX, placementWidth = 50, gap = 5;
   placement_label = new puText(curX-55, curHeight-elementHeight);
   placement_label->setLabel("Pos: <");

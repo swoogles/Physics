@@ -22,10 +22,8 @@ main_window_UI::main_window_UI() {
 }
 
 // TODO more good cleanup candidates in this file
-void main_window_UI::init() {
+void main_window_UI::init(int windowWidth) {
 	main_menu = new puMenuBar();
-	// TODO Pass this as a param, then there's no need for the glut call here.
-	int winWidth = glutGet(GLUT_WINDOW_WIDTH);
 
 	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
 	puCallback file_submenu_cb [] = { exit_cb,  NULL,      save_cb, open_cb, NULL};
@@ -34,7 +32,7 @@ void main_window_UI::init() {
 
 	main_menu->close();
 
-	int curX = winWidth;
+	int curX = windowWidth;
 	int timeHeight = 5;
 
 	int textWidth;

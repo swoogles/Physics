@@ -216,13 +216,13 @@ int main(int argcp, char **argv) {
   init( simulation );
 
   //Creates main menu bar
-  globalMainDisplay.init();
+  globalMainDisplay.init(glutGet(GLUT_WINDOW_WIDTH));
 
   control_center_num = glutCreateWindow("Control Center");
 
   postSimulationGlInit();
 
-    globalControlCenter.init(globalSimulation->getDT());
+  globalControlCenter.init(globalSimulation->getDT(), glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 
   glutMainLoop();
 
