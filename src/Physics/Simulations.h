@@ -110,26 +110,26 @@ class Simulations
 
     static void simpleOrbit();
 
-    static Simulation disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod);
+    static SimulationPointer_t disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod);
 
-    static Simulation bodyFormation_NonRandom(ForceCalculationMethod forceCalculationMethod);
-    static Simulation QuadrantTestingNonRandom(ForceCalculationMethod forceCalculationMethod);
-    static Simulation QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
+    static SimulationPointer_t bodyFormation_NonRandom(ForceCalculationMethod forceCalculationMethod);
+    static SimulationPointer_t QuadrantTestingNonRandom(ForceCalculationMethod forceCalculationMethod);
+    static SimulationPointer_t QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
     static Simulation QuadrantTesting_simplest_move(ForceCalculationMethod forceCalculationMethod);
 
-    static Simulation
+    static SimulationPointer_t
     bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod);
 
-    static Simulation bodyFormationGeneric_ArbitraryList(int numPieces, float *target, float *groupMomentum,
-                                                         ForceCalculationMethod forceCalculationMethod);
+    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(int numPieces, float *target, float *groupMomentum,
+                                                                      ForceCalculationMethod forceCalculationMethod);
 
-    static Simulation billiards1(int numPieces, ForceCalculationMethod forceCalculationMethod);
+    static SimulationPointer_t billiards1(int, ForceCalculationMethod forceCalculationMethod);
 
-    static Simulation billiards2_ReturnSimulation(int numShapes, ForceCalculationMethod forceCalculationMethod);
+    static SimulationPointer_t billiards2_ReturnSimulation(int, ForceCalculationMethod forceCalculationMethod);
 
-    static Simulation billiards3_ArbitraryList(int numShapes, ForceCalculationMethod forceCalculationMethod);
+    static SimulationPointer_t billiards3_ArbitraryList(int, ForceCalculationMethod forceCalculationMethod);
 
-    static Simulation createSimulation(char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod);
+    static SimulationPointer_t createSimulation( char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod );
 };
 
 
