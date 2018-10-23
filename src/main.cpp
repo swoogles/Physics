@@ -3,8 +3,6 @@
  *      Author: Bill Frasure
  */
 
-#define PU_USE_GLUT 1
-
 #include <GL/glut.h>
 #include <GL/glu.h>
 
@@ -16,15 +14,10 @@
 #include "Windows/control_center.h"
 #include "Windows/main_display.h"
 
-//All PLIB includes (What a great library)
-#include <plib/sg.h> // A better main class wouldn't be reference sgVecs.
-#include <plib/pu.h>
-
 //Observers
 #include "Observation/Observer.h"
 
 //Physics
-#include "Physics/Interactions.h"
 #include "Physics/Simulations.h"
 #include "Physics/WorldSettings.h"
 #include "Physics/PhysicsSandboxProperties.h"
@@ -58,7 +51,7 @@ ShapeList shapes;
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
 // TODO Allow an arbitrary list of objects to be displayed
-void display(void)
+void display()
 {
   glClearColor(0,0,0,0);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -69,7 +62,7 @@ void display(void)
   Observer * curObserver = Observer::getCurObserver();
   curObserver->getView();
 
-  sgVec3 curColor = { 1.0, 0.0, 0.0 };
+  float curColor[] = { 1.0, 0.0, 0.0 };
   glColor3fv(curColor);
 
   glMatrixMode(GL_MODELVIEW);
@@ -83,7 +76,7 @@ void display(void)
   glutPostRedisplay();
 }
 
-void controlDisplay(void) {
+void controlDisplay() {
   glutSetWindow(control_center_num);
   glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -101,27 +94,20 @@ void openGlInit() {
   glLoadIdentity();
 }
 
-void determineViewBasedOnSimulation(SimulationPtr_t simulation, Observer * observer) {
+void determineViewBasedOnSimulation(Simulation & simulation, Observer * observer) {
   float minX, minY, maxX, maxY;
-  simulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
+  simulation.getXYMinsAndMaxes( minX, maxX, minY, maxY );
   observer->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 }
 
 void init(char simulation) {
-  openGlInit();
-
   BillProperties billProperties("simulation.properties");
-
-  Observer::init();
-  Observer * curObserver = Observer::getCurObserver();
 
   PhysicsSandboxProperties properties(billProperties);
 
   globalSimulation = std::move(Simulations::createSimulation( simulation, properties.numShapes, properties.forceCalculationMethod));
   // TODO How about just use simulationPtr here?
   shapes = globalSimulation->getPhysicalObjects();
-
-  determineViewBasedOnSimulation(globalSimulation, curObserver);
 }
 
 void idle() {
@@ -129,9 +115,7 @@ void idle() {
 
 
   if (! globalControlCenter.isPaused() ) {
-//  if (! globalSimulation->isPaused()  ) {
-
-    /* TODO autoscaling should be part of the simulation, to avoid the temptation to reset values here
+    /* TODO autoscaling could be part of the simulation, to avoid the temptation to reset values here
     if (WorldSettings::isAutoScaling())
     {
       globalSimulation->resetXYMinsAndMaxes();
@@ -209,11 +193,18 @@ void postSimulationGlInit() {
 }
 
 int main(int argcp, char **argv) {
-  mainGlut(argcp, argv);
-  puInit();
   char simulation = argv[2][0];
 
   init( simulation );
+
+  openGlInit();
+  mainGlut(argcp, argv);
+  puInit();
+
+  Observer::init();
+  Observer * curObserver = Observer::getCurObserver();
+
+  determineViewBasedOnSimulation(*globalSimulation, curObserver);
 
   //Creates main menu bar
   globalMainDisplay.init(glutGet(GLUT_WINDOW_WIDTH));
