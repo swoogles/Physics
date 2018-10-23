@@ -35,7 +35,7 @@ Simulation::Simulation(Simulation &&originalSimulation, ShapeList newObjects)
         ,minY(FLT_MAX)
         ,maxY(FLT_MIN)
         ,constGravField(false)
-        ,gravBetweenObjects(originalSimulation.isGravBetweenObjects())
+        ,gravBetweenObjects(originalSimulation.gravBetweenObjects)
         ,forceCalcMethod(originalSimulation.forceCalcMethod)
 {
     physicalObjects.addList(std::move(newObjects));
@@ -86,16 +86,8 @@ void Simulation::resetXYMinsAndMaxes() {
 	maxY = FLT_MIN;
 }
 
-bool Simulation::isConstGravField() {
-	return constGravField;
-}
-
 void Simulation::getConstGravFieldVal(sgVec4 retGravField) {
 	sgCopyVec4(retGravField, gravField);
-}
-
-bool Simulation::isGravBetweenObjects() {
-	return gravBetweenObjects;
 }
 
 void Simulation::updateMinsAndMaxes() {
@@ -117,18 +109,8 @@ void Simulation::update()
   refreshQuadrant();
 }
 
-CollisionType Simulation::getCollisionType() const {
-    return collisionType;
-}
-
-ForceCalculationMethod Simulation::getForceCalcMethod() { return forceCalcMethod; }
-
-void Simulation::setForceCalcMethod(const ForceCalculationMethod forceCalcMethod) { this->forceCalcMethod = forceCalcMethod; }
-
 void Simulation::removePhysicalObject(shapePointer_t newShape) {
-    // TODO reinstate?
     physicalObjects.removeShapeFromList(std::move(newShape));
-//		physicalObjects.removeShapeFromList(newShape);
 }
 
 void Simulation::addPhysicalObjectToList(shapePointer_t newShape) { physicalObjects.addShapeToList(std::move(newShape)); }
@@ -232,7 +214,7 @@ void Simulation::calcForcesAll_LessNaive()
     vectorT physicalObjects = shapeList.getShapes();
     ShapeList deleteList;
 
-    if (this->isConstGravField() ) {
+    if (this->constGravField ) {
         this->getConstGravFieldVal(gravField);
         sgScaleVec4(gravField, 1/dt);
     }
@@ -247,7 +229,7 @@ void Simulation::calcForcesAll_LessNaive()
                 object2 = physicalObjects.at(j);
 
 
-                if (this->isGravBetweenObjects() ) {
+                if (this->gravBetweenObjects ) {
                     vecPtr gravVec = calcForceGravNew(object1, object2, dt );
 
                     object1->adjustMomentum(gravVec->vec);
@@ -259,10 +241,10 @@ void Simulation::calcForcesAll_LessNaive()
                 minSep = object1->getRadius() + object2->getRadius();
 
                 if (distance < minSep) {
-                    if (this->getCollisionType() == CollisionType::ELASTIC) {
+                    if (this->collisionType == CollisionType::ELASTIC) {
                         elasticCollision( object1, object2, dt );
                     }
-                    else if (this->getCollisionType() == CollisionType::INELASTIC){
+                    else if (this->collisionType == CollisionType::INELASTIC){
                         object1->mergeWith( object2 );
                         deleteList.addShapeToList(object2);
                     }
@@ -362,7 +344,7 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
 }
 
 void Simulation::calcForcesAll() {
-    switch(this->getForceCalcMethod()) {
+    switch(this->forceCalcMethod) {
         case ForceCalculationMethod::NAIVE:
             calcForcesAll_LessNaive();
             break;

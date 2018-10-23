@@ -40,17 +40,8 @@ private:
 
 	void removePhysicalObject( shapePointer_t newShape );
 
-	ForceCalculationMethod getForceCalcMethod();
-	CollisionType getCollisionType() const;
-
-	//! Returns true if a ubiquitous force from gravity affects the entire system
-	bool isConstGravField();
-
     //! Return gravity field vector in retGravField
     void getConstGravFieldVal(sgVec4 retGravField);
-
-	//! Returns true if simulation is calculating gravity between objects
-	bool isGravBetweenObjects();
 
 	void refreshQuadrant();
 	QuadrantPointer_t getQuadrant();
@@ -66,8 +57,6 @@ private:
 				   ForceCalculationMethod forceCalculationMethod);;
 	Simulation(Simulation && originalSimulation, ShapeList newObjects);
     Simulation(Simulation && originalSimulation);
-
-    void setForceCalcMethod( const ForceCalculationMethod forceCalcMethod );
 
     ShapeList getPhysicalObjects();
     void addPhysicalObjectToList( shapePointer_t newShape );
