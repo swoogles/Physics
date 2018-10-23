@@ -14,13 +14,10 @@
 class Simulation {
 private:
 	ShapeList physicalObjects;
-	int curStep;
-    float DT;
+	float DT;
     double timeElapsed;
-    bool paused;
-    float totalMass;
 
-    float minX, maxX, minY, maxY;
+	float minX, maxX, minY, maxY;
 
     bool constGravField;
     sgVec4 gravField;
@@ -31,7 +28,6 @@ private:
     ForceCalculationMethod forceCalcMethod;
     CollisionType collisionType;
 
-	void incCurStep();
 	void updateTimeElapsed();
 
 	void updateMinsAndMaxes();
@@ -54,9 +50,8 @@ private:
 
   public:
     Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects,
-				   ForceCalculationMethod forceCalculationMethod);;
+				   ForceCalculationMethod forceCalculationMethod);
 	Simulation(Simulation && originalSimulation, ShapeList newObjects);
-    Simulation(Simulation && originalSimulation);
 
     ShapeList getPhysicalObjects();
     void addPhysicalObjectToList( shapePointer_t newShape );
@@ -68,11 +63,7 @@ private:
 
     void update();
 
-    void Pause();
-    void unPause();
-    bool isPaused();
-
-    void getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY );
+	void getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY );
 
 } ;
 typedef shared_ptr<Simulation> SimulationPtr_t;

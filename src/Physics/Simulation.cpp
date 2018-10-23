@@ -5,11 +5,8 @@
 Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects,
                        ForceCalculationMethod forceCalculationMethod)
         :physicalObjects(std::move(physicalObjects))
-        ,curStep(0)
         ,DT(dt)
         ,timeElapsed(0)
-        ,paused(true)
-        ,totalMass(0)
         ,minX(FLT_MAX)
         ,maxX(FLT_MIN)
         ,minY(FLT_MAX)
@@ -25,16 +22,13 @@ Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, f
 
 Simulation::Simulation(Simulation &&originalSimulation, ShapeList newObjects)
         :physicalObjects(std::move(originalSimulation.physicalObjects))
-        ,curStep(0)
-        ,DT(originalSimulation.getDT())
-        ,timeElapsed(0)
-        ,paused(true)
-        ,totalMass(0)
+        ,DT(originalSimulation.DT)
+        ,timeElapsed(originalSimulation.timeElapsed)
         ,minX(FLT_MAX)
         ,maxX(FLT_MIN)
         ,minY(FLT_MAX)
         ,maxY(FLT_MIN)
-        ,constGravField(false)
+        ,constGravField(originalSimulation.constGravField)
         ,gravBetweenObjects(originalSimulation.gravBetweenObjects)
         ,forceCalcMethod(originalSimulation.forceCalcMethod)
 {
@@ -102,8 +96,8 @@ void Simulation::update()
   calcForcesAll();
   physicalObjects.update(DT);
   updateTimeElapsed();
-  incCurStep();
 
+  // TODO This causes another full iteration of all shapes. If it's going to happen, it should be done during one of the earlier iterations.
   updateMinsAndMaxes();
   // This is the first "n" part in "n log(n)"
   refreshQuadrant();
@@ -124,18 +118,6 @@ double Simulation::getTimeElapsed() { return timeElapsed; }
 float Simulation::getDT() const { return DT; }
 
 void Simulation::setDT(float newDT) { DT = newDT; }
-
-Simulation::Simulation(Simulation && originalSimulation) {
-
-}
-
-void Simulation::incCurStep() { curStep+= 1; }
-
-void Simulation::Pause() { paused = true; }
-
-void Simulation::unPause() { paused = false; }
-
-bool Simulation::isPaused() { return paused; }
 
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
@@ -204,7 +186,6 @@ void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt)
 // TODO This should return the deleted list, so that it can coexist with the Octree version
 void Simulation::calcForcesAll_LessNaive()
 {
-    float dt = this->getDT();
     shapePointer_t object1, object2;
     SGfloat distance, minSep;
 
@@ -216,7 +197,7 @@ void Simulation::calcForcesAll_LessNaive()
 
     if (this->constGravField ) {
         this->getConstGravFieldVal(gravField);
-        sgScaleVec4(gravField, 1/dt);
+        sgScaleVec4(gravField, 1/DT);
     }
 
     if (!physicalObjects.empty()) {
@@ -230,7 +211,7 @@ void Simulation::calcForcesAll_LessNaive()
 
 
                 if (this->gravBetweenObjects ) {
-                    vecPtr gravVec = calcForceGravNew(object1, object2, dt );
+                    vecPtr gravVec = calcForceGravNew(object1, object2, DT );
 
                     object1->adjustMomentum(gravVec->vec);
                     sgNegateVec4(gravVec->vec);
@@ -242,7 +223,7 @@ void Simulation::calcForcesAll_LessNaive()
 
                 if (distance < minSep) {
                     if (this->collisionType == CollisionType::ELASTIC) {
-                        elasticCollision( object1, object2, dt );
+                        elasticCollision( object1, object2, DT );
                     }
                     else if (this->collisionType == CollisionType::INELASTIC){
                         object1->mergeWith( object2 );
@@ -352,7 +333,7 @@ void Simulation::calcForcesAll() {
             PairCollection deleteList;
 
             for ( const auto & curShape : this->getPhysicalObjects().getShapes() ) {
-                deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, this->getQuadrant(), this->getDT(), 0));
+                deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, this->getQuadrant(), this->DT, 0));
             }
 
             for ( const auto & curShape : deleteList.doomed().getShapes() ) {

@@ -27,7 +27,6 @@ TEST_CASE( "Simulation is made", "[simulation]" ) {
     // REQUIRE( testSimulation.getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_OCTREE );
     REQUIRE( testSimulationPtr->getDT() == 1000.0 );
     REQUIRE( testSimulationPtr->getTimeElapsed() == 0 );
-    REQUIRE( testSimulationPtr->isPaused() );
 }
 
 TEST_CASE( "non-ptr Simulation is made", "[XXX]" ) {
