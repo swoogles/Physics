@@ -54,7 +54,7 @@ void Simulations::simpleOrbit() {
     );
 }
 
-SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod forceCalculationMethod) {
+Simulation Simulations::billiards1(int numRows, ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
 
     int numPieces = 0;
@@ -115,11 +115,10 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     }
 
     // return physicalObjects;
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
-    return curSimulation;
+    return Simulation(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
 }
 
-SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceCalculationMethod forceCalculationMethod)
+Simulation Simulations::billiards2_ReturnSimulation(int numRows, ForceCalculationMethod forceCalculationMethod)
 {
     ShapeList physicalObjects;
 
@@ -167,12 +166,11 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
         }
     }
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
-    return curSimulation;
+    return Simulation(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
 }
 
 
-SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalculationMethod forceCalculationMethod) {
+Simulation Simulations::billiards3_ArbitraryList(int numRows, ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
 
     float cueMass = 100.0;
@@ -226,13 +224,11 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
         }
     }
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
-    return curSimulation;
+    return Simulation(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
 }
 
-SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod)
-{
-    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, NAIVE);
+Simulation Simulations::disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod) {
+    Simulation curSimulation = Simulations::bodyFormation_ArbitraryList(1000, NAIVE);
 
     int numPieces = 1;
     float objectDensity = DENSITY_SUN;
@@ -254,42 +250,40 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod
     );
 
     ShapeList disruptingObject(curShape);
-    Simulation & sim = *curSimulation;
     // TODO actually use this, once I can prevent the initial sharedPtr from killing it when this function exits
-    Simulation disruptedSimulation(std::move(sim), disruptingObject);
-    curSimulation->addPhysicalObjectToList( curShape );
+//    Simulation disruptedSimulation(std::move(curSimulation), disruptingObject);
+    curSimulation.addPhysicalObjectToList( curShape );
     return curSimulation;
 }
 
-SimulationPointer_t Simulations::bodyFormation_NonRandom(ForceCalculationMethod forceCalculationMethod)
-{
-  float dt = 1000;
-  int numPieces = 2;
+Simulation Simulations::bodyFormation_NonRandom(ForceCalculationMethod forceCalculationMethod) {
+    float dt = 1000;
+    int numPieces = 2;
 
-  ShapeList physicalObjects;
+    ShapeList physicalObjects;
 
-	float objectDensity = DENSITY_SUN;
-	float bodyVolume = (MASS_SUN * 10.0)/(objectDensity);
-	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	sgVec4 startPlacement;
-	sgVec4 startMomentum = { 0, 0, 0 };
+    float objectDensity = DENSITY_SUN;
+    float bodyVolume = (MASS_SUN * 10.0)/(objectDensity);
+    float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+    sgVec4 startPlacement;
+    sgVec4 startMomentum = { 0, 0, 0 };
 
-	sgVec3 newColor = { 1, 0, 1 };
+    sgVec3 newColor = { 1, 0, 1 };
 
-	float pieceMass = pow(pieceRadius, 3.0);
-  pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
+    float pieceMass = pow(pieceRadius, 3.0);
+    pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
 
-  float totalMass = 0.0;
+    float totalMass = 0.0;
 
-  shapePointer_t curShape;
+    shapePointer_t curShape;
 
-  float offset = 8e4;
-  startPlacement[0]= offset;
-  startPlacement[1]= offset;
-  startPlacement[2]= offset;
-  startPlacement[3]= 0;
+    float offset = 8e4;
+    startPlacement[0]= offset;
+    startPlacement[1]= offset;
+    startPlacement[2]= offset;
+    startPlacement[3]= 0;
 
-  shapePointer_t oldCircle = make_shared<Circle>(
+    shapePointer_t oldCircle = make_shared<Circle>(
             startPlacement,
             pieceMass,
             pieceRadius,
@@ -298,9 +292,9 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom(ForceCalculationMethod 
             newColor
     );
 
-  physicalObjects.addShapeToList( oldCircle );
+    physicalObjects.addShapeToList( oldCircle );
 
-  startPlacement[0]= -offset;
+    startPlacement[0]= -offset;
 
     curShape = make_shared<Circle>(
             startPlacement,
@@ -311,21 +305,19 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom(ForceCalculationMethod 
             newColor
     );
 
-  physicalObjects.addShapeToList( curShape );
-  totalMass += curShape->getMass();
+    physicalObjects.addShapeToList( curShape );
+    totalMass += curShape->getMass();
 
-  startPlacement[0]= -offset;
+    startPlacement[0]= -offset;
 
-  startPlacement[0]= -offset;
-  startPlacement[1]= -offset;
+    startPlacement[0]= -offset;
+    startPlacement[1]= -offset;
 
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, dt, true, forceCalculationMethod);
-  return curSimulation;
+    return Simulation(physicalObjects, CollisionType::INELASTIC, dt, true, forceCalculationMethod);
 }
 
-SimulationPointer_t Simulations::QuadrantTestingNonRandom(ForceCalculationMethod forceCalculationMethod)
-{
+Simulation Simulations::QuadrantTestingNonRandom(ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
 
     int numPieces=5;
@@ -406,12 +398,10 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom(ForceCalculationMethod
 
     physicalObjects.addShapeToList( curShape );
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType ::INELASTIC, 1000, true, forceCalculationMethod);
-    return curSimulation;
+    return Simulation(physicalObjects, CollisionType ::INELASTIC, 1000, true, forceCalculationMethod);
 }
 
-SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod)
-{
+Simulation Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
 
     int numPieces=5;
@@ -454,12 +444,10 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
-    return curSimulation;
+    return Simulation(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
 }
 
-Simulation Simulations::QuadrantTesting_simplest_move(ForceCalculationMethod forceCalculationMethod)
-{
+Simulation Simulations::QuadrantTesting_simplest_move(ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
 
     int numPieces=5;
@@ -505,8 +493,7 @@ Simulation Simulations::QuadrantTesting_simplest_move(ForceCalculationMethod for
     return Simulation(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
 }
 
-SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod)
-{
+Simulation Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
     const float objectDensity = DENSITY_SUN;
@@ -555,13 +542,11 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, Forc
         totalMass += curShape->getMass();
     }
 
-    const SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
-    return curSimulation;
+    return Simulation(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
 }
 
-SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, float *target, float *groupMomentum,
-                                                                    ForceCalculationMethod forceCalculationMethod)
-{
+Simulation Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, float *target, float *groupMomentum,
+                                                           ForceCalculationMethod forceCalculationMethod) {
   ShapeList physicalObjects;
 
 	float objectDensity = DENSITY_SUN;
@@ -616,12 +601,10 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 		totalMass += pieceMass;
 	}
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
-  return curSimulation;
+    return Simulation(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
 }
 
-SimulationPointer_t Simulations::createSimulation( char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod)
-{
+Simulation Simulations::createSimulation(char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod) {
 	//******CURRENT SIMULATION*****
   if ( simNumber == '0' ) {
 	  return Simulations::bodyFormation_NonRandom(forceCalculationMethod);
