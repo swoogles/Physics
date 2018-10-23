@@ -20,7 +20,7 @@ public:
      *  \n -Pop matrix from the stack
      */
     static void draw(shapePointer_t myShape);
-    static void drawShapes(vectorT shapes);
+    static void drawShapes(const vectorT &shapes);
 
 };
 

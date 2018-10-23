@@ -29,7 +29,7 @@ void Drawing::draw(shapePointer_t myShape){
     glPopMatrix();
 }
 
-void Drawing::drawShapes(vectorT shapes) {
+void Drawing::drawShapes(const vectorT & shapes) {
     for ( const auto & curShape : shapes ) {
         draw(curShape);
     }
