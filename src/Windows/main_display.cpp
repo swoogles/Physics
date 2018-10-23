@@ -22,8 +22,9 @@ main_window_UI::main_window_UI() {
 }
 
 // TODO more good cleanup candidates in this file
-void main_window_UI::init( shared_ptr<Simulation> simulation ) {
+void main_window_UI::init() {
 	main_menu = new puMenuBar();
+	// TODO Pass this as a param, then there's no need for the glut call here.
 	int winWidth = glutGet(GLUT_WINDOW_WIDTH);
 
 	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
@@ -32,8 +33,6 @@ void main_window_UI::init( shared_ptr<Simulation> simulation ) {
 	main_menu->add_submenu("File", file_submenu, file_submenu_cb);
 
 	main_menu->close();
-
-  this->simulation = simulation ;
 
 	int curX = winWidth;
 	int timeHeight = 5;
@@ -75,8 +74,7 @@ void main_window_UI::init( shared_ptr<Simulation> simulation ) {
 
 }
 
-void main_window_UI::update() {
-	double curTime = simulation->getTimeElapsed();
+void main_window_UI::update(double timeElapsed) {
 	double intPart;
 	double fracPart;
 	float curDiv;
@@ -85,33 +83,33 @@ void main_window_UI::update() {
 	float curVal;
 
 	//Make initial cut down to hours
-	curTime /= 3600;
-	modf(curTime, &intPart);
-	curTime = intPart;
+	timeElapsed /= 3600;
+	modf(timeElapsed, &intPart);
+	timeElapsed = intPart;
 
 	curDiv = 24;
-	curTime /= curDiv;
-	fracPart = modf(curTime, &intPart);
+	timeElapsed /= curDiv;
+	fracPart = modf(timeElapsed, &intPart);
 	curVal = fracPart*curDiv;
 	hoursElapsed_value->setValue(curVal);
-	curTime = intPart;
+	timeElapsed = intPart;
 
 
 	curDiv = 365;
-	curTime /= curDiv;
-	fracPart = modf(curTime, &intPart);
+	timeElapsed /= curDiv;
+	fracPart = modf(timeElapsed, &intPart);
 	curVal = fracPart*curDiv;
 	daysElapsed_value->setValue(curVal);
-	curTime = intPart;
+	timeElapsed = intPart;
 
 	curDiv = 1000;
-	curTime /= curDiv;
-	fracPart = modf(curTime, &intPart);
+	timeElapsed /= curDiv;
+	fracPart = modf(timeElapsed, &intPart);
 	curVal = fracPart*curDiv;
 	yearsElapsed_value->setValue(curVal);
-	curTime = intPart;
+	timeElapsed = intPart;
 
-	curVal = curTime;
+	curVal = timeElapsed;
 	milleniaElapsed_value->setValue(curVal);
 
 }
@@ -160,11 +158,6 @@ void main_window_UI::saveFile_cb(puObject * caller) {
 
 void main_window_UI::exit_cb(puObject * caller) {
 	exit(1);
-}
-
-void main_window_UI::setSimulation( shared_ptr<Simulation> simulation )
-{
-  this->simulation =  simulation ;
 }
 
 // void main_window_UI::mk_dialog(char * dialogText) {

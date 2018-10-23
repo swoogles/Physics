@@ -8,9 +8,6 @@
 
 #include <GL/freeglut.h>
 
-
-#include "../Physics/Simulation.h"
-
 /*! \brief UI class that handles everything in the main window
  *
  *  Right now this only contains the Main Menu bar, but will eventually display some additional bits of information;
@@ -22,8 +19,6 @@
  */
 class main_window_UI {
 private:
-  shared_ptr<Simulation> simulation;
-
 	puMenuBar * main_menu;
 	puaFileSelector * open_selector;
 	puaFileSelector * save_selector;
@@ -47,13 +42,11 @@ public:
 	//! Unnecessary constructor for entirely static class
 	main_window_UI();
 
-  void setSimulation( shared_ptr<Simulation> simulation );
-
-	/*! \brief Initializes values for the Main Window interface
-	 *
-	 *  Creates the Main Menu puMenuBar and populates it with open, save, etc. funcitnos
-	 */
-	void init( shared_ptr<Simulation> residentSimulation );
+    /*! \brief Initializes values for the Main Window interface
+       *
+       *  Creates the Main Menu puMenuBar and populates it with open, save, etc. funcitnos
+       */
+	void init();
 
 	/*! \brief Updates the time values
 	 *
@@ -62,7 +55,7 @@ public:
 	 *  elapsed. Once calculated, it sets the appropriate labels to
 	 *  these values.
 	 */
-	void update();
+	void update(double timeElapsed);
 
 	//! Opens a file picker when Open is selected in Main Menu
 	static void open_cb(puObject *);

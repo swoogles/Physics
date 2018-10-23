@@ -142,7 +142,7 @@ void idle() {
 
     globalSimulation->update();
     shapes = globalSimulation->getPhysicalObjects();
-    globalMainDisplay.update();
+      globalMainDisplay.update(globalSimulation->getDT());
   }
 
   // Should just directly call Observer::getCurObserverInstance()
@@ -218,7 +218,7 @@ int main(int argcp, char **argv) {
   init( simulation );
 
   //Creates main menu bar
-  globalMainDisplay.init( globalSimulation );
+  globalMainDisplay.init();
 
   control_center_num = glutCreateWindow("Control Center");
 
