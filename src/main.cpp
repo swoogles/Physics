@@ -224,7 +224,7 @@ int main(int argcp, char **argv) {
 
   postSimulationGlInit();
 
-  globalControlCenter.init(globalSimulation, globalSimulation->getDT());
+    globalControlCenter.init(globalSimulation->getDT());
 
   glutMainLoop();
 

@@ -8,7 +8,8 @@
 
 #include <GL/freeglut.h>
 
-#include "control_center.h"
+
+#include "../Physics/Simulation.h"
 
 /*! \brief UI class that handles everything in the main window
  *

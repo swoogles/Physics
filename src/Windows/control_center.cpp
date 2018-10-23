@@ -12,12 +12,6 @@ using namespace std;
 bool control_center::paused;
 float control_center::dt;
 
-void control_center::clearShapes(puObject * caller) {
-  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
-  shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
-  curSimulation->getPhysicalObjects().clearShapes();
-}
-
 void control_center::switchViewNow(puObject * caller) {
   control_center * ccPointer = ( control_center *)caller->getUserData();
 	if ( ccPointer->isShowingRunTime() ) {
@@ -34,7 +28,7 @@ void control_center::switchViewNow(puObject * caller) {
 }
 
 // TODO Is there any better candidate for breaking things apart than this functino?
-void control_center::init(shared_ptr<Simulation> residentSimulation, float dt) {
+void control_center::init(float dt) {
   control_center::dt = dt;
   showingRunTime = false;
   userDat[0]=2;
@@ -106,11 +100,6 @@ void control_center::init(shared_ptr<Simulation> residentSimulation, float dt) {
   mass_in->setStyle(PUSTYLE_PLAIN);
   mass_in->setValue(1);
   curHeight -= (elementHeight+gap);
-
-  clear_objects = new puButton(curX, curHeight-elementHeight, curX+placementWidth, curHeight);
-  clear_objects->setLegend("Clear Objects(x)");
-  clear_objects->setUserData( &residentSimulation );
-  clear_objects->setCallback(clearShapes);
 
   placement_group->close();
   placement_group->hide();

@@ -6,8 +6,6 @@
 #include <plib/sg.h>
 #include "../Dimensions/Moveable.h"
 
-#include "../Physics/Simulation.h"
-
 #include "../Observation/Observer.h"
 
 /*! \brief Main UI for making objects and controlling simulation
@@ -34,9 +32,6 @@ private:
 
 		puText * mass_label;
       
-    puButton * clear_objects;
-
-
 	puGroup * runtime_group;
 		puText * speed_c_label;
 		puInput * speed_c_input;
@@ -68,7 +63,7 @@ private:
     puInput * mass_in;
 
 public:
-	void init(shared_ptr<Simulation> residentSimulation, float dt);
+	void init(float dt);
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
 
@@ -101,8 +96,6 @@ public:
 	static void alterDT(puObject *);
 	//! Pauses simulation 
 	static void pause_cb(puObject *);
-
-  static void clearShapes(puObject * caller);
 
 	//!Turn AutoScaling off
 	static void uncheckAutoScaling();
