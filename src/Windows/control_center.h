@@ -19,8 +19,6 @@
  */
 class control_center {
 private:
-  shared_ptr<Simulation> simulation;
-
 	puGroup * placement_group;
 		puText * object_name_label;
 		puInput * object_name_input;
@@ -67,9 +65,8 @@ private:
     puInput * mass_in;
 
 public:
-	//! Creates all UI elements and sets their values, positions, and callbacks
-  void setSimulation( shared_ptr<Simulation> simulation );
-	void init( shared_ptr<Simulation> residentSimulation );
+	static bool paused;
+	void init(shared_ptr<Simulation> residentSimulation, shared_ptr<bool> paused);
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
 
@@ -110,6 +107,8 @@ public:
 
 	//! Turn AutoScaling on or off
 	static void flipAutoScaling(puObject * caller);
+
+	bool isPaused();
 };
 
 #endif /* CONTROL_CENTER_H_ */

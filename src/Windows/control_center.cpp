@@ -9,6 +9,8 @@
 
 using namespace std;
 
+bool control_center::paused;
+
 void control_center::clearShapes(puObject * caller) {
   shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
   shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
@@ -30,13 +32,8 @@ void control_center::switchViewNow(puObject * caller) {
 
 }
 
-void control_center::setSimulation( shared_ptr<Simulation> simulation )
-{
-  this->simulation =  simulation ;
-}
-
 // TODO Is there any better candidate for breaking things apart than this functino?
-void control_center::init( shared_ptr<Simulation> residentSimulation ) {
+void control_center::init(shared_ptr<Simulation> residentSimulation, shared_ptr<bool> paused) {
   showingRunTime = false;
   userDat[0]=2;
   userDat[1]=-1;
@@ -149,7 +146,6 @@ void control_center::init( shared_ptr<Simulation> residentSimulation ) {
   pause_dt_button = new puButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
   curX += (placementWidth +gap);
   pause_dt_button->setLegend("Pause");
-  pause_dt_button->setUserData( &residentSimulation );
   pause_dt_button->setCallback(pause_cb);
   pause_dt_button->setValue(0);
 
@@ -239,14 +235,7 @@ void control_center::alterDT(puObject * caller) {
 }
 
 void control_center::pause_cb(puObject * caller) {
-  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
-  shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
-  if (caller->getIntegerValue() == 0) {
-    curSimulation->Pause();
-  }
-  else {
-    curSimulation->unPause();
-  }
+  paused = !paused;
 }
 
 void control_center::rotRight(puObject *) {
@@ -276,5 +265,9 @@ void control_center::rotStop(puObject *) {
   Observer * curObserver =  Observer::getCurObserver();
   sgVec3 angVelocity = {0,0,0};
   curObserver->setAngVelocity(angVelocity);
+}
+
+bool control_center::isPaused() {
+  return control_center::paused;
 }
 

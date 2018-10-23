@@ -53,6 +53,8 @@ SimulationPtr_t globalSimulation;
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
+shared_ptr<bool> paused = make_shared<bool>(true);
+
 ShapeList shapes;
 
 // You want to avoid passing argument to this method, because it would slow down every single
@@ -126,7 +128,9 @@ void init(char simulation) {
 
 void idle() {
 
-  if (! globalSimulation->isPaused()  ) {
+  if (! globalControlCenter.isPaused() ) {
+//  if (! globalSimulation->isPaused()  ) {
+
     /* TODO autoscaling should be part of the simulation, to avoid the temptation to reset values here
     if (WorldSettings::isAutoScaling())
     {
@@ -218,7 +222,7 @@ int main(int argcp, char **argv) {
 
   postSimulationGlInit();
 
-  globalControlCenter.init( globalSimulation );
+  globalControlCenter.init(globalSimulation, paused);
 
   glutMainLoop();
 
