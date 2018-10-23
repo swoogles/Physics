@@ -115,13 +115,6 @@ void idle() {
 
 
   if (! globalControlCenter.isPaused() ) {
-    /* TODO autoscaling could be part of the simulation, to avoid the temptation to reset values here
-    if (WorldSettings::isAutoScaling())
-    {
-      globalSimulation->resetXYMinsAndMaxes();
-    }
-     */
-
     globalSimulation->update();
     shapes = globalSimulation->getPhysicalObjects();
       globalMainDisplay.update(globalSimulation->getDT());

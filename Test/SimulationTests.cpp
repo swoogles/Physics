@@ -1,18 +1,12 @@
 #include "catch.hpp"
 
-#include <plib/sg.h>
-
-#include "../src/ShapeFiles/Circle.h"
 #include "../src/Physics/Simulation.h"
 #include "../src/Physics/Simulations.h"
-#include "../src/Physics/Interactions.h"
 
 #include "TestUtils.h"
 
 TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[green]" ) {
     SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest(NAIVE);
-    simulation->setForceCalcMethod(ForceCalculationMethod::OCTREE);
-
     simulation->update();
     REQUIRE(simulation->getPhysicalObjects().getShapes().size() == 1);
 }

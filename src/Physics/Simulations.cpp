@@ -232,7 +232,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
 
 SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod)
 {
-    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, NAIVE);
+    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, forceCalculationMethod);
 
     int numPieces = 1;
     float objectDensity = DENSITY_SUN;
