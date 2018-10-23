@@ -10,6 +10,7 @@
 using namespace std;
 
 bool control_center::paused;
+float control_center::dt;
 
 void control_center::clearShapes(puObject * caller) {
   shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
@@ -33,7 +34,8 @@ void control_center::switchViewNow(puObject * caller) {
 }
 
 // TODO Is there any better candidate for breaking things apart than this functino?
-void control_center::init(shared_ptr<Simulation> residentSimulation, shared_ptr<bool> paused) {
+void control_center::init(shared_ptr<Simulation> residentSimulation, float dt) {
+  control_center::dt = dt;
   showingRunTime = false;
   userDat[0]=2;
   userDat[1]=-1;
@@ -140,7 +142,6 @@ void control_center::init(shared_ptr<Simulation> residentSimulation, shared_ptr<
   dec_dt_button = new puOneShot(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
   curX += (placementWidth +gap);
   dec_dt_button->setLegend("Slower");
-  dec_dt_button->setUserData( &residentSimulation );
   dec_dt_button->setCallback( alterDT );
 
   pause_dt_button = new puButton(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
@@ -153,7 +154,6 @@ void control_center::init(shared_ptr<Simulation> residentSimulation, shared_ptr<
   inc_dt_button = new puOneShot(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
   curX += (placementWidth +gap);
   inc_dt_button->setLegend("Faster");
-  inc_dt_button->setUserData( &residentSimulation );
   inc_dt_button->setCallback(alterDT);
 
   curHeight -= elementHeight;
@@ -220,16 +220,12 @@ void control_center::flipAutoScaling(puObject * caller) {
 }
 
 void control_center::alterDT(puObject * caller) {
-  shared_ptr<Simulation> * spPointer = (shared_ptr<Simulation> *)caller->getUserData();
-  shared_ptr<Simulation> curSimulation = shared_ptr<Simulation>( *spPointer );
-
-
   if (strcmp(caller->getLegend(), "Slower") == 0) {
-    curSimulation->setDT(curSimulation->getDT() / 2);
+    control_center::dt /= 2;
   }
 
   if (strcmp(caller->getLegend(), "Faster") == 0) {
-    curSimulation->setDT(curSimulation->getDT() * 2);
+    control_center::dt *= 2;
   }
 
 }
@@ -269,5 +265,9 @@ void control_center::rotStop(puObject *) {
 
 bool control_center::isPaused() {
   return control_center::paused;
+}
+
+float control_center::getDt() {
+  return control_center::dt;
 }
 

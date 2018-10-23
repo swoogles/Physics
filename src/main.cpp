@@ -127,6 +127,8 @@ void init(char simulation) {
 }
 
 void idle() {
+  globalSimulation->setDT(globalControlCenter.getDt());
+
 
   if (! globalControlCenter.isPaused() ) {
 //  if (! globalSimulation->isPaused()  ) {
@@ -222,7 +224,7 @@ int main(int argcp, char **argv) {
 
   postSimulationGlInit();
 
-  globalControlCenter.init(globalSimulation, paused);
+  globalControlCenter.init(globalSimulation, globalSimulation->getDT());
 
   glutMainLoop();
 
