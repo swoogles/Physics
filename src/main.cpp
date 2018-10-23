@@ -53,8 +53,6 @@ SimulationPtr_t globalSimulation;
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
-shared_ptr<bool> paused = make_shared<bool>(true);
-
 ShapeList shapes;
 
 // You want to avoid passing argument to this method, because it would slow down every single
@@ -119,7 +117,7 @@ void init(char simulation) {
 
   PhysicsSandboxProperties properties(billProperties);
 
-  globalSimulation = Simulations::createSimulation( simulation, properties.numShapes, properties.forceCalculationMethod);
+  globalSimulation = std::move(Simulations::createSimulation( simulation, properties.numShapes, properties.forceCalculationMethod));
   // TODO How about just use simulationPtr here?
   shapes = globalSimulation->getPhysicalObjects();
 

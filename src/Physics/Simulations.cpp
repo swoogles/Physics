@@ -115,7 +115,7 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     }
 
     // return physicalObjects;
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
+    SimulationPointer_t curSimulation = make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
     return curSimulation;
 }
 
@@ -167,7 +167,7 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
         }
     }
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
+    SimulationPointer_t curSimulation = make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
     return curSimulation;
 }
 
@@ -226,7 +226,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
         }
     }
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
+    SimulationPointer_t curSimulation = make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
     return curSimulation;
 }
 
@@ -320,7 +320,7 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom(ForceCalculationMethod 
   startPlacement[1]= -offset;
 
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, dt, true, forceCalculationMethod);
+    SimulationPointer_t curSimulation = make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, dt, true, forceCalculationMethod);
   return curSimulation;
 }
 
@@ -406,7 +406,7 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom(ForceCalculationMethod
 
     physicalObjects.addShapeToList( curShape );
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType ::INELASTIC, 1000, true, forceCalculationMethod);
+    SimulationPointer_t curSimulation = make_unique<Simulation>(physicalObjects, CollisionType ::INELASTIC, 1000, true, forceCalculationMethod);
     return curSimulation;
 }
 
@@ -454,7 +454,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
+    SimulationPointer_t curSimulation = make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
     return curSimulation;
 }
 
@@ -555,7 +555,7 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, Forc
         totalMass += curShape->getMass();
     }
 
-    const SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
+    SimulationPointer_t curSimulation = make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
     return curSimulation;
 }
 
@@ -616,7 +616,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 		totalMass += pieceMass;
 	}
 
-    SimulationPointer_t curSimulation = make_shared<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
+    SimulationPointer_t curSimulation = make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
   return curSimulation;
 }
 

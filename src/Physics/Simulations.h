@@ -57,7 +57,7 @@ int NUM_BODIES = LAST_BODY+1;
 };
 */
 
-typedef shared_ptr<Simulation> SimulationPointer_t;
+typedef unique_ptr<Simulation> SimulationPointer_t;
 
 class Simulations
 {
@@ -101,7 +101,7 @@ class Simulations
      */
     static void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass);
 
-    typedef shared_ptr<Simulation> SimulationPointer_t;
+    typedef unique_ptr<Simulation> SimulationPointer_t;
   public:
     // TODO put this in a more appropriate "Physical Constants" location
     static float G;
