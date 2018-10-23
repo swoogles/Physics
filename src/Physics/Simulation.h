@@ -13,6 +13,7 @@
 
 class Simulation {
 private:
+	ShapeList physicalObjects;
 	int curStep;
     float DT;
     double timeElapsed;
@@ -28,7 +29,6 @@ private:
     QuadrantPointer_t quadrant;
 
     ForceCalculationMethod forceCalcMethod;
-    ShapeList physicalObjects;
     CollisionType collisionType;
 
 	void incCurStep();

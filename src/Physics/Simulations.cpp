@@ -178,7 +178,6 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
     float cueMass = 100.0;
     float ballMass = 0.156;
 
-    float cueRadius = 4;
     float ballRadius = .95;
 
     sgVec4 cueVelocity = { 30, -75, 20 };
@@ -254,9 +253,9 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod
     );
 
     ShapeList disruptingObject(curShape);
-    Simulation & sim = *curSimulation;
+//    Simulation & sim = *curSimulation;
     // TODO actually use this, once I can prevent the initial sharedPtr from killing it when this function exits
-    Simulation disruptedSimulation(std::move(sim), disruptingObject);
+//    Simulation disruptedSimulation(std::move(sim), disruptingObject);
     curSimulation->addPhysicalObjectToList( curShape );
     return curSimulation;
 }
@@ -655,6 +654,7 @@ SimulationPointer_t Simulations::createSimulation( char simNumber, int numShapes
   } else {
       exit(1);
   }
+
 }
 
 float Simulations::getSplitBodyRadius(float volume, int numPieces ) {

@@ -93,10 +93,6 @@ void Moveable::adjustAngVelocity(const sgVec4 dAngVelocity) {
 }
 
 void Moveable::update(float dt) {
-	if (this == nullptr) {
-		fprintf(stderr, "Error: Null Shape \n");
-		exit(1);
-	}
 	sgVec4 velocity;
 	sgVec4 prevVelocity;
 	sgScaleVec4(velocity, momentum, 1/mass);
