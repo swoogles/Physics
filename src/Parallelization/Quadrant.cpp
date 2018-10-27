@@ -20,7 +20,7 @@ bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundar
   return withinBoundaries;
 }
 
-shared_ptr<MyShape> Quadrant::getShapeInQuadrant()
+shapePointer_t Quadrant::getShapeInQuadrant()
 {
   return shapeInQuadrant;
 }
@@ -35,21 +35,27 @@ Quadrant::~Quadrant()
 }
 
 
-Quadrant::Quadrant(int level, sgVec4 pos, sgVec4 dimensions )
+Quadrant::Quadrant(int level, unique_ptr<VecStruct> pos, unique_ptr<VecStruct> dimensions)
   :isLeaf(true)
   ,containsBody(false)
   ,level(level)
-  ,borders(make_shared<Box>(pos, dimensions[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
+//  ,borders(make_shared<Box>(pos, dimensions[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
   ,quadOctree(extents[2][2][2])
   ,dimensions()
   
 {
+
+  sgVec4 boxPos;
+  sgCopyVec4(boxPos, pos->vec);
+  // TODO Can I get this back inside the nifty constructor syntax?
+  borders = make_shared<Box>(boxPos, dimensions->vec[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} );
   // TODO Require shapeToInsert in constructor.
   weightedPosition[0]=0.0;
   weightedPosition[1]=0.0;
   weightedPosition[2]=0.0;
-  setPos( pos );
-  sgCopyVec4( this->dimensions, dimensions );
+  // TODO Can this be a more direct move?
+  setPos( pos->vec );
+  sgCopyVec4( this->dimensions, dimensions->vec );
 
   sgVec3 CoMColor = { 0, 1, 0 };
   sgVec4 comPos = { 0, 0, 0, 1};
@@ -108,7 +114,7 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
      b. Subdivide the region further by creating four children. Then, recursively insert both b and c into the appropriate quadrant(s). Since b and c may still end up in the same quadrant, there may be several subdivisions during a single insertion.      c. Finally, update the center-of-mass and total mass of x.
 */
 
-void Quadrant::insertShape( shape_pointer insertedShape )
+void Quadrant::insertShape(shapePointer_t insertedShape)
 {
   // 1.
   if ( !containsBody )
@@ -185,24 +191,25 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 {
   vecPtr insertPos(shapeToInsert->getPosNew());
 
-  sgVec4 newPos;
-  sgVec4 newDimensions;
+//  sgVec4 newPos;
+  vecPtr newPos = make_unique<VecStruct>();
+  vecPtr newDimensions = make_unique<VecStruct>();
   sgVec4 offsets;
   sgVec3 targets;
 
   // Each dimension is cut in half as you go down
-  sgScaleVec4 ( newDimensions, dimensions, .5 );
+  sgScaleVec4 ( newDimensions->vec, dimensions, .5 );
 
   sgScaleVec3( offsets, dimensions, .25 );
 
   // Boundaries [0]=min : [1]=central : [2]=max
   sgVec3 maxBoundaries;
-  sgAddVec3( maxBoundaries, pos, newDimensions );
+  sgAddVec3( maxBoundaries, pos, newDimensions->vec );
 
   sgVec3 minBoundaries;
-  sgSubVec3( minBoundaries, pos, newDimensions );
+  sgSubVec3( minBoundaries, pos, newDimensions->vec );
 
-  sgCopyVec3( newPos, pos );
+  sgCopyVec3( newPos->vec, pos );
 
   targets[0] = INVALID_OCTREE_INDEX;
   targets[1] = INVALID_OCTREE_INDEX;
@@ -219,12 +226,12 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
       if ( insertPos->vec[i] < pos[i] )
       {
         targets[i] = 0; 
-        newPos[i] -= offsets[i];
+        newPos->vec[i] -= offsets[i];
       }
       else
       {
         targets[i] = 1; 
-        newPos[i] += offsets[i];
+        newPos->vec[i] += offsets[i];
       }
     }
   }
@@ -242,7 +249,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
     if ( insertionQuadrant == nullptr )
     {
-      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, std::ref(newPos), std::ref(newDimensions) ) ;
+      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, std::move(newPos), std::move(newDimensions) ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }

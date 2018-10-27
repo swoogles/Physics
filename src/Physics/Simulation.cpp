@@ -37,11 +37,21 @@ Simulation::Simulation(Simulation &&originalSimulation, ShapeList newObjects)
 
 void Simulation::refreshQuadrant()
 {
-  sgVec4 pos = {0,0,0,1};
+    vecPtr pos = make_unique<VecStruct>();
+    // TODO encapsulate in constructor
+    pos->vec[0] = 0;
+    pos->vec[1] = 0;
+    pos->vec[2] = 0;
+    pos->vec[3] = 1;
+
   float side = 10e5; //Formation Value
-  sgVec3 dimensions = { side, side, side };
+//  sgVec3 dimensions = { side, side, side };
+  vecPtr dimensions = make_unique<VecStruct>();
+  dimensions->vec[0] = side;
+  dimensions->vec[1] = side;
+  dimensions->vec[2] = side;
   // Uh oh.  I think this is it.
-  quadrant = std::make_shared<Quadrant>( 1, boost::ref(pos), boost::ref(dimensions) ) ;
+  quadrant = std::make_shared<Quadrant>( 1, std::move(pos), std::move(dimensions) ) ;
 
   for ( const auto & curShape : physicalObjects.getShapes() ) {
     quadrant->insertShape( curShape );

@@ -12,6 +12,7 @@
 #include <boost/multi_array/multi_array_ref.hpp>
 #include <boost/multi_array.hpp>
 #include <boost/ref.hpp>
+#include <memory>
 
 #define INVALID_OCTREE_INDEX -1
 
@@ -19,11 +20,12 @@ using boost::extents;
 using boost::multi_array;
 
 using std::make_shared;
+using std::weak_ptr;
 
 class Quadrant : public Box
 {
   private:
-    typedef shared_ptr<MyShape> shape_pointer;
+    typedef shapePointer_t shape_pointer;
     typedef shared_ptr<Quadrant> QuadrantPointer_t;
     typedef multi_array< QuadrantPointer_t, 3> array_typeNew;
 
@@ -31,7 +33,7 @@ class Quadrant : public Box
     bool containsBody;
     int level;
 
-    shape_pointer shapeInQuadrant;
+    shapePointer_t shapeInQuadrant;
 
     sgVec4 weightedPosition;
     sgVec4 dimensions;
@@ -45,17 +47,17 @@ class Quadrant : public Box
     ShapeList shapes;
 
   public:
-    Quadrant(int level, sgVec4 pos, sgVec4 dimensions );
+    Quadrant(int level, unique_ptr<VecStruct> pos, unique_ptr<VecStruct> dimensions);
     ~Quadrant();
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 
-    void insertShape( shape_pointer newShape );
+    void insertShape(shapePointer_t newShape);
 
     inline float getWidth() { return dimensions[0]; }
 
     inline bool isExternal() { return isLeaf; }
 
-    shared_ptr<MyShape> getShapeInQuadrant();
+    shapePointer_t getShapeInQuadrant();
 
     void getWeightedPosition(sgVec4 weightedPosition);
     void setWeightedPosition(sgVec4 weightedPosition);
