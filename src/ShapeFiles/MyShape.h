@@ -81,7 +81,7 @@ class MyShape : public Moveable {
 
     //! Returns color of object in retVec
     void getColor(sgVec3 retVec) const;
-    VecStruct * getColor() const;
+    unique_ptr<VecStruct> getColor() const;
 
     /*!
      * TODO This should at *least* go to the circle class, but I think it really belongs in the Physics package

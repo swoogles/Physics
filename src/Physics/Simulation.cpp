@@ -123,7 +123,7 @@ QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
 vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float dt )
 {
-    vecPtr gravVec(new VecStruct());
+    vecPtr gravVec = make_unique<VecStruct>();
 
     sgVec4 unitVec{};
 

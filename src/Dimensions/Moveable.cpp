@@ -36,7 +36,7 @@ unique_ptr<VecStruct> Moveable::getPosNew() const {
 }
 
 vecPtr Moveable::getVectorToObject( Moveable * object2) {
-	vecPtr vec(new VecStruct());
+	vecPtr vec = make_unique<VecStruct>();
 	vecPtr pos1(this->getPosNew());
 	vecPtr pos2(object2->getPosNew());
 	sgSubVec4(vec->vec, pos2->vec, pos1->vec);
@@ -67,7 +67,7 @@ void Moveable::adjustVelocity(const sgVec4 dVel) {
 }
 
 vecPtr Moveable::getVelocity() const {
-	vecPtr vecStruct(new VecStruct());
+	vecPtr vecStruct = make_unique<VecStruct>();
 	sgCopyVec4(vecStruct->vec, momentum);
 	sgScaleVec4(vecStruct->vec, 1/mass);
 

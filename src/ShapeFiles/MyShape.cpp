@@ -103,8 +103,8 @@ void MyShape::getColor(sgVec3 retVec) const{
 	sgCopyVec3(retVec, color);
 }
 
-VecStruct * MyShape::getColor() const {
-    VecStruct * vecStruct = new VecStruct();
+unique_ptr<VecStruct> MyShape::getColor() const {
+    unique_ptr<VecStruct> vecStruct = make_unique<VecStruct>();
     sgCopyVec4(vecStruct->vec, color);
     return vecStruct;
 
