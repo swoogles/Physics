@@ -8,8 +8,8 @@ VecStruct::VecStruct()
 : vec()
 {}
 
-shared_ptr<VecStruct> VecStruct::vecFromAtoB(VecStruct * a, VecStruct * b) {
-    shared_ptr<VecStruct> sepVec = make_shared<VecStruct>();
+unique_ptr <VecStruct> VecStruct::vecFromAtoB(VecStruct *a, VecStruct *b) {
+    unique_ptr<VecStruct> sepVec = make_unique<VecStruct>();
     sgSubVec4( sepVec->vec, a->vec, b->vec );
     return sepVec;
 }

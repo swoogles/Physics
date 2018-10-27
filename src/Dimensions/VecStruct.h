@@ -3,9 +3,10 @@
 
 #include <plib/sg.h>
 #include <memory>
+#include <iostream>
 
-using std::shared_ptr;
-using std::make_shared;
+using std::unique_ptr;
+using std::make_unique;
 
 class VecStruct {
 
@@ -13,7 +14,7 @@ public:
     sgVec4 vec;
 
     VecStruct();
-    static shared_ptr<VecStruct> vecFromAtoB(VecStruct * a, VecStruct * b);
+    static unique_ptr <VecStruct> vecFromAtoB(VecStruct *a, VecStruct *b);
 
     inline float x() {return vec[0];}
     inline float y() {return vec[1];}

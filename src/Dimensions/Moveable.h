@@ -9,9 +9,9 @@
 
 using namespace std;
 
-using std::shared_ptr;
+using std::unique_ptr;
 
-typedef std::shared_ptr<VecStruct> vecPtr;
+typedef std::unique_ptr<VecStruct> vecPtr;
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -53,7 +53,7 @@ public:
 	//! Set position of object to <newPos>
 	void setPos(const sgVec4 newPos);
 
-    shared_ptr<VecStruct> getPosNew() const;
+    unique_ptr<VecStruct> getPosNew() const;
 
 	vecPtr getVectorToObject( Moveable * object2);
 
