@@ -112,9 +112,9 @@ class MyShape : public Moveable {
     /*!
       * Simple method for getting distance between 2 objects
       */
-    float getDistanceToObject( shapePointer_t object2 );
+    float getDistanceToObject(MyShape &object2);
 
-    bool isTouching( shapePointer_t otherShape );
+    bool isTouching(MyShape &otherShape);
 
     /*! \relates MyShape
      *  \brief Combines 2 distinct objects in an inelastic collision into the first object and eliminates the second

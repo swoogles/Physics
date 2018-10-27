@@ -7,10 +7,8 @@
 
 #include "MyShape.h"
 
-float MyShape::getDistanceToObject( shapePointer_t object2 ) {
-  Moveable * obj2 = object2.get();
-
-  vecPtr sepVec(this->getVectorToObject(obj2));
+float MyShape::getDistanceToObject(MyShape &object2) {
+  vecPtr sepVec(this->getVectorToObject(object2));
   float distance = sgLengthVec4( sepVec->vec );
 
   return distance;
@@ -129,14 +127,14 @@ void MyShape::calcColor() {
 
 ShapeType MyShape::getType() { }
 
-bool MyShape::isTouching( shapePointer_t otherShape )
+bool MyShape::isTouching(MyShape &otherShape)
 {
-  vecPtr sepVec(this->getVectorToObject(otherShape.get()));
+  vecPtr sepVec(this->getVectorToObject(otherShape));
 
   SGfloat distanceSquared = sgLengthSquaredVec4(sepVec->vec);
   SGfloat distance = sqrt(distanceSquared);
 
-  SGfloat minSep = this->getRadius() + otherShape->getRadius();
+  SGfloat minSep = this->getRadius() + otherShape.getRadius();
 
 
   return (distance < minSep);

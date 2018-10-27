@@ -55,7 +55,7 @@ public:
 
     unique_ptr<VecStruct> getPosNew() const;
 
-	vecPtr getVectorToObject( Moveable * object2);
+	vecPtr getVectorToObject(Moveable &object2);
 
 	/*! \brief Rotate object around a specified axis
 	 *

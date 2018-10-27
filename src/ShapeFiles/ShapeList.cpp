@@ -32,7 +32,7 @@ bool ShapeList::hasConflictsWith( shapePointer_t insertShape )
   for (size_t i = 0; i < shapes.size() && conflict == false; i++)
   {
     object1 = shapes.at(i);
-    conflict = object1->isTouching( insertShape  );
+    conflict = object1->isTouching( *insertShape  );
   }
   return conflict;
 }

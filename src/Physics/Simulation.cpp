@@ -131,13 +131,13 @@ void Simulation::setDT(float newDT) { DT = newDT; }
 
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
-vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float dt )
+vecPtr calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
 {
     vecPtr gravVec = make_unique<VecStruct>();
 
     sgVec4 unitVec{};
 
-    vecPtr sepVec(object1->getVectorToObject(object2.get()));
+    vecPtr sepVec(object1.getVectorToObject(object2));
 
     SGfloat rSquared = sgLengthSquaredVec4(sepVec->vec);
 
@@ -145,7 +145,7 @@ vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float d
         rSquared = .00001;
     }
     float G = 6.67384e-11;
-    float forceMagnitude = (G * object1->getMass() * object2->getMass()) / rSquared;
+    float forceMagnitude = (G * object1.getMass() * object2.getMass()) / rSquared;
 
     sgNormaliseVec4(unitVec, sepVec->vec);
 
@@ -155,38 +155,38 @@ vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float d
     return  gravVec;
 }
 
-void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt) {
+void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
     sgVec4 sepVecUnit;
 
     sgVec4 tempVec, n, vdiff;
 
     SGfloat multiplier;
 
-    vecPtr sepVec(object1->getVectorToObject(object2.get()));
+    vecPtr sepVec(object1.getVectorToObject(object2));
     sgNormaliseVec4(sepVecUnit, sepVec->vec);
 
-    vecPtr aVel(object1->getVelocity());
-    vecPtr bVel(object2->getVelocity());
+    vecPtr aVel(object1.getVelocity());
+    vecPtr bVel(object2.getVelocity());
 
     sgCopyVec4(n, sepVecUnit);
     sgSubVec4(vdiff, aVel->vec, bVel->vec);
 
     float c = sgScalarProductVec4(n, vdiff);
 
-    multiplier = -2 * ( object2->getMass() * c ) / (object2->getMass() + object1->getMass());
+    multiplier = -2 * ( object2.getMass() * c ) / (object2.getMass() + object1.getMass());
     sgScaleVec4(tempVec, n, multiplier);
 
-    object1->adjustVelocity(tempVec);
+    object1.adjustVelocity(tempVec);
 
-    multiplier = 2 * ( object1->getMass() * c ) / (object2->getMass() + object1->getMass());
+    multiplier = 2 * ( object1.getMass() * c ) / (object2.getMass() + object1.getMass());
     sgScaleVec4(tempVec, n, multiplier);
 
-    object2->adjustVelocity(tempVec);
+    object2.adjustVelocity(tempVec);
 
     // TODO Figure out how necessary these lines are.
-    while ( object1->isTouching(object2) ) {
-        object1->update(dt/30);
-        object2->update(dt/30);
+    while ( object1.isTouching(object2) ) {
+        object1.update(dt/30);
+        object2.update(dt/30);
     }
 }
 
@@ -196,7 +196,6 @@ void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt)
 // TODO This should return the deleted list, so that it can coexist with the Octree version
 void Simulation::calcForcesAll_LessNaive()
 {
-    shapePointer_t object1, object2;
     SGfloat distance, minSep;
 
     sgVec4 gravField = {0, 0, 0, 0};
@@ -212,32 +211,32 @@ void Simulation::calcForcesAll_LessNaive()
 
     if (!physicalObjects.empty()) {
         for (size_t i = 0; i < physicalObjects.size()-1; i++) {
-            object1 = physicalObjects.at(i);
+            MyShape & object1 = *physicalObjects.at(i);
 
-            object1->adjustMomentum(gravField);
+            object1.adjustMomentum(gravField);
 
             for (size_t j = i + 1; j < physicalObjects.size(); j++) {
-                object2 = physicalObjects.at(j);
+                MyShape & object2 = *physicalObjects.at(j);
 
 
                 if (this->gravBetweenObjects ) {
                     vecPtr gravVec = calcForceGravNew(object1, object2, DT );
 
-                    object1->adjustMomentum(gravVec->vec);
+                    object1.adjustMomentum(gravVec->vec);
                     sgNegateVec4(gravVec->vec);
-                    object2->adjustMomentum(gravVec->vec);
+                    object2.adjustMomentum(gravVec->vec);
                 }
 
-                distance = object1->getDistanceToObject( object2 );
-                minSep = object1->getRadius() + object2->getRadius();
+                distance = object1.getDistanceToObject( object2 );
+                minSep = object1.getRadius() + object2.getRadius();
 
                 if (distance < minSep) {
                     if (this->collisionType == CollisionType::ELASTIC) {
                         elasticCollision( object1, object2, DT );
                     }
                     else if (this->collisionType == CollisionType::INELASTIC){
-                        object1->mergeWith( *object2 );
-                        deleteList.addShapeToList(object2);
+                        object1.mergeWith( object2 );
+                        deleteList.addShapeToList(physicalObjects.at(j));
                     }
                     else {
                         // TODO throw in some way.
@@ -249,8 +248,8 @@ void Simulation::calcForcesAll_LessNaive()
         }
 
         // Add unary forces to last object
-        object1 = physicalObjects.at(physicalObjects.size()-1);
-        object1->adjustMomentum(gravField);
+        MyShape & object1 = *physicalObjects.at(physicalObjects.size()-1);
+        object1.adjustMomentum(gravField);
 
         for ( const auto & curShape : deleteList.getShapes() ) {
             this->removePhysicalObject(curShape);
@@ -271,11 +270,11 @@ PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &cu
     //b.
     if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant ) {
         //c.
-        if ( curObject->isTouching( shapeInQuadrant ) ) {
+        if ( curObject->isTouching( *shapeInQuadrant ) ) {
             TouchingPair pair(curObject, shapeInQuadrant);
             deleteList.insertIfUnique(pair);
         } else {
-            vecPtr gravVec = calcForceGravNew( curObject, shapeInQuadrant, dt);
+            vecPtr gravVec = calcForceGravNew( *curObject, *shapeInQuadrant, dt);
             curObject->adjustMomentum(gravVec->vec);
         }
     }
@@ -306,12 +305,12 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
     }
     else {
         PairCollection deleteList;
-        SGfloat distance = curObject->getDistanceToObject( curQuadrant );
+        SGfloat distance = curObject->getDistanceToObject( *curQuadrant );
         SGfloat theta = 0.5;
         //2.
         //a.
         if ( curQuadrant->getWidth() / distance < theta ) {
-            vecPtr gravVec = calcForceGravNew( curObject, curQuadrant, dt);
+            vecPtr gravVec = calcForceGravNew( *curObject, *curQuadrant, dt);
             //b.
             curObject->adjustMomentum(gravVec->vec);
         } else { //3.

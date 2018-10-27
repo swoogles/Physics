@@ -16,7 +16,7 @@ using std::size_t;
  *  both objects have their elastic bools on.
  *
  */
-void elasticCollision( shapePointer_t object1, shapePointer_t object2, float dt);
+void elasticCollision(MyShape &object1, MyShape &object2, float dt);
 
 PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
 
@@ -42,7 +42,7 @@ void calcCollisionsAll(SimulationPtr_t curSimulation);
  */
 void calcForceGrav( sgVec4 gravVec, shapePointer_t object1, shapePointer_t object2, float dt ) ;
 
-vecPtr calcForceGravNew( shapePointer_t object1, shapePointer_t object2, float dt ) ;
+vecPtr calcForceGravNew(MyShape &object1, MyShape &object2, float dt) ;
 
 /*! \brief Will eventually calculate drag force on a single object
  */
