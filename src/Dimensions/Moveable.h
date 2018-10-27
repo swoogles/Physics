@@ -65,7 +65,7 @@ public:
 	 */
 	void adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis);
 
-	shared_ptr<MatrixStruct> getOrientationMat() const;
+	unique_ptr<MatrixStruct> getOrientationMat() const;
 
 
 	//! Alters momentum of object by <dVel> * mass

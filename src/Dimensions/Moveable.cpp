@@ -43,8 +43,8 @@ vecPtr Moveable::getVectorToObject( Moveable * object2) {
 	return vec;
 }
 
-shared_ptr<MatrixStruct> Moveable::getOrientationMat() const {
-	shared_ptr<MatrixStruct> matrixStruct = make_shared<MatrixStruct>();
+unique_ptr<MatrixStruct> Moveable::getOrientationMat() const {
+	unique_ptr<MatrixStruct> matrixStruct = make_unique<MatrixStruct>();
 
 	sgCopyMat4(matrixStruct->orientationMat, orientationMat);
 	return matrixStruct;
