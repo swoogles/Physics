@@ -53,7 +53,7 @@ class MyShape : public Moveable {
     void getMomentum(sgVec4 retVec);
 
     //! Returns momentum of object in retVec
-    VecStruct * getMomentum();
+    unique_ptr<VecStruct> getMomentum();
 
     /*! \brief Calculates the moment of inertia for the object
      *

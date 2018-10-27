@@ -53,12 +53,11 @@ void MyShape::getMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, momentum);
 }
 
-VecStruct * MyShape::getMomentum() {
-    VecStruct * vecStruct = new VecStruct();
+unique_ptr<VecStruct> MyShape::getMomentum() {
+    unique_ptr<VecStruct> vecStruct = make_unique<VecStruct>();
     sgCopyVec4(vecStruct->vec, momentum);
     return vecStruct;
 }
-
 
 // Angular Momentum and Velocity
 float MyShape::getMomentOfInertia() { return 1;}
