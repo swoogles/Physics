@@ -24,6 +24,6 @@ TouchingPair::TouchingPair(const shared_ptr<MyShape> aIn, const shared_ptr<MySha
 
 shapePointer_t TouchingPair::merge() {
     // Simpler when merge returns A's pointer directly.
-    a->mergeWith(b);
+    a->mergeWith(*b);
     return a;
 }

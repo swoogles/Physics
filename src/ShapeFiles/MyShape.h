@@ -127,7 +127,7 @@ class MyShape : public Moveable {
      *
      *  Note: This function does NOT delete the second object, currently that must be handled outside
      */
-    void mergeWith( shapePointer_t otherShape );
+    void mergeWith(MyShape &otherShape);
 
     /*! \relates MyShape
      *  \brief Determines the final angular momentum after 2 objects collide in a completely inelastic collision
@@ -145,7 +145,7 @@ class MyShape : public Moveable {
      *
      *	\return The angular momentum to be assigned to the merged object
      */
-    void calcMergedAngMomentum( shapePointer_t otherShape, sgVec4 totalAngMom );
+    void calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom);
 
     /*! \relates Circle
      *  \brief Finds radius after 2 circular objects are merged
@@ -156,7 +156,6 @@ class MyShape : public Moveable {
 };
 
 typedef shared_ptr<MyShape> shapePointer_t;
-typedef weak_ptr<MyShape> weakShapePointer_t;
 typedef typename std::vector<shapePointer_t> vectorT;
 
 #endif /* MYSHAPE_H_ */

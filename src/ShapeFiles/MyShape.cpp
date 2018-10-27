@@ -143,10 +143,10 @@ bool MyShape::isTouching( shapePointer_t otherShape )
 }
 
 // TODO Don't implement this at MyShape. It should have separate implementations for Circles and Boxes (If boxes even need it)
-void MyShape::mergeWith( shapePointer_t otherShape )
+void MyShape::mergeWith(MyShape &otherShape)
 {
     cout << "MERGING" << endl;
-  float newMass = this->getMass() + otherShape->getMass();
+  float newMass = this->getMass() + otherShape.getMass();
   float density = this->getDensity();
 
   float newRadius = calcMergedRadius( newMass, density );
@@ -157,17 +157,17 @@ void MyShape::mergeWith( shapePointer_t otherShape )
 
   // COM start
   vecPtr tempVec(this->getPosNew());
-  vecPtr tempVec2(otherShape->getPosNew());
+  vecPtr tempVec2(otherShape.getPosNew());
   sgVec4 COM;
 
   sgScaleVec4(tempVec->vec, this->getMass());
-  sgScaleVec4(tempVec2->vec, otherShape->getMass());
+  sgScaleVec4(tempVec2->vec, otherShape.getMass());
 
   sgAddVec4(COM,tempVec->vec, tempVec2->vec);
-  sgScaleVec4(COM, 1/(this->getMass() + otherShape->getMass()) );
+  sgScaleVec4(COM, 1/(this->getMass() + otherShape.getMass()) );
   // COM end
 
-  vecPtr otherShapeMomentum(otherShape->getMomentum());
+  vecPtr otherShapeMomentum(otherShape.getMomentum());
 
   this->setMass(newMass);
   this->setRadius(newRadius);
@@ -182,14 +182,14 @@ void MyShape::mergeWith( shapePointer_t otherShape )
 }
 
 // TODO This should return totalAngMom, instead of mutating parameter.
-void MyShape::calcMergedAngMomentum( shapePointer_t otherShape, sgVec4 totalAngMom )
+void MyShape::calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom)
 {
   sgVec4 sepVecUnit;
 
   vecPtr aPos(this->getPosNew());
-  vecPtr bPos(otherShape->getPosNew());
+  vecPtr bPos(otherShape.getPosNew());
   vecPtr aMomentum(this->getMomentum());
-  vecPtr bMomentum(otherShape->getMomentum());
+  vecPtr bMomentum(otherShape.getMomentum());
   sgVec4 tempVec;
   sgVec4 hitPt;
 
@@ -221,7 +221,7 @@ void MyShape::calcMergedAngMomentum( shapePointer_t otherShape, sgVec4 totalAngM
   this->getAngMomentum(tempVec);
   sgAddVec4(totalAngMom, tempVec);
 
-  otherShape->getAngMomentum(tempVec);
+  otherShape.getAngMomentum(tempVec);
   sgAddVec4(totalAngMom, tempVec);
 }
 

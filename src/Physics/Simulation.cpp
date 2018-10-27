@@ -236,7 +236,7 @@ void Simulation::calcForcesAll_LessNaive()
                         elasticCollision( object1, object2, DT );
                     }
                     else if (this->collisionType == CollisionType::INELASTIC){
-                        object1->mergeWith( object2 );
+                        object1->mergeWith( *object2 );
                         deleteList.addShapeToList(object2);
                     }
                     else {
