@@ -19,7 +19,8 @@ ShapeList ComplicatedFunctions::nonCollidingObjects(ShapeList allShapes, PairCol
                         brittlePairs.end(),
                         // TODO any way to use method reference here?
                         [circle](const TouchingPair &pair) {
-                            return pair.contains(circle);
+                            MyShape & circleRef = *circle;
+                            return pair.contains(circleRef);
                         });
             });
 

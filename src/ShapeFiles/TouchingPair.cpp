@@ -4,8 +4,10 @@
 
 #include "TouchingPair.h"
 
-bool TouchingPair::contains(shapePointer_t shape) const {
-    return (this->a == shape || this->b == shape);
+bool TouchingPair::contains(MyShape &shape) const {
+    MyShape & aRef = *a;
+    MyShape & bRef = *b;
+    return (&aRef == &shape || &bRef == &shape);
 }
 
 bool TouchingPair::sameItems(const TouchingPair & other)  const {

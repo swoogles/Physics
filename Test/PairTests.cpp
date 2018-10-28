@@ -15,7 +15,7 @@ std::unique_ptr<Circle> pass_through(std::unique_ptr<Circle> p)
     return p;
 }
 
-TEST_CASE( "sameItems tests", "[green]" ) {
+TEST_CASE( "sameItems tests", "[current]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     auto c = TestUtils::testCircle();
@@ -23,11 +23,11 @@ TEST_CASE( "sameItems tests", "[green]" ) {
     TouchingPair pair1(a, b);
 
     SECTION("contains first item") {
-        REQUIRE(pair1.contains(a));
+        REQUIRE(pair1.contains(*a));
     }
 
     SECTION("contains second item") {
-        REQUIRE(pair1.contains(b));
+        REQUIRE(pair1.contains(*b));
     }
 
     SECTION("has same items as itself.") {

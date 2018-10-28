@@ -29,7 +29,7 @@ TEST_CASE( "Construct a list with a single item", "[red]" ) {
     REQUIRE(singleItemList.contains(*a));
 }
 
-TEST_CASE( "hasConflicts with an existing item", "[current]" ) {
+TEST_CASE( "hasConflicts with an existing item", "[green]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     ShapeList singleItemList(a);
