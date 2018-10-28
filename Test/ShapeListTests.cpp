@@ -16,9 +16,9 @@ TEST_CASE( "Ensure that ShapeList.remove invokes destructor", "[current]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     ShapeList shapes(vectorT { a, b});
-    a.reset();
+    REQUIRE(shapes.size() == 2);
     shapes.removeShapeFromList(a);
-    cout << "ending test" << endl;
+    REQUIRE(shapes.size() == 1);
 }
 
 TEST_CASE( "Construct a list with a single item", "[green]" ) {

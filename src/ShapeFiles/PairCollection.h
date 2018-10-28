@@ -14,7 +14,7 @@ public:
     size_t size() const;
     ShapeList survivors();
     ShapeList doomed();
-    ShapeList mergePairs();
+    void mergePairs();
 //    bool any_of( std::function< bool(const TouchingPair &)>& const lambda );
     inline std::vector<TouchingPair> brittlePairs() { return pairs; }
 
