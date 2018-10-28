@@ -12,7 +12,7 @@
 #include "../src/Physics/Simulations.h"
 #include "../src/Physics/Interactions.h"
 
-TEST_CASE( "Remove ref", "[current]" ) {
+TEST_CASE( "Remove ref", "[green]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     ShapeList shapes(vectorT { a, b});
@@ -21,11 +21,19 @@ TEST_CASE( "Remove ref", "[current]" ) {
     REQUIRE(shapes.size() == 1);
 }
 
-TEST_CASE( "Construct a list with a single item", "[green]" ) {
+TEST_CASE( "Construct a list with a single item", "[red]" ) {
     auto a = TestUtils::testCircle();
     ShapeList singleItemList(a);
     REQUIRE(singleItemList.size() == 1);
     REQUIRE(singleItemList.getShapes()[0]->getMass() == 100);
+    REQUIRE(singleItemList.contains(*a));
+}
+
+TEST_CASE( "hasConflicts with an existing item", "[current]" ) {
+    auto a = TestUtils::testCircle();
+    auto b = TestUtils::testCircle();
+    ShapeList singleItemList(a);
+    REQUIRE(singleItemList.hasConflictsWith(*b));
 }
 
 TEST_CASE( "Adding a ShapeList to ShapeList", "[green]" ) {
@@ -43,8 +51,8 @@ TEST_CASE( "Adding a ShapeList to ShapeList", "[green]" ) {
     resultList.addList(cList);
     resultList.addList(dList);
     REQUIRE(resultList.size() == 4);
-    REQUIRE(resultList.contains(a));
-    REQUIRE(resultList.contains(b));
-    REQUIRE(resultList.contains(c));
-    REQUIRE(resultList.contains(d));
+    REQUIRE(resultList.contains(*a));
+    REQUIRE(resultList.contains(*b));
+    REQUIRE(resultList.contains(*c));
+    REQUIRE(resultList.contains(*d));
 }

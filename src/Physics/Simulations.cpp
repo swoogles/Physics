@@ -545,7 +545,7 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, Forc
         );
 
         //Check if being placed on previously created object
-        while ( physicalObjects.hasConflictsWith( curShape ) ) {
+        while ( physicalObjects.hasConflictsWith( *curShape ) ) {
             randomSplitBodyPlacement(startPlacement, pieceRadius, target);
             curShape->setPos( startPlacement );
         }
@@ -607,7 +607,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 
 
 		//Check if being placed on previously created object
-		while ( physicalObjects.hasConflictsWith( curShape ) ) {
+		while ( physicalObjects.hasConflictsWith( *curShape ) ) {
 			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
 			curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		}

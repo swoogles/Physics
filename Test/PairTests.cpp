@@ -103,9 +103,9 @@ TEST_CASE("add collections", "[green]") {
         cout << "2" << endl;
         destination.insertUniqueElements(source);
         cout << "3" << endl;
-        REQUIRE(destination.survivors().contains(a));
-        REQUIRE(destination.doomed().contains(b));
-        REQUIRE(destination.doomed().contains(c));
+        REQUIRE(destination.survivors().contains(*a));
+        REQUIRE(destination.doomed().contains(*b));
+        REQUIRE(destination.doomed().contains(*c));
     }
 }
 

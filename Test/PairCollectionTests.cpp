@@ -55,10 +55,10 @@ TEST_CASE("normalize list of pairs", "[red]") {
         SECTION("provide correct survivors and doomed entries") {
             auto survivors = uniquePairs.survivors();
             REQUIRE(survivors.size() == 1);
-            REQUIRE(survivors.contains(a));
+            REQUIRE(survivors.contains(*a));
             auto doomed = uniquePairs.doomed();
             REQUIRE(doomed.size() == 1);
-            REQUIRE(doomed.contains(b));
+            REQUIRE(doomed.contains(*b));
         }
 
         SECTION("manage the non-colliding objects") {
@@ -66,8 +66,8 @@ TEST_CASE("normalize list of pairs", "[red]") {
             auto nonColliders = ComplicatedFunctions::nonCollidingObjects(originalShapes, uniquePairs);
             // call new function here
             REQUIRE(nonColliders.size() == 2);
-            REQUIRE(nonColliders.contains(c));
-            REQUIRE(nonColliders.contains(d));
+            REQUIRE(nonColliders.contains(*c));
+            REQUIRE(nonColliders.contains(*d));
 
             std::vector<shared_ptr<Circle>> resultCircles(originalCircles.size());
             /*

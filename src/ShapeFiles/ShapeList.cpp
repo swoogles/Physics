@@ -23,7 +23,7 @@ ShapeList::ShapeList(vectorT shapesIn)
     ensureNoNullEntries("ShapeList(vectorT)");
 }
 
-bool ShapeList::hasConflictsWith( shapePointer_t insertShape )
+bool ShapeList::hasConflictsWith(MyShape &insertShape)
 {
   bool conflict = false;
 
@@ -32,7 +32,7 @@ bool ShapeList::hasConflictsWith( shapePointer_t insertShape )
   for (size_t i = 0; i < shapes.size() && conflict == false; i++)
   {
     object1 = shapes.at(i);
-    conflict = object1->isTouching( *insertShape  );
+    conflict = object1->isTouching( insertShape  );
   }
   return conflict;
 }
@@ -82,9 +82,15 @@ void ShapeList::update(const float dt) {
   }
 }
 
-bool ShapeList::contains(shapePointer_t searchShape) {
-  return std::any_of(shapes.begin(), shapes.end(), [searchShape](auto curShape) {
-    return curShape == searchShape;
+// ****THIS IS BROKEN****
+bool ShapeList::contains(MyShape &searchShape) {
+    cout << "searchShape: " << std::addressof(searchShape) << endl;
+  return std::any_of(shapes.begin(), shapes.end(), [searchShape](shapePointer_t curShape) {
+      MyShape & curShapeRef = *curShape;
+      cout << "curShapeRef: " << std::addressof(curShapeRef) << endl;
+      cout << "Comparison: " << (&curShapeRef == &searchShape) << endl;
+      // TODO Figure out why this isn't reporting as equal
+    return std::addressof(curShapeRef) == std::addressof(searchShape);
   });
 }
 

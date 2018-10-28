@@ -4,7 +4,6 @@
 #include "MyShape.h"
 #include <list>
 
-
 using std::size_t;
 
 typedef typename std::vector<shapePointer_t> vectorT;
@@ -18,7 +17,7 @@ class ShapeList {
     ShapeList();
     ShapeList(shapePointer_t initialShape);
     ShapeList(vectorT shapesIn);
-    bool hasConflictsWith( shapePointer_t insertShape );
+    bool hasConflictsWith(MyShape &insertShape);
     size_t addShapeToList(shapePointer_t insertShape);
     size_t addList(ShapeList addList);
 
@@ -27,6 +26,6 @@ class ShapeList {
     vectorT getShapes();
     void update(const float dt);
     inline size_t size() { return shapes.size(); };
-    bool contains(shapePointer_t searchShape);
+    bool contains(MyShape &searchShape);
 };
 #endif
