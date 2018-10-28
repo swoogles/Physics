@@ -12,12 +12,12 @@
 #include "../src/Physics/Simulations.h"
 #include "../src/Physics/Interactions.h"
 
-TEST_CASE( "Ensure that ShapeList.remove invokes destructor", "[current]" ) {
+TEST_CASE( "Remove ref", "[current]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     ShapeList shapes(vectorT { a, b});
     REQUIRE(shapes.size() == 2);
-    shapes.removeShapeFromList(a);
+    shapes.removeShapeFromList(*a);
     REQUIRE(shapes.size() == 1);
 }
 

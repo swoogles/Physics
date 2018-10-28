@@ -114,7 +114,7 @@ void Simulation::update()
 }
 
 void Simulation::removePhysicalObject(shapePointer_t newShape) {
-    physicalObjects.removeShapeFromList(std::move(newShape));
+    physicalObjects.removeShapeFromList(*newShape);
 }
 
 void Simulation::addPhysicalObjectToList(shapePointer_t newShape) { physicalObjects.addShapeToList(std::move(newShape)); }

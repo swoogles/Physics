@@ -62,29 +62,6 @@ size_t ShapeList::addList(ShapeList addList)
     return shapes.size();
 }
 
-int ShapeList::removeShapeFromList( shapePointer_t shapeToRemove )
-{
-  size_t newSize =  shapes.size() - 1;
-  std::list<shapePointer_t> newShapeList;
-
-  for( auto & curShape : shapes) {
-    if ( curShape != shapeToRemove) {
-//      newShapeVector.push_back(std::move(curShape));
-      newShapeList.push_front(curShape);
-    }
-  }
-
-  std::vector<shapePointer_t> newShapeVector{ std::make_move_iterator(std::begin(newShapeList)),
-                    std::make_move_iterator(std::end(newShapeList)) };
-
-  shapes.resize(newSize);
-  shapes = vectorT ( newShapeVector );
-
-    ensureNoNullEntries("removeShapeFromList");
-//    shapes.erase(std::remove(shapes.begin(), shapes.end(), shapeToRemove), shapes.end());
-    return 0;
-}
-
 size_t ShapeList::clearShapes() {
   shapes.clear();
   shapes.resize(0);
@@ -109,4 +86,26 @@ bool ShapeList::contains(shapePointer_t searchShape) {
   return std::any_of(shapes.begin(), shapes.end(), [searchShape](auto curShape) {
     return curShape == searchShape;
   });
+}
+
+int ShapeList::removeShapeFromList(MyShape &shapeToRemove) {
+    size_t newSize =  shapes.size() - 1;
+    std::list<shapePointer_t> newShapeList;
+
+    for( auto & curShape : shapes) {
+        MyShape & curShapeRef = *curShape;
+        if ( &(curShapeRef) != &shapeToRemove) {
+            newShapeList.push_front(curShape);
+        }
+    }
+
+    std::vector<shapePointer_t> newShapeVector{ std::make_move_iterator(std::begin(newShapeList)),
+                                                std::make_move_iterator(std::end(newShapeList)) };
+
+    shapes.resize(newSize);
+    shapes = vectorT ( newShapeVector );
+
+    ensureNoNullEntries("removeShapeFromList");
+//    shapes.erase(std::remove(shapes.begin(), shapes.end(), shapeToRemove), shapes.end());
+    return 0;
 }

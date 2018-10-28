@@ -21,7 +21,8 @@ class ShapeList {
     bool hasConflictsWith( shapePointer_t insertShape );
     size_t addShapeToList(shapePointer_t insertShape);
     size_t addList(ShapeList addList);
-    int removeShapeFromList( shapePointer_t shapeToRemove );
+
+    int removeShapeFromList( MyShape & shapeToRemove );
     size_t clearShapes();
     vectorT getShapes();
     void update(const float dt);
