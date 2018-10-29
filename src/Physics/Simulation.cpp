@@ -315,6 +315,7 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
             curObject->adjustMomentum(gravVec->vec);
         } else { //3.
             QuadrantPointer_t targetQuadrant;
+            // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
             for ( int x = 0; x < 2; x++ ) {
                 for ( int y = 0; y < 2; y++ ) {
                     for ( int z = 0; z < 2; z++ ) {

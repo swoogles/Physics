@@ -11,9 +11,6 @@ Box::Box(sgVec4 pos, float sideLength, sgVec3 color) {
 	sgCopyVec3(this->color, color);
 }
 
-Box::~Box() {
-}
-
 float Box::getScale() {
 	return sideLength;
 }

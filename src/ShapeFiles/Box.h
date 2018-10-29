@@ -9,9 +9,8 @@ private:
 public:
 	Box();
     Box(sgVec4 pos, float sideLength, sgVec3 color);
-	virtual ~Box();
 
-    float getScale();
+	float getScale();
 
     virtual float getWidth();
 

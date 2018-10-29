@@ -15,10 +15,6 @@ Moveable::Moveable()
           ,color{0.5,1.0,0.0}
 {}
 
-Moveable::~Moveable() {
-	//cout << "Killing Moveable" << endl;
-}
-
 void Moveable::setPos(float inX, float inY, float inZ) {
 	pos[0] = inX;
 	pos[1] = inY;

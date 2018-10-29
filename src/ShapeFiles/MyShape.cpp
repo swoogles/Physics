@@ -37,10 +37,6 @@ MyShape::MyShape()
 //   this->setColor( newColor );
 // }
 
-MyShape::~MyShape() {
-	//cout << "Killing MyShape" << endl;
-}
-
 float MyShape::getScale(){}
 
 void MyShape::adjustMomentum(const sgVec4 dMomentum) {

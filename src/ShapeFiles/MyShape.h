@@ -37,8 +37,6 @@ class MyShape : public Moveable {
     MyShape();
     // MyShape( const MyShape& );
 
-    virtual ~MyShape();
-
     virtual float getScale();
 
     //! Purely virtual method used by Circle
