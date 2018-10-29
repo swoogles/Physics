@@ -18,30 +18,6 @@ using std::size_t;
  */
 void elasticCollision(MyShape &object1, MyShape &object2, float dt);
 
-PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
-
-void calcForcesAll( SimulationPtr_t curSimulation );
-
-/*! \brief Calculates forces on all current objects
- *
- *  Loops through the shapes vector, calculating all currently active forces on and between each object. Can include drag, a constant gravity field,  and
- *  gravity between objects.
- *
- *  \param dt Determines time over which each force acts
- */
-void calcForcesAll_LessNaive( SimulationPtr_t curSimulation );
-
-/*! \brief Determines if any objects are colliding and responds appropriately.
- *
- *  The action taken when collisions are detected depends on the values active in WorldSettings. Can be elastic, inelastic, or anywhere in between(TODO)
- */
-void calcCollisionsAll(SimulationPtr_t curSimulation);
-
-/*! \brief Calculates magnitude of the force of gravity between 2 objects
- *
- */
-void calcForceGrav( sgVec4 gravVec, shapePointer_t object1, shapePointer_t object2, float dt ) ;
-
 vecPtr calcForceGravNew(MyShape &object1, MyShape &object2, float dt) ;
 
 /*! \brief Will eventually calculate drag force on a single object
