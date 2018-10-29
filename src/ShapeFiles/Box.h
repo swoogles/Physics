@@ -13,7 +13,7 @@ public:
 
     float getScale();
 
-	float getWidth();
+    virtual float getWidth();
 
 	ShapeType getType();
 };
