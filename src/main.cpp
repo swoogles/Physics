@@ -105,14 +105,11 @@ void init(char simulation) {
 
   PhysicsSandboxProperties properties(billProperties);
 
-  globalSimulation = std::move(Simulations::createSimulation( simulation, properties.numShapes, properties.forceCalculationMethod));
-  // TODO How about just use simulationPtr here?
-  shapes = globalSimulation->getPhysicalObjects();
+  globalSimulation = Simulations::createSimulation( simulation, properties.numShapes, properties.forceCalculationMethod);
 }
 
 void idle() {
   globalSimulation->setDT(globalControlCenter.getDt());
-
 
   if (! globalControlCenter.isPaused() ) {
     globalSimulation->update();
