@@ -46,6 +46,7 @@ class Quadrant : public Box
     QuadrantPointer_t determineShapeQuadrant( shape_pointer shapeToInsert );
     ShapeList shapes;
 
+    bool shapeIsInQuadrantBoundaries(shapePointer_t newShape);
   public:
     Quadrant(int level, unique_ptr<VecStruct> pos, unique_ptr<VecStruct> dimensions);
     ~Quadrant();

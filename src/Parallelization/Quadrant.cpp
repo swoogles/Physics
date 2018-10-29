@@ -116,10 +116,20 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 
 void Quadrant::insertShape(shapePointer_t insertedShape)
 {
+  // TODO use new function here
+  if (!shapeIsInQuadrantBoundaries(insertedShape)) {
+    cout << "Shape has strayed too far and cannot be placed inside this Quadrant! \n Unpredictable results ahead!" << endl;
+    return;
+  }
+
+  if (insertedShape.use_count() > 58000) {
+    cout << "Unplaceable shape : " << insertedShape.get() << ". I'm going to recurse myself to death now." << endl;
+  }
   // 1.
   if ( !containsBody )
   {
     shapeInQuadrant = insertedShape;
+//    cout << "insertShape.1 use_count: " << insertedShape.use_count() << endl;
     containsBody = true;
     this->setMass( insertedShape->getMass() );
     vecPtr pos(insertedShape->getPosNew());
@@ -174,6 +184,8 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
       // 3.c
       targetQuadrant->insertShape( insertedShape );
       targetQuadrantB->insertShape( shapeInQuadrant );
+//      cout << "insertShape.3c insertedShape use_count: " << insertedShape.use_count() << endl;
+//      cout << "insertShape.3c shapeInQuadrant use_count: " << shapeInQuadrant.use_count() << endl;
     }
     shapeInQuadrant.reset();
   }
@@ -191,7 +203,6 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 {
   vecPtr insertPos(shapeToInsert->getPosNew());
 
-//  sgVec4 newPos;
   vecPtr newPos = make_unique<VecStruct>();
   vecPtr newDimensions = make_unique<VecStruct>();
   sgVec4 offsets;
@@ -202,13 +213,6 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
   sgScaleVec3( offsets, dimensions, .25 );
 
-  // Boundaries [0]=min : [1]=central : [2]=max
-  sgVec3 maxBoundaries;
-  sgAddVec3( maxBoundaries, pos, newDimensions->vec );
-
-  sgVec3 minBoundaries;
-  sgSubVec3( minBoundaries, pos, newDimensions->vec );
-
   sgCopyVec3( newPos->vec, pos );
 
   targets[0] = INVALID_OCTREE_INDEX;
@@ -217,7 +221,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
   // TODO make one function that will take 2 vectors and return
   // true if one falls completely within the bounds of another
-  bool validInsertPosition = withinBoundaries( insertPos->vec, minBoundaries, maxBoundaries );
+  bool validInsertPosition = shapeIsInQuadrantBoundaries(shapeToInsert);
 
   if ( validInsertPosition )
   {
@@ -234,6 +238,8 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
         newPos->vec[i] += offsets[i];
       }
     }
+  } else {
+      cout << "NOT A GOOD INSERTION POINT. ABOUT TO DIE" << endl;
   }
 
   QuadrantPointer_t insertionQuadrant;
@@ -249,11 +255,36 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
     if ( insertionQuadrant == nullptr )
     {
+      cout << "Quadrant level: " << level << endl;
       insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, std::move(newPos), std::move(newDimensions) ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }
 
   return insertionQuadrant;
+}
+
+bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
+   vecPtr insertPos(newShape->getPosNew());
+
+//  sgVec4 newPos;
+  vecPtr newPos = make_unique<VecStruct>();
+  vecPtr newDimensions = make_unique<VecStruct>();
+
+  // Each dimension is cut in half as you go down
+  sgScaleVec4 ( newDimensions->vec, dimensions, .5 );
+
+  // Boundaries [0]=min : [1]=central : [2]=max
+  sgVec3 maxBoundaries;
+  sgAddVec3( maxBoundaries, pos, newDimensions->vec );
+
+  sgVec3 minBoundaries;
+  sgSubVec3( minBoundaries, pos, newDimensions->vec );
+
+  sgCopyVec3( newPos->vec, pos );
+
+  // TODO make one function that will take 2 vectors and return
+  // true if one falls completely within the bounds of another
+  return withinBoundaries( insertPos->vec, minBoundaries, maxBoundaries );
 }
 
