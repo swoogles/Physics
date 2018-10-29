@@ -1,19 +1,20 @@
 #include "Quadrant.h"
 
-typedef shared_ptr<Quadrant> QuadrantPointer_t;
-
 bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundaries )
 {
-
   bool withinBoundaries = true;
-  // X coordinate checking
-  for ( int i = 0; i < 3 && withinBoundaries == true; i++ )
+  for ( int i = 0; i < 3 && withinBoundaries; i++ )
   {
-    if ( 
-        (insertPos[i] < minBoundaries[i] ) && 
+    if (
+            /* THIS WAS IT!!! THIS WAS WHAT KILLED ME!!
+                I had an AND here instead of an OR, so this check was only working if the shape
+                happened to go out of bounds in all dimensions at the same time (basically never)
+                Otherwise, it would recurse itself to death by continuing to create Quadrants that
+                would NEVER contain the shape.
+                */
+        (insertPos[i] < minBoundaries[i] ) ||
         ( insertPos[i] > maxBoundaries[i] ) 
-      )
-    {
+      ) {
       withinBoundaries = false;
     }
   }
@@ -23,15 +24,6 @@ bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundar
 shapePointer_t Quadrant::getShapeInQuadrant()
 {
   return shapeInQuadrant;
-}
-
-Quadrant::~Quadrant()
-{
-    // TODO Make sure I have a working implementation here.
-    // TODO maybe a leak now that I've pulled this out?
-    shapeInQuadrant.reset();
-//  shapes.removeShapeFromList(borders);
-//  shapes.removeShapeFromList(centerOfMassRepresentation);
 }
 
 
@@ -118,13 +110,9 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
 {
   // TODO use new function here
   if (!shapeIsInQuadrantBoundaries(insertedShape)) {
-    cout << "Shape has strayed too far and cannot be placed inside this Quadrant! \n Unpredictable results ahead!" << endl;
     return;
   }
 
-  if (insertedShape.use_count() > 58000) {
-    cout << "Unplaceable shape : " << insertedShape.get() << ". I'm going to recurse myself to death now." << endl;
-  }
   // 1.
   if ( !containsBody )
   {
@@ -184,10 +172,7 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
       // 3.c
       targetQuadrant->insertShape( insertedShape );
       targetQuadrantB->insertShape( shapeInQuadrant );
-//      cout << "insertShape.3c insertedShape use_count: " << insertedShape.use_count() << endl;
-//      cout << "insertShape.3c shapeInQuadrant use_count: " << shapeInQuadrant.use_count() << endl;
     }
-    shapeInQuadrant.reset();
   }
 
   // 3.d
@@ -223,6 +208,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
   // true if one falls completely within the bounds of another
   bool validInsertPosition = shapeIsInQuadrantBoundaries(shapeToInsert);
 
+
   if ( validInsertPosition )
   {
     for ( int i = 0; i < 3; i++ )
@@ -238,8 +224,6 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
         newPos->vec[i] += offsets[i];
       }
     }
-  } else {
-      cout << "NOT A GOOD INSERTION POINT. ABOUT TO DIE" << endl;
   }
 
   QuadrantPointer_t insertionQuadrant;

@@ -44,13 +44,17 @@ class Quadrant : public Box
     array_typeNew  quadOctree;
 
     QuadrantPointer_t determineShapeQuadrant( shape_pointer shapeToInsert );
-    ShapeList shapes;
+
+    void getCenterOfMass(sgVec4 centerOfMass);
+    void setCenterOfMass( sgVec4 centerOfMass );
+
+    void getWeightedPosition(sgVec4 weightedPosition);
+    void setWeightedPosition(sgVec4 weightedPosition);
 
     bool shapeIsInQuadrantBoundaries(shapePointer_t newShape);
+
   public:
     Quadrant(int level, unique_ptr<VecStruct> pos, unique_ptr<VecStruct> dimensions);
-    ~Quadrant();
-    QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 
     void insertShape(shapePointer_t newShape);
 
@@ -60,12 +64,7 @@ class Quadrant : public Box
 
     shapePointer_t getShapeInQuadrant();
 
-    void getWeightedPosition(sgVec4 weightedPosition);
-    void setWeightedPosition(sgVec4 weightedPosition);
-
-    void getCenterOfMass(sgVec4 centerOfMass);
-    void setCenterOfMass( sgVec4 centerOfMass );
-
+    QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 };
 typedef shared_ptr<Quadrant> QuadrantPointer_t;
 #endif
