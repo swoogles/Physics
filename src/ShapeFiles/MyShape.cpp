@@ -43,10 +43,6 @@ void MyShape::adjustMomentum(const sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
 }
 
-void MyShape::getMomentum(sgVec4 retVec) {
-	sgCopyVec4(retVec, momentum);
-}
-
 unique_ptr<VecStruct> MyShape::getMomentum() {
     unique_ptr<VecStruct> vecStruct = make_unique<VecStruct>();
     sgCopyVec4(vecStruct->vec, momentum);
@@ -64,15 +60,6 @@ void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
 	sgScaleVec4(angVelocity, 1.0/I);
 }
 
-void MyShape::adjustAngMomentum(const sgVec4 dAngMomentum) {
-	//TODO generalize for other shapes
-	float I = getMomentOfInertia();
-
-	sgAddVec4(angMomentum, dAngMomentum);
-	sgCopyVec4(angVelocity, angMomentum);
-	sgScaleVec4(angVelocity, 1.0/I);
-}
-
 void MyShape::getAngMomentum(sgVec4 retVec) {
 	sgCopyVec4(retVec, angMomentum);
 }
@@ -81,20 +68,12 @@ void MyShape::setMass(float newMass) {
 	mass = newMass;
 }
 
-void MyShape::adjustMass(float dMass) {
-	mass += dMass;
-}
-
 float MyShape::getMass() {
 	return mass;
 }
 
 float MyShape::getDensity() {
 	return density;
-}
-
-void MyShape::getColor(sgVec3 retVec) const{
-	sgCopyVec3(retVec, color);
 }
 
 unique_ptr<VecStruct> MyShape::getColor() const {

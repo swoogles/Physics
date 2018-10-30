@@ -45,6 +45,9 @@ class Quadrant : public Box
 
     QuadrantPointer_t determineShapeQuadrant( shape_pointer shapeToInsert );
 
+    //! Alters mass of object by dMass
+    void adjustMass(float dMass);
+
     void getCenterOfMass(sgVec4 centerOfMass);
     void setCenterOfMass( sgVec4 centerOfMass );
 
@@ -65,6 +68,7 @@ class Quadrant : public Box
     shapePointer_t getShapeInQuadrant();
 
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
+
 };
 typedef shared_ptr<Quadrant> QuadrantPointer_t;
 #endif

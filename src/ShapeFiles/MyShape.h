@@ -30,12 +30,36 @@ using std::shared_ptr;
  *  \n \n Currently Circles are the only objects that have been really developed, as they are the easiest starting point physically
  */
 class MyShape : public Moveable {
+private:
+    /*! \relates MyShape
+     *  \brief Determines the final angular momentum after 2 objects collide in a completely inelastic collision
+     *
+     *  The final angular momentum is determined with the following formula:
+     *  \n v1i = the initial velocity of object 1
+     *  \n v2i = the initial velocity of object 2
+     *	\n m1 = the mass of object 1
+     *	\n m2 = the mass of object 2
+     *	\n e = the coefficient of restitution (e = 1 for elastic collision)
+     *	\n n = normal unit vector drawn from object 1 to object 2
+     *	\n c = n . (v1i - v2i)
+     *	\n v1f = v1i - ((m2c)/(m1 + m2))(1 + e)n
+     *	\n v2f = v2i + ((m1c)/(m1 + m2))(1 + e)n
+     *
+     *	\return The angular momentum to be assigned to the merged object
+     */
+    void calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom);
+
+
+    /*! \relates Circle
+     *  \brief Finds radius after 2 circular objects are merged
+     *
+     */
+    float calcMergedRadius(float massBoth, float density);
 
   public:
     /*! \brief Sets default values of members common to all shapes
     */
     MyShape();
-    // MyShape( const MyShape& );
 
     virtual float getScale();
 
@@ -46,9 +70,6 @@ class MyShape : public Moveable {
 
     //! Alters momentum by <dMomentum>
     void adjustMomentum(const sgVec4 dMomentum);
-
-    //! Returns momentum of object in retVec
-    void getMomentum(sgVec4 retVec);
 
     //! Returns momentum of object in retVec
     unique_ptr<VecStruct> getMomentum();
@@ -62,23 +83,19 @@ class MyShape : public Moveable {
 
     //! Sets angular momentum of object to <newAngMomentum>
     void setAngMomentum(sgVec4 newAngMomentum);
-    //! Alters angular momentum of object by <dAngMomentum>
-    void adjustAngMomentum(const sgVec4 dAngMomentum);
+
     //! Returns angular momentum of object in retVec
     void getAngMomentum(sgVec4 retVec);
 
     //! Sets mass of object to newMass
     void setMass(float newMass);
-    //! Alters mass of object by dMass
-    void adjustMass(float dMass);
+
     //! Returns mass of object
     float getMass();
 
     //! Returns density of object
     float getDensity();
 
-    //! Returns color of object in retVec
-    void getColor(sgVec3 retVec) const;
     unique_ptr<VecStruct> getColor() const;
 
     /*!
@@ -98,14 +115,6 @@ class MyShape : public Moveable {
      *  \n Rest to be determined
      */
     virtual ShapeType getType();
-
-    /*! \brief Vector that holds all currently active shapes
-     *
-     *  One of the biggest decisions still to be made is how/if to alter this to make it less scary
-     */
-    // static vector<MyShape *> shapes;
-    //PHYS-7
-    typedef shared_ptr<MyShape> shapePointer_t;
 
     /*!
       * Simple method for getting distance between 2 objects
@@ -127,33 +136,9 @@ class MyShape : public Moveable {
      */
     void mergeWith(MyShape &otherShape);
 
-    /*! \relates MyShape
-     *  \brief Determines the final angular momentum after 2 objects collide in a completely inelastic collision
-     *
-     *  The final angular momentum is determined with the following formula:
-     *  \n v1i = the initial velocity of object 1
-     *  \n v2i = the initial velocity of object 2
-     *	\n m1 = the mass of object 1
-     *	\n m2 = the mass of object 2
-     *	\n e = the coefficient of restitution (e = 1 for elastic collision)
-     *	\n n = normal unit vector drawn from object 1 to object 2
-     *	\n c = n . (v1i - v2i)
-     *	\n v1f = v1i - ((m2c)/(m1 + m2))(1 + e)n
-     *	\n v2f = v2i + ((m1c)/(m1 + m2))(1 + e)n
-     *
-     *	\return The angular momentum to be assigned to the merged object
-     */
-    void calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom);
-
-    /*! \relates Circle
-     *  \brief Finds radius after 2 circular objects are merged
-     *
-     */
-    float calcMergedRadius(float massBoth, float density);
-
 };
 
 typedef shared_ptr<MyShape> shapePointer_t;
 typedef typename std::vector<shapePointer_t> vectorT;
 
-#endif /* MYSHAPE_H_ */
+#endif

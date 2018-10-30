@@ -1,3 +1,4 @@
+#include "MyShape.h"
 #include "Quadrant.h"
 
 bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundaries )
@@ -117,7 +118,6 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
   if ( !containsBody )
   {
     shapeInQuadrant = insertedShape;
-//    cout << "insertShape.1 use_count: " << insertedShape.use_count() << endl;
     containsBody = true;
     this->setMass( insertedShape->getMass() );
     vecPtr pos(insertedShape->getPosNew());
@@ -239,7 +239,6 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
     if ( insertionQuadrant == nullptr )
     {
-      cout << "Quadrant level: " << level << endl;
       insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, std::move(newPos), std::move(newDimensions) ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
@@ -272,3 +271,6 @@ bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
   return withinBoundaries( insertPos->vec, minBoundaries, maxBoundaries );
 }
 
+void Quadrant::adjustMass(float dMass) {
+	mass += dMass;
+}
