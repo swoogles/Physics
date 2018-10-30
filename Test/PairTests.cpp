@@ -15,7 +15,7 @@ std::unique_ptr<Circle> pass_through(std::unique_ptr<Circle> p)
     return p;
 }
 
-TEST_CASE( "sameItems tests", "[current]" ) {
+TEST_CASE( "sameItems tests", "[green]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     auto c = TestUtils::testCircle();
