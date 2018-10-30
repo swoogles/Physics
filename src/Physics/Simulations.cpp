@@ -278,8 +278,6 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom(ForceCalculationMethod 
 	float pieceMass = pow(pieceRadius, 3.0);
   pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
 
-  float totalMass = 0.0;
-
   shapePointer_t curShape;
 
   float offset = 8e4;
@@ -311,7 +309,6 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom(ForceCalculationMethod 
     );
 
   physicalObjects.addShapeToList( curShape );
-  totalMass += curShape->getMass();
 
   startPlacement[0]= -offset;
 
@@ -518,13 +515,9 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, Forc
 
     const float pieceMass = pow(pieceRadius, 3.0) * (4.0/3.0) * M_PI * (objectDensity);
 
-    float totalMass = 0.0;
-
     srand ( time(NULL) );
 
     for (int i = 0; i < numPieces; i++) {
-        shapePointer_t curShape;
-
         if (i % 2 == 0) {
             startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
             randomSplitBodyMomentum(startMomentum, pieceMass);
@@ -535,7 +528,7 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, Forc
             sgNegateVec4(startPlacement);
         }
 
-        curShape = make_shared<Circle>(
+        const shapePointer_t curShape = make_shared<Circle>(
                 startPlacement,
                 pieceMass,
                 pieceRadius,
@@ -551,7 +544,6 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, Forc
         }
         physicalObjects.addShapeToList( curShape );
 
-        totalMass += curShape->getMass();
     }
 
     SimulationPointer_t curSimulation = make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
@@ -570,8 +562,6 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 
 	float pieceMass = pow(pieceRadius, 3.0);
 	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
-
-	float totalMass = 0.0;
 
 	srand ( time(NULL) );
 
@@ -612,7 +602,6 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 			curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		}
     physicalObjects.addShapeToList( curShape );
-		totalMass += pieceMass;
 	}
 
     SimulationPointer_t curSimulation = make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
