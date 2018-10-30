@@ -42,6 +42,13 @@ protected:
 
 	sgVec3 color;
 
+	/*! \brief Calculates the moment of inertia for the object
+	 *
+	 *  Calculation varies for different types of object
+	 *  \return Moment of Inertia value
+	 */
+	virtual float getMomentOfInertia();
+
 public:
 	/*! \brief Sets default values of members common to all shapes
 	 */
@@ -62,7 +69,7 @@ public:
 	 *  \param dAngle Amount to be rotated
 	 *  \param rotAxis Axis to rotate around
 	 */
-	void adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis);
+	void adjustAngle(SGfloat dAngle, const sgVec3 rotAxis);
 
 	unique_ptr<MatrixStruct> getOrientationMat() const;
 
@@ -71,13 +78,6 @@ public:
 	void adjustVelocity(const sgVec4 dVel);
 
 	vecPtr getVelocity() const;
-
-	/*! \brief Calculates the moment of inertia for the object
-	 *
-	 *  Calculation varies for different types of object
-	 *  \return Moment of Inertia value
-	 */
-	virtual float getMomentOfInertia();
 
 	//! Sets angular velocity of object to <newAngVelocity>
 	void setAngVelocity(const sgVec4 newAngVelocity);
