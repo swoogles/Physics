@@ -62,9 +62,6 @@ void display()
   Observer * curObserver = Observer::getCurObserver();
   curObserver->getView();
 
-  float curColor[] = { 1.0, 0.0, 0.0 };
-  glColor3fv(curColor);
-
   glMatrixMode(GL_MODELVIEW);
   Drawing::drawShapes(shapes.getShapes());
 

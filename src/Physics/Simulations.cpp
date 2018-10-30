@@ -412,7 +412,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
 
     float pieceMass = 1.0e10;
     shapePointer_t curShape;
-    float d= 1.8e3;
+    float d= pieceRadius * 20;
 
     //#1
     sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
@@ -442,7 +442,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 50, true, forceCalculationMethod);
 }
 
 Simulation Simulations::QuadrantTesting_simplest_move(ForceCalculationMethod forceCalculationMethod)

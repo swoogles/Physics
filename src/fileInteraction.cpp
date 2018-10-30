@@ -24,16 +24,16 @@ void saveShapes(char * fileName, vectorT shapes) {
 
 		myfile << curShape->getMass() << endl;
 
-		curShape->getMomentum(curField);
-		vecFilePrint(myfile, curField);
+		auto momentum = curShape->getMomentum();
+		vecFilePrint(myfile, (*momentum).vec);
 
 		curShape->getAngMomentum(curField);
 		vecFilePrint(myfile, curField);
 
 		myfile << curShape->getDensity() << endl;
 
-		curShape->getColor(curField);
-		vecFilePrint(myfile, curField);
+		auto color = curShape->getColor();
+		vecFilePrint(myfile, (*color).vec);
 
 	}
 	myfile.close();
