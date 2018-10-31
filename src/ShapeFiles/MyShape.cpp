@@ -144,6 +144,12 @@ void MyShape::mergeWith(MyShape &otherShape)
 
   this->setMass(newMass);
   this->setRadius(newRadius);
+
+  // TODO Verify this stuff
+  otherShape.setMass(0);
+  otherShape.setRadius(0);
+  // TODO /Verify this stuff
+
   this->adjustMomentum( otherShapeMomentum->vec );
 
   this->setAngMomentum(totalAngMom);

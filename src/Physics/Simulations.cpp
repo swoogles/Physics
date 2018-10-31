@@ -438,6 +438,18 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
+    sgVec4 object3Placement = {  (float) -(1/8.0 * d), (float) -(5/8.0 * d), 1, 1};
+
+    physicalObjects.addShapeToList(
+            make_shared<Circle>(
+                    object3Placement,
+                    pieceMass,
+                    startMomentum,
+                    objectDensity,
+                    newColor
+            )
+    );
+
     return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 50000, true, forceCalculationMethod);
 }
 
@@ -644,7 +656,7 @@ void Simulations::randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, s
 
   for (int i = 0; i < 3; i++)
   {
-    randMult = rand()%500;
+    randMult = rand()%100;
     if (randMult % 2 == 0) {
       randMult *= -1;
     }
