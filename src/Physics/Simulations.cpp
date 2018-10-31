@@ -225,7 +225,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
 
 SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod)
 {
-    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, forceCalculationMethod);
+    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, forceCalculationMethod, 0);
 
     int numPieces = 1;
     float objectDensity = DENSITY_SUN;
@@ -488,7 +488,8 @@ Simulation Simulations::QuadrantTesting_simplest_move(ForceCalculationMethod for
     return Simulation(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
 }
 
-SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod)
+SimulationPointer_t
+Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod, float dt)
 {
     ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
@@ -530,7 +531,7 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, Forc
         physicalObjects.addShapeToList( curShape );
     }
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, dt, true, forceCalculationMethod);
 }
 
 SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, float *target, float *groupMomentum,
@@ -590,13 +591,14 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
     return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
 }
 
-SimulationPointer_t Simulations::createSimulation( char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod)
+SimulationPointer_t
+Simulations::createSimulation(char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod, float dt)
 {
 	//******CURRENT SIMULATION*****
   if ( simNumber == '0' ) {
 	  return Simulations::bodyFormation_NonRandom(forceCalculationMethod);
   } else if ( simNumber == '1' ) {
-    return Simulations::bodyFormation_ArbitraryList(numShapes, forceCalculationMethod);
+    return Simulations::bodyFormation_ArbitraryList(numShapes, forceCalculationMethod, dt);
   } else if ( simNumber == '2' ) {
 	  return Simulations::disruption_ArbitraryList(forceCalculationMethod);
   } else if ( simNumber == '3' ) {

@@ -18,7 +18,7 @@ TEST_CASE( "confirm size of Circle", "[green]" ) {
 }
 
 
-TEST_CASE( "merge Circles", "[current]" ) {
+TEST_CASE( "merge Circles", "[green]" ) {
     auto a = TestUtils::improvedTestCircle();
     auto b = TestUtils::improvedTestCircle();
     cout << "Radius of a: " << a->getRadius() << endl;

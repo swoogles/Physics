@@ -118,7 +118,7 @@ class Simulations
     static Simulation QuadrantTesting_simplest_move(ForceCalculationMethod forceCalculationMethod);
 
     static SimulationPointer_t
-    bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod);
+    bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod, float dt);
 
     static SimulationPointer_t bodyFormationGeneric_ArbitraryList(int numPieces, float *target, float *groupMomentum,
                                                                       ForceCalculationMethod forceCalculationMethod);
@@ -129,7 +129,8 @@ class Simulations
 
     static SimulationPointer_t billiards3_ArbitraryList(int, ForceCalculationMethod forceCalculationMethod);
 
-    static SimulationPointer_t createSimulation( char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod );
+    static SimulationPointer_t
+    createSimulation(char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod, float dt);
 };
 
 
