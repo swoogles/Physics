@@ -198,11 +198,9 @@ void MyShape::calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom)
   sgAddVec4(totalAngMom, tempVec);
 }
 
+// This was t-totally fucked before
 float MyShape::calcMergedRadius(float massBoth, float density) {
-  float radius = massBoth/density;
-  radius /= (4/3.0);
-  radius = pow(radius, 1.0/3);
-  return radius;
+    return sqrt(((3*massBoth) / 4 * M_PI ) / density);
 }
 
 void MyShape::setRadius(float) {}

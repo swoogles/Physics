@@ -402,17 +402,15 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
 {
     ShapeList physicalObjects;
 
-    int numPieces=5;
+    int numPieces=2;
     float objectDensity = DENSITY_SUN;
-    float bodyVolume = (MASS_SUN)/(objectDensity);
-    float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+    float pieceMass = (MASS_SUN)/(numPieces);
     sgVec4 startMomentum = { 0, 0, 0 };
 
     sgVec3 newColor = { 1, 1, 1 };
 
-    float pieceMass = 1.0e10;
     shapePointer_t curShape;
-    float d= pieceRadius * 20;
+    float d= 1e5;
 
     //#1
     sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
@@ -421,7 +419,6 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             make_shared<Circle>(
                     object1Placement,
                     pieceMass,
-                    pieceRadius,
                     startMomentum,
                     objectDensity,
                     newColor
@@ -429,13 +426,12 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             );
 
     //#2
-    sgVec4 object2Placement = {  (float) +(7/8.0 * d), (float) +(7/8.0 * d), 1, 1};
+    sgVec4 object2Placement = {  (float) -(7/8.0 * d), (float) +(7/8.0 * d), 1, 1};
 
     physicalObjects.addShapeToList(
             make_shared<Circle>(
                     object2Placement,
                     pieceMass,
-                    pieceRadius,
                     startMomentum,
                     objectDensity,
                     newColor

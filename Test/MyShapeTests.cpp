@@ -12,7 +12,17 @@
 
 #include <memory>
 
-TEST_CASE( "confirm size of Circle", "[current]" ) {
+TEST_CASE( "confirm size of Circle", "[green]" ) {
     auto a = TestUtils::testCircle();
     cout << "Size of Circle: " << sizeof(*a) << endl;
+}
+
+
+TEST_CASE( "merge Circles", "[current]" ) {
+    auto a = TestUtils::improvedTestCircle();
+    auto b = TestUtils::improvedTestCircle();
+    cout << "Radius of a: " << a->getRadius() << endl;
+    cout << "Radius of b: " << b->getRadius() << endl;
+    a->mergeWith(*b);
+    REQUIRE(a->getRadius() > b->getRadius());
 }

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-bool control_center::paused = true;
+bool control_center::paused = false;
 float control_center::dt;
 
 void control_center::switchViewNow(puObject * caller) {

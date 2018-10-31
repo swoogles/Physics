@@ -111,7 +111,7 @@ void idle() {
   if (! globalControlCenter.isPaused() ) {
     globalSimulation->update();
     shapes = globalSimulation->getPhysicalObjects();
-      globalMainDisplay.update(globalSimulation->getDT());
+    globalMainDisplay.update(globalSimulation->getDT());
   }
 
   // Should just directly call Observer::getCurObserverInstance()

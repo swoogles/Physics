@@ -25,6 +25,22 @@ class Circle: public MyShape {
             sgVec3 color
     );
 
+    Circle(
+            sgVec4 pos,
+            float mass,
+            sgVec4 momentum,
+            float density,
+            sgVec3 color
+    );
+
+    Circle(
+            sgVec4 pos,
+            float mass,
+            float radius,
+            sgVec4 momentum,
+            sgVec3 color
+    );
+
     virtual ~Circle();
 
     float getScale();
