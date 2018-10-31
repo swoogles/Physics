@@ -410,7 +410,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     sgVec3 newColor = { 1, 1, 1 };
 
     shapePointer_t curShape;
-    float d= 1e5;
+    float d= 3e4;
 
     //#1
     sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
@@ -438,7 +438,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 50, true, forceCalculationMethod);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 50000, true, forceCalculationMethod);
 }
 
 Simulation Simulations::QuadrantTesting_simplest_move(ForceCalculationMethod forceCalculationMethod)
@@ -493,14 +493,13 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, Forc
     ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
     const float objectDensity = DENSITY_SUN;
-    const float bodyVolume = (MASS_SUN * 10)/(objectDensity);
-    const float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+    const float pieceMass = (MASS_SUN * 10)/(numPieces);
+    const float pieceRadius = Circle::calcRadius(pieceMass, objectDensity);
     sgVec4 startPlacement, startMomentum;
     sgVec4 target = { 1000, 0, 0, 1};
 
     sgVec3 newColor = { 1, 1, 1 };
 
-    const float pieceMass = pow(pieceRadius, 3.0) * (4.0/3.0) * M_PI * (objectDensity);
 
     srand ( time(NULL) );
 
@@ -520,7 +519,6 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, Forc
                 pieceMass,
                 pieceRadius,
                 startMomentum,
-                objectDensity,
                 newColor
         );
 

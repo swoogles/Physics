@@ -25,4 +25,5 @@ TEST_CASE( "merge Circles", "[current]" ) {
     cout << "Radius of b: " << b->getRadius() << endl;
     a->mergeWith(*b);
     REQUIRE(a->getRadius() > b->getRadius());
+    REQUIRE(a->getMass() == b->getMass() * 2);
 }

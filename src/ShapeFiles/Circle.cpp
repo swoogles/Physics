@@ -88,6 +88,10 @@ Circle::Circle(
 
 }
 
+float Circle::calcRadius(float mass, float density) {
+	return sqrt(((3*mass) / 4 * M_PI ) / density);
+}
+
 /*
 float calcRadius(float mass, int density ) {
 	float pieceRadius = pieceVol/(M_PI * 4.0/3.0);

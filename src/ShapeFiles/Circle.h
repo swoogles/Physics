@@ -51,5 +51,8 @@ class Circle: public MyShape {
     float getMomentOfInertia();
 
     ShapeType getType();
+
+
+    static float calcRadius(float mass, float density);
 };
 #endif
