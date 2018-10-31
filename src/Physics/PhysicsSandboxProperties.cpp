@@ -15,10 +15,11 @@ ForceCalculationMethod PhysicsSandboxProperties::parseForceCalculationProperty(s
   }
 }
 
-int PhysicsSandboxProperties::parseNumShapes(std::string value) {
+int PhysicsSandboxProperties::parseStringAsInt(std::string value) {
   return atoi(value.c_str());
 }
 
 PhysicsSandboxProperties::PhysicsSandboxProperties(BillProperties properties)
 : forceCalculationMethod(parseForceCalculationProperty(properties.at("forceCalculationMethod" ))),
-  numShapes(parseNumShapes(properties.at( "numShapes" ))) {}
+  numShapes(parseStringAsInt(properties.at("numShapes"))),
+  dt(Serializer::parseStringAsFloat("dt")){}
