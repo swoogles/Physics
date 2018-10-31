@@ -12,3 +12,4 @@ CMakeLists.txt
 cmake-build-debug/
 Makefile
 .idea/*
+Test/catch.hpp
