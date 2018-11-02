@@ -21,11 +21,13 @@ class ShapeList {
     size_t addShapeToList(shapePointer_t insertShape);
     size_t addList(ShapeList addList);
 
-    int removeShapeFromList( MyShape & shapeToRemove );
+    int removeShapeFromList(shared_ptr<MyShape> shapeToRemove);
+    int remove(ShapeList & shapesToRemove);
     size_t clearShapes();
     vectorT getShapes();
     void update(const float dt);
     inline size_t size() { return shapes.size(); };
-    bool contains(MyShape &searchShape);
+
+    bool contains(shared_ptr<MyShape> searchShape) const;
 };
 #endif

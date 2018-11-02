@@ -114,7 +114,11 @@ void Simulation::update()
 }
 
 void Simulation::removePhysicalObject(shapePointer_t newShape) {
-    physicalObjects.removeShapeFromList(*newShape);
+    physicalObjects.removeShapeFromList(newShape);
+}
+
+void Simulation::removePhysicalObjects(ShapeList shapesToRemove) {
+    physicalObjects.remove(shapesToRemove);
 }
 
 void Simulation::addPhysicalObjectToList(shapePointer_t newShape) { physicalObjects.addShapeToList(std::move(newShape)); }
@@ -252,10 +256,7 @@ void Simulation::calcForcesAll_LessNaive()
         object1.adjustMomentum(gravField);
 
         // TODO This would be much faster if we removed deleteList in one pass
-        for ( const auto & curShape : deleteList.getShapes() ) {
-            this->removePhysicalObject(curShape);
-        }
-
+        this->removePhysicalObjects(deleteList);
     }
 
 }
@@ -356,3 +357,4 @@ void Simulation::calcForcesAll() {
             // TODO curSimulation.quadrant needs to die *before* any of my shapes will actually go away!
     }
 }
+

@@ -82,36 +82,40 @@ void ShapeList::update(const float dt) {
   }
 }
 
-// ****THIS IS BROKEN****
-bool ShapeList::contains(MyShape &searchShape) {
-    cout << "searchShape: " << std::addressof(searchShape) << endl;
-  return std::any_of(shapes.begin(), shapes.end(), [searchShape](shapePointer_t curShape) {
-      MyShape & curShapeRef = *curShape;
-      cout << "curShapeRef: " << std::addressof(curShapeRef) << endl;
-      cout << "Comparison: " << (&curShapeRef == &searchShape) << endl;
-      // TODO Figure out why this isn't reporting as equal
-    return std::addressof(curShapeRef) == std::addressof(searchShape);
-  });
-}
+int ShapeList::remove(ShapeList &shapesToRemove) {
+    size_t newSize =  shapes.size() - shapesToRemove.size();
 
-int ShapeList::removeShapeFromList(MyShape &shapeToRemove) {
-    size_t newSize =  shapes.size() - 1;
-    std::list<shapePointer_t> newShapeList;
-
-    for( auto & curShape : shapes) {
-        MyShape & curShapeRef = *curShape;
-        if ( &(curShapeRef) != &shapeToRemove) {
-            newShapeList.push_front(curShape);
-        }
-    }
-
-    std::vector<shapePointer_t> newShapeVector{ std::make_move_iterator(std::begin(newShapeList)),
-                                                std::make_move_iterator(std::end(newShapeList)) };
+    auto newIterator = std::remove_if(shapes.begin(), shapes.end(), [shapesToRemove](auto shape) {
+        // THIS CAN'T WORK UNTIL CONTAINS IS FIXED
+        return shapesToRemove.contains(shape);
+//        std::any_of(shapesToRemove.shapes.begin(), shapesToRemove.shapes.begin())
+//        return &(curShapeRef) == &shapeToRemove;
+    });
 
     shapes.resize(newSize);
-    shapes = vectorT ( newShapeVector );
 
     ensureNoNullEntries("removeShapeFromList");
 //    shapes.erase(std::remove(shapes.begin(), shapes.end(), shapeToRemove), shapes.end());
     return 0;
+
+}
+
+int ShapeList::removeShapeFromList(shared_ptr<MyShape> shapeToRemove) {
+    size_t newSize =  shapes.size() - 1;
+
+    auto newIterator = std::remove_if(shapes.begin(), shapes.end(), [shapeToRemove](auto shape) {
+        return shape == shapeToRemove;
+    });
+
+    shapes.resize(newSize);
+
+    ensureNoNullEntries("removeShapeFromList");
+//    shapes.erase(std::remove(shapes.begin(), shapes.end(), shapeToRemove), shapes.end());
+    return 0;
+}
+
+bool ShapeList::contains(shared_ptr<MyShape> searchShape) const {
+    return std::any_of(shapes.begin(), shapes.end(), [searchShape](shapePointer_t curShape) {
+        return searchShape == curShape;
+    });
 }
