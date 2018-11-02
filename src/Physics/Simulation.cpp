@@ -95,7 +95,7 @@ void Simulation::getConstGravFieldVal(sgVec4 retGravField) {
 }
 
 void Simulation::updateMinsAndMaxes() {
-    for ( const auto & curShape : getPhysicalObjects().getShapes() ) {
+    for ( const auto & curShape : this->physicalObjects.getShapes() ) {
         vecPtr curPos(curShape->getPosNew());
         updateXYMinsAndMaxes(curPos->vec);
     }
@@ -204,8 +204,7 @@ void Simulation::calcForcesAll_LessNaive()
 
     sgVec4 gravField = {0, 0, 0, 0};
 
-    ShapeList shapeList = this->getPhysicalObjects() ;
-    vectorT physicalObjects = shapeList.getShapes();
+    vectorT physicalObjects = this->physicalObjects.getShapes();
     ShapeList deleteList;
 
     if (this->constGravField ) {
@@ -344,7 +343,7 @@ void Simulation::calcForcesAll() {
         case ForceCalculationMethod ::OCTREE:
             PairCollection deleteList;
 
-            for ( const auto & curShape : this->getPhysicalObjects().getShapes() ) {
+            for ( const auto & curShape : this->physicalObjects.getShapes() ) {
                 deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, this->getQuadrant(), this->DT, 0));
             }
 
@@ -356,5 +355,17 @@ void Simulation::calcForcesAll() {
 
             // TODO curSimulation.quadrant needs to die *before* any of my shapes will actually go away!
     }
+}
+
+size_t Simulation::getSize() {
+    return this->physicalObjects.getShapes().size();
+}
+
+double Simulation::getMass() {
+    double mass = 0;
+    for (const auto & shape : this->physicalObjects.getShapes()) {
+        mass += shape->getMass();
+    }
+    return mass;
 }
 

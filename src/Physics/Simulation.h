@@ -66,6 +66,9 @@ private:
 
 	void getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY );
 
+	size_t getSize();
+	double getMass();
+
 } ;
 typedef shared_ptr<Simulation> SimulationPtr_t;
 #endif

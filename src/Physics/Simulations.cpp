@@ -653,7 +653,7 @@ void Simulations::randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, s
 
   for (int i = 0; i < 3; i++)
   {
-    randMult = rand()%100;
+    randMult = rand()%500;
     if (randMult % 2 == 0) {
       randMult *= -1;
     }
@@ -699,7 +699,7 @@ void Simulations::randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       if (switchB)
       {
         // Set the range of momenta, and have them be half positive/half negative
-        randMult = rand()%15;
+        randMult = rand()%5;
         if (randMult % 2 == 0)
           randMult *= -1;
 
