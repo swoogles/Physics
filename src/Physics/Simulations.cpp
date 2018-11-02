@@ -19,7 +19,7 @@ void Simulations::simpleOrbit() {
 	float sunRadiusScale = 15;
 	float earthRadiusScale = 220;
 
-	float sunVolume = (MASS_SUN*MASS_VAR)/(DENSITY_SUN*CONVERSION_CONST);
+	float sunVolume = (AstronomicalValues::MASS_SUN*MASS_VAR)/(AstronomicalValues::DENSITY_SUN*CONVERSION_CONST);
 	float sunRadius = getSplitBodyRadius(sunVolume, 1);
 
 	float earthVolume = (MASS_EARTH*MASS_VAR)/(DENSITY_EARTH*CONVERSION_CONST);
@@ -31,10 +31,10 @@ void Simulations::simpleOrbit() {
 
     curShape = make_shared<Circle>(
             startPos,
-            MASS_SUN,
+            AstronomicalValues::MASS_SUN,
             sunRadius * sunRadiusScale,
             startMom,
-            DENSITY_SUN,
+            AstronomicalValues::DENSITY_SUN,
             sunColor
     );
 
@@ -223,24 +223,21 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
     return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
 }
 
-SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod)
+SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod, float dt)
 {
-    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, forceCalculationMethod, 0);
+    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, forceCalculationMethod, dt);
 
     int numPieces = 1;
-    float objectDensity = DENSITY_SUN;
-    float bodyVolume = (MASS_SUN)/(objectDensity)/3;
-    float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-    float pieceMass = pow(pieceRadius, 3.0);
+    float objectDensity = AstronomicalValues::DENSITY_SUN;
+    float pieceMass = (AstronomicalValues::MASS_SUN)/numPieces;
     sgVec4 startMomentum = { 0, 0, 0 };
     sgVec3 newColor = { 1, 0, 1 };
 
-    sgVec4 startPlacement = { -pieceRadius * 30, 0, 0, 1};
+    sgVec4 startPlacement = { -1e7 , 0, 0, 1};
 
     shapePointer_t curShape = make_shared<Circle>(
             startPlacement,
             pieceMass,
-            pieceRadius,
             startMomentum,
             objectDensity,
             newColor
@@ -261,8 +258,8 @@ SimulationPointer_t Simulations::bodyFormation_NonRandom(ForceCalculationMethod 
 
   ShapeList physicalObjects;
 
-	float objectDensity = DENSITY_SUN;
-	float bodyVolume = (MASS_SUN * 10.0)/(objectDensity);
+	float objectDensity = AstronomicalValues::DENSITY_SUN;
+	float bodyVolume = (AstronomicalValues::MASS_SUN * 10.0)/(objectDensity);
 	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
 	sgVec4 startPlacement;
 	sgVec4 startMomentum = { 0, 0, 0 };
@@ -318,8 +315,8 @@ SimulationPointer_t Simulations::QuadrantTestingNonRandom(ForceCalculationMethod
     ShapeList physicalObjects;
 
     int numPieces=5;
-    float objectDensity = DENSITY_SUN;
-    float bodyVolume = (MASS_SUN)/(objectDensity);
+    float objectDensity = AstronomicalValues::DENSITY_SUN;
+    float bodyVolume = (AstronomicalValues::MASS_SUN)/(objectDensity);
     float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
     sgVec4 startMomentum = { 0, 0, 0 };
 
@@ -403,8 +400,8 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     ShapeList physicalObjects;
 
     int numPieces=2;
-    float objectDensity = DENSITY_SUN;
-    float pieceMass = (MASS_SUN)/(numPieces);
+    float objectDensity = AstronomicalValues::DENSITY_SUN;
+    float pieceMass = (AstronomicalValues::MASS_SUN)/(numPieces);
     sgVec4 startMomentum = { 0, 0, 0 };
 
     sgVec3 newColor = { 1, 1, 1 };
@@ -458,8 +455,8 @@ Simulation Simulations::QuadrantTesting_simplest_move(ForceCalculationMethod for
     ShapeList physicalObjects;
 
     int numPieces=5;
-    float objectDensity = DENSITY_SUN;
-    float bodyVolume = (MASS_SUN)/(objectDensity);
+    float objectDensity = AstronomicalValues::DENSITY_SUN;
+    float bodyVolume = (AstronomicalValues::MASS_SUN)/(objectDensity);
     float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
     sgVec4 startMomentum = { 0, 0, 0 };
 
@@ -505,9 +502,9 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod f
 {
     ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
-    const float objectDensity = DENSITY_SUN;
-    const float pieceMass = (MASS_SUN * 10)/(numPieces);
-    const float pieceRadius = Circle::calcRadius(pieceMass, objectDensity);
+    const float objectDensity = AstronomicalValues::DENSITY_SUN;
+    const float pieceMass = (AstronomicalValues::MASS_SUN )/(numPieces);
+    const float pieceRadius = MyShape::calcRadius(pieceMass, objectDensity);
     sgVec4 startPlacement, startMomentum;
     sgVec4 target = { 1000, 0, 0, 1};
 
@@ -530,8 +527,8 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod f
         const shapePointer_t curShape = make_shared<Circle>(
                 startPlacement,
                 pieceMass,
-                pieceRadius,
                 startMomentum,
+                objectDensity,
                 newColor
         );
 
@@ -551,8 +548,8 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 {
   ShapeList physicalObjects;
 
-	float objectDensity = DENSITY_SUN;
-	float bodyVolume = (MASS_SUN)/(objectDensity);
+	float objectDensity = AstronomicalValues::DENSITY_SUN;
+	float bodyVolume = (AstronomicalValues::MASS_SUN)/(objectDensity);
 	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
 	sgVec4 startPlacement, startMomentum;
 
@@ -612,7 +609,7 @@ Simulations::createSimulation(char simNumber, int numShapes, ForceCalculationMet
   } else if ( simNumber == '1' ) {
     return Simulations::bodyFormation_ArbitraryList(numShapes, forceCalculationMethod, dt);
   } else if ( simNumber == '2' ) {
-	  return Simulations::disruption_ArbitraryList(forceCalculationMethod);
+	  return Simulations::disruption_ArbitraryList(forceCalculationMethod, dt);
   } else if ( simNumber == '3' ) {
     return Simulations::QuadrantTestingNonRandom(forceCalculationMethod);
   } else if ( simNumber == '4' ) {

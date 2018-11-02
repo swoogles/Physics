@@ -7,11 +7,11 @@
 #include "Simulation.h"
 #include "CollisionType.h"
 #include "ForceCalculationMethod.h"
+#include "AstronomicalValues.h"
 
 #define MASS_VAR 1e21
 //#define MASS_SUN 1989100000
 
-#define MASS_SUN 598910000
 //#define MASS_LARGEST_STAR
 #define MASS_JUPITER 1898600
 #define MASS_SATURN 568460
@@ -25,7 +25,6 @@
 //Volume = MASS/(DENSITY*CONVERSION_CONST)
 #define CONVERSION_CONST 1e12
 
-#define DENSITY_SUN 1.409
 #define DENSITY_JUPITER 1.33
 #define DENSITY_SATURN 0.70
 #define DENSITY_URANUS 1.30
@@ -110,7 +109,7 @@ class Simulations
 
     static void simpleOrbit();
 
-    static SimulationPointer_t disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod);
+    static SimulationPointer_t disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod, float dt);
 
     static SimulationPointer_t bodyFormation_NonRandom(ForceCalculationMethod forceCalculationMethod);
     static SimulationPointer_t QuadrantTestingNonRandom(ForceCalculationMethod forceCalculationMethod);
