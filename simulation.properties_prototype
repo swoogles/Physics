@@ -1,0 +1,6 @@
+forceCalculationMethod=octree
+# forceCalculationMethod=octree
+# simulation=1
+parallel=false
+numShapes=20
+dt=10000.0
