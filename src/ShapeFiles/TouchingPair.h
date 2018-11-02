@@ -23,6 +23,7 @@ public:
 
     bool sameItems(const TouchingPair & touchingPair) const;
     bool contains(MyShape &shape) const;
+    bool contains(shared_ptr<MyShape> searchShape) const;
     inline shared_ptr<MyShape> getA() const { return a; };
     inline shared_ptr<MyShape> getB() const { return b; };
     shapePointer_t merge();

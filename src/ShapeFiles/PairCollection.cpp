@@ -11,7 +11,13 @@ void PairCollection::insertIfUnique(const TouchingPair & newPair) {
     auto pairFunc = [&newPair](const TouchingPair pair) { return newPair.sameItems(pair); };
     auto foundInDestination = std::any_of(pairs.begin(), pairs.end(), pairFunc);
     if (!foundInDestination) {
-        pairs.push_back(newPair);
+        auto singleFunc = [&newPair](const TouchingPair pair) { return newPair.contains(pair.getA()) || newPair.contains(pair.getB()); };
+        auto foundAchainedItem = std::any_of(pairs.begin(), pairs.end(), singleFunc);
+        if (foundAchainedItem) {
+            cout << "AVOIDING UGLY SHIT" << endl;
+        } else {
+            pairs.push_back(newPair);
+        }
     }
 }
 

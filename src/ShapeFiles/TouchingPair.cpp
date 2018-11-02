@@ -29,3 +29,7 @@ shapePointer_t TouchingPair::merge() {
     a->mergeWith(*b);
     return a;
 }
+
+bool TouchingPair::contains(shared_ptr<MyShape> search) const {
+    return a == search || b == search;
+}
