@@ -46,8 +46,6 @@ SimulationPtr_t globalSimulation;
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
-ShapeList shapes;
-
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
 // TODO Allow an arbitrary list of objects to be displayed
@@ -63,7 +61,7 @@ void display()
   curObserver->getView();
 
   glMatrixMode(GL_MODELVIEW);
-  Drawing::drawShapes(shapes.getShapes());
+  Drawing::drawShapes(globalSimulation->getPhysicalObjects().getShapes());
 
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
@@ -112,7 +110,6 @@ void idle() {
 
   if (! globalControlCenter.isPaused() ) {
     globalSimulation->update();
-    shapes = globalSimulation->getPhysicalObjects();
     globalMainDisplay.update(globalSimulation->getDT());
   }
 
