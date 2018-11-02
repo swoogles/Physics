@@ -251,6 +251,7 @@ void Simulation::calcForcesAll_LessNaive()
         MyShape & object1 = *physicalObjects.at(physicalObjects.size()-1);
         object1.adjustMomentum(gravField);
 
+        // TODO This would be much faster if we removed deleteList in one pass
         for ( const auto & curShape : deleteList.getShapes() ) {
             this->removePhysicalObject(curShape);
         }

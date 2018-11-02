@@ -122,7 +122,7 @@ void MyShape::mergeWith(MyShape &otherShape)
   float newMass = this->getMass() + otherShape.getMass();
   float density = this->getDensity();
 
-  float newRadius = calcMergedRadius( newMass, density );
+  float newRadius = calcRadius(newMass, density);
 
   sgVec3 totalAngMom;
 
@@ -205,7 +205,7 @@ void MyShape::calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom)
 }
 
 // This was t-totally fucked before
-float MyShape::calcMergedRadius(float massBoth, float density) {
+float MyShape::calcRadius(float massBoth, float density) {
     return sqrt(((3*massBoth) / 4 * M_PI ) / density);
 }
 

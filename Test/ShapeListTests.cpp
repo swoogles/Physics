@@ -12,12 +12,13 @@
 #include "../src/Physics/Simulations.h"
 #include "../src/Physics/Interactions.h"
 
-TEST_CASE( "Remove ref", "[green]" ) {
+TEST_CASE( "Remove ref", "[current]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     ShapeList shapes(vectorT { a, b});
     REQUIRE(shapes.size() == 2);
     shapes.removeShapeFromList(*a);
+    cout << "in between destruction" << endl;
     REQUIRE(shapes.size() == 1);
 }
 

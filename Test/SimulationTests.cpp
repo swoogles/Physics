@@ -11,7 +11,7 @@ TEST_CASE( "Items are being removed from Simulation when Octree force calculatio
     REQUIRE(simulation->getPhysicalObjects().getShapes().size() == 1);
 }
 
-TEST_CASE( "New simulation is created from original Simulation and additional shapes", "[XXX]" ) {
+TEST_CASE( "New simulation is created from original Simulation and additional shapes", "[green]" ) {
     SimulationPointer_t simulation = Simulations::QuadrantTesting_simplest(NAIVE);
     REQUIRE(simulation->getPhysicalObjects().getShapes().size() == 2);
     auto a = TestUtils::testCircle();
@@ -21,7 +21,7 @@ TEST_CASE( "New simulation is created from original Simulation and additional sh
     REQUIRE(newSimulation.getPhysicalObjects().getShapes().size() == 3);
 }
 
-TEST_CASE( "Simulation is made", "[simulation]" ) {
+TEST_CASE( "Simulation is made", "[green]" ) {
     SimulationPointer_t  testSimulationPtr = Simulations::QuadrantTesting_simplest(NAIVE);
 
     // REQUIRE( testSimulation.getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_OCTREE );
@@ -29,7 +29,7 @@ TEST_CASE( "Simulation is made", "[simulation]" ) {
     REQUIRE( testSimulationPtr->getTimeElapsed() == 0 );
 }
 
-TEST_CASE( "non-ptr Simulation is made", "[XXX]" ) {
+TEST_CASE( "non-ptr Simulation is made", "[green]" ) {
     Simulation simulation = Simulations::QuadrantTesting_simplest_move(NAIVE);
     REQUIRE( simulation.getDT() == 1000.0);
 }

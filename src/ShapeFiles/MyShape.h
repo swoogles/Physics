@@ -49,13 +49,6 @@ private:
      */
     void calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom);
 
-
-    /*! \relates Circle
-     *  \brief Finds radius after 2 circular objects are merged
-     *
-     */
-    float calcMergedRadius(float massBoth, float density);
-
   public:
     /*! \brief Sets default values of members common to all shapes
     */
@@ -136,6 +129,11 @@ private:
      */
     void mergeWith(MyShape &otherShape);
 
+    /*! \relates Circle
+     *  \brief Finds radius after 2 circular objects are merged
+     *
+     */
+    static float calcRadius(float massBoth, float density);
 };
 
 typedef shared_ptr<MyShape> shapePointer_t;
