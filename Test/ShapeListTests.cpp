@@ -12,17 +12,15 @@
 #include "../src/Physics/Simulations.h"
 #include "../src/Physics/Interactions.h"
 
-TEST_CASE( "Remove ref", "[current]" ) {
-    auto a = TestUtils::testCircle();
-    auto b = TestUtils::testCircle();
-    ShapeList shapes(vectorT { a, b});
+TEST_CASE( "Remove ref", "[ShapeList][current]" ) {
+    ShapeList shapes(vectorT { TestUtils::testCircle(), TestUtils::testCircle()});
     REQUIRE(shapes.size() == 2);
-    shapes.removeShapeFromList(*a);
+    shapes.removeShapeFromList(*shapes.getShapes()[0]);
     cout << "in between destruction" << endl;
     REQUIRE(shapes.size() == 1);
 }
 
-TEST_CASE( "Construct a list with a single item", "[red]" ) {
+TEST_CASE( "Construct a list with a single item", "[ShapeList][red]" ) {
     auto a = TestUtils::testCircle();
     ShapeList singleItemList(a);
     REQUIRE(singleItemList.size() == 1);
@@ -30,14 +28,14 @@ TEST_CASE( "Construct a list with a single item", "[red]" ) {
     REQUIRE(singleItemList.contains(*a));
 }
 
-TEST_CASE( "hasConflicts with an existing item", "[green]" ) {
+TEST_CASE( "hasConflicts with an existing item", "[ShapeList][green]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     ShapeList singleItemList(a);
     REQUIRE(singleItemList.hasConflictsWith(*b));
 }
 
-TEST_CASE( "Adding a ShapeList to ShapeList", "[green]" ) {
+TEST_CASE( "Adding a ShapeList to ShapeList", "[ShapeList][green]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     auto c = TestUtils::testCircle();

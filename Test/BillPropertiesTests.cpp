@@ -30,10 +30,10 @@ std::string GetCurrentWorkingDir( void ) {
 }
 
 
-TEST_CASE("Successfully load a test properties file", "[green]"){
+TEST_CASE("Successfully load a test properties file", "[BillProperties][green]"){
 
     cout << "Directory: " << GetCurrentWorkingDir() << endl;
-    BillProperties properties = BillProperties("Test/test.properties");
-    REQUIRE(properties.at("numShapes").compare("2000") == 0);
+    BillProperties properties = BillProperties("simulation.properties_prototype");
+    REQUIRE(properties.at("numShapes").compare("20") == 0);
     REQUIRE(properties.at("dt").compare("10000.0") == 0);
 }
