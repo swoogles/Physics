@@ -347,9 +347,8 @@ void Simulation::calcForcesAll() {
                 deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, this->getQuadrant(), this->DT, 0));
             }
 
-            for ( const auto & curShape : deleteList.doomed().getShapes() ) {
-                this->removePhysicalObject(curShape);
-            }
+            this->removePhysicalObjects(deleteList.doomed().getShapes() );
+            
             deleteList.mergePairs();
             break;
 
