@@ -14,7 +14,6 @@ void PairCollection::insertIfUnique(const TouchingPair & newPair) {
         auto singleFunc = [&newPair](const TouchingPair pair) { return newPair.contains(pair.getA()) || newPair.contains(pair.getB()); };
         auto foundAchainedItem = std::any_of(pairs.begin(), pairs.end(), singleFunc);
         if (foundAchainedItem) {
-            cout << "AVOIDING UGLY SHIT" << endl;
         } else {
             pairs.push_back(newPair);
         }

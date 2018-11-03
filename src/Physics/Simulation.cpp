@@ -310,9 +310,11 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
             //b.
             curObject->adjustMomentum(gravVec->vec);
         } else { //3.
+            // TODO Get this enabled
 //            for (const auto & subQuadrant: quadrant->children()) {
 //                deleteList.insertUniqueElements(calcForceOnObject_Octree(curObject, subQuadrant, dt, recursionLevel + 1)) ;
 //            }
+
             QuadrantPointer_t targetQuadrant;
             // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
             for ( int x = 0; x < 2; x++ ) {
@@ -346,11 +348,8 @@ void Simulation::calcForcesAll() {
             }
 
             this->removePhysicalObjects(deleteList.doomed().getShapes() );
-
             deleteList.mergePairs();
             break;
-
-            // TODO curSimulation.quadrant needs to die *before* any of my shapes will actually go away!
     }
 }
 

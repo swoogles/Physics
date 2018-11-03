@@ -285,6 +285,7 @@ vector<shared_ptr<Quadrant>> Quadrant::children() {
       for ( int z = 0; z < 2; z++ ) {
         targetQuadrant = this->getQuadrantFromCell( x, y, z );
         if ( targetQuadrant != nullptr ) {
+          cout << "Live child:" << targetQuadrant << endl;
           liveChildren.push_back(std::move(targetQuadrant));
         }
       }

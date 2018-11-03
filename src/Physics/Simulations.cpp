@@ -447,7 +447,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 50000, true, forceCalculationMethod);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1e4, true, forceCalculationMethod);
 }
 
 Simulation Simulations::QuadrantTesting_simplest_move(ForceCalculationMethod forceCalculationMethod)

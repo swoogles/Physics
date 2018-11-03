@@ -118,7 +118,6 @@ bool MyShape::isTouching(MyShape &otherShape)
 // TODO Don't implement this at MyShape. It should have separate implementations for Circles and Boxes (If boxes even need it)
 void MyShape::mergeWith(MyShape &otherShape)
 {
-    cout << "MERGING" << endl;
   float newMass = this->getMass() + otherShape.getMass();
   float density = this->getDensity();
 
@@ -146,8 +145,8 @@ void MyShape::mergeWith(MyShape &otherShape)
   this->setRadius(newRadius);
 
   // TODO Verify this stuff
-//  otherShape.setMass(0);
-//  otherShape.setRadius(0);
+  otherShape.setMass(0);
+  otherShape.setRadius(0);
   // TODO /Verify this stuff
 
   this->adjustMomentum( otherShapeMomentum->vec );
