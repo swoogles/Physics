@@ -22,6 +22,8 @@ private:
 	bool autoScale;
 	static int curObserver;
 
+	static void BuildPerspProjMat(float *m, float fov, float aspect, float znear, float zfar);
+
 public:
 	static void init();
 
@@ -56,7 +58,5 @@ public:
 
   //! Similar as MyShape::update(float), except only uses angular velocity right now
   void update(float);
-
-  static void BuildPerspProjMat(float *m, float fov, float aspect, float znear, float zfar);
 };
 #endif /* OBSERVER_H_ */
