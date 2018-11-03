@@ -13,3 +13,8 @@ unique_ptr <VecStruct> VecStruct::vecFromAtoB(VecStruct *a, VecStruct *b) {
     sgSubVec4( sepVec->vec, a->vec, b->vec );
     return sepVec;
 }
+
+VecStruct::VecStruct(float x, float y, float z)
+    :vec{x, y, z} {
+
+}
