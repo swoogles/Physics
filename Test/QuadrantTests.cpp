@@ -13,12 +13,19 @@
 
 #include <memory>
 
-TEST_CASE("Get children") {
+TEST_CASE("Get children", "[Quadrant]") {
     VecStruct pos;
     VecStruct dimensions{200, 200, 200};
     Quadrant quadrant(0, pos, dimensions);
     REQUIRE(quadrant.children().empty());
 
-    auto a = TestUtils::improvedTestCircle();
+    auto a = TestUtils::testCircle();
+    quadrant.insertShape(a);
+    REQUIRE(quadrant.children().size() == 0);
+    auto b = TestUtils::testCircle();
+    b->setPos(10, 5, 2);
+    quadrant.insertShape(b);
+    REQUIRE(quadrant.children().size() == 1);
+
 
 }
