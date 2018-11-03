@@ -11,7 +11,7 @@
 class TestUtils {
 public:
     static shared_ptr<Circle> testCircle();
-    static shared_ptr<Circle> improvedTestCircle();
+    static unique_ptr<Circle> improvedTestCircle();
 
 };
 

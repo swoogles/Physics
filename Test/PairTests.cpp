@@ -96,16 +96,16 @@ TEST_CASE("add collections", "[green]") {
 
     SECTION("Add collection to collection") {
         PairCollection destination;
-        cout << "1" << endl;
         PairCollection source;
         source.insertIfUnique(ab);
+
         source.insertIfUnique(ac);
-        cout << "2" << endl;
+
         destination.insertUniqueElements(source);
-        cout << "3" << endl;
         REQUIRE(destination.survivors().contains(a));
         REQUIRE(destination.doomed().contains(b));
-        REQUIRE(destination.doomed().contains(c));
+        // This needs to be denied in the current implementation to avoid faulty re-merges
+        REQUIRE_FALSE(destination.doomed().contains(c));
     }
 }
 

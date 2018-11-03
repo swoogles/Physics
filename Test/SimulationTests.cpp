@@ -15,7 +15,7 @@ TEST_CASE( "Run simple simulation until merge happens", "[green]" ) {
     SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest(NAIVE);
     auto initialMass = simulation->getMass();
     REQUIRE(simulation->getSize() == 3);
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1e4; i++) {
         simulation->update();
     }
     REQUIRE(simulation->getSize() == 1);

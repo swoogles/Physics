@@ -15,6 +15,10 @@
 
 TEST_CASE("Get children") {
     VecStruct pos;
-    Quadrant quadrant(0, )
+    VecStruct dimensions{200, 200, 200};
+    Quadrant quadrant(0, pos, dimensions);
+    REQUIRE(quadrant.children().empty());
+
+    auto a = TestUtils::improvedTestCircle();
 
 }

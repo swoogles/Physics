@@ -23,7 +23,7 @@ shared_ptr<Circle> TestUtils::testCircle() {
     );
 }
 
-shared_ptr<Circle> TestUtils::improvedTestCircle() {
+unique_ptr<Circle> TestUtils::improvedTestCircle() {
     auto mass = 100;
     float density = 1;
 
@@ -31,7 +31,7 @@ shared_ptr<Circle> TestUtils::improvedTestCircle() {
     sgVec4 startMom = { 0, 0, 0, 0 };
     sgVec3 color = { 255, 255, 0 };
 
-    return std::make_shared<Circle>(
+    return std::make_unique<Circle>(
             aPos,
             mass,
             startMom,

@@ -21,9 +21,10 @@ TEST_CASE( "confirm size of Circle", "[green]" ) {
 TEST_CASE( "merge Circles", "[green]" ) {
     auto a = TestUtils::improvedTestCircle();
     auto b = TestUtils::improvedTestCircle();
+    auto originalMass = a->getMass() + b->getMass();
     cout << "Radius of a: " << a->getRadius() << endl;
     cout << "Radius of b: " << b->getRadius() << endl;
     a->mergeWith(*b);
     REQUIRE(a->getRadius() > b->getRadius());
-    REQUIRE(a->getMass() == b->getMass() * 2);
+    REQUIRE(a->getMass() == originalMass);
 }
