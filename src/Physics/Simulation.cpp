@@ -51,7 +51,7 @@ void Simulation::refreshQuadrant()
   dimensions->vec[1] = side;
   dimensions->vec[2] = side;
   // Uh oh.  I think this is it.
-  quadrant = std::make_shared<Quadrant>( 1, *pos, *dimensions ) ;
+  quadrant = std::make_shared<Quadrant>( 1, *pos, side ) ;
 
   for ( const auto & curShape : physicalObjects.getShapes() ) {
     quadrant->insertShape( curShape );
@@ -241,12 +241,7 @@ void Simulation::calcForcesAll_LessNaive()
                         object1.mergeWith( object2 );
                         deleteList.addShapeToList(physicalObjects.at(j));
                     }
-                    else {
-                        // TODO throw in some way.
-                    }
-
                 }
-
             }
         }
 
@@ -311,10 +306,14 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
             curObject->adjustMomentum(gravVec->vec);
         } else { //3.
             // TODO Get this enabled
-//            for (const auto & subQuadrant: quadrant->children()) {
-//                deleteList.insertUniqueElements(calcForceOnObject_Octree(curObject, subQuadrant, dt, recursionLevel + 1)) ;
+//            if (!quadrant->children().empty()) {
+//                for (const auto &subQuadrant: quadrant->children()) {
+//                    deleteList.insertUniqueElements(
+//                            calcForceOnObject_Octree(curObject, subQuadrant, dt, recursionLevel + 1));
+//                }
 //            }
 
+//            /*
             QuadrantPointer_t targetQuadrant;
             // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
             for ( int x = 0; x < 2; x++ ) {
@@ -327,6 +326,7 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
                     }
                 }
             }
+//             */
 
         }
         return deleteList;

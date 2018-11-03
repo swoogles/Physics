@@ -15,8 +15,8 @@
 
 TEST_CASE("Get children", "[Quadrant]") {
     VecStruct pos;
-    VecStruct dimensions{200, 200, 200};
-    Quadrant quadrant(0, pos, dimensions);
+    float width = 200;
+    Quadrant quadrant(0, pos, width);
     SECTION("Basic properties") {
         REQUIRE(quadrant.children().empty());
         REQUIRE(quadrant.getMass() == 0);

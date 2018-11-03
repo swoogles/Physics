@@ -28,27 +28,27 @@ shapePointer_t Quadrant::getShapeInQuadrant()
 }
 
 
-Quadrant::Quadrant(int level, VecStruct &pos, VecStruct dimensions)
+Quadrant::Quadrant(int level, VecStruct &pos, float width)
   :isLeaf(true)
   ,containsBody(false)
   ,level(level)
 //  ,borders(make_shared<Box>(pos, dimensions[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
   ,quadOctree(extents[2][2][2])
-  ,dimensions()
-  
 {
-
+    // TODO Get this in a more idiomatic form
+  this->setMass(0);
   sgVec4 boxPos;
   sgCopyVec4(boxPos, pos.vec);
   // TODO Can I get this back inside the nifty constructor syntax?
-  borders = make_shared<Box>(boxPos, dimensions.vec[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} );
+  borders = make_shared<Box>(boxPos, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} );
   // TODO Require shapeToInsert in constructor.
   weightedPosition[0]=0.0;
   weightedPosition[1]=0.0;
   weightedPosition[2]=0.0;
   // TODO Can this be a more direct move?
   setPos( pos.vec );
-  sgCopyVec4( this->dimensions, dimensions.vec );
+  sgVec3 dimensions{width, width, width};
+  sgCopyVec4( this->dimensions, dimensions);
 
   sgVec3 CoMColor = { 0, 1, 0 };
   sgVec4 comPos = { 0, 0, 0, 1};
@@ -87,13 +87,13 @@ void Quadrant::setWeightedPosition( sgVec4 weightedPosition )
 void Quadrant::getCenterOfMass( sgVec4 centerOfMass )
 {
 	sgCopyVec4( centerOfMass, this->weightedPosition );
-  sgScaleVec4( centerOfMass, 1.0/mass );
+	if (mass != 0) sgScaleVec4( centerOfMass, 1.0/mass );
 }
 
 void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 {
   sgCopyVec4( this->weightedPosition, centerOfMass );
-  sgScaleVec4( this->weightedPosition, mass );
+  if (mass != 0) sgScaleVec4( this->weightedPosition, mass );
 }
 
 /* Description of insertion algorithm
@@ -109,8 +109,12 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 
 void Quadrant::insertShape(shapePointer_t insertedShape)
 {
-  // TODO use new function here
   if (!shapeIsInQuadrantBoundaries(insertedShape)) {
+
+    /* TODO Either
+     *  Mark the shape for deletion in some way
+     *  Expand the Quadrant until it *does* include the shape
+     */
     return;
   }
 
@@ -178,21 +182,20 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
   // 3.d
   sgVec4 CoMPosition;
   this->getCenterOfMass( CoMPosition );
-
-//  centerOfMassRepresentation->setPos( CoMPosition );
+  //  centerOfMassRepresentation->setPos( CoMPosition );
 }
 
 
 // Guaranteed to hand back an instantiated Quadrant
+// TODO This is scary. A determination shouldn't create anything.
 QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
   VecStruct insertPos = *shapeToInsert->getPosNew();
-//  vecPtr insertPos(shapeToInsert->getPosNew());
 
   VecStruct newPos;
   VecStruct newDimensions;
   sgVec4 offsets;
-  sgVec3 targets;
+  sgVec3 targets{INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX};
 
   // Each dimension is cut in half as you go down
   sgScaleVec4 ( newDimensions.vec, dimensions, .5 );
@@ -201,29 +204,17 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
   sgCopyVec3( newPos.vec, pos );
 
-  targets[0] = INVALID_OCTREE_INDEX;
-  targets[1] = INVALID_OCTREE_INDEX;
-  targets[2] = INVALID_OCTREE_INDEX;
-
-  // TODO make one function that will take 2 vectors and return
-  // true if one falls completely within the bounds of another
-  bool validInsertPosition = shapeIsInQuadrantBoundaries(shapeToInsert);
-
-
-  if ( validInsertPosition )
+  for ( int i = 0; i < 3; i++ )
   {
-    for ( int i = 0; i < 3; i++ )
+    if ( insertPos.vec[i] < pos[i] )
     {
-      if ( insertPos.vec[i] < pos[i] )
-      {
-        targets[i] = 0; 
-        newPos.vec[i] -= offsets[i];
-      }
-      else
-      {
-        targets[i] = 1; 
-        newPos.vec[i] += offsets[i];
-      }
+      targets[i] = 0;
+      newPos.vec[i] -= offsets[i];
+    }
+    else
+    {
+      targets[i] = 1;
+      newPos.vec[i] += offsets[i];
     }
   }
 
@@ -240,7 +231,8 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
     if ( insertionQuadrant == nullptr )
     {
-      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions ) ;
+      cout << "Creating a new subquadrant for insertion" << endl;
+      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions.vec[0] ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }
@@ -278,15 +270,16 @@ void Quadrant::adjustMass(float dMass) {
 
 vector<shared_ptr<Quadrant>> Quadrant::children() {
   vector<shared_ptr<Quadrant>>liveChildren ;
-  QuadrantPointer_t targetQuadrant;
   // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
   for ( int x = 0; x < 2; x++ ) {
     for ( int y = 0; y < 2; y++ ) {
       for ( int z = 0; z < 2; z++ ) {
-        targetQuadrant = this->getQuadrantFromCell( x, y, z );
+        QuadrantPointer_t targetQuadrant = this->getQuadrantFromCell( x, y, z );
         if ( targetQuadrant != nullptr ) {
-          cout << "Live child:" << targetQuadrant << endl;
-          liveChildren.push_back(std::move(targetQuadrant));
+            cout << "Return child at quadrant: " << x << ", " << y << ", " << z << endl;
+          liveChildren.push_back(targetQuadrant);
+          auto nextChildren = targetQuadrant->children();
+          liveChildren.insert(std::end(liveChildren), std::begin(nextChildren), std::end(nextChildren));
         }
       }
     }

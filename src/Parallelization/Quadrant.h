@@ -57,7 +57,7 @@ class Quadrant : public Box
     bool shapeIsInQuadrantBoundaries(shapePointer_t newShape);
 
   public:
-    Quadrant(int level, VecStruct &pos, VecStruct dimensions);
+    Quadrant(int level, VecStruct &pos, float width);
 
     void insertShape(shapePointer_t newShape);
 
