@@ -186,19 +186,20 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
 // Guaranteed to hand back an instantiated Quadrant
 QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
-  vecPtr insertPos(shapeToInsert->getPosNew());
+  VecStruct insertPos = *shapeToInsert->getPosNew();
+//  vecPtr insertPos(shapeToInsert->getPosNew());
 
-  vecPtr newPos = make_unique<VecStruct>();
-  vecPtr newDimensions = make_unique<VecStruct>();
+  VecStruct newPos;
+  VecStruct newDimensions;
   sgVec4 offsets;
   sgVec3 targets;
 
   // Each dimension is cut in half as you go down
-  sgScaleVec4 ( newDimensions->vec, dimensions, .5 );
+  sgScaleVec4 ( newDimensions.vec, dimensions, .5 );
 
   sgScaleVec3( offsets, dimensions, .25 );
 
-  sgCopyVec3( newPos->vec, pos );
+  sgCopyVec3( newPos.vec, pos );
 
   targets[0] = INVALID_OCTREE_INDEX;
   targets[1] = INVALID_OCTREE_INDEX;
@@ -213,15 +214,15 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
   {
     for ( int i = 0; i < 3; i++ )
     {
-      if ( insertPos->vec[i] < pos[i] )
+      if ( insertPos.vec[i] < pos[i] )
       {
         targets[i] = 0; 
-        newPos->vec[i] -= offsets[i];
+        newPos.vec[i] -= offsets[i];
       }
       else
       {
         targets[i] = 1; 
-        newPos->vec[i] += offsets[i];
+        newPos.vec[i] += offsets[i];
       }
     }
   }
@@ -239,7 +240,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
     if ( insertionQuadrant == nullptr )
     {
-      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, *newPos, *newDimensions ) ;
+      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }
@@ -248,27 +249,27 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 }
 
 bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
-   vecPtr insertPos(newShape->getPosNew());
+  VecStruct insertPos = *newShape->getPosNew();
+//    vecPtr insertPos(newShape->getPosNew());
 
-//  sgVec4 newPos;
-  vecPtr newPos = make_unique<VecStruct>();
-  vecPtr newDimensions = make_unique<VecStruct>();
+    VecStruct newPos;
+    VecStruct newDimensions;
 
-  // Each dimension is cut in half as you go down
-  sgScaleVec4 ( newDimensions->vec, dimensions, .5 );
+    // Each dimension is cut in half as you go down
+    sgScaleVec4 ( newDimensions.vec, dimensions, .5 );
 
-  // Boundaries [0]=min : [1]=central : [2]=max
-  sgVec3 maxBoundaries;
-  sgAddVec3( maxBoundaries, pos, newDimensions->vec );
+    // Boundaries [0]=min : [1]=central : [2]=max
+    sgVec3 maxBoundaries;
+    sgAddVec3( maxBoundaries, pos, newDimensions.vec );
 
-  sgVec3 minBoundaries;
-  sgSubVec3( minBoundaries, pos, newDimensions->vec );
+    sgVec3 minBoundaries;
+    sgSubVec3( minBoundaries, pos, newDimensions.vec );
 
-  sgCopyVec3( newPos->vec, pos );
+    sgCopyVec3( newPos.vec, pos );
 
-  // TODO make one function that will take 2 vectors and return
-  // true if one falls completely within the bounds of another
-  return withinBoundaries( insertPos->vec, minBoundaries, maxBoundaries );
+    // TODO make one function that will take 2 vectors and return
+    // true if one falls completely within the bounds of another
+    return withinBoundaries( insertPos.vec, minBoundaries, maxBoundaries );
 }
 
 void Quadrant::adjustMass(float dMass) {
