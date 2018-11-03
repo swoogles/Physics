@@ -39,3 +39,22 @@ unique_ptr<Circle> TestUtils::improvedTestCircle() {
             color
     );
 }
+
+shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
+    auto mass = 100;
+    float radius = 10;
+    float density = 1;
+
+    sgVec4 aPos = { x, y, z, 1 };
+    sgVec4 startMom = { 0, 0, 0, 0 };
+    sgVec3 color = { 255, 255, 0 };
+
+    return std::make_shared<Circle>(
+            aPos,
+            mass,
+            radius,
+            startMom,
+            density,
+            color
+    );
+}

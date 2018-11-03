@@ -22,10 +22,10 @@ TEST_CASE("Get children", "[Quadrant]") {
     auto a = TestUtils::testCircle();
     quadrant.insertShape(a);
     REQUIRE(quadrant.children().size() == 0);
-    auto b = TestUtils::testCircle();
-    b->setPos(10, 5, 2);
+    auto b = TestUtils::circleAt(10, 5, 2);
     quadrant.insertShape(b);
     REQUIRE(quadrant.children().size() == 1);
-
-
+    for (const auto & child: quadrant.children()) {
+        cout << "CHILD: " << child << endl;
+    }
 }
