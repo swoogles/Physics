@@ -57,7 +57,7 @@ class Quadrant : public Box
     bool shapeIsInQuadrantBoundaries(shapePointer_t newShape);
 
   public:
-    Quadrant(int level, unique_ptr<VecStruct> pos, unique_ptr<VecStruct> dimensions);
+    Quadrant(int level, VecStruct &pos, VecStruct dimensions);
 
     void insertShape(shapePointer_t newShape);
 
@@ -69,6 +69,7 @@ class Quadrant : public Box
 
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 
+    vector<shared_ptr<Quadrant>> children();
 };
 typedef shared_ptr<Quadrant> QuadrantPointer_t;
 #endif

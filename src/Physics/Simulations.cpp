@@ -653,7 +653,7 @@ void Simulations::randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, s
 
   for (int i = 0; i < 3; i++)
   {
-    randMult = rand()%500;
+    randMult = rand()%450;
     if (randMult % 2 == 0) {
       randMult *= -1;
     }

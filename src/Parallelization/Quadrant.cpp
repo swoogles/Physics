@@ -28,7 +28,7 @@ shapePointer_t Quadrant::getShapeInQuadrant()
 }
 
 
-Quadrant::Quadrant(int level, unique_ptr<VecStruct> pos, unique_ptr<VecStruct> dimensions)
+Quadrant::Quadrant(int level, VecStruct &pos, VecStruct dimensions)
   :isLeaf(true)
   ,containsBody(false)
   ,level(level)
@@ -39,16 +39,16 @@ Quadrant::Quadrant(int level, unique_ptr<VecStruct> pos, unique_ptr<VecStruct> d
 {
 
   sgVec4 boxPos;
-  sgCopyVec4(boxPos, pos->vec);
+  sgCopyVec4(boxPos, pos.vec);
   // TODO Can I get this back inside the nifty constructor syntax?
-  borders = make_shared<Box>(boxPos, dimensions->vec[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} );
+  borders = make_shared<Box>(boxPos, dimensions.vec[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} );
   // TODO Require shapeToInsert in constructor.
   weightedPosition[0]=0.0;
   weightedPosition[1]=0.0;
   weightedPosition[2]=0.0;
   // TODO Can this be a more direct move?
-  setPos( pos->vec );
-  sgCopyVec4( this->dimensions, dimensions->vec );
+  setPos( pos.vec );
+  sgCopyVec4( this->dimensions, dimensions.vec );
 
   sgVec3 CoMColor = { 0, 1, 0 };
   sgVec4 comPos = { 0, 0, 0, 1};
@@ -239,7 +239,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
     if ( insertionQuadrant == nullptr )
     {
-      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, std::move(newPos), std::move(newDimensions) ) ;
+      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, *newPos, *newDimensions ) ;
       quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
     }
   }
@@ -273,4 +273,21 @@ bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
 
 void Quadrant::adjustMass(float dMass) {
 	mass += dMass;
+}
+
+vector<shared_ptr<Quadrant>> Quadrant::children() {
+  vector<shared_ptr<Quadrant>>liveChildren ;
+  QuadrantPointer_t targetQuadrant;
+  // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
+  for ( int x = 0; x < 2; x++ ) {
+    for ( int y = 0; y < 2; y++ ) {
+      for ( int z = 0; z < 2; z++ ) {
+        targetQuadrant = this->getQuadrantFromCell( x, y, z );
+        if ( targetQuadrant != nullptr ) {
+          liveChildren.push_back(std::move(targetQuadrant));
+        }
+      }
+    }
+  }
+  return liveChildren;
 }

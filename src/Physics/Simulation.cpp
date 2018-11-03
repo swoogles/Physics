@@ -51,7 +51,7 @@ void Simulation::refreshQuadrant()
   dimensions->vec[1] = side;
   dimensions->vec[2] = side;
   // Uh oh.  I think this is it.
-  quadrant = std::make_shared<Quadrant>( 1, std::move(pos), std::move(dimensions) ) ;
+  quadrant = std::make_shared<Quadrant>( 1, *pos, *dimensions ) ;
 
   for ( const auto & curShape : physicalObjects.getShapes() ) {
     quadrant->insertShape( curShape );
@@ -296,11 +296,6 @@ PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &cu
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
 PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel)
 {
-
-    if (recursionLevel > 100) {
-        exit(1);
-    }
-
     if ( curQuadrant->isExternal() ) {
         return calculateForceOnExternalNode(curObject, curQuadrant, dt);
     }
@@ -315,6 +310,9 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
             //b.
             curObject->adjustMomentum(gravVec->vec);
         } else { //3.
+//            for (const auto & subQuadrant: quadrant->children()) {
+//                deleteList.insertUniqueElements(calcForceOnObject_Octree(curObject, subQuadrant, dt, recursionLevel + 1)) ;
+//            }
             QuadrantPointer_t targetQuadrant;
             // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
             for ( int x = 0; x < 2; x++ ) {
@@ -348,7 +346,7 @@ void Simulation::calcForcesAll() {
             }
 
             this->removePhysicalObjects(deleteList.doomed().getShapes() );
-            
+
             deleteList.mergePairs();
             break;
 
