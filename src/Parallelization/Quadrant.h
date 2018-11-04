@@ -36,7 +36,7 @@ class Quadrant : public Box
     shapePointer_t shapeInQuadrant;
 
     sgVec4 weightedPosition;
-    sgVec4 dimensions;
+    VecStruct dimensions;
 
     shared_ptr<Box> borders;
 //    shared_ptr<Circle> centerOfMassRepresentation;
@@ -61,7 +61,7 @@ class Quadrant : public Box
 
     void insertShape(shapePointer_t newShape);
 
-    inline float getWidth() { return dimensions[0]; }
+    inline float getWidth() { return dimensions.vec[0]; }
 
     inline bool isExternal() { return isLeaf; }
 

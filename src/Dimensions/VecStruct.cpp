@@ -14,6 +14,10 @@ unique_ptr <VecStruct> VecStruct::vecFromAtoB(VecStruct *a, VecStruct *b) {
     return sepVec;
 }
 
+VecStruct::VecStruct(sgVec4 coordinates) {
+    sgCopyVec4(vec, coordinates);
+}
+
 VecStruct::VecStruct(float x, float y, float z)
     :vec{x, y, z} {
 
@@ -26,3 +30,4 @@ VecStruct VecStruct::scaledBy(float scalingFactor) {
     VecStruct newVecStruct(newVec[0], newVec[1], newVec[2]);
     return newVecStruct;
 }
+

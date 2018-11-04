@@ -32,6 +32,7 @@ Quadrant::Quadrant(int level, VecStruct &pos, float width)
   :isLeaf(true)
   ,containsBody(false)
   ,level(level)
+  ,dimensions(width, width, width)
 //  ,borders(make_shared<Box>(pos, dimensions[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
   ,quadOctree(extents[2][2][2])
 {
@@ -47,8 +48,6 @@ Quadrant::Quadrant(int level, VecStruct &pos, float width)
   weightedPosition[2]=0.0;
   // TODO Can this be a more direct move?
   setPos( pos.vec );
-  sgVec3 dimensions{width, width, width};
-  sgCopyVec4( this->dimensions, dimensions);
 
   sgVec3 CoMColor = { 0, 1, 0 };
   sgVec4 comPos = { 0, 0, 0, 1};
@@ -187,12 +186,11 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
   VecStruct newPos;
   sgVec4 offsets;
   int targets[]{INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX};
-  VecStruct dimensionsVec(dimensions[0], dimensions[1], dimensions[2]);
 
   // Each dimension is cut in half as you go down
-  VecStruct newDimensions = dimensionsVec.scaledBy(.5);
+  VecStruct newDimensions = dimensions.scaledBy(.5);
 
-  sgScaleVec3( offsets, dimensions, .25 );
+  sgScaleVec3( offsets, dimensions.vec, .25 );
 
   sgCopyVec3( newPos.vec, pos );
 
@@ -230,7 +228,7 @@ bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
     VecStruct newDimensions;
 
     // Each dimension is cut in half as you go down
-    sgScaleVec4 ( newDimensions.vec, dimensions, .5 );
+    sgScaleVec4 ( newDimensions.vec, dimensions.vec, .5 );
 
     // Boundaries [0]=min : [1]=central : [2]=max
     sgVec3 maxBoundaries;
