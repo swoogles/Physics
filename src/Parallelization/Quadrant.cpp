@@ -143,10 +143,7 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
 
     // 2. b
     QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
-    if ( targetQuadrant != nullptr )
-    {
-      targetQuadrant->insertShape( insertedShape );
-    }
+    targetQuadrant->insertShape( insertedShape );
   }
   // 3. a
   else
@@ -167,16 +164,10 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
 
     sgAddVec4(quadrantWeightedPosition, shapeWeightedPosition->vec );
     this->setWeightedPosition( quadrantWeightedPosition );
-
-    // Consider removing this check. It's only an issue when you're out of
-    // memory, and it's not like I'm checking for that situation everywhere
-    // else in the program.
-    if ( targetQuadrant != nullptr && targetQuadrantB != nullptr )
-    {
-      // 3.c
-      targetQuadrant->insertShape( insertedShape );
-      targetQuadrantB->insertShape( shapeInQuadrant );
-    }
+    // 3.c
+    targetQuadrant->insertShape( insertedShape );
+    targetQuadrantB->insertShape( shapeInQuadrant );
+    // TODO I should be removing shapeInQuadrant here.
   }
 
   // 3.d
@@ -195,7 +186,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
   VecStruct newPos;
   VecStruct newDimensions;
   sgVec4 offsets;
-  sgVec3 targets{INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX};
+  int targets[]{INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX};
 
   // Each dimension is cut in half as you go down
   sgScaleVec4 ( newDimensions.vec, dimensions, .5 );
@@ -218,23 +209,13 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
     }
   }
 
-  QuadrantPointer_t insertionQuadrant;
+  QuadrantPointer_t insertionQuadrant = quadOctree[targets[0]][targets[1]][targets[2]];
 
-  // Only proceed if we have determined that the provided shape does actually
-  // belong in this Quadrant
-  if ( targets[0] != INVALID_OCTREE_INDEX &&
-      targets[1] != INVALID_OCTREE_INDEX &&
-      targets[2] != INVALID_OCTREE_INDEX )
+  if ( insertionQuadrant == nullptr )
   {
-
-    insertionQuadrant = quadOctree[targets[0]][targets[1]][targets[2]];
-
-    if ( insertionQuadrant == nullptr )
-    {
-      cout << "Creating a new subquadrant for insertion" << endl;
-      insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions.vec[0] ) ;
-      quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
-    }
+//    cout << "Creating a new subquadrant for insertion" << endl;
+    insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions.vec[0] ) ;
+    quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
   }
 
   return insertionQuadrant;
