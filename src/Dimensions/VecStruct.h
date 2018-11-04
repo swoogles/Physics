@@ -23,6 +23,8 @@ public:
     inline float z() {return vec[2];}
 
     VecStruct scaledBy(float scalingFactor);
+    VecStruct plus(const VecStruct & other);
+    VecStruct minus(const VecStruct & other);
 };
 
 #endif

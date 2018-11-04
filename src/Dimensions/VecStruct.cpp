@@ -27,7 +27,21 @@ VecStruct VecStruct::scaledBy(float scalingFactor) {
     // TODO Make sure Vec3 behavior is appropriate here.
     sgVec4 newVec;
     sgScaleVec3 ( newVec, this->vec, scalingFactor );
-    VecStruct newVecStruct(newVec[0], newVec[1], newVec[2]);
+    VecStruct newVecStruct(newVec);
+    return newVecStruct;
+}
+
+VecStruct VecStruct::plus(const VecStruct & other) {
+    sgVec4 newVec;
+    sgAddVec4 ( newVec, this->vec, other.vec );
+    VecStruct newVecStruct(newVec);
+    return newVecStruct;
+}
+
+VecStruct VecStruct::minus(const VecStruct &other) {
+    sgVec4 newVec;
+    sgSubVec4 ( newVec, this->vec, other.vec );
+    VecStruct newVecStruct(newVec);
     return newVecStruct;
 }
 

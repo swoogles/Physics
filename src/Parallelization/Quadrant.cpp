@@ -231,17 +231,15 @@ bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
     sgScaleVec4 ( newDimensions.vec, dimensions.vec, .5 );
 
     // Boundaries [0]=min : [1]=central : [2]=max
-    sgVec3 maxBoundaries;
-    sgAddVec3( maxBoundaries, pos, newDimensions.vec );
-
-    sgVec3 minBoundaries;
-    sgSubVec3( minBoundaries, pos, newDimensions.vec );
+    VecStruct posVec(pos);
+    VecStruct maxBoundariesVec = posVec.plus(newDimensions);
+    VecStruct minBoundariesVec = posVec.minus(newDimensions);
 
     sgCopyVec3( newPos.vec, pos );
 
     // TODO make one function that will take 2 vectors and return
     // true if one falls completely within the bounds of another
-    return withinBoundaries( insertPos.vec, minBoundaries, maxBoundaries );
+    return withinBoundaries( insertPos.vec, minBoundariesVec.vec, maxBoundariesVec.vec );
 }
 
 void Quadrant::adjustMass(float dMass) {
