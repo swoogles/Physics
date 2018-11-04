@@ -183,28 +183,26 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 {
   VecStruct insertPos = *shapeToInsert->getPosNew();
 
-  VecStruct newPos;
-  sgVec4 offsets;
   int targets[]{INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX};
 
   // Each dimension is cut in half as you go down
   VecStruct newDimensions = dimensions.scaledBy(.5);
 
-  sgScaleVec3( offsets, dimensions.vec, .25 );
+  VecStruct offsets = dimensions.scaledBy(.25);
 
-  sgCopyVec3( newPos.vec, pos );
+  VecStruct newPos(pos);
 
   for ( int i = 0; i < 3; i++ )
   {
     if ( insertPos.vec[i] < pos[i] )
     {
       targets[i] = 0;
-      newPos.vec[i] -= offsets[i];
+      newPos.vec[i] -= offsets.vec[i];
     }
     else
     {
       targets[i] = 1;
-      newPos.vec[i] += offsets[i];
+      newPos.vec[i] += offsets.vec[i];
     }
   }
 
@@ -222,20 +220,14 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 
 bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
   VecStruct insertPos = *newShape->getPosNew();
-//    vecPtr insertPos(newShape->getPosNew());
 
-    VecStruct newPos;
-    VecStruct newDimensions;
-
-    // Each dimension is cut in half as you go down
-    sgScaleVec4 ( newDimensions.vec, dimensions.vec, .5 );
+  // Each dimension is cut in half as you go down
+    VecStruct newDimensions = dimensions.scaledBy(.5);
 
     // Boundaries [0]=min : [1]=central : [2]=max
     VecStruct posVec(pos);
     VecStruct maxBoundariesVec = posVec.plus(newDimensions);
     VecStruct minBoundariesVec = posVec.minus(newDimensions);
-
-    sgCopyVec3( newPos.vec, pos );
 
     // TODO make one function that will take 2 vectors and return
     // true if one falls completely within the bounds of another
