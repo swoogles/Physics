@@ -20,6 +20,8 @@ public:
     inline float x() {return vec[0];}
     inline float y() {return vec[1];}
     inline float z() {return vec[2];}
+
+    VecStruct scaledBy(float scalingFactor);
 };
 
 #endif

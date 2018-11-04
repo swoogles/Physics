@@ -18,3 +18,11 @@ VecStruct::VecStruct(float x, float y, float z)
     :vec{x, y, z} {
 
 }
+
+VecStruct VecStruct::scaledBy(float scalingFactor) {
+    // TODO Make sure Vec3 behavior is appropriate here.
+    sgVec4 newVec;
+    sgScaleVec3 ( newVec, this->vec, .5 );
+    VecStruct newVecStruct(newVec[0], newVec[1], newVec[2]);
+    return newVecStruct;
+}

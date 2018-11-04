@@ -168,6 +168,7 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
     targetQuadrant->insertShape( insertedShape );
     targetQuadrantB->insertShape( shapeInQuadrant );
     // TODO I should be removing shapeInQuadrant here.
+    shapeInQuadrant = nullptr;
   }
 
   // 3.d
@@ -184,12 +185,12 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
   VecStruct insertPos = *shapeToInsert->getPosNew();
 
   VecStruct newPos;
-  VecStruct newDimensions;
   sgVec4 offsets;
   int targets[]{INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX};
+  VecStruct dimensionsVec(dimensions[0], dimensions[1], dimensions[2]);
 
   // Each dimension is cut in half as you go down
-  sgScaleVec4 ( newDimensions.vec, dimensions, .5 );
+  VecStruct newDimensions = dimensionsVec.scaledBy(.5);
 
   sgScaleVec3( offsets, dimensions, .25 );
 
