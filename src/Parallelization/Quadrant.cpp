@@ -1,18 +1,22 @@
 #include "MyShape.h"
 #include "Quadrant.h"
 
-bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundaries )
+bool withinBoundaries(VecStruct & insertPos, VecStruct & minBoundaries, VecStruct & maxBoundaries)
 {
   bool withinBoundaries = true;
+  withinBoundaries &= !(insertPos.x() < minBoundaries.x() || insertPos.x() > maxBoundaries.x());
+  withinBoundaries &= !(insertPos.y() < minBoundaries.y() || insertPos.y() > maxBoundaries.y());
+  withinBoundaries &= !(insertPos.z() < minBoundaries.z() || insertPos.z() > maxBoundaries.z());
+  return withinBoundaries;
+  /*
   for ( int i = 0; i < 3 && withinBoundaries; i++ )
   {
     if (
-            /* THIS WAS IT!!! THIS WAS WHAT KILLED ME!!
+            THIS WAS IT!!! THIS WAS WHAT KILLED ME!!
                 I had an AND here instead of an OR, so this check was only working if the shape
                 happened to go out of bounds in all dimensions at the same time (basically never)
                 Otherwise, it would recurse itself to death by continuing to create Quadrants that
                 would NEVER contain the shape.
-                */
         (insertPos[i] < minBoundaries[i] ) ||
         ( insertPos[i] > maxBoundaries[i] ) 
       ) {
@@ -20,6 +24,7 @@ bool withinBoundaries( sgVec3 insertPos, sgVec3 minBoundaries, sgVec3 maxBoundar
     }
   }
   return withinBoundaries;
+*/
 }
 
 shapePointer_t Quadrant::getShapeInQuadrant()
@@ -33,21 +38,15 @@ Quadrant::Quadrant(int level, VecStruct &pos, float width)
   ,containsBody(false)
   ,level(level)
   ,dimensions(width, width, width)
-//  ,borders(make_shared<Box>(pos, dimensions[0], (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
+  ,borders(make_shared<Box>(pos.vec, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
   ,quadOctree(extents[2][2][2])
+  ,weightedPosition {0,0,0,0}
 {
     // TODO Get this in a more idiomatic form
   this->setMass(0);
-  sgVec4 boxPos;
-  sgCopyVec4(boxPos, pos.vec);
-  // TODO Can I get this back inside the nifty constructor syntax?
-  borders = make_shared<Box>(boxPos, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} );
   // TODO Require shapeToInsert in constructor.
-  weightedPosition[0]=0.0;
-  weightedPosition[1]=0.0;
-  weightedPosition[2]=0.0;
   // TODO Can this be a more direct move?
-  setPos( pos.vec );
+  this->setPos( pos.vec );
 
   sgVec3 CoMColor = { 0, 1, 0 };
   sgVec4 comPos = { 0, 0, 0, 1};
@@ -231,7 +230,7 @@ bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
 
     // TODO make one function that will take 2 vectors and return
     // true if one falls completely within the bounds of another
-    return withinBoundaries( insertPos.vec, minBoundariesVec.vec, maxBoundariesVec.vec );
+    return withinBoundaries( insertPos, minBoundariesVec, maxBoundariesVec );
 }
 
 void Quadrant::adjustMass(float dMass) {
