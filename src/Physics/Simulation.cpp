@@ -59,6 +59,7 @@ void Simulation::refreshQuadrant()
 }
 
 void Simulation::updateXYMinsAndMaxes(sgVec4 curPos) {
+    // TODO Use min/max functions instead of comparisons here.
     resetXYMinsAndMaxes();
     if (curPos[0] < minX) {
         minX = curPos[0];
@@ -111,10 +112,6 @@ void Simulation::update()
   updateMinsAndMaxes();
   // This is the first "n" part in "n log(n)"
   refreshQuadrant();
-}
-
-void Simulation::removePhysicalObject(shapePointer_t newShape) {
-    physicalObjects.removeShapeFromList(newShape);
 }
 
 void Simulation::removePhysicalObjects(ShapeList shapesToRemove) {

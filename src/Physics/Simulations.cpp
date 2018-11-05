@@ -114,6 +114,7 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
         cutOff--;
     }
 
+    // TODO Fix places where a default 0 got passed to Simulation dt
     return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
 }
 
@@ -699,7 +700,7 @@ void Simulations::randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       if (switchB)
       {
         // Set the range of momenta, and have them be half positive/half negative
-        randMult = rand()%5;
+        randMult = rand()%3;
         if (randMult % 2 == 0)
           randMult *= -1;
 

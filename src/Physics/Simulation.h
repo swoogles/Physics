@@ -34,7 +34,6 @@ private:
     void resetXYMinsAndMaxes();
     void updateXYMinsAndMaxes(sgVec4 curPos);
 
-	void removePhysicalObject( shapePointer_t newShape );
 	void removePhysicalObjects( ShapeList shapesToRemove );
 
     //! Return gravity field vector in retGravField
