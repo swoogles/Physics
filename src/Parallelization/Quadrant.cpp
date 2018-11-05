@@ -103,9 +103,7 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
   else if ( ! isLeaf )
   {
     this->adjustMass( insertedShape->getMass() );
-
-    VecStruct shapeWeightedPosition = insertedShape->getPos().scaledBy(insertedShape->getMass() );
-    this->weightedPosition = (this->weightedPosition.plus(shapeWeightedPosition));
+    this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
 
     // 2. b
     QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
@@ -122,8 +120,7 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
     QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
     QuadrantPointer_t targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
 
-    VecStruct shapeWeightedPosition = insertedShape->getPos().scaledBy(insertedShape->getMass() );
-    this->weightedPosition =  this->weightedPosition.plus(shapeWeightedPosition);
+    this->weightedPosition =  this->weightedPosition.plus(insertedShape->getWeightedPosition());
     // 3.c
     targetQuadrant->insertShape( insertedShape );
     targetQuadrantB->insertShape( shapeInQuadrant );
@@ -183,16 +180,16 @@ bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
   VecStruct insertPos = newShape->getPos();
 
   // Each dimension is cut in half as you go down
-    VecStruct newDimensions = dimensions.scaledBy(.5);
+  VecStruct newDimensions = dimensions.scaledBy(.5);
 
-    // Boundaries [0]=min : [1]=central : [2]=max
-    VecStruct posVec(pos);
-    VecStruct maxBoundariesVec = posVec.plus(newDimensions);
-    VecStruct minBoundariesVec = posVec.minus(newDimensions);
+  // Boundaries [0]=min : [1]=central : [2]=max
+  VecStruct posVec(pos);
+  VecStruct maxBoundariesVec = posVec.plus(newDimensions);
+  VecStruct minBoundariesVec = posVec.minus(newDimensions);
 
-    // TODO make one function that will take 2 vectors and return
-    // true if one falls completely within the bounds of another
-    return withinBoundaries( insertPos, minBoundariesVec, maxBoundariesVec );
+  // TODO make one function that will take 2 vectors and return
+  // true if one falls completely within the bounds of another
+  return withinBoundaries( insertPos, minBoundariesVec, maxBoundariesVec );
 }
 
 void Quadrant::adjustMass(float dMass) {

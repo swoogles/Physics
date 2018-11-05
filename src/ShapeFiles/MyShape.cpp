@@ -52,7 +52,7 @@ void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
 	float I = getMomentOfInertia();
 	sgCopyVec4(angMomentum, newAngMomentum);
 	sgCopyVec4(angVelocity, angMomentum);
-	sgScaleVec4(angVelocity, 1.0/I);
+	sgScaleVec4(angVelocity, 1.0f/I);
 }
 
 VecStruct MyShape::getAngMomentum() {
@@ -89,7 +89,6 @@ void MyShape::calcColor() {
 	if (greenAmount > 1.0) {
 		greenAmount = 1.0;
 	}
-
 
 	color[0] = redAmount;
 	color[1] = greenAmount;
@@ -187,4 +186,9 @@ float MyShape::calcRadius(float massBoth, float density) {
 
 void MyShape::setRadius(float) {}
 float MyShape::getRadius() { return 1;}
+
+VecStruct MyShape::getWeightedPosition() {
+//    return VecStruct();
+    return this->getPos().scaledBy(this->getMass() );
+}
 
