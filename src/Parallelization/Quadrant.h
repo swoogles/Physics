@@ -35,7 +35,7 @@ class Quadrant : public Box
 
     shapePointer_t shapeInQuadrant;
 
-    sgVec4 weightedPosition;
+    VecStruct weightedPosition;
     VecStruct dimensions;
 
     shared_ptr<Box> borders;
@@ -50,9 +50,6 @@ class Quadrant : public Box
 
     void getCenterOfMass(sgVec4 centerOfMass);
     void setCenterOfMass( sgVec4 centerOfMass );
-
-    void getWeightedPosition(sgVec4 weightedPosition);
-    void setWeightedPosition(sgVec4 weightedPosition);
 
     bool shapeIsInQuadrantBoundaries(shapePointer_t newShape);
 

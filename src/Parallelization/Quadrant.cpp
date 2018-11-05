@@ -4,27 +4,10 @@
 bool withinBoundaries(VecStruct & insertPos, VecStruct & minBoundaries, VecStruct & maxBoundaries)
 {
   bool withinBoundaries = true;
-  withinBoundaries &= !(insertPos.x() < minBoundaries.x() || insertPos.x() > maxBoundaries.x());
-  withinBoundaries &= !(insertPos.y() < minBoundaries.y() || insertPos.y() > maxBoundaries.y());
-  withinBoundaries &= !(insertPos.z() < minBoundaries.z() || insertPos.z() > maxBoundaries.z());
+  withinBoundaries &= (insertPos.x() > minBoundaries.x() && insertPos.x() < maxBoundaries.x());
+  withinBoundaries &= (insertPos.y() > minBoundaries.y() && insertPos.y() < maxBoundaries.y());
+  withinBoundaries &= (insertPos.z() > minBoundaries.z() && insertPos.z() < maxBoundaries.z());
   return withinBoundaries;
-  /*
-  for ( int i = 0; i < 3 && withinBoundaries; i++ )
-  {
-    if (
-            THIS WAS IT!!! THIS WAS WHAT KILLED ME!!
-                I had an AND here instead of an OR, so this check was only working if the shape
-                happened to go out of bounds in all dimensions at the same time (basically never)
-                Otherwise, it would recurse itself to death by continuing to create Quadrants that
-                would NEVER contain the shape.
-        (insertPos[i] < minBoundaries[i] ) ||
-        ( insertPos[i] > maxBoundaries[i] ) 
-      ) {
-      withinBoundaries = false;
-    }
-  }
-  return withinBoundaries;
-*/
 }
 
 shapePointer_t Quadrant::getShapeInQuadrant()
@@ -40,7 +23,7 @@ Quadrant::Quadrant(int level, VecStruct &pos, float width)
   ,dimensions(width, width, width)
   ,borders(make_shared<Box>(pos.vec, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
   ,quadOctree(extents[2][2][2])
-  ,weightedPosition {0,0,0,0}
+  ,weightedPosition(0,0,0)
 {
     // TODO Get this in a more idiomatic form
   this->setMass(0);
@@ -73,25 +56,17 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z )
   return quadOctree[x][y][z];
 }
 
-void Quadrant::getWeightedPosition( sgVec4 weightedPosition )
-{
-	sgCopyVec4( weightedPosition, this->weightedPosition );
-}
-void Quadrant::setWeightedPosition( sgVec4 weightedPosition )
-{
-  sgCopyVec4( this->weightedPosition, weightedPosition );
-}
 
 void Quadrant::getCenterOfMass( sgVec4 centerOfMass )
 {
-	sgCopyVec4( centerOfMass, this->weightedPosition );
+	sgCopyVec4( centerOfMass, this->weightedPosition.vec );
 	if (mass != 0) sgScaleVec4( centerOfMass, 1.0/mass );
 }
 
 void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
 {
-  sgCopyVec4( this->weightedPosition, centerOfMass );
-  if (mass != 0) sgScaleVec4( this->weightedPosition, mass );
+  sgCopyVec4( this->weightedPosition.vec, centerOfMass );
+  if (mass != 0) sgScaleVec4( this->weightedPosition.vec, mass );
 }
 
 /* Description of insertion algorithm
@@ -122,22 +97,15 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
     shapeInQuadrant = insertedShape;
     containsBody = true;
     this->setMass( insertedShape->getMass() );
-    vecPtr pos(insertedShape->getPosNew());
-    this->setCenterOfMass( pos->vec );
+    this->setCenterOfMass( insertedShape->getPos().vec );
   }
   // 2. a
   else if ( ! isLeaf )
   {
     this->adjustMass( insertedShape->getMass() );
 
-    sgVec4 quadrantWeightedPosition;
-    this->getWeightedPosition( quadrantWeightedPosition );
-
-    vecPtr shapeWeightedPosition(insertedShape->getPosNew());
-    sgScaleVec4( shapeWeightedPosition->vec, insertedShape->getMass() );
-
-    sgAddVec4( quadrantWeightedPosition, shapeWeightedPosition->vec );
-    this->setWeightedPosition( quadrantWeightedPosition );
+    VecStruct shapeWeightedPosition = insertedShape->getPos().scaledBy(insertedShape->getMass() );
+    this->weightedPosition = (this->weightedPosition.plus(shapeWeightedPosition));
 
     // 2. b
     QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
@@ -154,14 +122,8 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
     QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
     QuadrantPointer_t targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
 
-    sgVec4 quadrantWeightedPosition;
-    this->getWeightedPosition( quadrantWeightedPosition );
-
-    vecPtr shapeWeightedPosition(insertedShape->getPosNew());
-    sgScaleVec4( shapeWeightedPosition->vec, insertedShape->getMass() );
-
-    sgAddVec4(quadrantWeightedPosition, shapeWeightedPosition->vec );
-    this->setWeightedPosition( quadrantWeightedPosition );
+    VecStruct shapeWeightedPosition = insertedShape->getPos().scaledBy(insertedShape->getMass() );
+    this->weightedPosition =  this->weightedPosition.plus(shapeWeightedPosition);
     // 3.c
     targetQuadrant->insertShape( insertedShape );
     targetQuadrantB->insertShape( shapeInQuadrant );
@@ -180,7 +142,7 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
 // TODO This is scary. A determination shouldn't create anything.
 QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
-  VecStruct insertPos = *shapeToInsert->getPosNew();
+  VecStruct insertPos = shapeToInsert->getPos();
 
   int targets[]{INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX};
 
@@ -218,7 +180,7 @@ QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert 
 }
 
 bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
-  VecStruct insertPos = *newShape->getPosNew();
+  VecStruct insertPos = newShape->getPos();
 
   // Each dimension is cut in half as you go down
     VecStruct newDimensions = dimensions.scaledBy(.5);
@@ -255,3 +217,4 @@ vector<shared_ptr<Quadrant>> Quadrant::children() {
   }
   return liveChildren;
 }
+
