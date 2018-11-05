@@ -9,14 +9,10 @@
 
 float MyShape::getDistanceToObject(MyShape &object2) {
   VecStruct sepVec(this->getVectorToObject(object2));
-  float distance = sgLengthVec4( sepVec.vec );
-
-  return distance;
+  return sgLengthVec4( sepVec.vec );
 }
 
-MyShape::MyShape()
-{
-}
+MyShape::MyShape() = default;
 
 // MyShape::MyShape( const MyShape& copyShape )
 // {
@@ -76,21 +72,20 @@ float MyShape::getDensity() {
 	return density;
 }
 
-unique_ptr<VecStruct> MyShape::getColor() const {
-    unique_ptr<VecStruct> vecStruct = make_unique<VecStruct>();
-    sgCopyVec4(vecStruct->vec, color);
+VecStruct MyShape::getColor() const {
+    VecStruct vecStruct;
+    sgCopyVec4(vecStruct.vec, color);
     return vecStruct;
-
 }
 
 void MyShape::calcColor() {
   float totalMass = mass;
 
-	float redAmount = 0.25 + mass / (totalMass/3.0);
+	float redAmount = 0.25f + mass / (totalMass/3.0f);
 	if (redAmount > 1.0)
 		redAmount = 1.0;
 
-	float greenAmount = mass / (0.8 *totalMass);
+	float greenAmount = mass / (0.8f *totalMass);
 	if (greenAmount > 1.0) {
 		greenAmount = 1.0;
 	}
@@ -110,7 +105,6 @@ bool MyShape::isTouching(MyShape &otherShape)
   SGfloat distance = sqrt(distanceSquared);
 
   SGfloat minSep = this->getRadius() + otherShape.getRadius();
-
 
   return (distance < minSep);
 }

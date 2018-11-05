@@ -33,7 +33,7 @@ void saveShapes(char * fileName, vectorT shapes) {
 		myfile << curShape->getDensity() << endl;
 
 		auto color = curShape->getColor();
-		vecFilePrint(myfile, (*color).vec);
+		vecFilePrint(myfile, color.vec);
 
 	}
 	myfile.close();

@@ -14,8 +14,7 @@ void Drawing::draw(shapePointer_t myShape){
     float scale = myShape->getScale();
     glScalef(scale, scale, scale);
 
-    vecPtr color(myShape->getColor());
-    glColor3fv(color->vec);
+    glColor3fv(myShape->getColor().vec);
 
     int numPts = 16;
     switch (myShape->getType()) {

@@ -89,7 +89,7 @@ private:
     //! Returns density of object
     float getDensity();
 
-    unique_ptr<VecStruct> getColor() const;
+    VecStruct getColor() const;
 
     /*!
      * TODO This should at *least* go to the circle class, but I think it really belongs in the Physics package
