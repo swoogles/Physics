@@ -19,8 +19,8 @@ void saveShapes(char * fileName, vectorT shapes) {
 		myfile << curShape->getType() << endl;
 
 
-		vecPtr pos(curShape->getPosNew());
-		vecFilePrint(myfile, pos->vec);
+		VecStruct pos(curShape->getPos());
+		vecFilePrint(myfile, pos.vec);
 
 		myfile << curShape->getMass() << endl;
 

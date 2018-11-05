@@ -31,18 +31,8 @@ VecStruct Moveable::getPos() {
 }
 
 
-unique_ptr<VecStruct> Moveable::getPosNew() const {
-	unique_ptr<VecStruct> vecStruct = make_unique<VecStruct>();
-    sgCopyVec4(vecStruct->vec, pos);
-    return vecStruct;
-}
-
 VecStruct Moveable::getVectorToObject(Moveable &object2) {
-	VecStruct vec;
-	vecPtr pos1(this->getPosNew());
-	vecPtr pos2(object2.getPosNew());
-	sgSubVec4(vec.vec, pos2->vec, pos1->vec);
-	return vec;
+    return object2.getPos().minus(this->getPos());
 }
 
 unique_ptr<MatrixStruct> Moveable::getOrientationMat() const {

@@ -97,8 +97,8 @@ void Simulation::getConstGravFieldVal(sgVec4 retGravField) {
 
 void Simulation::updateMinsAndMaxes() {
     for ( const auto & curShape : this->physicalObjects.getShapes() ) {
-        vecPtr curPos(curShape->getPosNew());
-        updateXYMinsAndMaxes(curPos->vec);
+        VecStruct curPos(curShape->getPos());
+        updateXYMinsAndMaxes(curPos.vec);
     }
 }
 
@@ -166,7 +166,7 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
     VecStruct sepVec(object1.getVectorToObject(object2));
     sgNormaliseVec4(sepVecUnit, sepVec.vec);
 
-    vecPtr aVel(object1.getVelocity());
+    vecPtr aVel(object1.etVelocity());
     vecPtr bVel(object2.getVelocity());
 
     sgCopyVec4(n, sepVecUnit);

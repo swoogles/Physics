@@ -4,8 +4,8 @@ void Drawing::draw(shapePointer_t myShape){
     glPushMatrix();
 
     //Translate
-    vecPtr pos (myShape->getPosNew());
-    glTranslatef(pos->x(), pos->y(), pos->z());
+    VecStruct pos (myShape->getPos());
+    glTranslatef(pos.x(), pos.y(), pos.z());
 
     //Rotate
     glMultMatrixf( (const GLfloat*) myShape->getOrientationMat().get());

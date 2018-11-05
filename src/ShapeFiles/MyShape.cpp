@@ -128,14 +128,14 @@ void MyShape::mergeWith(MyShape &otherShape)
   calcMergedAngMomentum( otherShape, totalAngMom );
 
   // COM start
-  vecPtr tempVec(this->getPosNew());
-  vecPtr tempVec2(otherShape.getPosNew());
+  VecStruct tempVec(this->getPos());
+  VecStruct tempVec2(otherShape.getPos());
   sgVec4 COM;
 
-  sgScaleVec4(tempVec->vec, this->getMass());
-  sgScaleVec4(tempVec2->vec, otherShape.getMass());
+  sgScaleVec4(tempVec.vec, this->getMass());
+  sgScaleVec4(tempVec2.vec, otherShape.getMass());
 
-  sgAddVec4(COM,tempVec->vec, tempVec2->vec);
+  sgAddVec4(COM,tempVec.vec, tempVec2.vec);
   sgScaleVec4(COM, 1/(this->getMass() + otherShape.getMass()) );
   // COM end
 
@@ -164,8 +164,8 @@ void MyShape::calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom)
 {
   sgVec4 sepVecUnit;
 
-  vecPtr aPos(this->getPosNew());
-  vecPtr bPos(otherShape.getPosNew());
+  VecStruct aPos(this->getPos());
+  VecStruct bPos(otherShape.getPos());
   vecPtr aMomentum(this->getMomentum());
   vecPtr bMomentum(otherShape.getMomentum());
   sgVec4 tempVec;
@@ -174,13 +174,13 @@ void MyShape::calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom)
   sgVec3 r;
   sgVec3 crossed;
 
-  vecPtr sepVec(VecStruct::vecFromAtoB(aPos.get(), bPos.get()));
+  vecPtr sepVec(VecStruct::vecFromAtoB(aPos, bPos));
   sgNormaliseVec4( sepVecUnit, sepVec->vec );
 
   sgScaleVec4(tempVec, sepVecUnit, this->getRadius());
-  sgAddVec4(hitPt, aPos->vec, tempVec);
+  sgAddVec4(hitPt, aPos.vec, tempVec);
   
-  sgSubVec3( r, aPos->vec, hitPt );
+  sgSubVec3( r, aPos.vec, hitPt );
 
   for (int i = 0; i < 4; i++) {
     totalAngMom[i] = 0;
@@ -190,7 +190,7 @@ void MyShape::calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom)
 
   sgAddVec4(totalAngMom, crossed);
 
-  sgSubVec3( r, bPos->vec, hitPt );
+  sgSubVec3( r, bPos.vec, hitPt );
 
   sgVectorProductVec3(crossed, r, bMomentum->vec);
 
