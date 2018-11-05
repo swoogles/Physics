@@ -59,6 +59,7 @@ public:
 	//! Set position of object to <newPos>
 	void setPos(const sgVec4 newPos);
 
+	VecStruct getPos() ; // Reinstate const-ness
     unique_ptr<VecStruct> getPosNew() const;
 
 	vecPtr getVectorToObject(Moveable &object2);

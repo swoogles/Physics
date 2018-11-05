@@ -25,6 +25,12 @@ void Moveable::setPos(const sgVec4 newPos) {
 	sgCopyVec4(this->pos, newPos);
 }
 
+VecStruct Moveable::getPos() {
+    VecStruct retVec(pos);
+	return retVec;
+}
+
+
 unique_ptr<VecStruct> Moveable::getPosNew() const {
 	unique_ptr<VecStruct> vecStruct = make_unique<VecStruct>();
     sgCopyVec4(vecStruct->vec, pos);
