@@ -86,8 +86,6 @@ void openShapes(char * fileName, vectorT shapes) {
 			float density;
 			curFile >> density;
 
-			float bogusRadius = 1; // TODO Infer from density and mass
-
 			//Set start color
 			sgVec4 color;
 			vecFileRead(curFile, color);
@@ -95,7 +93,6 @@ void openShapes(char * fileName, vectorT shapes) {
 			shapePointer_t curShape = std::make_shared<Circle>(
 					pos,
 					mass,
-					bogusRadius,
 					momentum,
 					density,
 					color
