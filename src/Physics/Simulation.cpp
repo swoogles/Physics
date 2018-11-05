@@ -166,7 +166,7 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
     VecStruct sepVec(object1.getVectorToObject(object2));
     sgNormaliseVec4(sepVecUnit, sepVec.vec);
 
-    vecPtr aVel(object1.etVelocity());
+    vecPtr aVel(object1.getVelocity());
     vecPtr bVel(object2.getVelocity());
 
     sgCopyVec4(n, sepVecUnit);

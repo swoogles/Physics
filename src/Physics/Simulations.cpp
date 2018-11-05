@@ -7,7 +7,6 @@
 
 #include "Simulations.h"
 
-float Simulations::G = 6.67384e-11;
 float astronomicalSideLength = 10e5; //Formation Value
 float billiardsSideLength = 200;
 float smallAstronomicalSideLength = 1.8e4;
@@ -16,14 +15,10 @@ void Simulations::simpleOrbit() {
 
 	sgVec4 startPos = { 0, 0, 0, 1 };
   sgVec4 startMom = { 0, -2e-1, 0, 0 };
-	float sunRadiusScale = 15;
-	float earthRadiusScale = 220;
 
 	float sunVolume = (AstronomicalValues::MASS_SUN*MASS_VAR)/(AstronomicalValues::DENSITY_SUN*CONVERSION_CONST);
 	float sunRadius = getSplitBodyRadius(sunVolume, 1);
 
-	float earthVolume = (MASS_EARTH*MASS_VAR)/(DENSITY_EARTH*CONVERSION_CONST);
-	float earthRadius = getSplitBodyRadius(earthVolume, 1);
 
   shapePointer_t curShape;
 
@@ -32,7 +27,6 @@ void Simulations::simpleOrbit() {
     curShape = make_shared<Circle>(
             startPos,
             AstronomicalValues::MASS_SUN,
-            sunRadius * sunRadiusScale,
             startMom,
             AstronomicalValues::DENSITY_SUN,
             sunColor
@@ -47,7 +41,6 @@ void Simulations::simpleOrbit() {
     curShape = make_shared<Circle>(
             startPos,
             MASS_EARTH,
-            earthRadius*earthRadiusScale,
             startMom,
             DENSITY_EARTH,
             earthColor
@@ -79,8 +72,6 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     newColor[1] = 1;
     newColor[2] = 1;
 
-    float bogusDensity = 1; // TODO This should be calculated from radius & mass
-
     shapePointer_t curShape;
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
@@ -89,7 +80,6 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
             cueMass,
             ballRadius,
             cueMomentum,
-            bogusDensity,
             newColor
     );
 
@@ -106,7 +96,6 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
                     ballMass,
                     ballRadius,
                     ballMomentum,
-                    bogusDensity,
                     newColor
             );
             physicalObjects.addShapeToList( curShape );
@@ -134,7 +123,6 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
     sgVec3 newColor = { 1, 0, 1 };
 
     shapePointer_t shapeForInsertion;
-    float bogusDensity = 1; // TODO This should be calculated from radius & mass
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
     shapeForInsertion = make_shared<Circle>(
@@ -142,7 +130,6 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
             cueMass,
             ballRadius,
             cueMomentum,
-            bogusDensity,
             newColor
     );
     physicalObjects.addShapeToList( shapeForInsertion );
@@ -158,7 +145,6 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
                     ballMass,
                     ballRadius,
                     ballMomentum,
-                    bogusDensity,
                     newColor
             );
 
@@ -182,7 +168,6 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
     sgScaleVec4(cueMomentum, cueVelocity, cueMass);
 
     sgVec3 newColor = { 1, 1, 1 };
-    float bogusDensity = 1; // TODO This should be calculated from radius & mass
 
     shapePointer_t shapeForInsertion;
 
@@ -192,7 +177,6 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
             cueMass,
             ballRadius,
             cueMomentum,
-            bogusDensity,
             newColor
     );
     physicalObjects.addShapeToList( shapeForInsertion );
@@ -213,7 +197,6 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
                         ballMass,
                         ballRadius,
                         ballMomentum,
-                        bogusDensity,
                         newColor
                 );
 
@@ -250,150 +233,6 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod
 //    Simulation disruptedSimulation(std::move(sim), disruptingObject);
     curSimulation->addPhysicalObjectToList( curShape );
     return curSimulation;
-}
-
-SimulationPointer_t Simulations::bodyFormation_NonRandom(ForceCalculationMethod forceCalculationMethod)
-{
-  float dt = 1000;
-  int numPieces = 2;
-
-  ShapeList physicalObjects;
-
-	float objectDensity = AstronomicalValues::DENSITY_SUN;
-	float bodyVolume = (AstronomicalValues::MASS_SUN * 10.0)/(objectDensity);
-	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-	sgVec4 startPlacement;
-	sgVec4 startMomentum = { 0, 0, 0 };
-
-	sgVec3 newColor = { 1, 0, 1 };
-
-	float pieceMass = pow(pieceRadius, 3.0);
-  pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
-
-  shapePointer_t curShape;
-
-  float offset = 8e4;
-  startPlacement[0]= offset;
-  startPlacement[1]= offset;
-  startPlacement[2]= offset;
-  startPlacement[3]= 0;
-
-  shapePointer_t oldCircle = make_shared<Circle>(
-            startPlacement,
-            pieceMass,
-            pieceRadius,
-            startMomentum,
-            objectDensity,
-            newColor
-    );
-
-  physicalObjects.addShapeToList( oldCircle );
-
-  startPlacement[0]= -offset;
-
-    curShape = make_shared<Circle>(
-            startPlacement,
-            pieceMass,
-            pieceRadius,
-            startMomentum,
-            objectDensity,
-            newColor
-    );
-
-  physicalObjects.addShapeToList( curShape );
-
-  startPlacement[0]= -offset;
-
-  startPlacement[0]= -offset;
-  startPlacement[1]= -offset;
-
-
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, dt, true, forceCalculationMethod);
-}
-
-SimulationPointer_t Simulations::QuadrantTestingNonRandom(ForceCalculationMethod forceCalculationMethod)
-{
-    ShapeList physicalObjects;
-
-    int numPieces=5;
-    float objectDensity = AstronomicalValues::DENSITY_SUN;
-    float bodyVolume = (AstronomicalValues::MASS_SUN)/(objectDensity);
-    float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-    sgVec4 startMomentum = { 0, 0, 0 };
-
-    sgVec3 newColor = { 1, 1, 1 };
-
-    float pieceMass = (pow(pieceRadius, 3.0) / 2) * (4.0/3.0) * M_PI * (objectDensity);
-
-    shapePointer_t curShape;
-    float d= 1.8e3;
-
-    //#0
-    sgVec4 startPlacement = {  (float) -(7/8.0 * d), + (float) (3/8.0 * d), 1, 1};
-    curShape = make_shared<Circle>(
-            startPlacement,
-            pieceMass,
-            pieceRadius,
-            startMomentum,
-            objectDensity,
-            newColor
-    );
-
-    physicalObjects.addShapeToList( curShape );
-
-    //#1
-    sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
-    curShape = make_shared<Circle>(
-            object1Placement,
-            pieceMass,
-            pieceRadius,
-            startMomentum,
-            objectDensity,
-            newColor
-    );
-
-    physicalObjects.addShapeToList( curShape );
-
-    //#2
-    sgVec4 object2Placement = {  (float) +(7/8.0 * d), (float) +(7/8.0 * d), 1, 1};
-    curShape = make_shared<Circle>(
-            object2Placement,
-            pieceMass,
-            pieceRadius,
-            startMomentum,
-            objectDensity,
-            newColor
-    );
-
-    physicalObjects.addShapeToList( curShape );
-
-    //#3
-    sgVec4 object3Placement = {  (float) +(7/8.0 * d), (float) +(2/8.0 * d), 1, 1};
-    curShape = make_shared<Circle>(
-            object3Placement,
-            pieceMass,
-            pieceRadius,
-            startMomentum,
-            objectDensity,
-            newColor
-    );
-
-    physicalObjects.addShapeToList( curShape );
-
-    //#4
-    sgVec4 object4Placement = {  (float) -(5/8.0 * d), (float) +(1/8.0 * d), 1, 1};
-    curShape = make_shared<Circle>(
-            object4Placement,
-            pieceMass,
-            pieceRadius,
-            startMomentum,
-            objectDensity,
-            newColor
-    );
-
-    physicalObjects.addShapeToList( curShape );
-
-    return make_unique<Simulation>(physicalObjects, CollisionType ::INELASTIC, 1000, true, forceCalculationMethod);
 }
 
 SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod)
@@ -451,53 +290,6 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1e4, true, forceCalculationMethod);
 }
 
-Simulation Simulations::QuadrantTesting_simplest_move(ForceCalculationMethod forceCalculationMethod)
-{
-    ShapeList physicalObjects;
-
-    int numPieces=5;
-    float objectDensity = AstronomicalValues::DENSITY_SUN;
-    float bodyVolume = (AstronomicalValues::MASS_SUN)/(objectDensity);
-    float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
-    sgVec4 startMomentum = { 0, 0, 0 };
-
-    sgVec3 newColor = { 1, 1, 1 };
-
-    float pieceMass = 1.0e10;
-    shapePointer_t curShape;
-    float d= 1.8e3;
-
-    //#1
-    sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
-
-    physicalObjects.addShapeToList(
-            make_shared<Circle>(
-                    object1Placement,
-                    pieceMass,
-                    pieceRadius,
-                    startMomentum,
-                    objectDensity,
-                    newColor
-            )
-    );
-
-    //#2
-    sgVec4 object2Placement = {  (float) +(7/8.0 * d), (float) +(7/8.0 * d), 1, 1};
-
-    physicalObjects.addShapeToList(
-            make_shared<Circle>(
-                    object2Placement,
-                    pieceMass,
-                    pieceRadius,
-                    startMomentum,
-                    objectDensity,
-                    newColor
-            )
-    );
-
-    return Simulation(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod);
-}
-
 SimulationPointer_t
 Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod, float dt)
 {
@@ -550,11 +342,10 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
   ShapeList physicalObjects;
 
 	float objectDensity = AstronomicalValues::DENSITY_SUN;
-	float bodyVolume = (AstronomicalValues::MASS_SUN)/(objectDensity);
-	float pieceRadius = getSplitBodyRadius(bodyVolume, numPieces);
+	float pieceMass = (AstronomicalValues::MASS_SUN)/(numPieces);
 	sgVec4 startPlacement, startMomentum;
 
-	float pieceMass = pow(pieceRadius, 3.0);
+	float pieceRadius = 100; // TOTALLY ARBITRARY VALUE!!
 	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
 
 	srand ( time(NULL) );
@@ -583,7 +374,6 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
         curShape = make_shared<Circle>(
                 startPlacement,
                 pieceMass,
-                pieceRadius,
                 startMomentum,
                 objectDensity,
                 newColor
@@ -592,7 +382,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 
 		//Check if being placed on previously created object
 		while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+			randomSplitBodyPlacement(startPlacement, curShape->getRadius(), target);
 			curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		}
     physicalObjects.addShapeToList( curShape );
@@ -606,13 +396,11 @@ Simulations::createSimulation(char simNumber, int numShapes, ForceCalculationMet
 {
 	//******CURRENT SIMULATION*****
   if ( simNumber == '0' ) {
-	  return Simulations::bodyFormation_NonRandom(forceCalculationMethod);
   } else if ( simNumber == '1' ) {
     return Simulations::bodyFormation_ArbitraryList(numShapes, forceCalculationMethod, dt);
   } else if ( simNumber == '2' ) {
 	  return Simulations::disruption_ArbitraryList(forceCalculationMethod, dt);
   } else if ( simNumber == '3' ) {
-    return Simulations::QuadrantTestingNonRandom(forceCalculationMethod);
   } else if ( simNumber == '4' ) {
     return Simulations::billiards1(15, forceCalculationMethod);
   } else if ( simNumber == '5' ) {

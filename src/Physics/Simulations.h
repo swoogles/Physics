@@ -103,18 +103,11 @@ class Simulations
     typedef unique_ptr<Simulation> SimulationPointer_t;
   public:
     // TODO put this in a more appropriate "Physical Constants" location
-    static float G;
-
-    static void largeGridAlternating();
-
     static void simpleOrbit();
 
     static SimulationPointer_t disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod, float dt);
 
-    static SimulationPointer_t bodyFormation_NonRandom(ForceCalculationMethod forceCalculationMethod);
-    static SimulationPointer_t QuadrantTestingNonRandom(ForceCalculationMethod forceCalculationMethod);
     static SimulationPointer_t QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
-    static Simulation QuadrantTesting_simplest_move(ForceCalculationMethod forceCalculationMethod);
 
     static SimulationPointer_t
     bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod, float dt);

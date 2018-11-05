@@ -42,6 +42,6 @@ TEST_CASE( "Simulation is made", "[green]" ) {
 }
 
 TEST_CASE( "non-ptr Simulation is made", "[green]" ) {
-    Simulation simulation = Simulations::QuadrantTesting_simplest_move(NAIVE);
-    REQUIRE( simulation.getDT() == 1000.0);
+    shared_ptr<Simulation> simulation = Simulations::QuadrantTesting_simplest(NAIVE);
+    REQUIRE( simulation->getDT() == 1000.0);
 }
