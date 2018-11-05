@@ -129,8 +129,8 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
   }
 
   // 3.d
-  sgVec4 CoMPosition;
-  this->getCenterOfMass( CoMPosition );
+  //  sgVec4 CoMPosition;
+  //  this->getCenterOfMass( CoMPosition );
   //  centerOfMassRepresentation->setPos( CoMPosition );
 }
 
