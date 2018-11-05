@@ -47,7 +47,7 @@ private:
      *
      *	\return The angular momentum to be assigned to the merged object
      */
-    void calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom);
+    VecStruct calcMergedAngMomentum(MyShape &otherShape);
 
   public:
     /*! \brief Sets default values of members common to all shapes
@@ -65,7 +65,7 @@ private:
     void adjustMomentum(const sgVec4 dMomentum);
 
     //! Returns momentum of object in retVec
-    unique_ptr<VecStruct> getMomentum();
+    VecStruct getMomentum();
 
     /*! \brief Calculates the moment of inertia for the object
      *
@@ -78,7 +78,7 @@ private:
     void setAngMomentum(sgVec4 newAngMomentum);
 
     //! Returns angular momentum of object in retVec
-    void getAngMomentum(sgVec4 retVec);
+    VecStruct getAngMomentum();
 
     //! Sets mass of object to newMass
     void setMass(float newMass);

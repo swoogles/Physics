@@ -43,9 +43,8 @@ void MyShape::adjustMomentum(const sgVec4 dMomentum) {
 	sgAddVec4(momentum, dMomentum);
 }
 
-unique_ptr<VecStruct> MyShape::getMomentum() {
-    unique_ptr<VecStruct> vecStruct = make_unique<VecStruct>();
-    sgCopyVec4(vecStruct->vec, momentum);
+VecStruct MyShape::getMomentum() {
+    VecStruct vecStruct(momentum);
     return vecStruct;
 }
 
@@ -60,8 +59,9 @@ void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
 	sgScaleVec4(angVelocity, 1.0/I);
 }
 
-void MyShape::getAngMomentum(sgVec4 retVec) {
-	sgCopyVec4(retVec, angMomentum);
+VecStruct MyShape::getAngMomentum() {
+    VecStruct retVec(angMomentum);
+    return retVec;
 }
 
 void MyShape::setMass(float newMass) {
@@ -118,30 +118,24 @@ bool MyShape::isTouching(MyShape &otherShape)
 // TODO Don't implement this at MyShape. It should have separate implementations for Circles and Boxes (If boxes even need it)
 void MyShape::mergeWith(MyShape &otherShape)
 {
-  float newMass = this->getMass() + otherShape.getMass();
+  float combinedMass = this->getMass() + otherShape.getMass();
   float density = this->getDensity();
 
-  float newRadius = calcRadius(newMass, density);
+  float newRadius = calcRadius(combinedMass, density);
 
-  sgVec3 totalAngMom;
-
-  calcMergedAngMomentum( otherShape, totalAngMom );
+  VecStruct totalAngMom = calcMergedAngMomentum(otherShape);
 
   // COM start
   VecStruct tempVec(this->getPos());
   VecStruct tempVec2(otherShape.getPos());
-  sgVec4 COM;
 
   sgScaleVec4(tempVec.vec, this->getMass());
   sgScaleVec4(tempVec2.vec, otherShape.getMass());
 
-  sgAddVec4(COM,tempVec.vec, tempVec2.vec);
-  sgScaleVec4(COM, 1/(this->getMass() + otherShape.getMass()) );
+  VecStruct COM = tempVec.plus(tempVec2).scaledBy(1/(combinedMass));
   // COM end
 
-  vecPtr otherShapeMomentum(otherShape.getMomentum());
-
-  this->setMass(newMass);
+  this->setMass(combinedMass);
   this->setRadius(newRadius);
 
   // TODO Verify this stuff
@@ -149,58 +143,47 @@ void MyShape::mergeWith(MyShape &otherShape)
   otherShape.setRadius(0);
   // TODO /Verify this stuff
 
-  this->adjustMomentum( otherShapeMomentum->vec );
+  this->adjustMomentum(otherShape.getMomentum().vec);
 
-  this->setAngMomentum(totalAngMom);
-  this->getAngMomentum(totalAngMom);
+  this->setAngMomentum(totalAngMom.vec);
 
   this->calcColor();
 
-  this->setPos(COM);
+  this->setPos(COM.vec);
 }
 
 // TODO This should return totalAngMom, instead of mutating parameter.
-void MyShape::calcMergedAngMomentum(MyShape &otherShape, sgVec4 totalAngMom)
+VecStruct MyShape::calcMergedAngMomentum(MyShape &otherShape)
 {
-  sgVec4 sepVecUnit;
+    VecStruct aPos(this->getPos());
+    VecStruct bPos(otherShape.getPos());
+    VecStruct aMomentum(this->getMomentum());
+    VecStruct bMomentum(otherShape.getMomentum());
 
-  VecStruct aPos(this->getPos());
-  VecStruct bPos(otherShape.getPos());
-  vecPtr aMomentum(this->getMomentum());
-  vecPtr bMomentum(otherShape.getMomentum());
-  sgVec4 tempVec;
-  sgVec4 hitPt;
+    sgVec3 crossed;
 
-  sgVec3 r;
-  sgVec3 crossed;
+    vecPtr sepVec(VecStruct::vecFromAtoB(aPos, bPos));
+    VecStruct sepVecUnit;
+    sgNormaliseVec4( sepVecUnit.vec, sepVec->vec );
 
-  vecPtr sepVec(VecStruct::vecFromAtoB(aPos, bPos));
-  sgNormaliseVec4( sepVecUnit, sepVec->vec );
+    VecStruct hitPointOnA = sepVecUnit.scaledBy(this->getRadius());
 
-  sgScaleVec4(tempVec, sepVecUnit, this->getRadius());
-  sgAddVec4(hitPt, aPos.vec, tempVec);
-  
-  sgSubVec3( r, aPos.vec, hitPt );
+    VecStruct hitPt = aPos.plus(hitPointOnA);
 
-  for (int i = 0; i < 4; i++) {
-    totalAngMom[i] = 0;
-  }
+    VecStruct rForA = aPos.minus(hitPt);
 
-  sgVectorProductVec3(crossed, r, aMomentum->vec);
+    sgVectorProductVec3(crossed, rForA.vec, aMomentum.vec);
+    VecStruct newAngularMomentumForA(crossed);
 
-  sgAddVec4(totalAngMom, crossed);
+    VecStruct rForB = bPos.minus(hitPt);
 
-  sgSubVec3( r, bPos.vec, hitPt );
+    sgVectorProductVec3(crossed, rForB.vec, bMomentum.vec);
+    VecStruct newAngularMomentumForB(crossed);
+    VecStruct totalAngMom = newAngularMomentumForA.plus(newAngularMomentumForB);
 
-  sgVectorProductVec3(crossed, r, bMomentum->vec);
-
-  sgAddVec3(totalAngMom, crossed);
-
-  this->getAngMomentum(tempVec);
-  sgAddVec4(totalAngMom, tempVec);
-
-  otherShape.getAngMomentum(tempVec);
-  sgAddVec4(totalAngMom, tempVec);
+    return totalAngMom
+            .plus(this->getAngMomentum())
+            .plus(otherShape.getAngMomentum());
 }
 
 // This was t-totally fucked before

@@ -25,10 +25,10 @@ void saveShapes(char * fileName, vectorT shapes) {
 		myfile << curShape->getMass() << endl;
 
 		auto momentum = curShape->getMomentum();
-		vecFilePrint(myfile, (*momentum).vec);
+		vecFilePrint(myfile, momentum.vec);
 
-		curShape->getAngMomentum(curField);
-		vecFilePrint(myfile, curField);
+		VecStruct angularMomenum = curShape->getAngMomentum();
+		vecFilePrint(myfile, angularMomenum.vec);
 
 		myfile << curShape->getDensity() << endl;
 
