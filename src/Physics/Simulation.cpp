@@ -138,9 +138,9 @@ vecPtr calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
 
     sgVec4 unitVec{};
 
-    vecPtr sepVec(object1.getVectorToObject(object2));
+    VecStruct sepVec(object1.getVectorToObject(object2));
 
-    SGfloat rSquared = sgLengthSquaredVec4(sepVec->vec);
+    SGfloat rSquared = sgLengthSquaredVec4(sepVec.vec);
 
     if (rSquared < .00001) {
         rSquared = .00001;
@@ -148,7 +148,7 @@ vecPtr calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
     float G = 6.67384e-11;
     float forceMagnitude = (G * object1.getMass() * object2.getMass()) / rSquared;
 
-    sgNormaliseVec4(unitVec, sepVec->vec);
+    sgNormaliseVec4(unitVec, sepVec.vec);
 
     sgScaleVec4(gravVec->vec, unitVec, forceMagnitude);
     sgScaleVec4(gravVec->vec, dt);
@@ -163,8 +163,8 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
 
     SGfloat multiplier;
 
-    vecPtr sepVec(object1.getVectorToObject(object2));
-    sgNormaliseVec4(sepVecUnit, sepVec->vec);
+    VecStruct sepVec(object1.getVectorToObject(object2));
+    sgNormaliseVec4(sepVecUnit, sepVec.vec);
 
     vecPtr aVel(object1.getVelocity());
     vecPtr bVel(object2.getVelocity());

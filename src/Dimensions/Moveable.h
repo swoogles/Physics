@@ -62,7 +62,7 @@ public:
 	VecStruct getPos() ; // Reinstate const-ness
     unique_ptr<VecStruct> getPosNew() const;
 
-	vecPtr getVectorToObject(Moveable &object2);
+	VecStruct getVectorToObject(Moveable &object2);
 
 	/*! \brief Rotate object around a specified axis
 	 *

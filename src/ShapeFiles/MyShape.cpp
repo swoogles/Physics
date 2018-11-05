@@ -8,8 +8,8 @@
 #include "MyShape.h"
 
 float MyShape::getDistanceToObject(MyShape &object2) {
-  vecPtr sepVec(this->getVectorToObject(object2));
-  float distance = sgLengthVec4( sepVec->vec );
+  VecStruct sepVec(this->getVectorToObject(object2));
+  float distance = sgLengthVec4( sepVec.vec );
 
   return distance;
 }
@@ -104,9 +104,9 @@ ShapeType MyShape::getType() { }
 
 bool MyShape::isTouching(MyShape &otherShape)
 {
-  vecPtr sepVec(this->getVectorToObject(otherShape));
+  VecStruct sepVec(this->getVectorToObject(otherShape));
 
-  SGfloat distanceSquared = sgLengthSquaredVec4(sepVec->vec);
+  SGfloat distanceSquared = sgLengthSquaredVec4(sepVec.vec);
   SGfloat distance = sqrt(distanceSquared);
 
   SGfloat minSep = this->getRadius() + otherShape.getRadius();

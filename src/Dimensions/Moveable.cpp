@@ -37,11 +37,11 @@ unique_ptr<VecStruct> Moveable::getPosNew() const {
     return vecStruct;
 }
 
-vecPtr Moveable::getVectorToObject(Moveable &object2) {
-	vecPtr vec = make_unique<VecStruct>();
+VecStruct Moveable::getVectorToObject(Moveable &object2) {
+	VecStruct vec;
 	vecPtr pos1(this->getPosNew());
 	vecPtr pos2(object2.getPosNew());
-	sgSubVec4(vec->vec, pos2->vec, pos1->vec);
+	sgSubVec4(vec.vec, pos2->vec, pos1->vec);
 	return vec;
 }
 
