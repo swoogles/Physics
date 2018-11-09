@@ -41,6 +41,8 @@ TEST_CASE("Get children", "[Quadrant]") {
             cout << "CHILD: " << child << endl;
         }
 
+        REQUIRE(quadrant.children().size() == 2);
+
         PairCollection deleteList;
         for (const auto &subQuadrant: quadrant.children()) {
             REQUIRE_FALSE(subQuadrant == nullptr);
