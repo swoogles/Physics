@@ -53,8 +53,15 @@ class Quadrant : public Box
 
     bool shapeIsInQuadrantBoundaries(shapePointer_t newShape);
 
+    vector<int> getSubQuadrantSubScripts( shapePointer_t shapeToInsert );
+    QuadrantPointer_t subQuadrantAt(vector<int> & indices);
+    void assignSubQuadrantAt(vector<int> & indices, QuadrantPointer_t newSubQuadrant);
   public:
     Quadrant(int level, VecStruct &pos, float width);
+    Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float width);
+
+    static Quadrant emptyLeaf(int level, VecStruct &pos, float width);
+    Quadrant filledLeaf(shapePointer_t newShape, int level, VecStruct &pos, float width);
 
     void insertShape(shapePointer_t newShape);
 

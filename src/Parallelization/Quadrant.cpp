@@ -1,3 +1,9 @@
+#include <utility>
+
+#include <utility>
+
+#include <utility>
+
 #include "MyShape.h"
 #include "Quadrant.h"
 
@@ -27,6 +33,42 @@ Quadrant::Quadrant(int level, VecStruct &pos, float width)
 {
     // TODO Get this in a more idiomatic form
   this->setMass(0);
+  // TODO Require shapeToInsert in constructor.
+  // TODO Can this be a more direct move?
+  this->setPos( pos.vec );
+
+  sgVec3 CoMColor = { 0, 1, 0 };
+  sgVec4 comPos = { 0, 0, 0, 1};
+  float comMass = 0;
+  float comRadius = 1.0;
+  sgVec4 comMomentum = { 0, 0, 0 };
+  float comDensity = 1.0;
+
+  /*
+  centerOfMassRepresentation = make_shared<Circle>(
+          comPos,
+          comMass,
+          comRadius,
+          comMomentum,
+          comDensity,
+          CoMColor
+  );
+   */
+
+}
+
+Quadrant::Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float width)
+        :isLeaf(true)
+        ,containsBody(true)
+        ,shapeInQuadrant(std::move(newShape))
+        ,level(level)
+        ,dimensions(width, width, width)
+        ,borders(make_shared<Box>(pos.vec, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
+        ,quadOctree(extents[2][2][2])
+        ,weightedPosition(0,0,0)
+{
+  // TODO Get this in a more idiomatic form
+  this->setMass(shapeInQuadrant->getMass());
   // TODO Require shapeToInsert in constructor.
   // TODO Can this be a more direct move?
   this->setPos( pos.vec );
@@ -92,7 +134,7 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
   }
 
   // 1.
-  if ( !containsBody )
+  if ( isLeaf && !containsBody )
   {
     shapeInQuadrant = insertedShape;
     containsBody = true;
@@ -134,46 +176,47 @@ void Quadrant::insertShape(shapePointer_t insertedShape)
   //  centerOfMassRepresentation->setPos( CoMPosition );
 }
 
+vector<int> Quadrant::getSubQuadrantSubScripts( shapePointer_t shapeToInsert ){
+  VecStruct insertPos = shapeToInsert->getPos();
+  vector<int> targets{INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX};
+  for ( int i = 0; i < 3; i++ ) {
+    if ( insertPos.vec[i] < pos[i] ) {
+      targets[i] = 0;
+    } else {
+      targets[i] = 1;
+    }
+  }
+
+  return targets;
+}
 
 // Guaranteed to hand back an instantiated Quadrant
 // TODO This is scary. A determination shouldn't create anything.
 QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
 {
-  VecStruct insertPos = shapeToInsert->getPos();
+    auto targetIndices = this->getSubQuadrantSubScripts(std::move(shapeToInsert));
 
-  int targets[]{INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX};
+    QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
-  // Each dimension is cut in half as you go down
-  VecStruct newDimensions = dimensions.scaledBy(.5);
+    if ( insertionQuadrant == nullptr ) {
+        // Each dimension is cut in half as you go down
+        VecStruct newDimensions = dimensions.scaledBy(.5);
 
-  VecStruct offsets = dimensions.scaledBy(.25);
+        VecStruct offsets = dimensions.scaledBy(.25);
 
-  VecStruct newPos(pos);
-
-  for ( int i = 0; i < 3; i++ )
-  {
-    if ( insertPos.vec[i] < pos[i] )
-    {
-      targets[i] = 0;
-      newPos.vec[i] -= offsets.vec[i];
+        VecStruct newPos(pos);
+        for ( int i = 0; i < 3; i++ ) {
+            if (targetIndices[i] == 0) {
+                newPos.vec[i] -= offsets.vec[i];
+            } else {
+                newPos.vec[i] += offsets.vec[i];
+            }
+        }
+        insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions.vec[0] ) ;
+        this->assignSubQuadrantAt(targetIndices, insertionQuadrant);
     }
-    else
-    {
-      targets[i] = 1;
-      newPos.vec[i] += offsets.vec[i];
-    }
-  }
 
-  QuadrantPointer_t insertionQuadrant = quadOctree[targets[0]][targets[1]][targets[2]];
-
-  if ( insertionQuadrant == nullptr )
-  {
-//    cout << "Creating a new subquadrant for insertion" << endl;
-    insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions.vec[0] ) ;
-    quadOctree[targets[0]][targets[1]][targets[2]] = insertionQuadrant;
-  }
-
-  return insertionQuadrant;
+    return insertionQuadrant;
 }
 
 bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
@@ -213,5 +256,22 @@ vector<shared_ptr<Quadrant>> Quadrant::children() {
     }
   }
   return liveChildren;
+}
+
+Quadrant Quadrant::emptyLeaf(int level, VecStruct &pos, float width) {
+    // TODO Implement for real
+  return Quadrant(level, pos, width);
+}
+
+Quadrant Quadrant::filledLeaf(shapePointer_t newShape, int level, VecStruct &pos, float width) {
+  return Quadrant(std::move(newShape), level, pos, width);
+}
+
+QuadrantPointer_t Quadrant::subQuadrantAt(vector<int> &indices) {
+    return quadOctree[indices[0]][indices[1]][indices[2]];
+}
+
+void Quadrant::assignSubQuadrantAt(vector<int> &indices, QuadrantPointer_t newQuadrant) {
+    this->quadOctree[indices[0]][indices[1]][indices[2]] = newQuadrant;
 }
 
