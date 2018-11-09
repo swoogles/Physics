@@ -4,11 +4,12 @@
 
 #include <utility>
 
+#include <utility>
+
 #include "MyShape.h"
 #include "Quadrant.h"
 
-bool withinBoundaries(VecStruct & insertPos, VecStruct & minBoundaries, VecStruct & maxBoundaries)
-{
+bool withinBoundaries(VecStruct & insertPos, VecStruct & minBoundaries, VecStruct & maxBoundaries) {
   bool withinBoundaries = true;
   withinBoundaries &= (insertPos.x() > minBoundaries.x() && insertPos.x() < maxBoundaries.x());
   withinBoundaries &= (insertPos.y() > minBoundaries.y() && insertPos.y() < maxBoundaries.y());
@@ -16,8 +17,7 @@ bool withinBoundaries(VecStruct & insertPos, VecStruct & minBoundaries, VecStruc
   return withinBoundaries;
 }
 
-shapePointer_t Quadrant::getShapeInQuadrant()
-{
+shapePointer_t Quadrant::getShapeInQuadrant() {
   return shapeInQuadrant;
 }
 
@@ -93,20 +93,17 @@ Quadrant::Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float wid
 
 }
 
-QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z )
-{
+QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
   return quadOctree[x][y][z];
 }
 
 
-void Quadrant::getCenterOfMass( sgVec4 centerOfMass )
-{
+void Quadrant::getCenterOfMass( sgVec4 centerOfMass ) {
 	sgCopyVec4( centerOfMass, this->weightedPosition.vec );
 	if (mass != 0) sgScaleVec4( centerOfMass, 1.0/mass );
 }
 
-void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
-{
+void Quadrant::setCenterOfMass( sgVec4 centerOfMass ) {
   sgCopyVec4( this->weightedPosition.vec, centerOfMass );
   if (mass != 0) sgScaleVec4( this->weightedPosition.vec, mass );
 }
@@ -122,63 +119,43 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass )
      b. Subdivide the region further by creating four children. Then, recursively insert both b and c into the appropriate quadrant(s). Since b and c may still end up in the same quadrant, there may be several subdivisions during a single insertion.      c. Finally, update the center-of-mass and total mass of x.
 */
 
-void Quadrant::insertShape(shapePointer_t insertedShape)
-{
-  if (!shapeIsInQuadrantBoundaries(insertedShape)) {
+void Quadrant::insertShape(shapePointer_t insertedShape) {
+    if (!shapeIsInQuadrantBoundaries(insertedShape)) {
 
-    /* TODO Either
-     *  Mark the shape for deletion in some way
-     *  Expand the Quadrant until it *does* include the shape
-     */
-    return;
-  }
+        /* TODO Either
+         *  Mark the shape for deletion in some way
+         *  Expand the Quadrant until it *does* include the shape
+         */
+        return;
+    }
 
-  // 1.
-  if ( isLeaf && !containsBody )
-  {
-    shapeInQuadrant = insertedShape;
-    containsBody = true;
-    this->setMass( insertedShape->getMass() );
-    this->setCenterOfMass( insertedShape->getPos().vec );
-  }
-  // 2. a
-  else if ( ! isLeaf )
-  {
-    this->adjustMass( insertedShape->getMass() );
-    this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
+    this->adjustMass(insertedShape->getMass());
+    // 1.
+    if ( !containsBody ) {
+        shapeInQuadrant = insertedShape;
+        containsBody = true;
+        this->setCenterOfMass( insertedShape->getPos().vec );
+    }
+    // 2. a
+    else {
+        this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
+        if (isLeaf) {
+            isLeaf = false;
+            // I deviate from the described algorithm here, because I only make the
+            // Quadrants necessary, rather than all 4 up front.
+            this->determineSubQuadrant(shapeInQuadrant)->insertShape(std::move(shapeInQuadrant));
+        }
+        this->determineSubQuadrant(insertedShape)->insertShape(insertedShape);
+    }
 
-    // 2. b
-    QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
-    targetQuadrant->insertShape( insertedShape );
-  }
-  // 3. a
-  else
-  {
-    this->adjustMass( insertedShape->getMass() );
-    isLeaf = false;
-    // 3. b
-    // I deviate from the described algorithm here, because I only make the
-    // Quadrants necessary, rather than all 4 up front.
-    QuadrantPointer_t targetQuadrant = this->determineShapeQuadrant( insertedShape );
-    QuadrantPointer_t targetQuadrantB = this->determineShapeQuadrant( shapeInQuadrant );
-
-    this->weightedPosition =  this->weightedPosition.plus(insertedShape->getWeightedPosition());
-    // 3.c
-    targetQuadrant->insertShape( insertedShape );
-    targetQuadrantB->insertShape( shapeInQuadrant );
-    // TODO I should be removing shapeInQuadrant here.
-    shapeInQuadrant = nullptr;
-  }
-
-  // 3.d
-  //  sgVec4 CoMPosition;
-  //  this->getCenterOfMass( CoMPosition );
-  //  centerOfMassRepresentation->setPos( CoMPosition );
+    // 3.d
+    //  sgVec4 CoMPosition;
+    //  this->getCenterOfMass( CoMPosition );
+    //  centerOfMassRepresentation->setPos( CoMPosition );
 }
 
-vector<int> Quadrant::getSubQuadrantSubScripts( shapePointer_t shapeToInsert ){
-  VecStruct insertPos = shapeToInsert->getPos();
-  vector<int> targets{INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX, INVALID_OCTREE_INDEX};
+vector<int> Quadrant::getSubQuadrantSubScripts(VecStruct &insertPos){
+  vector<int> targets(3);
   for ( int i = 0; i < 3; i++ ) {
     if ( insertPos.vec[i] < pos[i] ) {
       targets[i] = 0;
@@ -192,19 +169,18 @@ vector<int> Quadrant::getSubQuadrantSubScripts( shapePointer_t shapeToInsert ){
 
 // Guaranteed to hand back an instantiated Quadrant
 // TODO This is scary. A determination shouldn't create anything.
-QuadrantPointer_t Quadrant::determineShapeQuadrant( shape_pointer shapeToInsert )
-{
-    auto targetIndices = this->getSubQuadrantSubScripts(std::move(shapeToInsert));
+QuadrantPointer_t Quadrant::determineSubQuadrant(shape_pointer shapeToInsert) {
+    VecStruct insertPos = shapeToInsert->getPos();
+    auto targetIndices = this->getSubQuadrantSubScripts(insertPos);
 
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
         // Each dimension is cut in half as you go down
         VecStruct newDimensions = dimensions.scaledBy(.5);
-
         VecStruct offsets = dimensions.scaledBy(.25);
-
         VecStruct newPos(pos);
+
         for ( int i = 0; i < 3; i++ ) {
             if (targetIndices[i] == 0) {
                 newPos.vec[i] -= offsets.vec[i];
@@ -225,7 +201,6 @@ bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
   // Each dimension is cut in half as you go down
   VecStruct newDimensions = dimensions.scaledBy(.5);
 
-  // Boundaries [0]=min : [1]=central : [2]=max
   VecStruct posVec(pos);
   VecStruct maxBoundariesVec = posVec.plus(newDimensions);
   VecStruct minBoundariesVec = posVec.minus(newDimensions);
@@ -272,6 +247,6 @@ QuadrantPointer_t Quadrant::subQuadrantAt(vector<int> &indices) {
 }
 
 void Quadrant::assignSubQuadrantAt(vector<int> &indices, QuadrantPointer_t newQuadrant) {
-    this->quadOctree[indices[0]][indices[1]][indices[2]] = newQuadrant;
+    this->quadOctree[indices[0]][indices[1]][indices[2]] = std::move(newQuadrant);
 }
 
