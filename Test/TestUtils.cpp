@@ -6,7 +6,6 @@
 
 shared_ptr<Circle> TestUtils::testCircle() {
     auto mass = 100;
-    float radius = 10;
     float density = 1;
 
     sgVec4 aPos = { 0, 0, 0, 1 };
@@ -16,7 +15,6 @@ shared_ptr<Circle> TestUtils::testCircle() {
     return std::make_shared<Circle>(
             aPos,
             mass,
-            radius,
             startMom,
             density,
             color
@@ -42,7 +40,6 @@ unique_ptr<Circle> TestUtils::improvedTestCircle() {
 
 shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
     auto mass = 100;
-    float radius = 10;
     float density = 1;
 
     sgVec4 aPos = { x, y, z, 1 };
@@ -52,7 +49,6 @@ shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
     return std::make_shared<Circle>(
             aPos,
             mass,
-            radius,
             startMom,
             density,
             color
