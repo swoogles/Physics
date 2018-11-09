@@ -45,12 +45,6 @@ void Simulation::refreshQuadrant()
     pos->vec[3] = 1;
 
   float side = 10e5; //Formation Value
-//  sgVec3 dimensions = { side, side, side };
-  vecPtr dimensions = make_unique<VecStruct>();
-  dimensions->vec[0] = side;
-  dimensions->vec[1] = side;
-  dimensions->vec[2] = side;
-  // Uh oh.  I think this is it.
   quadrant = std::make_shared<Quadrant>( 1, *pos, side ) ;
 
   for ( const auto & curShape : physicalObjects.getShapes() ) {
@@ -302,15 +296,6 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
             //b.
             curObject->adjustMomentum(gravVec->vec);
         } else { //3.
-            // TODO Get this enabled
-//            if (!quadrant->children().empty()) {
-//                for (const auto &subQuadrant: quadrant->children()) {
-//                    deleteList.insertUniqueElements(
-//                            calcForceOnObject_Octree(curObject, subQuadrant, dt, recursionLevel + 1));
-//                }
-//            }
-
-//            /*
             QuadrantPointer_t targetQuadrant;
             // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
             for ( int x = 0; x < 2; x++ ) {
@@ -323,7 +308,6 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
                     }
                 }
             }
-//             */
 
         }
         return deleteList;
