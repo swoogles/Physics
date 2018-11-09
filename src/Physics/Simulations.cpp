@@ -50,6 +50,8 @@ void Simulations::simpleOrbit() {
 SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
 
+    float dt = 1.0;
+
     int numPieces = 0;
     float cueMass = 100.0;
 
@@ -104,12 +106,14 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     }
 
     // TODO Fix places where a default 0 got passed to Simulation dt
-    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
+    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, dt, false, forceCalculationMethod);
 }
 
 SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceCalculationMethod forceCalculationMethod)
 {
     ShapeList physicalObjects;
+
+    float dt = 1.0;
 
     float cueMass = 100.0;
     float ballMass = 0.156;
@@ -151,12 +155,14 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
             physicalObjects.addShapeToList( shapeForInsertion );
         }
     }
-    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
+    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, dt, false, forceCalculationMethod);
 }
 
 
 SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
+
+    float dt = 1.0;
 
     float cueMass = 100.0;
     float ballMass = 0.156;
@@ -204,7 +210,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
             }
         }
     }
-    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, 0, false, forceCalculationMethod);
+    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, dt, false, forceCalculationMethod);
 }
 
 SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod, float dt)
