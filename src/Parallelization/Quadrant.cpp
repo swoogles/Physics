@@ -117,38 +117,30 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass ) {
 
   3. a. If node x is an external node, say containing a body named c, then there are two bodies b and c in the same region. 
      b. Subdivide the region further by creating four children. Then, recursively insert both b and c into the appropriate quadrant(s). Since b and c may still end up in the same quadrant, there may be several subdivisions during a single insertion.      c. Finally, update the center-of-mass and total mass of x.
+
+     TODO Regarding shapes outside of the quadrant, I should either
+     *  Mark the shape for deletion in some way
+     *  Expand the Quadrant until it *does* include the shape
 */
 
 void Quadrant::insertShape(shapePointer_t insertedShape) {
-    /* TODO Either
-     *  Mark the shape for deletion in some way
-     *  Expand the Quadrant until it *does* include the shape
-     */
     if (!shapeIsInQuadrantBoundaries(insertedShape)) { return; }
 
     this->adjustMass(insertedShape->getMass());
-    // 1.
     if ( !containsBody ) {
         shapeInQuadrant = insertedShape;
         containsBody = true;
         this->setCenterOfMass( insertedShape->getPos().vec );
     }
-    // 2. a
     else {
         this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
         if (isLeaf) {
             isLeaf = false;
-            // I deviate from the described algorithm here, because I only make the
-            // Quadrants necessary, rather than all 4 up front.
             this->determineSubQuadrant(shapeInQuadrant)->insertShape(std::move(shapeInQuadrant));
         }
         this->determineSubQuadrant(insertedShape)->insertShape(insertedShape);
     }
-
-    // 3.d
-    //  sgVec4 CoMPosition;
-    //  this->getCenterOfMass( CoMPosition );
-    //  centerOfMassRepresentation->setPos( CoMPosition );
+    // 3.d centerOfMassRepresentation->setPos( CoMPosition );
 }
 
 vector<int> Quadrant::getSubQuadrantSubScripts(VecStruct &insertPos){
