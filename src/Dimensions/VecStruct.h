@@ -27,6 +27,7 @@ public:
     VecStruct withElementsMultipliedBy(const VecStruct &other);
     VecStruct plus(const VecStruct & other);
     VecStruct minus(const VecStruct & other);
+    VecStruct unit();
 };
 
 #endif

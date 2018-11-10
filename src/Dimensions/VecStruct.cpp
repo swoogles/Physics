@@ -59,3 +59,9 @@ VecStruct VecStruct::withElementsMultipliedBy(const VecStruct &other) {
     return retVec;
 }
 
+VecStruct VecStruct::unit() {
+    sgVec4 newVec;
+    sgNormaliseVec4(newVec, vec);
+    return newVec;
+}
+
