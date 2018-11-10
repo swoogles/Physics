@@ -27,7 +27,7 @@ typedef std::unique_ptr<VecStruct> vecPtr;
 class Moveable {
 protected:
 
-	sgVec4 pos;
+	sgVec4 pos; // TODO make this a VecStruct
 	sgQuat orientationQuat;
 	sgMat4 orientationMat;
 

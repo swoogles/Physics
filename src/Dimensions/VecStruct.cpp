@@ -23,6 +23,11 @@ VecStruct::VecStruct(float x, float y, float z)
 
 }
 
+VecStruct::VecStruct(float x, float y, float z, bool anchored)
+    :vec{x, y, z, anchored ? 1.0f : 0.0f} {
+}
+
+
 VecStruct VecStruct::scaledBy(float scalingFactor) {
     // TODO Make sure Vec3 behavior is appropriate here.
     sgVec4 newVec;

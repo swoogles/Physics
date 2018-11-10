@@ -73,24 +73,7 @@ Quadrant::Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float wid
   // TODO Can this be a more direct move?
   this->setPos( pos.vec );
 
-  sgVec3 CoMColor = { 0, 1, 0 };
-  sgVec4 comPos = { 0, 0, 0, 1};
-  float comMass = 0;
-  float comRadius = 1.0;
-  sgVec4 comMomentum = { 0, 0, 0 };
-  float comDensity = 1.0;
-
-  /*
-  centerOfMassRepresentation = make_shared<Circle>(
-          comPos,
-          comMass,
-          comRadius,
-          comMomentum,
-          comDensity,
-          CoMColor
-  );
-   */
-
+  // TODO reinstate CoM calculations here
 }
 
 QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
@@ -118,6 +101,7 @@ void Quadrant::insertShape(shapePointer_t insertedShape) {
 
     this->adjustMass(insertedShape->getMass());
     this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
+
     if ( !containsBody ) {
         shapeInQuadrant = insertedShape;
         containsBody = true;
@@ -132,25 +116,6 @@ void Quadrant::insertShape(shapePointer_t insertedShape) {
         }
     }
     // 3.d centerOfMassRepresentation->setPos( CoMPosition );
-}
-
-/*
- * TODO Consider vector<boolean> or vec<Direction>
- *  or vec<OctreeIndex>, which would just be an Enum with a 0 and 1 value.
- *
- * The data I care about is *not* an int.
- */
-vector<int> Quadrant::getSubQuadrantSubScripts(VecStruct &insertPos){
-  vector<int> targets(3);
-  for ( int i = 0; i < 3; i++ ) {
-    if ( insertPos.vec[i] < pos[i] ) {
-      targets[i] = 0;
-    } else {
-      targets[i] = 1;
-    }
-  }
-
-  return targets;
 }
 
 OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant) {

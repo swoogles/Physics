@@ -51,7 +51,6 @@ class Quadrant : public Box
 
     bool positionIsInQuadrantBoundaries(VecStruct insertPos);
 
-    vector<int> getSubQuadrantSubScripts(VecStruct &insertPos);
     QuadrantPointer_t subQuadrantAt(OctreeCoordinates indices);
     void assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newSubQuadrant);
     OctreeCoordinates coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant);

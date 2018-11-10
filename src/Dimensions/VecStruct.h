@@ -16,6 +16,7 @@ public:
     VecStruct();
     VecStruct(sgVec4 coordinates);
     VecStruct(float x, float y, float z);
+    VecStruct(float x, float y, float z, bool anchored);
     static unique_ptr <VecStruct> vecFromAtoB(VecStruct &a, VecStruct &b);
 
     inline float x() {return vec[0];}

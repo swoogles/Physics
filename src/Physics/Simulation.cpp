@@ -37,19 +37,14 @@ Simulation::Simulation(Simulation &&originalSimulation, ShapeList newObjects)
 
 void Simulation::refreshQuadrant()
 {
-    vecPtr pos = make_unique<VecStruct>();
-    // TODO encapsulate in constructor
-    pos->vec[0] = 0;
-    pos->vec[1] = 0;
-    pos->vec[2] = 0;
-    pos->vec[3] = 1;
+    VecStruct pos(0, 0, 0, true);
 
-  float side = 10e5; //Formation Value
-  quadrant = std::make_shared<Quadrant>( 1, *pos, side ) ;
+    float side = 10e5; //Formation Value
+    quadrant = std::make_shared<Quadrant>( 1, pos, side ) ;
 
-  for ( const auto & curShape : physicalObjects.getShapes() ) {
-    quadrant->insertShape( curShape );
-  }
+    for ( const auto & curShape : physicalObjects.getShapes() ) {
+        quadrant->insertShape( curShape );
+    }
 }
 
 void Simulation::updateXYMinsAndMaxes(sgVec4 curPos) {
@@ -130,18 +125,14 @@ vecPtr calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
 {
     vecPtr gravVec = make_unique<VecStruct>();
 
-    sgVec4 unitVec{};
-
     VecStruct sepVec(object1.getVectorToObject(object2));
 
-    SGfloat rSquared = sgLengthSquaredVec4(sepVec.vec);
+    SGfloat rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
 
-    if (rSquared < .00001) {
-        rSquared = .00001;
-    }
     float G = 6.67384e-11;
     float forceMagnitude = (G * object1.getMass() * object2.getMass()) / rSquared;
 
+    sgVec4 unitVec{};
     sgNormaliseVec4(unitVec, sepVec.vec);
 
     sgScaleVec4(gravVec->vec, unitVec, forceMagnitude);
