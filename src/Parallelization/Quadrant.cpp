@@ -120,14 +120,11 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass ) {
 */
 
 void Quadrant::insertShape(shapePointer_t insertedShape) {
-    if (!shapeIsInQuadrantBoundaries(insertedShape)) {
-
-        /* TODO Either
-         *  Mark the shape for deletion in some way
-         *  Expand the Quadrant until it *does* include the shape
-         */
-        return;
-    }
+    /* TODO Either
+     *  Mark the shape for deletion in some way
+     *  Expand the Quadrant until it *does* include the shape
+     */
+    if (!shapeIsInQuadrantBoundaries(insertedShape)) { return; }
 
     this->adjustMass(insertedShape->getMass());
     // 1.

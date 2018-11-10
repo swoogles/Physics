@@ -249,8 +249,7 @@ void Simulation::calcForcesAll_LessNaive()
 
 
 PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &curObject, const QuadrantPointer_t &curQuadrant, float dt) {
-    //1.
-    //a.
+    //1. a.
     PairCollection deleteList;
     shapePointer_t shapeInQuadrant = curQuadrant->getShapeInQuadrant();
 
