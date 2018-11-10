@@ -124,7 +124,7 @@ void Quadrant::setCenterOfMass( sgVec4 centerOfMass ) {
 */
 
 void Quadrant::insertShape(shapePointer_t insertedShape) {
-    if (!shapeIsInQuadrantBoundaries(insertedShape)) { return; }
+    if (!positionIsInQuadrantBoundaries(insertedShape->getPos())) { return; }
 
     this->adjustMass(insertedShape->getMass());
     if ( !containsBody ) {
@@ -136,13 +136,21 @@ void Quadrant::insertShape(shapePointer_t insertedShape) {
         this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
         if (isLeaf) {
             isLeaf = false;
-            this->determineSubQuadrant(shapeInQuadrant->getPos())->insertShape(std::move(shapeInQuadrant));
+            this->subQuadrantThatContains(shapeInQuadrant->getPos())
+                ->insertShape(std::move(shapeInQuadrant));
         }
-        this->determineSubQuadrant(insertedShape->getPos())->insertShape(insertedShape);
+        this->subQuadrantThatContains(insertedShape->getPos())
+            ->insertShape(insertedShape);
     }
     // 3.d centerOfMassRepresentation->setPos( CoMPosition );
 }
 
+/*
+ * TODO Consider vector<boolean> or vec<Direction>
+ *  or vec<OctreeIndex>, which would just be an Enum with a 0 and 1 value.
+ *
+ * The data I care about is *not* an int.
+ */
 vector<int> Quadrant::getSubQuadrantSubScripts(VecStruct &insertPos){
   vector<int> targets(3);
   for ( int i = 0; i < 3; i++ ) {
@@ -158,8 +166,9 @@ vector<int> Quadrant::getSubQuadrantSubScripts(VecStruct &insertPos){
 
 // Guaranteed to hand back an instantiated Quadrant
 // TODO This is scary. A determination shouldn't create anything.
-QuadrantPointer_t Quadrant::determineSubQuadrant(VecStruct insertPos) {
+QuadrantPointer_t Quadrant::subQuadrantThatContains(VecStruct insertPos) {
     auto targetIndices = this->getSubQuadrantSubScripts(insertPos);
+    // TODO function to determine subQuadrant values based purely on indices.
 
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
@@ -183,8 +192,7 @@ QuadrantPointer_t Quadrant::determineSubQuadrant(VecStruct insertPos) {
     return insertionQuadrant;
 }
 
-bool Quadrant::shapeIsInQuadrantBoundaries(shapePointer_t newShape) {
-  VecStruct insertPos = newShape->getPos();
+bool Quadrant::positionIsInQuadrantBoundaries(VecStruct insertPos) {
 
   // Each dimension is cut in half as you go down
   VecStruct newDimensions = dimensions.scaledBy(.5);

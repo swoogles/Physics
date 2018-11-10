@@ -43,7 +43,7 @@ class Quadrant : public Box
 
     array_typeNew  quadOctree;
 
-    QuadrantPointer_t determineSubQuadrant(VecStruct insertPos);
+    QuadrantPointer_t subQuadrantThatContains(VecStruct insertPos);
 
     //! Alters mass of object by dMass
     void adjustMass(float dMass);
@@ -51,7 +51,7 @@ class Quadrant : public Box
     void getCenterOfMass(sgVec4 centerOfMass);
     void setCenterOfMass( sgVec4 centerOfMass );
 
-    bool shapeIsInQuadrantBoundaries(shapePointer_t newShape);
+    bool positionIsInQuadrantBoundaries(VecStruct insertPos);
 
     vector<int> getSubQuadrantSubScripts(VecStruct &insertPos);
     QuadrantPointer_t subQuadrantAt(vector<int> & indices);
