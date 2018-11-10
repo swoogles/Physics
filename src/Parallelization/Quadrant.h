@@ -43,7 +43,7 @@ class Quadrant : public Box
 
     array_typeNew  quadOctree;
 
-    QuadrantPointer_t determineSubQuadrant(shape_pointer shapeToInsert);
+    QuadrantPointer_t determineSubQuadrant(VecStruct insertPos);
 
     //! Alters mass of object by dMass
     void adjustMass(float dMass);

@@ -136,9 +136,9 @@ void Quadrant::insertShape(shapePointer_t insertedShape) {
         this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
         if (isLeaf) {
             isLeaf = false;
-            this->determineSubQuadrant(shapeInQuadrant)->insertShape(std::move(shapeInQuadrant));
+            this->determineSubQuadrant(shapeInQuadrant->getPos())->insertShape(std::move(shapeInQuadrant));
         }
-        this->determineSubQuadrant(insertedShape)->insertShape(insertedShape);
+        this->determineSubQuadrant(insertedShape->getPos())->insertShape(insertedShape);
     }
     // 3.d centerOfMassRepresentation->setPos( CoMPosition );
 }
@@ -158,8 +158,7 @@ vector<int> Quadrant::getSubQuadrantSubScripts(VecStruct &insertPos){
 
 // Guaranteed to hand back an instantiated Quadrant
 // TODO This is scary. A determination shouldn't create anything.
-QuadrantPointer_t Quadrant::determineSubQuadrant(shape_pointer shapeToInsert) {
-    VecStruct insertPos = shapeToInsert->getPos();
+QuadrantPointer_t Quadrant::determineSubQuadrant(VecStruct insertPos) {
     auto targetIndices = this->getSubQuadrantSubScripts(insertPos);
 
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
