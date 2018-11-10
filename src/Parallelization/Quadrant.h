@@ -49,9 +49,6 @@ class Quadrant : public Box
     //! Alters mass of object by dMass
     void adjustMass(float dMass);
 
-    void getCenterOfMass(sgVec4 centerOfMass);
-    void setCenterOfMass( sgVec4 centerOfMass );
-
     bool positionIsInQuadrantBoundaries(VecStruct insertPos);
 
     vector<int> getSubQuadrantSubScripts(VecStruct &insertPos);

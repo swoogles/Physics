@@ -98,16 +98,6 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
 }
 
 
-void Quadrant::getCenterOfMass( sgVec4 centerOfMass ) {
-	sgCopyVec4( centerOfMass, this->weightedPosition.vec );
-	if (mass != 0) sgScaleVec4( centerOfMass, 1.0/mass );
-}
-
-void Quadrant::setCenterOfMass( sgVec4 centerOfMass ) {
-  sgCopyVec4( this->weightedPosition.vec, centerOfMass );
-  if (mass != 0) sgScaleVec4( this->weightedPosition.vec, mass );
-}
-
 /* Description of insertion algorithm
 
   1. If node x does not contain a body, put the new body b here.
@@ -127,20 +117,19 @@ void Quadrant::insertShape(shapePointer_t insertedShape) {
     if (!positionIsInQuadrantBoundaries(insertedShape->getPos())) { return; }
 
     this->adjustMass(insertedShape->getMass());
+    this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
     if ( !containsBody ) {
         shapeInQuadrant = insertedShape;
         containsBody = true;
-        this->setCenterOfMass( insertedShape->getPos().vec );
     }
     else {
-        this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
+        this->subQuadrantThatContains(insertedShape->getPos())
+                ->insertShape(insertedShape);
         if (isLeaf) {
             isLeaf = false;
             this->subQuadrantThatContains(shapeInQuadrant->getPos())
                 ->insertShape(std::move(shapeInQuadrant));
         }
-        this->subQuadrantThatContains(insertedShape->getPos())
-            ->insertShape(insertedShape);
     }
     // 3.d centerOfMassRepresentation->setPos( CoMPosition );
 }
@@ -181,7 +170,7 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(VecStruct insertPos) {
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
-        // Each dimension is cut in half as you go down
+        // TODO This can be turned into a dedicated subQuadrant function.
         VecStruct newDimensions = dimensions.scaledBy(.5);
         VecStruct offsets = dimensions.scaledBy(.25);
         VecStruct newPos = VecStruct(pos).plus(
