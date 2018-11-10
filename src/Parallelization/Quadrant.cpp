@@ -164,10 +164,18 @@ vector<int> Quadrant::getSubQuadrantSubScripts(VecStruct &insertPos){
   return targets;
 }
 
+OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant) {
+    return OctreeCoordinates(
+        pointInsideQuadrant.vec[0] < pos[0],
+                pointInsideQuadrant.vec[1] < pos[1],
+                pointInsideQuadrant.vec[2] < pos[2]
+    );
+}
+
 // Guaranteed to hand back an instantiated Quadrant
 // TODO This is scary. A determination shouldn't create anything.
 QuadrantPointer_t Quadrant::subQuadrantThatContains(VecStruct insertPos) {
-    auto targetIndices = this->getSubQuadrantSubScripts(insertPos);
+    auto targetIndices = this->coordinatesForSubQuadrantContaining(insertPos);
     // TODO function to determine subQuadrant values based purely on indices.
 
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
@@ -176,15 +184,10 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(VecStruct insertPos) {
         // Each dimension is cut in half as you go down
         VecStruct newDimensions = dimensions.scaledBy(.5);
         VecStruct offsets = dimensions.scaledBy(.25);
-        VecStruct newPos(pos);
+        VecStruct newPos = VecStruct(pos).plus(
+                offsets.withElementsMultipliedBy(targetIndices.polarities())
+        );
 
-        for ( int i = 0; i < 3; i++ ) {
-            if (targetIndices[i] == 0) {
-                newPos.vec[i] -= offsets.vec[i];
-            } else {
-                newPos.vec[i] += offsets.vec[i];
-            }
-        }
         insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions.vec[0] ) ;
         this->assignSubQuadrantAt(targetIndices, insertionQuadrant);
     }
@@ -193,16 +196,12 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(VecStruct insertPos) {
 }
 
 bool Quadrant::positionIsInQuadrantBoundaries(VecStruct insertPos) {
-
-  // Each dimension is cut in half as you go down
   VecStruct newDimensions = dimensions.scaledBy(.5);
 
   VecStruct posVec(pos);
   VecStruct maxBoundariesVec = posVec.plus(newDimensions);
   VecStruct minBoundariesVec = posVec.minus(newDimensions);
 
-  // TODO make one function that will take 2 vectors and return
-  // true if one falls completely within the bounds of another
   return withinBoundaries( insertPos, minBoundariesVec, maxBoundariesVec );
 }
 
@@ -212,13 +211,11 @@ void Quadrant::adjustMass(float dMass) {
 
 vector<shared_ptr<Quadrant>> Quadrant::children() {
   vector<shared_ptr<Quadrant>>liveChildren ;
-  // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
   for ( int x = 0; x < 2; x++ ) {
     for ( int y = 0; y < 2; y++ ) {
       for ( int z = 0; z < 2; z++ ) {
         QuadrantPointer_t targetQuadrant = this->getQuadrantFromCell( x, y, z );
         if ( targetQuadrant != nullptr ) {
-            cout << "Return child at quadrant: " << x << ", " << y << ", " << z << endl;
           liveChildren.push_back(targetQuadrant);
           auto nextChildren = targetQuadrant->children();
           liveChildren.insert(std::end(liveChildren), std::begin(nextChildren), std::end(nextChildren));
@@ -238,11 +235,14 @@ Quadrant Quadrant::filledLeaf(shapePointer_t newShape, int level, VecStruct &pos
   return Quadrant(std::move(newShape), level, pos, width);
 }
 
-QuadrantPointer_t Quadrant::subQuadrantAt(vector<int> &indices) {
-    return quadOctree[indices[0]][indices[1]][indices[2]];
+QuadrantPointer_t Quadrant::subQuadrantAt(OctreeCoordinates indices) {
+    auto ints = indices.ints();
+    return quadOctree[ints[0]][ints[1]][ints[2]];
 }
 
-void Quadrant::assignSubQuadrantAt(vector<int> &indices, QuadrantPointer_t newQuadrant) {
-    this->quadOctree[indices[0]][indices[1]][indices[2]] = std::move(newQuadrant);
+void Quadrant::assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newQuadrant) {
+    auto ints = indices.ints();
+    this->quadOctree[ints[0]][ints[1]][ints[2]] = std::move(newQuadrant);
 }
+
 

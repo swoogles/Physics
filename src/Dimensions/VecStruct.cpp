@@ -45,3 +45,12 @@ VecStruct VecStruct::minus(const VecStruct &other) {
     return newVecStruct;
 }
 
+VecStruct VecStruct::withElementsMultipliedBy(const VecStruct &other) {
+    VecStruct retVec(
+            this->vec[0] * other.vec[0],
+            this->vec[1] * other.vec[1],
+            this->vec[2] * other.vec[2]
+            );
+    return retVec;
+}
+

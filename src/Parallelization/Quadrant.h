@@ -8,6 +8,7 @@
 #include "../ShapeFiles/Circle.h"
 #include "../ShapeFiles/ShapeList.h"
 #include "../ShapeFiles/PairCollection.h"
+#include "OctreeCoordinates.h"
 
 #include <boost/multi_array/multi_array_ref.hpp>
 #include <boost/multi_array.hpp>
@@ -54,8 +55,9 @@ class Quadrant : public Box
     bool positionIsInQuadrantBoundaries(VecStruct insertPos);
 
     vector<int> getSubQuadrantSubScripts(VecStruct &insertPos);
-    QuadrantPointer_t subQuadrantAt(vector<int> & indices);
-    void assignSubQuadrantAt(vector<int> & indices, QuadrantPointer_t newSubQuadrant);
+    QuadrantPointer_t subQuadrantAt(OctreeCoordinates indices);
+    void assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newSubQuadrant);
+    OctreeCoordinates coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant);
   public:
     Quadrant(int level, VecStruct &pos, float width);
     Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float width);
