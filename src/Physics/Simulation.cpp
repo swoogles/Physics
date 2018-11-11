@@ -137,32 +137,21 @@ VecStruct calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
 }
 
 void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
-    sgVec4 sepVecUnit;
+    VecStruct sepVecUnit = object1.getVectorToObject(object2).unit();
+    VecStruct n(sepVecUnit);
 
-    sgVec4 tempVec, n, vdiff;
+    float c = n.scalarProduct4(object1.getVelocity().minus(object2.getVelocity()));
 
-    SGfloat multiplier;
+    auto combinedMass = object2.getMass() + object1.getMass();
+    SGfloat multiplierA = -2 * ( object2.getMass() * c ) / combinedMass;
+    VecStruct aVec = n.scaledBy(multiplierA);
 
-    VecStruct sepVec(object1.getVectorToObject(object2));
-    sgNormaliseVec4(sepVecUnit, sepVec.vec);
+    object1.adjustVelocity(aVec.vec);
 
-    VecStruct aVel(object1.getVelocity());
-    VecStruct bVel(object2.getVelocity());
+    SGfloat multiplierB = 2 * ( object1.getMass() * c ) / combinedMass;
+    VecStruct bVec = n.scaledBy(multiplierB);
 
-    sgCopyVec4(n, sepVecUnit);
-    sgSubVec4(vdiff, aVel.vec, bVel.vec);
-
-    float c = sgScalarProductVec4(n, vdiff);
-
-    multiplier = -2 * ( object2.getMass() * c ) / (object2.getMass() + object1.getMass());
-    sgScaleVec4(tempVec, n, multiplier);
-
-    object1.adjustVelocity(tempVec);
-
-    multiplier = 2 * ( object1.getMass() * c ) / (object2.getMass() + object1.getMass());
-    sgScaleVec4(tempVec, n, multiplier);
-
-    object2.adjustVelocity(tempVec);
+    object2.adjustVelocity(bVec.vec);
 
     // TODO Figure out how necessary these lines are.
     while ( object1.isTouching(object2) ) {

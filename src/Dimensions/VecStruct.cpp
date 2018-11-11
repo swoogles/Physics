@@ -65,3 +65,7 @@ VecStruct VecStruct::unit() {
     return newVec;
 }
 
+float VecStruct::scalarProduct4(const VecStruct & other) {
+    return sgScalarProductVec4(this->vec, other.vec);
+}
+

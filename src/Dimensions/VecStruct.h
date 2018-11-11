@@ -28,6 +28,7 @@ public:
     VecStruct plus(const VecStruct & other);
     VecStruct minus(const VecStruct & other);
     VecStruct unit();
+    float scalarProduct4(const VecStruct & other);
 };
 
 #endif
