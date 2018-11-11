@@ -41,7 +41,7 @@ protected:
 	float mass; // TODO This gots'ta go.
 	float density;
 
-	sgVec3 color;
+	VecStruct color;
 
 	/*! \brief Calculates the moment of inertia for the object
 	 *

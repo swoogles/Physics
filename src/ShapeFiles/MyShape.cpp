@@ -73,8 +73,7 @@ float MyShape::getDensity() {
 }
 
 VecStruct MyShape::getColor() const {
-    VecStruct vecStruct;
-    sgCopyVec4(vecStruct.vec, color);
+    VecStruct vecStruct(color.vec);
     return vecStruct;
 }
 
@@ -90,8 +89,8 @@ void MyShape::calcColor() {
 		greenAmount = 1.0;
 	}
 
-	color[0] = redAmount;
-	color[1] = greenAmount;
+	color.vec[0] = redAmount;
+	color.vec[1] = greenAmount;
 }
 
 ShapeType MyShape::getType() { }
