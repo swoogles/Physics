@@ -50,13 +50,13 @@ float MyShape::getMomentOfInertia() { return 1;}
 void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
 	sgCopyVec4(prevAngVelocity, angVelocity);
 	float I = getMomentOfInertia();
-	sgCopyVec4(angMomentum, newAngMomentum);
-	sgCopyVec4(angVelocity, angMomentum);
+	sgCopyVec4(angMomentum.vec, newAngMomentum);
+	sgCopyVec4(angVelocity, angMomentum.vec);
 	sgScaleVec4(angVelocity, 1.0f/I);
 }
 
 VecStruct MyShape::getAngMomentum() {
-    VecStruct retVec(angMomentum);
+    VecStruct retVec(angMomentum.vec);
     return retVec;
 }
 

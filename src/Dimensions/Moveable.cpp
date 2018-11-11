@@ -69,15 +69,15 @@ void Moveable::setAngVelocity(const sgVec4 newAngVelocity) {
 	sgCopyVec4(prevAngVelocity, angVelocity);
 	float I = getMomentOfInertia();
 	sgCopyVec4(angVelocity, newAngVelocity);
-	sgCopyVec4(angMomentum, angVelocity);
-	sgScaleVec4(angMomentum, I);
+	sgCopyVec4(angMomentum.vec, angVelocity);
+	sgScaleVec4(angMomentum.vec, I);
 }
 
 void Moveable::adjustAngVelocity(const sgVec4 dAngVelocity) {
 	float I = getMomentOfInertia();
 	sgAddVec4(angVelocity, dAngVelocity);
-	sgCopyVec4(angMomentum, angVelocity);
-	sgScaleVec4(angMomentum, I);
+	sgCopyVec4(angMomentum.vec, angVelocity);
+	sgScaleVec4(angMomentum.vec, I);
 }
 
 void Moveable::update(float dt) {

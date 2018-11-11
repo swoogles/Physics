@@ -34,7 +34,7 @@ protected:
     VecStruct momentum; // TODO This gots'ta go.
 	VecStruct prevMomentum;
 
-	sgVec4 angMomentum;
+	VecStruct angMomentum;
 	sgVec4 angVelocity;
 	sgVec4 prevAngVelocity;
 
