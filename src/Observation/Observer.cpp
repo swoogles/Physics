@@ -28,7 +28,7 @@ Observer::Observer()
 void Observer::getView() {
 	glLoadMatrixf(perspectiveMat);
 
-	glTranslatef(pos[0], pos[1], pos[2]);
+	glTranslatef(pos.x(), pos.y(), pos.z());
 
 	//Orientation below translate gives orbit around point
 	//Orientation above translate gives pivot at point
@@ -36,11 +36,11 @@ void Observer::getView() {
 }
 
 void Observer::zoomIn() {
-	pos[2] *= .95;
+	pos.vec[2] *= .95;
 }
 
 void Observer::zoomOut() {
-	pos[2] *= 1.05;
+	pos.vec[2] *= 1.05;
 }
 
 void Observer::setAutoScaling(bool shouldScale) {

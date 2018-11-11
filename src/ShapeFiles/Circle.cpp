@@ -43,7 +43,7 @@ Circle::Circle(
 		sgVec3 color
 		) {
 
-	sgCopyVec4(this->pos, pos);
+	sgCopyVec4(this->pos.vec, pos);
 	this->mass = mass;
 	this->radius = radius;
 	sgCopyVec4(this->momentum.vec, momentum);
@@ -59,7 +59,7 @@ Circle::Circle(
 		float density,
 		sgVec3 color
 		) {
-	sgCopyVec4(this->pos, pos);
+	sgCopyVec4(this->pos.vec, pos);
 	this->mass = mass;
 	// TODO calculate this
 //	this->radius = radius;

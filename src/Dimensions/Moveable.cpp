@@ -1,7 +1,7 @@
 #include "Moveable.h"
 
 Moveable::Moveable()
-           :pos{0.0,0.0,0.0,1.0}
+           :pos{0.0,0.0,0.0,true}
            ,orientationQuat{0, 0, 0, 1.0} // Identity Quaternion
            ,orientationMat{{1, 0, 0, 0},
                            {0, 1, 0, 0},
@@ -16,13 +16,13 @@ Moveable::Moveable()
 {}
 
 void Moveable::setPos(float inX, float inY, float inZ) {
-	pos[0] = inX;
-	pos[1] = inY;
-	pos[2] = inZ;
+	pos.vec[0] = inX;
+	pos.vec[1] = inY;
+	pos.vec[2] = inZ;
 }
 
 void Moveable::setPos(const sgVec4 newPos) {
-	sgCopyVec4(this->pos, newPos);
+	sgCopyVec4(this->pos.vec, newPos);
 }
 
 VecStruct Moveable::getPos() {
@@ -87,7 +87,7 @@ void Moveable::update(float dt) {
 			.plus(prevVelocity)
 			.scaledBy(.5) //Get avg velocity
 			.scaledBy(dt);
-	sgAddVec4(pos, dPos.vec);
+	sgAddVec4(pos.vec, dPos.vec);
 
 	sgVec3 rotVec;
 	rotVec[0] = 1; rotVec[1] = 0; rotVec[2] = 0;

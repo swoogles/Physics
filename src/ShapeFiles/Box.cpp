@@ -6,7 +6,7 @@ Box::Box()
 }
 
 Box::Box(sgVec4 pos, float sideLength, sgVec3 color) {
-	sgCopyVec4(this->pos, pos);
+	sgCopyVec4(this->pos.vec, pos);
 	sideLength = sideLength;
 	sgCopyVec3(this->color, color);
 }

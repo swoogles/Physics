@@ -120,9 +120,9 @@ void Quadrant::insertShape(shapePointer_t insertedShape) {
 
 OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant) {
     return OctreeCoordinates(
-        pointInsideQuadrant.vec[0] < pos[0],
-                pointInsideQuadrant.vec[1] < pos[1],
-                pointInsideQuadrant.vec[2] < pos[2]
+        pointInsideQuadrant.x() < pos.x(),
+                pointInsideQuadrant.y() < pos.y(),
+                pointInsideQuadrant.z() < pos.z()
     );
 }
 
