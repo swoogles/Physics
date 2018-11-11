@@ -146,12 +146,12 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
     SGfloat multiplierA = -2 * ( object2.getMass() * c ) / combinedMass;
     VecStruct aVec = n.scaledBy(multiplierA);
 
-    object1.adjustVelocity(aVec.vec);
+    object1.adjustVelocity(aVec);
 
     SGfloat multiplierB = 2 * ( object1.getMass() * c ) / combinedMass;
     VecStruct bVec = n.scaledBy(multiplierB);
 
-    object2.adjustVelocity(bVec.vec);
+    object2.adjustVelocity(bVec);
 
     // TODO Figure out how necessary these lines are.
     while ( object1.isTouching(object2) ) {

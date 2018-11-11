@@ -51,11 +51,12 @@ void Moveable::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
 	sgQuatToMatrix(orientationMat, orientationQuat);
 }
 
-void Moveable::adjustVelocity(const sgVec4 dVel) {
-	sgVec4 tempVec;
-	sgScaleVec4(tempVec, momentum, 1/mass);
-	sgAddVec4(tempVec, dVel);
-	sgScaleVec4(momentum, tempVec, mass);
+void Moveable::adjustVelocity(VecStruct dVel) {
+	VecStruct momentumVec(momentum);
+	sgCopyVec4(
+			momentum,
+			momentumVec.scaledBy(1/mass).plus(dVel).scaledBy(mass).vec
+	) ;
 }
 
 VecStruct Moveable::getVelocity() {

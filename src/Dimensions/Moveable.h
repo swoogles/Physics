@@ -75,7 +75,7 @@ public:
 
 
 	//! Alters momentum of object by <dVel> * mass
-	void adjustVelocity(const sgVec4 dVel);
+	void adjustVelocity(VecStruct dVel);
 
 	VecStruct getVelocity();
 
