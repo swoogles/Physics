@@ -79,3 +79,8 @@ VecStruct VecStruct::vectorProduct3(const VecStruct &other) {
     return retVec;
 }
 
+float VecStruct::length() {
+    SGfloat distanceSquared = sgLengthSquaredVec4(this->vec);
+    return sqrt(distanceSquared);
+}
+

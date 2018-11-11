@@ -31,6 +31,7 @@ public:
     VecStruct unit();
     float scalarProduct4(const VecStruct & other);
     VecStruct vectorProduct3(const VecStruct & other);
+    float length();
 };
 
 #endif
