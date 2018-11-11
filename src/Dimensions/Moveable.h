@@ -58,7 +58,7 @@ public:
 	//! Set position of object to <inX, inY, inZ>
 	void setPos(float inX, float inY, float inZ);
 	//! Set position of object to <newPos>
-	void setPos(const sgVec4 newPos);
+	void setPos(VecStruct newPos);
 
 	VecStruct getPos() ; // Reinstate const-ness
 
@@ -81,9 +81,9 @@ public:
 	VecStruct getVelocity();
 
 	//! Sets angular velocity of object to <newAngVelocity>
-	void setAngVelocity(const sgVec4 newAngVelocity);
+	void setAngVelocity(VecStruct newAngVelocity);
 	//! Alters angular velocity of object by <dAngVelocity>
-	void adjustAngVelocity(const sgVec4 dangVelocity);
+	void adjustAngVelocity(VecStruct dangVelocity);
 
 	//! Moves object based on current normal and angular momentum
 	void update(float);

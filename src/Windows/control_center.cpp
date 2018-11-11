@@ -223,30 +223,30 @@ void control_center::pause_cb(puObject * caller) {
 
 void control_center::rotRight(puObject *) {
   Moveable * curObserver =  Observer::getCurObserver();
-  sgVec3 angVelocity = {0,.5,0};
+  VecStruct angVelocity(0,.5,0);
   curObserver->adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotLeft(puObject *) {
   Observer * curObserver =  Observer::getCurObserver();
-  sgVec3 angVelocity = {0,-.5,0};
+  VecStruct angVelocity(0,-.5,0);
   curObserver->adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotUp(puObject *) {
   Observer * curObserver =  Observer::getCurObserver();
-  sgVec3 angVelocity = {+.5,0,0};
+  VecStruct angVelocity(+.5,0,0);
   curObserver->adjustAngVelocity(angVelocity);
 }
 void control_center::rotDown(puObject *) {
   Observer * curObserver =  Observer::getCurObserver();
-  sgVec3 angVelocity = {-.5,0,0};
+  VecStruct angVelocity(-.5,0,0);
   curObserver->adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotStop(puObject *) {
   Observer * curObserver =  Observer::getCurObserver();
-  sgVec3 angVelocity = {0,0,0};
+  VecStruct angVelocity(0,0,0);
   curObserver->setAngVelocity(angVelocity);
 }
 

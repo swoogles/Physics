@@ -35,7 +35,7 @@ Quadrant::Quadrant(int level, VecStruct &pos, float width)
   this->setMass(0);
   // TODO Require shapeToInsert in constructor.
   // TODO Can this be a more direct move?
-  this->setPos( pos.vec );
+  this->setPos( pos );
 
   sgVec3 CoMColor = { 0, 1, 0 };
   sgVec4 comPos = { 0, 0, 0, 1};
@@ -71,7 +71,7 @@ Quadrant::Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float wid
   this->setMass(shapeInQuadrant->getMass());
   // TODO Require shapeToInsert in constructor.
   // TODO Can this be a more direct move?
-  this->setPos( pos.vec );
+  this->setPos( pos );
 
   // TODO reinstate CoM calculations here
 }

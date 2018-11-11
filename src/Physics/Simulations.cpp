@@ -334,7 +334,8 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod f
         //Check if being placed on previously created object
         while ( physicalObjects.hasConflictsWith( *curShape ) ) {
             randomSplitBodyPlacement(startPlacement, pieceRadius, target);
-            curShape->setPos( startPlacement );
+            VecStruct newPos(startPlacement);
+            curShape->setPos( newPos );
         }
         physicalObjects.addShapeToList( curShape );
     }

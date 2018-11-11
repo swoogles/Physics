@@ -131,7 +131,7 @@ void MyShape::mergeWith(MyShape &otherShape)
 
   this->calcColor();
 
-  this->setPos(COM.vec);
+  this->setPos(COM);
 }
 
 // TODO This should return totalAngMom, instead of mutating parameter.
