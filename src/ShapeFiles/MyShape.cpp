@@ -8,8 +8,7 @@
 #include "MyShape.h"
 
 float MyShape::getDistanceToObject(MyShape &object2) {
-  VecStruct sepVec(this->getVectorToObject(object2));
-  return sgLengthVec4( sepVec.vec );
+    return this->getVectorToObject(object2).length();
 }
 
 MyShape::MyShape() = default;
@@ -48,11 +47,11 @@ VecStruct MyShape::getMomentum() {
 float MyShape::getMomentOfInertia() { return 1;}
 
 void MyShape::setAngMomentum(VecStruct newAngMomentum) {
-	sgCopyVec4(prevAngVelocity.vec, angVelocity.vec);
+    this->prevAngVelocity = angVelocity;
+	this->prevAngVelocity = angVelocity;
 	float I = getMomentOfInertia();
-	sgCopyVec4(angMomentum.vec, newAngMomentum.vec);
-	sgCopyVec4(angVelocity.vec, angMomentum.vec);
-	sgScaleVec4(angVelocity.vec, 1.0f/I);
+	this->angMomentum = newAngMomentum;
+	this->angVelocity = angMomentum.scaledBy(1.0f/I);
 }
 
 VecStruct MyShape::getAngMomentum() {
@@ -98,13 +97,9 @@ ShapeType MyShape::getType() { }
 bool MyShape::isTouching(MyShape &otherShape)
 {
   VecStruct sepVec(this->getVectorToObject(otherShape));
+  float minSep = this->getRadius() + otherShape.getRadius();
 
-  SGfloat distanceSquared = sgLengthSquaredVec4(sepVec.vec);
-  SGfloat distance = sqrt(distanceSquared);
-
-  SGfloat minSep = this->getRadius() + otherShape.getRadius();
-
-  return (distance < minSep);
+  return (sepVec.length() < minSep);
 }
 
 // TODO Don't implement this at MyShape. It should have separate implementations for Circles and Boxes (If boxes even need it)
@@ -117,15 +112,10 @@ void MyShape::mergeWith(MyShape &otherShape)
 
   VecStruct totalAngMom = calcMergedAngMomentum(otherShape);
 
-  // COM start
-  VecStruct tempVec(this->getPos());
-  VecStruct tempVec2(otherShape.getPos());
-
-  sgScaleVec4(tempVec.vec, this->getMass());
-  sgScaleVec4(tempVec2.vec, otherShape.getMass());
-
-  VecStruct COM = tempVec.plus(tempVec2).scaledBy(1/(combinedMass));
-  // COM end
+  VecStruct COM =
+          this->getWeightedPosition()
+          .plus(otherShape.getWeightedPosition())
+          .scaledBy(1/(combinedMass));
 
   this->setMass(combinedMass);
   this->setRadius(newRadius);

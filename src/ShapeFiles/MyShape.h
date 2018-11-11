@@ -12,8 +12,6 @@
 #include <iostream>
 #include <string>
 
-#include <plib/sg.h>
-
 using std::shared_ptr;
 
 /*! \brief The class at the heart of all the physical calculations
