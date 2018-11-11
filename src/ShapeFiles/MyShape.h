@@ -2,15 +2,11 @@
 #define MYSHAPE_H_
 
 #include <cmath>
+#include <vector>
 
 #include "../Dimensions/Moveable.h"
 #include "../Dimensions/VecStruct.h"
-#include "../Dimensions/MatrixStruct.h"
-#include "../Physics/WorldSettings.h"
 #include "ShapeType.h"
-
-#include <iostream>
-#include <string>
 
 using std::shared_ptr;
 

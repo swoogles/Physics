@@ -3,6 +3,7 @@
 
 #include "MyShape.h"
 #include <list>
+#include <algorithm>
 
 using std::size_t;
 

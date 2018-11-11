@@ -4,6 +4,8 @@
 #include "TouchingPair.h"
 #include "ShapeList.h"
 
+#include <algorithm>
+
 using std::vector;
 
 class PairCollection {
