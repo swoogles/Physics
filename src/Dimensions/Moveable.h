@@ -32,11 +32,12 @@ protected:
 	sgMat4 orientationMat;
 
     VecStruct momentum; // TODO This gots'ta go.
+	VecStruct prevMomentum;
+
 	sgVec4 angMomentum;
 	sgVec4 angVelocity;
 	sgVec4 prevAngVelocity;
 
-	sgVec4 prevMomentum;
 	float mass; // TODO This gots'ta go.
 	float density;
 

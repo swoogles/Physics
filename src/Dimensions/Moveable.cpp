@@ -81,12 +81,10 @@ void Moveable::adjustAngVelocity(const sgVec4 dAngVelocity) {
 }
 
 void Moveable::update(float dt) {
-	sgVec4 prevVelocity;
-	sgScaleVec4(prevVelocity, prevMomentum, 1/mass);
-	VecStruct prevVelocityVec(prevVelocity);
+	VecStruct prevVelocity(prevMomentum.scaledBy(1/mass));
 	auto dPos =
 			this->getVelocity()
-			.plus(prevVelocityVec)
+			.plus(prevVelocity)
 			.scaledBy(.5) //Get avg velocity
 			.scaledBy(dt);
 	sgAddVec4(pos, dPos.vec);
@@ -99,7 +97,7 @@ void Moveable::update(float dt) {
 	rotVec[0] = 0; rotVec[1] = 0; rotVec[2] = 1;
 	adjustAngle( (prevAngVelocity[2] + angVelocity[2]) * .5 *dt, rotVec);
 
-	sgCopyVec4(prevMomentum, momentum.vec);
+	sgCopyVec4(prevMomentum.vec, momentum.vec);
 	sgCopyVec4(prevAngVelocity, angVelocity);
 
 }
