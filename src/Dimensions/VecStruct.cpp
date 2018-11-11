@@ -69,3 +69,7 @@ float VecStruct::scalarProduct4(const VecStruct & other) {
     return sgScalarProductVec4(this->vec, other.vec);
 }
 
+VecStruct::VecStruct(const float *coordinates) {
+    sgCopyVec4(vec, coordinates);
+}
+
