@@ -166,14 +166,14 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
 // TODO This should return the deleted list, so that it can coexist with the Octree version
 void Simulation::calcForcesAll_LessNaive()
 {
-    sgVec4 gravField = {0, 0, 0, 0};
+    VecStruct gravField(0, 0, 0, false);
 
     vectorT physicalObjects = this->physicalObjects.getShapes();
     ShapeList deleteList;
 
     if (this->constGravField ) {
-        this->getConstGravFieldVal(gravField);
-        sgScaleVec4(gravField, 1/DT);
+        this->getConstGravFieldVal(gravField.vec);
+        sgScaleVec4(gravField.vec, 1/DT);
     }
 
     if (!physicalObjects.empty()) {
@@ -189,9 +189,9 @@ void Simulation::calcForcesAll_LessNaive()
                 if (this->gravBetweenObjects ) {
                     VecStruct gravVec = calcForceGravNew(object1, object2, DT );
 
-                    object1.adjustMomentum(gravVec.vec);
+                    object1.adjustMomentum(gravVec);
                     sgNegateVec4(gravVec.vec);
-                    object2.adjustMomentum(gravVec.vec);
+                    object2.adjustMomentum(gravVec);
                 }
 
                 SGfloat distance = object1.getDistanceToObject( object2 );
@@ -233,7 +233,7 @@ PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &cu
             deleteList.insertIfUnique(pair);
         } else {
             VecStruct gravVec = calcForceGravNew( *curObject, *shapeInQuadrant, dt);
-            curObject->adjustMomentum(gravVec.vec);
+            curObject->adjustMomentum(gravVec);
         }
     }
 

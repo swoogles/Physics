@@ -35,8 +35,8 @@ MyShape::MyShape() = default;
 
 float MyShape::getScale(){}
 
-void MyShape::adjustMomentum(const sgVec4 dMomentum) {
-	sgAddVec4(momentum.vec, dMomentum);
+void MyShape::adjustMomentum(VecStruct dMomentum) {
+	sgAddVec4(momentum.vec, dMomentum.vec);
 }
 
 VecStruct MyShape::getMomentum() {
@@ -47,10 +47,10 @@ VecStruct MyShape::getMomentum() {
 // Angular Momentum and Velocity
 float MyShape::getMomentOfInertia() { return 1;}
 
-void MyShape::setAngMomentum(sgVec4 newAngMomentum) {
+void MyShape::setAngMomentum(VecStruct newAngMomentum) {
 	sgCopyVec4(prevAngVelocity.vec, angVelocity.vec);
 	float I = getMomentOfInertia();
-	sgCopyVec4(angMomentum.vec, newAngMomentum);
+	sgCopyVec4(angMomentum.vec, newAngMomentum.vec);
 	sgCopyVec4(angVelocity.vec, angMomentum.vec);
 	sgScaleVec4(angVelocity.vec, 1.0f/I);
 }
@@ -135,9 +135,9 @@ void MyShape::mergeWith(MyShape &otherShape)
   otherShape.setRadius(0);
   // TODO /Verify this stuff
 
-  this->adjustMomentum(otherShape.getMomentum().vec);
+  this->adjustMomentum(otherShape.getMomentum());
 
-  this->setAngMomentum(totalAngMom.vec);
+  this->setAngMomentum(totalAngMom);
 
   this->calcColor();
 

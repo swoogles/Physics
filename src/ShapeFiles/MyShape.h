@@ -62,7 +62,7 @@ private:
     virtual float getRadius();
 
     //! Alters momentum by <dMomentum>
-    void adjustMomentum(const sgVec4 dMomentum);
+    void adjustMomentum(VecStruct dMomentum);
 
     //! Returns momentum of object in retVec
     VecStruct getMomentum();
@@ -75,7 +75,7 @@ private:
     virtual float getMomentOfInertia();
 
     //! Sets angular momentum of object to <newAngMomentum>
-    void setAngMomentum(sgVec4 newAngMomentum);
+    void setAngMomentum(VecStruct newAngMomentum);
 
     //! Returns angular momentum of object in retVec
     VecStruct getAngMomentum();

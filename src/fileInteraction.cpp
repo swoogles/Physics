@@ -82,6 +82,8 @@ void openShapes(char * fileName, vectorT shapes) {
 			vecFileRead(curFile, angularMomentum);
 			angularMomentum[3] = 0;
 
+			VecStruct angularMomentumVec(angularMomentum);
+
 			//Set start density
 			float density;
 			curFile >> density;
@@ -97,7 +99,7 @@ void openShapes(char * fileName, vectorT shapes) {
 					density,
 					color
 					);
-			curShape->setAngMomentum(angularMomentum);
+			curShape->setAngMomentum(angularMomentumVec);
 			shapes.push_back(curShape);
 		}
 	}
