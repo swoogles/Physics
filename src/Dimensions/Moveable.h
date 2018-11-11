@@ -31,7 +31,7 @@ protected:
 	sgQuat orientationQuat;
 	sgMat4 orientationMat;
 
-    sgVec4 momentum; // TODO This gots'ta go.
+    VecStruct momentum; // TODO This gots'ta go.
 	sgVec4 angMomentum;
 	sgVec4 angVelocity;
 	sgVec4 prevAngVelocity;

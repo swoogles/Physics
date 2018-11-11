@@ -46,7 +46,7 @@ Circle::Circle(
 	sgCopyVec4(this->pos, pos);
 	this->mass = mass;
 	this->radius = radius;
-	sgCopyVec4(this->momentum, momentum);
+	sgCopyVec4(this->momentum.vec, momentum);
 //	ρ=(3m)/(4πr^2)
 	this->density = (3*mass) / (4 * M_PI * (radius * radius));
 	sgCopyVec3(this->color, color);
@@ -65,7 +65,7 @@ Circle::Circle(
 //	this->radius = radius;
 	 this->radius =   sqrt(((3*mass) / 4 * M_PI ) / density);
 
-	sgCopyVec4(this->momentum, momentum);
+	sgCopyVec4(this->momentum.vec, momentum);
 	this->density = density;
 	sgCopyVec3(this->color, color);
 

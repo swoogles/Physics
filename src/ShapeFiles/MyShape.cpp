@@ -36,7 +36,7 @@ MyShape::MyShape() = default;
 float MyShape::getScale(){}
 
 void MyShape::adjustMomentum(const sgVec4 dMomentum) {
-	sgAddVec4(momentum, dMomentum);
+	sgAddVec4(momentum.vec, dMomentum);
 }
 
 VecStruct MyShape::getMomentum() {
