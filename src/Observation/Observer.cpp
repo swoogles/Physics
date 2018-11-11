@@ -59,11 +59,11 @@ void Observer::update(float dt) {
   sgVec3 rotVec;
 
   rotVec[0] = 1; rotVec[1] = 0; rotVec[2] = 0;
-  adjustAngle(angVelocity[0], rotVec);
+  adjustAngle(angVelocity.x(), rotVec);
   rotVec[0] = 0; rotVec[1] = 1; rotVec[2] = 0;
-  adjustAngle(angVelocity[1], rotVec);
+  adjustAngle(angVelocity.y(), rotVec);
   rotVec[0] = 0; rotVec[1] = 0; rotVec[2] = 1;
-  adjustAngle(angVelocity[2], rotVec);
+  adjustAngle(angVelocity.z(), rotVec);
 }
 
 void Observer::calcMinPullback(float fov, float minX, float minY, float maxX, float maxY)

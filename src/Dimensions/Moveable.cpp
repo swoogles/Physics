@@ -66,17 +66,17 @@ VecStruct Moveable::getVelocity() {
 float Moveable::getMomentOfInertia() { return 1;}
 
 void Moveable::setAngVelocity(const sgVec4 newAngVelocity) {
-	sgCopyVec4(prevAngVelocity, angVelocity);
+	sgCopyVec4(prevAngVelocity.vec, angVelocity.vec);
 	float I = getMomentOfInertia();
-	sgCopyVec4(angVelocity, newAngVelocity);
-	sgCopyVec4(angMomentum.vec, angVelocity);
+	sgCopyVec4(angVelocity.vec, newAngVelocity);
+	sgCopyVec4(angMomentum.vec, angVelocity.vec);
 	sgScaleVec4(angMomentum.vec, I);
 }
 
 void Moveable::adjustAngVelocity(const sgVec4 dAngVelocity) {
 	float I = getMomentOfInertia();
-	sgAddVec4(angVelocity, dAngVelocity);
-	sgCopyVec4(angMomentum.vec, angVelocity);
+	sgAddVec4(angVelocity.vec, dAngVelocity);
+	sgCopyVec4(angMomentum.vec, angVelocity.vec);
 	sgScaleVec4(angMomentum.vec, I);
 }
 
@@ -91,14 +91,14 @@ void Moveable::update(float dt) {
 
 	sgVec3 rotVec;
 	rotVec[0] = 1; rotVec[1] = 0; rotVec[2] = 0;
-	adjustAngle( (prevAngVelocity[0] + angVelocity[0]) * .5 *dt, rotVec);
+	adjustAngle( (prevAngVelocity.x() + angVelocity.x()) * .5 *dt, rotVec);
 	rotVec[0] = 0; rotVec[1] = 1; rotVec[2] = 0;
-	adjustAngle( (prevAngVelocity[1] + angVelocity[1]) * .5 *dt, rotVec);
+	adjustAngle( (prevAngVelocity.y() + angVelocity.y()) * .5 *dt, rotVec);
 	rotVec[0] = 0; rotVec[1] = 0; rotVec[2] = 1;
-	adjustAngle( (prevAngVelocity[2] + angVelocity[2]) * .5 *dt, rotVec);
+	adjustAngle( (prevAngVelocity.z() + angVelocity.z()) * .5 *dt, rotVec);
 
 	sgCopyVec4(prevMomentum.vec, momentum.vec);
-	sgCopyVec4(prevAngVelocity, angVelocity);
+	sgCopyVec4(prevAngVelocity.vec, angVelocity.vec);
 
 }
 

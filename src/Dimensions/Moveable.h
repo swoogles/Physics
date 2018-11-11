@@ -35,8 +35,8 @@ protected:
 	VecStruct prevMomentum;
 
 	VecStruct angMomentum;
-	sgVec4 angVelocity;
-	sgVec4 prevAngVelocity;
+	VecStruct angVelocity;
+	VecStruct prevAngVelocity;
 
 	float mass; // TODO This gots'ta go.
 	float density;
