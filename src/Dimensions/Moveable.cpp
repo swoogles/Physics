@@ -7,9 +7,9 @@ Moveable::Moveable()
                            {0, 1, 0, 0},
                            {0, 0, 1, 0},
                            {0, 0, 0, 1}}
-          ,momentum{0, 0, 0, 0}
-          ,angMomentum{0, 0, 0, 0}
-          ,angVelocity{0, 0, 0, 0}
+          ,momentum{0, 0, 0, false}
+          ,angMomentum{0, 0, 0, false}
+          ,angVelocity{0, 0, 0, false}
           ,mass(1)
           ,density(1)
           ,color{0.5,1.0,0.0}
