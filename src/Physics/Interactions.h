@@ -18,7 +18,7 @@ using std::size_t;
  */
 void elasticCollision(MyShape &object1, MyShape &object2, float dt);
 
-vecPtr calcForceGravNew(MyShape &object1, MyShape &object2, float dt) ;
+VecStruct calcForceGravNew(MyShape &object1, MyShape &object2, float dt) ;
 
 /*! \brief Will eventually calculate drag force on a single object
  */

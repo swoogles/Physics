@@ -121,10 +121,8 @@ void Simulation::setDT(float newDT) { DT = newDT; }
 
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
-vecPtr calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
+VecStruct calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
 {
-    vecPtr gravVec = make_unique<VecStruct>();
-
     VecStruct sepVec(object1.getVectorToObject(object2));
 
     SGfloat rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
@@ -132,13 +130,10 @@ vecPtr calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
     float G = 6.67384e-11;
     float forceMagnitude = (G * object1.getMass() * object2.getMass()) / rSquared;
 
-    sgVec4 unitVec{};
-    sgNormaliseVec4(unitVec, sepVec.vec);
-
-    sgScaleVec4(gravVec->vec, unitVec, forceMagnitude);
-    sgScaleVec4(gravVec->vec, dt);
-
-    return  gravVec;
+    return sepVec
+            .unit()
+            .scaledBy(forceMagnitude)
+            .scaledBy(dt);
 }
 
 void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
@@ -205,11 +200,11 @@ void Simulation::calcForcesAll_LessNaive()
 
 
                 if (this->gravBetweenObjects ) {
-                    vecPtr gravVec = calcForceGravNew(object1, object2, DT );
+                    VecStruct gravVec = calcForceGravNew(object1, object2, DT );
 
-                    object1.adjustMomentum(gravVec->vec);
-                    sgNegateVec4(gravVec->vec);
-                    object2.adjustMomentum(gravVec->vec);
+                    object1.adjustMomentum(gravVec.vec);
+                    sgNegateVec4(gravVec.vec);
+                    object2.adjustMomentum(gravVec.vec);
                 }
 
                 distance = object1.getDistanceToObject( object2 );
@@ -251,8 +246,8 @@ PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &cu
             TouchingPair pair(curObject, shapeInQuadrant);
             deleteList.insertIfUnique(pair);
         } else {
-            vecPtr gravVec = calcForceGravNew( *curObject, *shapeInQuadrant, dt);
-            curObject->adjustMomentum(gravVec->vec);
+            VecStruct gravVec = calcForceGravNew( *curObject, *shapeInQuadrant, dt);
+            curObject->adjustMomentum(gravVec.vec);
         }
     }
 
@@ -282,9 +277,9 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
         //2.
         //a.
         if ( curQuadrant->getWidth() / distance < theta ) {
-            vecPtr gravVec = calcForceGravNew( *curObject, *curQuadrant, dt);
+            VecStruct gravVec = calcForceGravNew( *curObject, *curQuadrant, dt);
             //b.
-            curObject->adjustMomentum(gravVec->vec);
+            curObject->adjustMomentum(gravVec.vec);
         } else { //3.
             QuadrantPointer_t targetQuadrant;
             // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
