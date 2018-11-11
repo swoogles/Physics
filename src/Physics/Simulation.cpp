@@ -177,8 +177,6 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
 // TODO This should return the deleted list, so that it can coexist with the Octree version
 void Simulation::calcForcesAll_LessNaive()
 {
-    SGfloat distance, minSep;
-
     sgVec4 gravField = {0, 0, 0, 0};
 
     vectorT physicalObjects = this->physicalObjects.getShapes();
@@ -207,8 +205,8 @@ void Simulation::calcForcesAll_LessNaive()
                     object2.adjustMomentum(gravVec.vec);
                 }
 
-                distance = object1.getDistanceToObject( object2 );
-                minSep = object1.getRadius() + object2.getRadius();
+                SGfloat distance = object1.getDistanceToObject( object2 );
+                SGfloat minSep = object1.getRadius() + object2.getRadius();
 
                 if (distance < minSep) {
                     if (this->collisionType == CollisionType::ELASTIC) {
@@ -223,10 +221,9 @@ void Simulation::calcForcesAll_LessNaive()
         }
 
         // Add unary forces to last object
-        MyShape & object1 = *physicalObjects.at(physicalObjects.size()-1);
-        object1.adjustMomentum(gravField);
+        auto object1 = physicalObjects.at(physicalObjects.size()-1);
+        object1->adjustMomentum(gravField);
 
-        // TODO This would be much faster if we removed deleteList in one pass
         this->removePhysicalObjects(deleteList);
     }
 
