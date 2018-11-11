@@ -30,6 +30,7 @@ public:
     VecStruct minus(const VecStruct & other);
     VecStruct unit();
     float scalarProduct4(const VecStruct & other);
+    VecStruct vectorProduct3(const VecStruct & other);
 };
 
 #endif

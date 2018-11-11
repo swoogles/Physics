@@ -73,3 +73,9 @@ VecStruct::VecStruct(const float *coordinates) {
     sgCopyVec4(vec, coordinates);
 }
 
+VecStruct VecStruct::vectorProduct3(const VecStruct &other) {
+    VecStruct retVec;
+    sgVectorProductVec3(retVec.vec, this->vec, other.vec);
+    return retVec;
+}
+

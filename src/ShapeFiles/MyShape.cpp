@@ -36,7 +36,7 @@ MyShape::MyShape() = default;
 float MyShape::getScale(){}
 
 void MyShape::adjustMomentum(VecStruct dMomentum) {
-	sgAddVec4(momentum.vec, dMomentum.vec);
+    this->momentum = momentum.plus(dMomentum);
 }
 
 VecStruct MyShape::getMomentum() {
@@ -152,25 +152,19 @@ VecStruct MyShape::calcMergedAngMomentum(MyShape &otherShape)
     VecStruct aMomentum(this->getMomentum());
     VecStruct bMomentum(otherShape.getMomentum());
 
-    sgVec3 crossed;
-
     vecPtr sepVec(VecStruct::vecFromAtoB(aPos, bPos));
-    VecStruct sepVecUnit;
-    sgNormaliseVec4( sepVecUnit.vec, sepVec->vec );
 
-    VecStruct hitPointOnA = sepVecUnit.scaledBy(this->getRadius());
+    VecStruct hitPointOnA = sepVec->unit().scaledBy(this->getRadius());
 
     VecStruct hitPt = aPos.plus(hitPointOnA);
 
     VecStruct rForA = aPos.minus(hitPt);
 
-    sgVectorProductVec3(crossed, rForA.vec, aMomentum.vec);
-    VecStruct newAngularMomentumForA(crossed);
+    VecStruct newAngularMomentumForA = rForA.vectorProduct3(aMomentum);
 
     VecStruct rForB = bPos.minus(hitPt);
 
-    sgVectorProductVec3(crossed, rForB.vec, bMomentum.vec);
-    VecStruct newAngularMomentumForB(crossed);
+    VecStruct newAngularMomentumForB = rForB.vectorProduct3(bMomentum);
     VecStruct totalAngMom = newAngularMomentumForA.plus(newAngularMomentumForB);
 
     return totalAngMom
