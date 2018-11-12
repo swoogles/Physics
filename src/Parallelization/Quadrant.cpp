@@ -27,7 +27,7 @@ Quadrant::Quadrant(int level, VecStruct &pos, float width)
   ,containsBody(false)
   ,level(level)
   ,dimensions(width, width, width)
-  ,borders(make_shared<Box>(pos.vec, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
+  ,borders(make_shared<Box>(pos, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
   ,quadOctree(extents[2][2][2])
   ,weightedPosition(0,0,0)
 {
@@ -63,7 +63,7 @@ Quadrant::Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float wid
         ,shapeInQuadrant(std::move(newShape))
         ,level(level)
         ,dimensions(width, width, width)
-        ,borders(make_shared<Box>(pos.vec, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
+        ,borders(make_shared<Box>(pos, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
         ,quadOctree(extents[2][2][2])
         ,weightedPosition(0,0,0)
 {
@@ -143,10 +143,11 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(VecStruct insertPos) {
 
 QuadrantPointer_t Quadrant::makeSubQuadrant(OctreeCoordinates coordinates) {
     VecStruct newDimensions = dimensions.scaledBy(.5);
-    VecStruct offsets = dimensions.scaledBy(.25);
-    VecStruct newPos = pos.plus(
-            offsets.withElementsMultipliedBy(coordinates.polarities())
-    );
+    VecStruct offsets =
+            dimensions
+                    .scaledBy(.25)
+                    .withElementsMultipliedBy(coordinates.polarities());
+    VecStruct newPos = pos.plus( offsets );
 
     return std::move(std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions.vec[0] ) );
 }
