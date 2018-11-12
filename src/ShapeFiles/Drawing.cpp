@@ -22,7 +22,8 @@ void Drawing::draw(shapePointer_t myShape){
             glutWireCube( 1.0 );
             break;
         case circle:
-            glutWireSphere( 1, numPts, numPts);
+            glutSolidSphere( 1, numPts, numPts);
+//            glutWireSphere( 1, numPts, numPts);
             break;
     }
     glPopMatrix();
