@@ -72,6 +72,8 @@ class Quadrant : public Box
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 
     vector<shared_ptr<Quadrant>> children();
+
+    QuadrantPointer_t makeSubQuadrant(OctreeCoordinates coordinates);
 };
 typedef shared_ptr<Quadrant> QuadrantPointer_t;
 #endif

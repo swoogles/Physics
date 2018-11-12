@@ -126,27 +126,29 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(VecStruct pointI
     );
 }
 
-// Guaranteed to hand back an instantiated Quadrant
 // TODO This is scary. A determination shouldn't create anything.
 QuadrantPointer_t Quadrant::subQuadrantThatContains(VecStruct insertPos) {
     auto targetIndices = this->coordinatesForSubQuadrantContaining(insertPos);
-    // TODO function to determine subQuadrant values based purely on indices.
-
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
-        // TODO This can be turned into a dedicated subQuadrant function.
-        VecStruct newDimensions = dimensions.scaledBy(.5);
-        VecStruct offsets = dimensions.scaledBy(.25);
-        VecStruct newPos = VecStruct(pos).plus(
-                offsets.withElementsMultipliedBy(targetIndices.polarities())
-        );
+        QuadrantPointer_t newSubQuadrant = this->makeSubQuadrant(targetIndices);
+        this->assignSubQuadrantAt(targetIndices, newSubQuadrant);
+        return newSubQuadrant;
+    } else {
+        return insertionQuadrant;
+   };
 
-        insertionQuadrant = std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions.vec[0] ) ;
-        this->assignSubQuadrantAt(targetIndices, insertionQuadrant);
-    }
+}
 
-    return insertionQuadrant;
+QuadrantPointer_t Quadrant::makeSubQuadrant(OctreeCoordinates coordinates) {
+    VecStruct newDimensions = dimensions.scaledBy(.5);
+    VecStruct offsets = dimensions.scaledBy(.25);
+    VecStruct newPos = VecStruct(pos).plus(
+            offsets.withElementsMultipliedBy(coordinates.polarities())
+    );
+
+    return std::move(std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions.vec[0] ) );
 }
 
 bool Quadrant::positionIsInQuadrantBoundaries(VecStruct insertPos) {

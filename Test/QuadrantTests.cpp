@@ -23,6 +23,12 @@ TEST_CASE("Get children", "[Quadrant]") {
         REQUIRE(quadrant.getShapeInQuadrant() == nullptr);
     }
 
+    SECTION("SubQuadrant creation") {
+        OctreeCoordinates coordinates(false, false ,false);
+        auto subQuadrant = quadrant.makeSubQuadrant(coordinates);
+        REQUIRE(subQuadrant->getWidth() == quadrant.getWidth() / 2.0f);
+    }
+
     SECTION("Single Insertion") {
         auto a = TestUtils::testCircle();
         quadrant.insertShape(a);
@@ -31,11 +37,15 @@ TEST_CASE("Get children", "[Quadrant]") {
     SECTION("Multiple Insertions") {
         auto a = TestUtils::testCircle();
         quadrant.insertShape(a);
+        cout << "A " << endl;
         auto b = TestUtils::circleAt(5, 5, 5);
+        cout << "B.1 " << endl;
         quadrant.insertShape(b);
+        cout << "B.2 " << endl;
         REQUIRE(quadrant.children().size() == 1);
         quadrant.insertShape(TestUtils::circleAt(-5, 5, 5));
         quadrant.insertShape(TestUtils::circleAt(5, -5, 5));
+        cout << "C " << endl;
 
         for (const auto &child: quadrant.children()) {
             cout << "CHILD: " << child << endl;
