@@ -34,7 +34,7 @@ private:
 
 	void updateMinsAndMaxes();
     void resetXYMinsAndMaxes();
-    void updateXYMinsAndMaxes(sgVec4 curPos);
+    void updateXYMinsAndMaxes(VecStruct curPos);
 
 	void removePhysicalObjects( ShapeList shapesToRemove );
 

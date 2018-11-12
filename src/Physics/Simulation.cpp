@@ -1,5 +1,3 @@
-#include <utility>
-
 #include "Simulation.h"
 
 Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects,
@@ -48,21 +46,14 @@ void Simulation::refreshQuadrant()
     }
 }
 
-void Simulation::updateXYMinsAndMaxes(sgVec4 curPos) {
+void Simulation::updateXYMinsAndMaxes(VecStruct curPos) {
     // TODO Use min/max functions instead of comparisons here.
     resetXYMinsAndMaxes();
-    if (curPos[0] < minX) {
-        minX = curPos[0];
-    }
-    if (curPos[0] > maxX) {
-        maxX = curPos[0];
-    }
-    if (curPos[1] < minY) {
-        minY = curPos[1];
-    }
-    if (curPos[1] > maxY) {
-        maxY = curPos[1];
-    }
+    maxX = std::max(maxX, curPos.x());
+    minX = std::min(minX, curPos.x());
+
+    maxY = std::max(maxY, curPos.y());
+    minY = std::min(minY, curPos.y());
 }
 
 void Simulation::getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY ) {
@@ -88,7 +79,7 @@ void Simulation::getConstGravFieldVal(sgVec4 retGravField) {
 void Simulation::updateMinsAndMaxes() {
     for ( const auto & curShape : this->physicalObjects.getShapes() ) {
         VecStruct curPos(curShape->getPos());
-        updateXYMinsAndMaxes(curPos.vec);
+        updateXYMinsAndMaxes(curPos);
     }
 }
 
@@ -195,7 +186,7 @@ void Simulation::calcForcesAll_LessNaive()
                     object2.adjustMomentum(gravVec);
                 }
 
-                SGfloat distance = object1.getDistanceToObject( object2 );
+                SGfloat distance = object1.distanceTo(object2);
                 SGfloat minSep = object1.getRadius() + object2.getRadius();
 
                 if (distance < minSep) {
@@ -259,7 +250,7 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
     }
     else {
         PairCollection deleteList;
-        SGfloat distance = curObject->getDistanceToObject( *curQuadrant );
+        SGfloat distance = curObject->distanceTo(*curQuadrant);
         //2.a
         if ( curQuadrant->getWidth() / distance < octreeTheta ) {
             VecStruct gravVec = calcForceGravNew( *curObject, *curQuadrant, dt);

@@ -7,7 +7,7 @@
 
 #include "MyShape.h"
 
-float MyShape::getDistanceToObject(MyShape &object2) {
+float MyShape::distanceTo(MyShape &object2) {
     return this->getVectorToObject(object2).length();
 }
 

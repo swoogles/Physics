@@ -106,7 +106,7 @@ private:
     /*!
       * Simple method for getting distance between 2 objects
       */
-    float getDistanceToObject(MyShape &object2);
+    float distanceTo(MyShape &object2);
 
     bool isTouching(MyShape &otherShape);
 
