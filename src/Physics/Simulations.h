@@ -106,15 +106,17 @@ class Simulations
     // TODO put this in a more appropriate "Physical Constants" location
     static void simpleOrbit();
 
-    static SimulationPointer_t disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod, float dt);
+    static SimulationPointer_t
+    disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod, float dt, float octreeTheta);
 
     static SimulationPointer_t QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
 
     static SimulationPointer_t
-    bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod, float dt);
+    bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod, float dt,
+                                    float octreeTheta);
 
     static SimulationPointer_t bodyFormationGeneric_ArbitraryList(int numPieces, float *target, float *groupMomentum,
-                                                                      ForceCalculationMethod forceCalculationMethod);
+                                                                      ForceCalculationMethod forceCalculationMethod, float octreeTheta);
 
     static SimulationPointer_t billiards1(int, ForceCalculationMethod forceCalculationMethod);
 

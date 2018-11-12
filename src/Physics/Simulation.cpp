@@ -3,7 +3,7 @@
 #include "Simulation.h"
 
 Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects,
-                       ForceCalculationMethod forceCalculationMethod)
+                       ForceCalculationMethod forceCalculationMethod, float octreeTheta)
         :physicalObjects(std::move(physicalObjects))
         ,DT(dt)
         ,timeElapsed(0)
@@ -15,6 +15,7 @@ Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, f
         ,gravBetweenObjects(gravityBetweenObjects)
         ,forceCalcMethod(forceCalculationMethod)
         ,collisionType(collisionType)
+        ,octreeTheta(octreeTheta)
 {
     this->updateMinsAndMaxes();
     this->refreshQuadrant();
@@ -259,10 +260,8 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
     else {
         PairCollection deleteList;
         SGfloat distance = curObject->getDistanceToObject( *curQuadrant );
-        SGfloat theta = 0.2; // Higher is less accurate, but faster
-        //2.
-        //a.
-        if ( curQuadrant->getWidth() / distance < theta ) {
+        //2.a
+        if ( curQuadrant->getWidth() / distance < octreeTheta ) {
             VecStruct gravVec = calcForceGravNew( *curObject, *curQuadrant, dt);
             //b.
             curObject->adjustMomentum(gravVec);

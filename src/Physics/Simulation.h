@@ -52,7 +52,7 @@ private:
 
   public:
     Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects,
-				   ForceCalculationMethod forceCalculationMethod);
+				   ForceCalculationMethod forceCalculationMethod, float octreeTheta);
 	Simulation(Simulation && originalSimulation, ShapeList newObjects);
 
     ShapeList getPhysicalObjects();
