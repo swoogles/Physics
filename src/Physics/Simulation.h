@@ -23,6 +23,8 @@ private:
     sgVec4 gravField;
     bool gravBetweenObjects;
 
+    float octreeTheta;
+
     QuadrantPointer_t quadrant;
 
     ForceCalculationMethod forceCalcMethod;

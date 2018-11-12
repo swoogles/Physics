@@ -8,6 +8,7 @@
 #include "CollisionType.h"
 #include "ForceCalculationMethod.h"
 #include "AstronomicalValues.h"
+#include "PhysicsSandboxProperties.h"
 
 #define MASS_VAR 1e21
 //#define MASS_SUN 1989100000
@@ -122,7 +123,7 @@ class Simulations
     static SimulationPointer_t billiards3_ArbitraryList(int, ForceCalculationMethod forceCalculationMethod);
 
     static SimulationPointer_t
-    createSimulation(char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod, float dt);
+    createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
 };
 
 

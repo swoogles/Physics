@@ -399,12 +399,14 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 }
 
 SimulationPointer_t
-Simulations::createSimulation(char simNumber, int numShapes, ForceCalculationMethod forceCalculationMethod, float dt)
+Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties)
 {
+    ForceCalculationMethod forceCalculationMethod = simulationProperties.forceCalculationMethod;
+    auto dt = simulationProperties.dt;
 	//******CURRENT SIMULATION*****
   if ( simNumber == '0' ) {
   } else if ( simNumber == '1' ) {
-    return Simulations::bodyFormation_ArbitraryList(numShapes, forceCalculationMethod, dt);
+    return Simulations::bodyFormation_ArbitraryList(simulationProperties.numShapes, forceCalculationMethod, dt);
   } else if ( simNumber == '2' ) {
 	  return Simulations::disruption_ArbitraryList(forceCalculationMethod, dt);
   } else if ( simNumber == '3' ) {
@@ -419,12 +421,12 @@ Simulations::createSimulation(char simNumber, int numShapes, ForceCalculationMet
     groupMomentum[2]=0;
     groupMomentum[3]=1;
     sgVec4 target = { -2000, 0, 0, 1 };
-      Simulations::bodyFormationGeneric_ArbitraryList(numShapes, target, groupMomentum, forceCalculationMethod);
+      Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties.numShapes, target, groupMomentum, forceCalculationMethod);
 
     target[0]=-target[0];
     groupMomentum[1]*=-1;
 
-      Simulations::bodyFormationGeneric_ArbitraryList(numShapes, target, groupMomentum, forceCalculationMethod);
+      Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties.numShapes, target, groupMomentum, forceCalculationMethod);
   } else if ( simNumber == '7' ) {
       return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
   } else if ( simNumber == '8' ) {

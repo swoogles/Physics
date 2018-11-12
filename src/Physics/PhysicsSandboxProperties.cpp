@@ -22,5 +22,6 @@ int PhysicsSandboxProperties::parseStringAsInt(std::string value) {
 PhysicsSandboxProperties::PhysicsSandboxProperties(BillProperties properties)
 : forceCalculationMethod(parseForceCalculationProperty(properties.at("forceCalculationMethod" ))),
   numShapes(parseStringAsInt(properties.at("numShapes"))),
-  dt(Serializer::parseStringAsFloat(properties.at("dt")))
+  dt(Serializer::parseStringAsFloat(properties.at("dt"))),
+  octreeTheta(Serializer::parseStringAsFloat(properties.at("octree_theta")))
   {}

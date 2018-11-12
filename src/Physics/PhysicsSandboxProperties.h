@@ -15,6 +15,7 @@ public:
     const ForceCalculationMethod forceCalculationMethod;
     const int numShapes;
     const float dt;
+    const float octreeTheta;
 
     PhysicsSandboxProperties(BillProperties billProperties);
 

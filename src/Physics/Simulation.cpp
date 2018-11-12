@@ -259,7 +259,7 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
     else {
         PairCollection deleteList;
         SGfloat distance = curObject->getDistanceToObject( *curQuadrant );
-        SGfloat theta = 0.5;
+        SGfloat theta = 0.2; // Higher is less accurate, but faster
         //2.
         //a.
         if ( curQuadrant->getWidth() / distance < theta ) {

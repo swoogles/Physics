@@ -101,8 +101,7 @@ void init(char simulation) {
   PhysicsSandboxProperties properties(billProperties);
 
   cout << "dt: " << properties.dt << endl;
-  globalSimulation = Simulations::createSimulation(simulation, properties.numShapes, properties.forceCalculationMethod,
-                                                   properties.dt);
+  globalSimulation = Simulations::createSimulation(simulation, properties);
 }
 
 void idle() {
