@@ -8,7 +8,7 @@ private:
 	float sideLength;
 public:
 	Box();
-    Box(sgVec4 pos, float sideLength, sgVec3 color);
+    Box(VecStruct pos, float sideLength, sgVec3 color);
 
 	float getScale();
 

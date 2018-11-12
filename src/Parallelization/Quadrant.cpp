@@ -144,7 +144,7 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(VecStruct insertPos) {
 QuadrantPointer_t Quadrant::makeSubQuadrant(OctreeCoordinates coordinates) {
     VecStruct newDimensions = dimensions.scaledBy(.5);
     VecStruct offsets = dimensions.scaledBy(.25);
-    VecStruct newPos = VecStruct(pos).plus(
+    VecStruct newPos = pos.plus(
             offsets.withElementsMultipliedBy(coordinates.polarities())
     );
 
@@ -154,9 +154,8 @@ QuadrantPointer_t Quadrant::makeSubQuadrant(OctreeCoordinates coordinates) {
 bool Quadrant::positionIsInQuadrantBoundaries(VecStruct insertPos) {
   VecStruct newDimensions = dimensions.scaledBy(.5);
 
-  VecStruct posVec(pos);
-  VecStruct maxBoundariesVec = posVec.plus(newDimensions);
-  VecStruct minBoundariesVec = posVec.minus(newDimensions);
+  VecStruct maxBoundariesVec = pos.plus(newDimensions);
+  VecStruct minBoundariesVec = pos.minus(newDimensions);
 
   return withinBoundaries( insertPos, minBoundariesVec, maxBoundariesVec );
 }
