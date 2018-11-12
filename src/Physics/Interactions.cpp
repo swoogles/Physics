@@ -8,6 +8,6 @@ void calcDrag(float dt, vectorT shapes) {
     VecStruct dragForce(curShape->getVelocity());
     sgScaleVec4(dragForce.vec, dragConstant);
     sgScaleVec4(dragForce.vec, dt);
-    curShape->adjustMomentum(dragForce.vec);
+    curShape->adjustMomentum(dragForce);
   }
 }

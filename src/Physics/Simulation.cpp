@@ -265,7 +265,7 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
         if ( curQuadrant->getWidth() / distance < theta ) {
             VecStruct gravVec = calcForceGravNew( *curObject, *curQuadrant, dt);
             //b.
-            curObject->adjustMomentum(gravVec.vec);
+            curObject->adjustMomentum(gravVec);
         } else { //3.
             QuadrantPointer_t targetQuadrant;
             // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
