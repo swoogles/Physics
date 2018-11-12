@@ -4,9 +4,11 @@
 #include <plib/sg.h>
 #include <memory>
 #include <iostream>
+#include <string>
 
 using std::unique_ptr;
 using std::make_unique;
+using std::string;
 
 class VecStruct {
 
@@ -32,6 +34,8 @@ public:
     float scalarProduct4(const VecStruct & other);
     VecStruct vectorProduct3(const VecStruct & other);
     float length();
+    string toString();
+    bool hasValues(float xIn, float yIn, float zIn); // TODO Lookout! This is currently only used for testing!
 };
 
 #endif

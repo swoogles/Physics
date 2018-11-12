@@ -84,3 +84,21 @@ float VecStruct::length() {
     return sqrt(distanceSquared);
 }
 
+string VecStruct::toString() {
+    string rep;
+    // TODO Get float->string conversion. Bleh.
+    return rep
+            .append("{")
+            .append(std::to_string(x()))
+            .append(", ")
+            .append(std::to_string(y()))
+            .append(", ")
+            .append(std::to_string(z()))
+            .append("}")
+            ;
+}
+
+bool VecStruct::hasValues(float xIn, float yIn, float zIn) {
+    return  x() == xIn && y() == yIn && z() == zIn;
+}
+
