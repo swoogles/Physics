@@ -19,6 +19,7 @@ class control_center {
 private:
 	static bool paused;
 	static float dt;
+	static bool renderOctree ;
 
 	puGroup * placement_group;
 		puText * object_name_label;
@@ -47,6 +48,7 @@ private:
 		puArrowButton * rotDown_button;
 
 		puButton * autoScale_button;
+		puButton * renderOctree_button;
 
 	puButton * viewSwitcher;
 
@@ -97,6 +99,8 @@ public:
 	//! Pauses simulation 
 	static void pause_cb(puObject *);
 
+	static void toggleOctreeRendering(puObject *);
+
 	//!Turn AutoScaling off
 	static void uncheckAutoScaling();
 
@@ -105,6 +109,7 @@ public:
 
 	bool isPaused();
 	float getDt();
+	bool shouldRenderOctree();
 };
 
 #endif /* CONTROL_CENTER_H_ */

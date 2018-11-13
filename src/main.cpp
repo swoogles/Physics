@@ -65,10 +65,12 @@ void display()
   glMatrixMode(GL_MODELVIEW);
   Drawing::drawShapes(globalSimulation->getPhysicalObjects().getShapes());
 
-  function<void(Quadrant)> drawingFunc = [] (Quadrant quadrant) {
-      Drawing::draw(quadrant.getBorders());
-  };
-  globalSimulation->getQuadrant()->applyToAllChildren(drawingFunc);
+  if (globalControlCenter.shouldRenderOctree()) {
+    function<void(Quadrant)> drawingFunc = [](Quadrant quadrant) {
+        Drawing::draw(quadrant.getBorders());
+    };
+    globalSimulation->getQuadrant()->applyToAllChildren(drawingFunc);
+  }
 
 
   glMatrixMode(GL_PROJECTION);

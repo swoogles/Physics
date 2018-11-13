@@ -11,6 +11,7 @@ using namespace std;
 
 bool control_center::paused = false;
 float control_center::dt;
+bool control_center::renderOctree = false;
 
 void control_center::switchViewNow(puObject * caller) {
   control_center * ccPointer = ( control_center *)caller->getUserData();
@@ -189,6 +190,15 @@ void control_center::init(float dt, int windowWidth, int windowHeight) {
   autoScale_button->setValue(1);
   autoScale_button->setCallback(flipAutoScaling);
 
+  curHeight -= elementHeight;
+  renderOctree_button = new puButton(curX, curHeight, curX+16, curHeight+16, PUBUTTON_RADIO);
+  renderOctree_button->setLabelPlace( PUPLACE_CENTERED_RIGHT );
+  renderOctree_button->setLabel("Render Octree");
+  renderOctree_button->setValue(1);
+  renderOctree_button->setCallback(toggleOctreeRendering);
+  renderOctree_button->clrValue();
+
+
   runtime_group->close();
 
 }
@@ -256,5 +266,13 @@ bool control_center::isPaused() {
 
 float control_center::getDt() {
   return control_center::dt;
+}
+
+void control_center::toggleOctreeRendering(puObject *) {
+    renderOctree = !renderOctree;
+}
+
+bool control_center::shouldRenderOctree() {
+    return renderOctree;
 }
 
