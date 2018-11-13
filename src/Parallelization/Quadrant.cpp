@@ -18,7 +18,7 @@ Quadrant::Quadrant(int level, VecStruct &pos, float width)
   ,containsBody(false)
   ,level(level)
   ,dimensions(width, width, width)
-  ,borders(make_shared<Box>(pos, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
+  ,borders(make_shared<Box>(pos, width, (sgVec3){ (float) (level*.10), (float) (1-level*.06), (float) (1-level*.06)} ) )
   ,quadOctree(extents[2][2][2])
   ,weightedPosition(0,0,0)
 {
