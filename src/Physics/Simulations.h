@@ -107,16 +107,15 @@ class Simulations
     static void simpleOrbit();
 
     static SimulationPointer_t
-    disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod, float dt, float octreeTheta);
+    disruption_ArbitraryList(PhysicsSandboxProperties properties);
 
     static SimulationPointer_t QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
 
     static SimulationPointer_t
-    bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod, float dt,
-                                    float octreeTheta);
+    bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
 
-    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(int numPieces, float *target, float *groupMomentum,
-                                                                      ForceCalculationMethod forceCalculationMethod, float octreeTheta);
+    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, float *target,
+                                                                      float *groupMomentum);
 
     static SimulationPointer_t billiards1(int, ForceCalculationMethod forceCalculationMethod);
 

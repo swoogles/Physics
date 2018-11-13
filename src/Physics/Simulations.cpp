@@ -213,9 +213,9 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
     return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, dt, false, forceCalculationMethod, 0.5);
 }
 
-SimulationPointer_t Simulations::disruption_ArbitraryList(ForceCalculationMethod forceCalculationMethod, float dt, float octreeTheta)
+SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperties properties)
 {
-    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, forceCalculationMethod, dt, octreeTheta);
+    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, properties);
 
     int numPieces = 1;
     float objectDensity = AstronomicalValues::DENSITY_SUN;
@@ -297,8 +297,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
 }
 
 SimulationPointer_t
-Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod forceCalculationMethod, float dt,
-                                         float octreeTheta)
+Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties)
 {
     ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
@@ -341,16 +340,16 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, ForceCalculationMethod f
         physicalObjects.addShapeToList( curShape );
     }
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, dt, true, forceCalculationMethod, octreeTheta);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, properties.dt, true, properties.forceCalculationMethod, properties.octreeTheta);
 }
 
-SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPieces, float *target, float *groupMomentum,
-                                                                    ForceCalculationMethod forceCalculationMethod, float octreeTheta)
+SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, float *target,
+                                                                    float *groupMomentum)
 {
   ShapeList physicalObjects;
 
 	float objectDensity = AstronomicalValues::DENSITY_SUN;
-	float pieceMass = (AstronomicalValues::MASS_SUN)/(numPieces);
+	float pieceMass = (AstronomicalValues::MASS_SUN)/(properties.numShapes);
 	sgVec4 startPlacement, startMomentum;
 
 	float pieceRadius = 100; // TOTALLY ARBITRARY VALUE!!
@@ -365,7 +364,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
 
 
     shapePointer_t curShape;
-	for (int i = 0; i < numPieces; i++) {
+	for (int i = 0; i < properties.numShapes; i++) {
 
 		if (i % 2 == 0) {
 			randomSplitBodyMomentum(startMomentum, pieceMass);
@@ -396,7 +395,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(int numPiece
     physicalObjects.addShapeToList( curShape );
 	}
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, forceCalculationMethod, octreeTheta);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, properties.forceCalculationMethod, properties.octreeTheta);
 }
 
 SimulationPointer_t
@@ -407,9 +406,9 @@ Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulatio
 	//******CURRENT SIMULATION*****
   if ( simNumber == '0' ) {
   } else if ( simNumber == '1' ) {
-    return Simulations::bodyFormation_ArbitraryList(simulationProperties.numShapes, forceCalculationMethod, dt, simulationProperties.octreeTheta);
+    return Simulations::bodyFormation_ArbitraryList(simulationProperties.numShapes, simulationProperties);
   } else if ( simNumber == '2' ) {
-	  return Simulations::disruption_ArbitraryList(forceCalculationMethod, dt, 0);
+	  return Simulations::disruption_ArbitraryList(simulationProperties);
   } else if ( simNumber == '3' ) {
   } else if ( simNumber == '4' ) {
     return Simulations::billiards1(15, forceCalculationMethod);
@@ -422,14 +421,12 @@ Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulatio
     groupMomentum[2]=0;
     groupMomentum[3]=1;
     sgVec4 target = { -2000, 0, 0, 1 };
-      Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties.numShapes, target, groupMomentum,
-                                                      forceCalculationMethod, 0);
+      Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties, target, groupMomentum);
 
     target[0]=-target[0];
     groupMomentum[1]*=-1;
 
-      Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties.numShapes, target, groupMomentum,
-                                                      forceCalculationMethod, 0);
+      Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties, target, groupMomentum);
   } else if ( simNumber == '7' ) {
       return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
   } else if ( simNumber == '8' ) {
