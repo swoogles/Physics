@@ -25,6 +25,8 @@
 #include "ShapeFiles/Drawing.h"
 #include "BillProperties.h"
 
+#include <functional>
+
 #define WW 5
 #define WH 5
 #define FPS 1
@@ -62,6 +64,12 @@ void display()
 
   glMatrixMode(GL_MODELVIEW);
   Drawing::drawShapes(globalSimulation->getPhysicalObjects().getShapes());
+
+  function<void(Quadrant)> drawingFunc = [] (Quadrant quadrant) {
+      Drawing::draw(quadrant.getBorders());
+  };
+  globalSimulation->getQuadrant()->applyToAllChildren(drawingFunc);
+
 
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
@@ -105,16 +113,15 @@ void init(char simulation) {
 }
 
 void idle() {
-  globalSimulation->setDT(globalControlCenter.getDt());
-
+  auto dt = globalControlCenter.getDt();
   if (! globalControlCenter.isPaused() ) {
-    globalSimulation->update();
-    globalMainDisplay.update(globalSimulation->getDT());
+      globalSimulation->update(dt);
+    globalMainDisplay.update(dt);
   }
 
   // Should just directly call Observer::getCurObserverInstance()
   Observer * curObserver = Observer::getCurObserver();
-  curObserver->update( globalSimulation->getDT() );
+  curObserver->update(dt);
 
   // Not sure if I can use Observer the way that I want to here, due to the constaints of the input methods
   if (WorldSettings::isAutoScaling()) {

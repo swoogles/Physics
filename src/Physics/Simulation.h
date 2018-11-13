@@ -30,7 +30,7 @@ private:
     ForceCalculationMethod forceCalcMethod;
     CollisionType collisionType;
 
-	void updateTimeElapsed();
+	void updateTimeElapsed(float dt);
 
 	void updateMinsAndMaxes();
     void resetXYMinsAndMaxes();
@@ -42,7 +42,6 @@ private:
     void getConstGravFieldVal(sgVec4 retGravField);
 
 	void refreshQuadrant();
-	QuadrantPointer_t getQuadrant();
 
 	PairCollection calculateForceOnExternalNode(const shapePointer_t &curObject, const QuadrantPointer_t &curQuadrant, float dt);
 	PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
@@ -63,13 +62,15 @@ private:
 
     double getTimeElapsed();
 
-    void update();
+    // TODO Take dt as a parameter here.
+	void update(float dt);
 
 	void getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY );
 
 	size_t getSize();
 	double getMass();
 
+	QuadrantPointer_t getQuadrant();
 } ;
 typedef shared_ptr<Simulation> SimulationPtr_t;
 #endif

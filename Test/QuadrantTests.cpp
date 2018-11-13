@@ -90,13 +90,15 @@ TEST_CASE("Get children", "[Quadrant]") {
         REQUIRE(quadrant.children().empty());
     }
     SECTION("Multiple Insertions") {
-        auto a = TestUtils::testCircle();
+        auto a = TestUtils::circleAt(5, 5, 5);
         quadrant.insertShape(a);
-        auto b = TestUtils::circleAt(5, 5, 5);
+        auto b = TestUtils::circleAt(5, 5, -5);
         quadrant.insertShape(b);
-        REQUIRE(quadrant.children().size() == 1);
+        REQUIRE(quadrant.children().size() == 2);
         quadrant.insertShape(TestUtils::circleAt(-5, 5, 5));
+        REQUIRE(quadrant.children().size() == 3);
         quadrant.insertShape(TestUtils::circleAt(5, -5, 5));
+        REQUIRE(quadrant.children().size() == 4);
 
         for (const auto &child: quadrant.children()) {
             cout << "CHILD: " << child << endl;
@@ -108,5 +110,16 @@ TEST_CASE("Get children", "[Quadrant]") {
 //        TODO Reinstate
 //        REQUIRE(quadrant.children().size() == 2);
 
+    }
+
+    SECTION("Get null subquadrant") {
+        REQUIRE(quadrant.getQuadrantFromCell(0, 0, 0) == nullptr);
+        REQUIRE(quadrant.getQuadrantFromCell(0, 0, 1) == nullptr);
+        REQUIRE(quadrant.getQuadrantFromCell(0, 1, 0) == nullptr);
+        REQUIRE(quadrant.getQuadrantFromCell(0, 1, 1) == nullptr);
+        REQUIRE(quadrant.getQuadrantFromCell(1, 0, 0) == nullptr);
+        REQUIRE(quadrant.getQuadrantFromCell(1, 0, 1) == nullptr);
+        REQUIRE(quadrant.getQuadrantFromCell(1, 1, 0) == nullptr);
+        REQUIRE(quadrant.getQuadrantFromCell(1, 1, 1) == nullptr);
     }
 }

@@ -83,11 +83,11 @@ void Simulation::updateMinsAndMaxes() {
     }
 }
 
-void Simulation::update()
+void Simulation::update(float dt)
 {
   calcForcesAll();
-  physicalObjects.update(DT);
-  updateTimeElapsed();
+  physicalObjects.update(dt);
+    updateTimeElapsed(dt);
 
   // TODO This causes another full iteration of all shapes. If it's going to happen, it should be done during one of the earlier iterations.
   updateMinsAndMaxes();
@@ -103,7 +103,7 @@ void Simulation::addPhysicalObjectToList(shapePointer_t newShape) { physicalObje
 
 ShapeList Simulation::getPhysicalObjects() { return physicalObjects; }
 
-void Simulation::updateTimeElapsed() { timeElapsed += DT; }
+void Simulation::updateTimeElapsed(float dt) { timeElapsed += dt; }
 
 double Simulation::getTimeElapsed() { return timeElapsed; }
 
@@ -257,8 +257,13 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
             //b.
             curObject->adjustMomentum(gravVec);
         } else { //3.
-            QuadrantPointer_t targetQuadrant;
+            /* This seems to work now; it's just absurdly slow
+            for (const auto & curQuadrantNew: curQuadrant->children()) {
+                deleteList.insertUniqueElements(calcForceOnObject_Octree(curObject, curQuadrantNew, dt, recursionLevel + 1)) ;
+            }
+             */
             // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
+            QuadrantPointer_t targetQuadrant;
             for ( int x = 0; x < 2; x++ ) {
                 for ( int y = 0; y < 2; y++ ) {
                     for ( int z = 0; z < 2; z++ ) {

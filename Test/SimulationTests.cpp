@@ -7,7 +7,7 @@
 
 TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[green]" ) {
     SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest(NAIVE);
-    simulation->update();
+    simulation->update(0);
     REQUIRE(simulation->getSize() == 3);
 }
 
@@ -16,7 +16,7 @@ TEST_CASE( "Run simple simulation until merge happens", "[green]" ) {
     auto initialMass = simulation->getMass();
     REQUIRE(simulation->getSize() == 3);
     for (int i = 0; i < 1e4; i++) {
-        simulation->update();
+        simulation->update(0);
     }
     REQUIRE(simulation->getSize() == 1);
     auto mergedMass = simulation->getMass();

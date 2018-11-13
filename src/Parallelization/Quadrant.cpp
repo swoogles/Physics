@@ -1,12 +1,3 @@
-#include <utility>
-
-#include <utility>
-
-#include <utility>
-
-#include <utility>
-
-#include "MyShape.h"
 #include "Quadrant.h"
 
 bool withinBoundaries(VecStruct & insertPos, VecStruct & minBoundaries, VecStruct & maxBoundaries) {
@@ -77,7 +68,7 @@ Quadrant::Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float wid
 }
 
 QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
-  return quadOctree[x][y][z];
+  return this->quadOctree[x][y][z];
 }
 
 
@@ -179,7 +170,7 @@ vector<shared_ptr<Quadrant>> Quadrant::children() {
       }
     }
   }
-  return liveChildren;
+  return std::move(liveChildren);
 }
 
 Quadrant Quadrant::emptyLeaf(int level, VecStruct &pos, float width) {
@@ -199,6 +190,26 @@ QuadrantPointer_t Quadrant::subQuadrantAt(OctreeCoordinates indices) {
 void Quadrant::assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newQuadrant) {
     auto ints = indices.ints();
     this->quadOctree[ints[0]][ints[1]][ints[2]] = std::move(newQuadrant);
+}
+
+void Quadrant::applyToAllChildren(function<void (Quadrant)> functor) {
+    functor.operator()(*this);
+
+    for ( int x = 0; x < 2; x++ ) {
+        for ( int y = 0; y < 2; y++ ) {
+            for ( int z = 0; z < 2; z++ ) {
+                QuadrantPointer_t targetQuadrant = this->getQuadrantFromCell( x, y, z );
+                if ( targetQuadrant != nullptr ) {
+                    targetQuadrant->applyToAllChildren(functor);
+                }
+            }
+        }
+    }
+
+}
+
+shared_ptr<Box> Quadrant::getBorders() {
+    return borders;
 }
 
 

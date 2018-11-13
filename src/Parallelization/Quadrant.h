@@ -15,7 +15,7 @@
 #include <boost/ref.hpp>
 #include <memory>
 
-#define INVALID_OCTREE_INDEX -1
+#include <functional>
 
 using boost::extents;
 using boost::multi_array;
@@ -26,7 +26,6 @@ using std::weak_ptr;
 class Quadrant : public Box
 {
   private:
-    typedef shapePointer_t shape_pointer;
     typedef shared_ptr<Quadrant> QuadrantPointer_t;
     typedef multi_array< QuadrantPointer_t, 3> array_typeNew;
 
@@ -72,8 +71,12 @@ class Quadrant : public Box
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 
     vector<shared_ptr<Quadrant>> children();
+    unique_ptr<vector<shared_ptr<Quadrant>>> children(unique_ptr<vector<shared_ptr<Quadrant>>> inVector);
 
     QuadrantPointer_t makeSubQuadrant(OctreeCoordinates coordinates);
+    void applyToAllChildren(function<void (Quadrant)> functor);
+
+    shared_ptr<Box> getBorders();
 };
 typedef shared_ptr<Quadrant> QuadrantPointer_t;
 #endif
