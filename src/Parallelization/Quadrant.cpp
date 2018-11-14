@@ -183,7 +183,7 @@ void Quadrant::assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t 
 }
 
 void Quadrant::applyToAllChildren(function<void (Quadrant)> functor) {
-    functor.operator()(*this);
+    functor(*this);
 
     for ( int x = 0; x < 2; x++ ) {
         for ( int y = 0; y < 2; y++ ) {
