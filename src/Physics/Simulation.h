@@ -4,7 +4,6 @@
 #define SIMULATION_H_
 
 #include <boost/ref.hpp>
-#include <plib/sg.h>
 #include "../ShapeFiles/ShapeList.h"
 #include "../Parallelization/Quadrant.h"
 #include "ForceCalculationMethod.h"
@@ -19,7 +18,7 @@ private:
 	float minX, maxX, minY, maxY;
 
     bool constGravField;
-    sgVec4 gravField;
+    VecStruct gravField;
     bool gravBetweenObjects;
 
     float octreeTheta;
@@ -38,7 +37,7 @@ private:
 	void removePhysicalObjects( ShapeList shapesToRemove );
 
     //! Return gravity field vector in retGravField
-    void getConstGravFieldVal(sgVec4 retGravField);
+	VecStruct getConstGravFieldVal();
 
 	void refreshQuadrant();
 

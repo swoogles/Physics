@@ -70,8 +70,8 @@ void Simulation::resetXYMinsAndMaxes() {
 	maxY = FLT_MIN;
 }
 
-void Simulation::getConstGravFieldVal(sgVec4 retGravField) {
-	sgCopyVec4(retGravField, gravField);
+VecStruct Simulation::getConstGravFieldVal() {
+    return gravField;
 }
 
 void Simulation::updateMinsAndMaxes() {
@@ -109,7 +109,7 @@ VecStruct calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
 {
     VecStruct sepVec(object1.getVectorToObject(object2));
 
-    SGfloat rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
+    float rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
 
     float G = 6.67384e-11;
     float forceMagnitude = (G * object1.getMass() * object2.getMass()) / rSquared;
@@ -127,12 +127,12 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
     float c = n.scalarProduct4(object1.getVelocity().minus(object2.getVelocity()));
 
     auto combinedMass = object2.getMass() + object1.getMass();
-    SGfloat multiplierA = -2 * ( object2.getMass() * c ) / combinedMass;
+    float multiplierA = -2 * ( object2.getMass() * c ) / combinedMass;
     VecStruct aVec = n.scaledBy(multiplierA);
 
     object1.adjustVelocity(aVec);
 
-    SGfloat multiplierB = 2 * ( object1.getMass() * c ) / combinedMass;
+    float multiplierB = 2 * ( object1.getMass() * c ) / combinedMass;
     VecStruct bVec = n.scaledBy(multiplierB);
 
     object2.adjustVelocity(bVec);
@@ -150,36 +150,29 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
 // TODO This should return the deleted list, so that it can coexist with the Octree version
 void Simulation::calcForcesAll_LessNaive(float dt)
 {
-    VecStruct gravField(0, 0, 0, false);
-
     vectorT physicalObjects = this->physicalObjects.getShapes();
     ShapeList deleteList;
-
-    if (this->constGravField ) {
-        this->getConstGravFieldVal(gravField.vec);
-        sgScaleVec4(gravField.vec, 1/dt);
-    }
 
     if (!physicalObjects.empty()) {
         for (size_t i = 0; i < physicalObjects.size()-1; i++) {
             MyShape & object1 = *physicalObjects.at(i);
 
-            object1.adjustMomentum(gravField);
+            if (constGravField) {
+                object1.adjustMomentum(this->getConstGravFieldVal().scaledBy(1 / dt));
+            }
 
             for (size_t j = i + 1; j < physicalObjects.size(); j++) {
                 MyShape & object2 = *physicalObjects.at(j);
-
 
                 if (this->gravBetweenObjects ) {
                     VecStruct gravVec = calcForceGravNew(object1, object2, dt );
 
                     object1.adjustMomentum(gravVec);
-                    sgNegateVec4(gravVec.vec);
-                    object2.adjustMomentum(gravVec);
+                    object2.adjustMomentum(gravVec.scaledBy(-1).vec);
                 }
 
-                SGfloat distance = object1.distanceTo(object2);
-                SGfloat minSep = object1.getRadius() + object2.getRadius();
+                float distance = object1.distanceTo(object2);
+                float minSep = object1.getRadius() + object2.getRadius();
 
                 if (distance < minSep) {
                     if (this->collisionType == CollisionType::ELASTIC) {
@@ -195,7 +188,7 @@ void Simulation::calcForcesAll_LessNaive(float dt)
 
         // Add unary forces to last object
         auto object1 = physicalObjects.at(physicalObjects.size()-1);
-        object1->adjustMomentum(gravField);
+        object1->adjustMomentum(this->getConstGravFieldVal().scaledBy(1 / dt));
 
         this->removePhysicalObjects(deleteList);
     }
@@ -242,7 +235,7 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
     }
     else {
         PairCollection deleteList;
-        SGfloat distance = curObject->distanceTo(*curQuadrant);
+        float distance = curObject->distanceTo(*curQuadrant);
         //2.a
         if ( curQuadrant->getWidth() / distance < octreeTheta ) {
             VecStruct gravVec = calcForceGravNew( *curObject, *curQuadrant, dt);
