@@ -172,15 +172,6 @@ vector<shared_ptr<Quadrant>> Quadrant::children() {
   return std::move(liveChildren);
 }
 
-Quadrant Quadrant::emptyLeaf(int level, VecStruct &pos, float width) {
-    // TODO Implement for real
-  return Quadrant(level, pos, width);
-}
-
-Quadrant Quadrant::filledLeaf(shapePointer_t newShape, int level, VecStruct &pos, float width) {
-  return Quadrant(std::move(newShape), level, pos, width);
-}
-
 QuadrantPointer_t Quadrant::subQuadrantAt(OctreeCoordinates indices) {
     auto ints = indices.ints();
     return quadOctree[ints[0]][ints[1]][ints[2]];
