@@ -101,8 +101,6 @@ void Simulation::removePhysicalObjects(ShapeList shapesToRemove) {
 
 void Simulation::addPhysicalObjectToList(shapePointer_t newShape) { physicalObjects.addShapeToList(std::move(newShape)); }
 
-ShapeList Simulation::getPhysicalObjects() { return physicalObjects; }
-
 void Simulation::updateTimeElapsed(float dt) { timeElapsed += dt; }
 
 double Simulation::getTimeElapsed() { return timeElapsed; }

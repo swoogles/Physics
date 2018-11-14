@@ -48,6 +48,15 @@ SimulationPtr_t globalSimulation;
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
+function<void(Quadrant)> drawShapeInQuadrant = [](Quadrant quadrant) {
+    auto shape = quadrant.getShapeInQuadrant();
+    if (shape != nullptr) Drawing::draw(shape);
+};
+
+function<void(Quadrant)> drawingFunc = [](Quadrant quadrant) {
+    Drawing::draw(quadrant.getBorders());
+};
+
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
 // TODO Allow an arbitrary list of objects to be displayed
@@ -63,15 +72,15 @@ void display()
   curObserver->getView();
 
   glMatrixMode(GL_MODELVIEW);
-  Drawing::drawShapes(globalSimulation->getPhysicalObjects().getShapes());
 
-  if (globalControlCenter.shouldRenderOctree()) {
-    function<void(Quadrant)> drawingFunc = [](Quadrant quadrant) {
-        Drawing::draw(quadrant.getBorders());
-    };
-    globalSimulation->getQuadrant()->applyToAllChildren(drawingFunc);
-  }
+  function<void(Quadrant)> fullQuadrantDrawingFunction = [](Quadrant quadrant) {
+      if (globalControlCenter.shouldRenderOctree()) {
+        drawingFunc(quadrant);
+      }
+      drawShapeInQuadrant(quadrant);
+  };
 
+  globalSimulation->getQuadrant()->applyToAllChildren(fullQuadrantDrawingFunction);
 
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();

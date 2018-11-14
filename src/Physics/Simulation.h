@@ -54,7 +54,6 @@ private:
 				   ForceCalculationMethod forceCalculationMethod, float octreeTheta);
 	Simulation(Simulation && originalSimulation, ShapeList newObjects);
 
-    ShapeList getPhysicalObjects();
     void addPhysicalObjectToList( shapePointer_t newShape );
 
     void setDT(float newDT);
