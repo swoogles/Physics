@@ -37,11 +37,9 @@ TEST_CASE( "Simulation is made", "[green]" ) {
     SimulationPointer_t  testSimulationPtr = Simulations::QuadrantTesting_simplest(NAIVE);
 
     // REQUIRE( testSimulation.getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_OCTREE );
-    REQUIRE( testSimulationPtr->getDT() == 50000.0 );
     REQUIRE( testSimulationPtr->getTimeElapsed() == 0 );
 }
 
 TEST_CASE( "non-ptr Simulation is made", "[green]" ) {
     shared_ptr<Simulation> simulation = Simulations::QuadrantTesting_simplest(NAIVE);
-    REQUIRE( simulation->getDT() == 1000.0);
 }

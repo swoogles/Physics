@@ -14,8 +14,7 @@
 class Simulation {
 private:
 	ShapeList physicalObjects;
-	float DT;
-    double timeElapsed;
+	double timeElapsed;
 
 	float minX, maxX, minY, maxY;
 
@@ -46,18 +45,15 @@ private:
 	PairCollection calculateForceOnExternalNode(const shapePointer_t &curObject, const QuadrantPointer_t &curQuadrant, float dt);
 	PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
 
-	void calcForcesAll_LessNaive();
-	void calcForcesAll();
+	void calcForcesAll_LessNaive(float dt);
+	void calcForcesAll(float dt);
 
   public:
-    Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects,
-				   ForceCalculationMethod forceCalculationMethod, float octreeTheta);
+    Simulation(ShapeList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
+                   ForceCalculationMethod forceCalculationMethod, float octreeTheta);
 	Simulation(Simulation && originalSimulation, ShapeList newObjects);
 
     void addPhysicalObjectToList( shapePointer_t newShape );
-
-    void setDT(float newDT);
-    float getDT() const;
 
     double getTimeElapsed();
 

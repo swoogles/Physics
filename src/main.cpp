@@ -114,13 +114,14 @@ void determineViewBasedOnSimulation(Simulation & simulation, Observer * observer
   observer->calcMinPullback( 45.0, minX, minY, maxX, maxY);
 }
 
-void init(char simulation) {
+PhysicsSandboxProperties init(char simulation) {
   BillProperties billProperties("simulation.properties");
 
   PhysicsSandboxProperties properties(billProperties);
 
   cout << "dt: " << properties.dt << endl;
   globalSimulation = Simulations::createSimulation(simulation, properties);
+  return properties;
 }
 
 void idle() {
@@ -198,7 +199,7 @@ void postSimulationGlInit() {
 int main(int argcp, char **argv) {
   char simulation = argv[2][0];
 
-  init( simulation );
+  auto properties = init( simulation );
 
   openGlInit();
   mainGlut(argcp, argv);
@@ -216,7 +217,7 @@ int main(int argcp, char **argv) {
 
   postSimulationGlInit();
 
-  globalControlCenter.init(globalSimulation->getDT(), glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+  globalControlCenter.init(properties.dt, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
 
   glutMainLoop();
 

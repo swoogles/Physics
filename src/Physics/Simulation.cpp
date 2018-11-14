@@ -1,9 +1,8 @@
 #include "Simulation.h"
 
-Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, float dt, bool gravityBetweenObjects,
+Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
                        ForceCalculationMethod forceCalculationMethod, float octreeTheta)
         :physicalObjects(std::move(physicalObjects))
-        ,DT(dt)
         ,timeElapsed(0)
         ,minX(FLT_MAX)
         ,maxX(FLT_MIN)
@@ -21,7 +20,6 @@ Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, f
 
 Simulation::Simulation(Simulation &&originalSimulation, ShapeList newObjects)
         :physicalObjects(std::move(originalSimulation.physicalObjects))
-        ,DT(originalSimulation.DT)
         ,timeElapsed(originalSimulation.timeElapsed)
         ,minX(FLT_MAX)
         ,maxX(FLT_MIN)
@@ -85,7 +83,7 @@ void Simulation::updateMinsAndMaxes() {
 
 void Simulation::update(float dt)
 {
-  calcForcesAll();
+    calcForcesAll(dt);
   physicalObjects.update(dt);
     updateTimeElapsed(dt);
 
@@ -104,10 +102,6 @@ void Simulation::addPhysicalObjectToList(shapePointer_t newShape) { physicalObje
 void Simulation::updateTimeElapsed(float dt) { timeElapsed += dt; }
 
 double Simulation::getTimeElapsed() { return timeElapsed; }
-
-float Simulation::getDT() const { return DT; }
-
-void Simulation::setDT(float newDT) { DT = newDT; }
 
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
@@ -154,7 +148,7 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
 // structural changes that I can make so that it will be more legible and
 // more suitable for later parallelization
 // TODO This should return the deleted list, so that it can coexist with the Octree version
-void Simulation::calcForcesAll_LessNaive()
+void Simulation::calcForcesAll_LessNaive(float dt)
 {
     VecStruct gravField(0, 0, 0, false);
 
@@ -163,7 +157,7 @@ void Simulation::calcForcesAll_LessNaive()
 
     if (this->constGravField ) {
         this->getConstGravFieldVal(gravField.vec);
-        sgScaleVec4(gravField.vec, 1/DT);
+        sgScaleVec4(gravField.vec, 1/dt);
     }
 
     if (!physicalObjects.empty()) {
@@ -177,7 +171,7 @@ void Simulation::calcForcesAll_LessNaive()
 
 
                 if (this->gravBetweenObjects ) {
-                    VecStruct gravVec = calcForceGravNew(object1, object2, DT );
+                    VecStruct gravVec = calcForceGravNew(object1, object2, dt );
 
                     object1.adjustMomentum(gravVec);
                     sgNegateVec4(gravVec.vec);
@@ -189,7 +183,7 @@ void Simulation::calcForcesAll_LessNaive()
 
                 if (distance < minSep) {
                     if (this->collisionType == CollisionType::ELASTIC) {
-                        elasticCollision( object1, object2, DT );
+                        elasticCollision( object1, object2, dt );
                     }
                     else if (this->collisionType == CollisionType::INELASTIC){
                         object1.mergeWith( object2 );
@@ -280,16 +274,16 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
 
 }
 
-void Simulation::calcForcesAll() {
+void Simulation::calcForcesAll(float dt) {
     switch(this->forceCalcMethod) {
         case ForceCalculationMethod::NAIVE:
-            calcForcesAll_LessNaive();
+            calcForcesAll_LessNaive(0);
             break;
         case ForceCalculationMethod ::OCTREE:
             PairCollection deleteList;
 
             for ( const auto & curShape : this->physicalObjects.getShapes() ) {
-                deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, this->getQuadrant(), this->DT, 0));
+                deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, this->getQuadrant(), dt, 0));
             }
 
             this->removePhysicalObjects(deleteList.doomed().getShapes() );

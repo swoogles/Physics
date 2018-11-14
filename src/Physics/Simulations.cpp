@@ -50,8 +50,6 @@ void Simulations::simpleOrbit() {
 SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
 
-    float dt = 1.0;
-
     int numPieces = 0;
     float cueMass = 100.0;
 
@@ -106,14 +104,12 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     }
 
     // TODO Fix places where a default 0 got passed to Simulation dt
-    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, dt, false, forceCalculationMethod, 0.5);
+    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, false, forceCalculationMethod, 0.5);
 }
 
 SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceCalculationMethod forceCalculationMethod)
 {
     ShapeList physicalObjects;
-
-    float dt = 1.0;
 
     float cueMass = 100.0;
     float ballMass = 0.156;
@@ -155,14 +151,12 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
             physicalObjects.addShapeToList( shapeForInsertion );
         }
     }
-    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, dt, false, forceCalculationMethod, 0.5);
+    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, false, forceCalculationMethod, 0.5);
 }
 
 
 SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
-
-    float dt = 1.0;
 
     float cueMass = 100.0;
     float ballMass = 0.156;
@@ -210,7 +204,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
             }
         }
     }
-    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, dt, false, forceCalculationMethod, 0.5);
+    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, false, forceCalculationMethod, 0.5);
 }
 
 SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperties properties)
@@ -293,7 +287,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1e4, true, forceCalculationMethod, 0.5);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, forceCalculationMethod, 0.5);
 }
 
 SimulationPointer_t
@@ -340,7 +334,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
         physicalObjects.addShapeToList( curShape );
     }
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, properties.dt, true, properties.forceCalculationMethod, properties.octreeTheta);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, properties.forceCalculationMethod, properties.octreeTheta);
 }
 
 SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, float *target,
@@ -395,14 +389,13 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
     physicalObjects.addShapeToList( curShape );
 	}
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, 1000, true, properties.forceCalculationMethod, properties.octreeTheta);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, properties.forceCalculationMethod, properties.octreeTheta);
 }
 
 SimulationPointer_t
 Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties)
 {
     ForceCalculationMethod forceCalculationMethod = simulationProperties.forceCalculationMethod;
-    auto dt = simulationProperties.dt;
 	//******CURRENT SIMULATION*****
   if ( simNumber == '0' ) {
   } else if ( simNumber == '1' ) {
