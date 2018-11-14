@@ -102,3 +102,19 @@ bool VecStruct::hasValues(float xIn, float yIn, float zIn) {
     return  x() == xIn && y() == yIn && z() == zIn;
 }
 
+std::list<VecStruct> VecStruct::cancellingVectors(int numberOfVectors) {
+    return std::list<VecStruct>();
+}
+
+bool VecStruct::operator==(const VecStruct &other) const {
+    return this->x() == other.x()
+           && this->y() == other.y()
+           && this->z() == other.z();
+}
+
+ostream &operator<<(ostream &os, const VecStruct &vec) {
+    os << "{" << vec.x() << ", " << vec.y() << ", " << vec.z() << "}";
+    return os;
+}
+
+
