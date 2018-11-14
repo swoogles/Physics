@@ -48,14 +48,14 @@ SimulationPtr_t globalSimulation;
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
-function<void(Quadrant)> drawShapeInQuadrant = [](Quadrant quadrant) {
+void drawShapeInQuadrant(Quadrant quadrant) {
     auto shape = quadrant.getShapeInQuadrant();
     if (shape != nullptr) Drawing::draw(shape);
 };
 
-function<void(Quadrant)> drawingFunc = [](Quadrant quadrant) {
-    Drawing::draw(quadrant.getBorders());
-};
+void drawingFuncFixed(Quadrant quadrant) {
+  Drawing::draw(quadrant.getBorders());
+}
 
 // You want to avoid passing argument to this method, because it would slow down every single
 // call.
@@ -75,7 +75,7 @@ void display()
 
   function<void(Quadrant)> fullQuadrantDrawingFunction = [](Quadrant quadrant) {
       if (globalControlCenter.shouldRenderOctree()) {
-        drawingFunc(quadrant);
+        drawingFuncFixed(quadrant);
       }
       drawShapeInQuadrant(quadrant);
   };
