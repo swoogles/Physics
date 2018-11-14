@@ -133,14 +133,13 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(VecStruct insertPos) {
 }
 
 QuadrantPointer_t Quadrant::makeSubQuadrant(OctreeCoordinates coordinates) {
-    VecStruct newDimensions = dimensions.scaledBy(.5);
     VecStruct offsets =
             dimensions
                     .scaledBy(.25)
                     .withElementsMultipliedBy(coordinates.polarities());
     VecStruct newPos = pos.plus( offsets );
 
-    return std::move(std::make_shared<Quadrant>( this->level + 1, newPos, newDimensions.vec[0] ) );
+    return std::move(std::make_shared<Quadrant>( this->level + 1, newPos, this->getWidth() / 2.0 ) );
 }
 
 bool Quadrant::positionIsInQuadrantBoundaries(VecStruct insertPos) {
