@@ -18,11 +18,10 @@ TEST_CASE( "Basics", "[VecStruct]" ) {
     REQUIRE(obj.x() == 1);
     REQUIRE(obj.y() == 2);
     REQUIRE(obj.z() == 3);
-    REQUIRE(fabs(obj.length() == 3.74166f) < epsilon);
+    REQUIRE(fabs(obj.length() - 3.74166f) < epsilon);
 
     SECTION("Unit vectors") {
-        VecStruct expectedUnitResult(0.16f, 0.33f, 0.51f);
-        cout << "unit result " << obj.unit() << endl;
+        VecStruct expectedUnitResult(0.267261, 0.534522, 0.801784);
         REQUIRE( obj.unit() == expectedUnitResult);
     }
 

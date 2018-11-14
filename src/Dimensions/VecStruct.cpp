@@ -107,9 +107,10 @@ std::list<VecStruct> VecStruct::cancellingVectors(int numberOfVectors) {
 }
 
 bool VecStruct::operator==(const VecStruct &other) const {
-    return this->x() == other.x()
-           && this->y() == other.y()
-           && this->z() == other.z();
+    float epsilon = 0.0001;
+    return fabs(this->x() -other.x()) < epsilon
+           && fabs(this->y() -other.y()) < epsilon
+           && fabs(this->z() -other.z()) < epsilon;
 }
 
 ostream &operator<<(ostream &os, const VecStruct &vec) {
