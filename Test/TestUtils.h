@@ -12,6 +12,7 @@ class TestUtils {
 public:
     static shared_ptr<Circle> testCircle();
     static shared_ptr<Circle> circleAt(float x, float y, float z);
+    static Circle simpleCircleAt(float x, float y, float z);
     static unique_ptr<Circle> improvedTestCircle();
 
 };
