@@ -10,6 +10,11 @@
 
 using std::size_t;
 
+class Interactions {
+public:
+    ShapeList crackPhysicalObject(MyShape &shape, float kineticEnergy, int numberOfPieces);
+};
+
 /*! \brief Calculates new velocities after a collision
  *
  *  This function is called when 2 objects are determined to be too close to eachother, and either WorldSettings::isAllElastic() returns true or
@@ -25,3 +30,4 @@ VecStruct calcForceGravNew(MyShape &object1, MyShape &object2, float dt) ;
 void calcDrag(float dt);
 
 #endif /* INTERACTIONS_H_ */
+

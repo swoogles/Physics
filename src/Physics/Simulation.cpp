@@ -1,4 +1,6 @@
 #include "Simulation.h"
+#include "Interactions.h"
+
 
 Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
                        ForceCalculationMethod forceCalculationMethod, float octreeTheta)
@@ -297,3 +299,13 @@ double Simulation::getMass() {
     return mass;
 }
 
+ShapeList Simulation::crackPhysicalObject(MyShape &shape) {
+    int numberOfFragments = 2;
+    VecStruct initialMomentum(shape.getMomentum());
+
+    return ShapeList();
+}
+
+ShapeList Interactions::crackPhysicalObject(MyShape &shape, float kineticEnergy, int numberOfPieces) {
+    return ShapeList();
+}

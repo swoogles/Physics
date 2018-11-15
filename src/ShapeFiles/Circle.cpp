@@ -76,6 +76,15 @@ float Circle::calcRadius(float mass, float density) {
 }
 
 /*
+ * Consult method here:
+ *   https://www.cmu.edu/biolphys/deserno/pdf/sphere_equi.pdf
+ */
+vector<VecStruct> Circle::pointsEvenlyDistributedOnSphere(int numPoints, float radius) {
+	VecStruct invalidDefault(-1, -1, -1);
+    return vector<VecStruct>{invalidDefault};
+}
+
+/*
 float calcRadius(float mass, int density ) {
 	float pieceRadius = pieceVol/(M_PI * 4.0/3.0);
 	pieceRadius = pow(pieceRadius, 1.0/3.0);

@@ -28,3 +28,14 @@ TEST_CASE( "merge Circles", "[green]" ) {
     REQUIRE(a->getRadius() > b->getRadius());
     REQUIRE(a->getMass() == originalMass);
 }
+
+TEST_CASE("Equally distribute points on a sphere", "[todo]") {
+    auto numPoints = 5;
+    auto radius = 1;
+
+    auto results = Circle::pointsEvenlyDistributedOnSphere(numPoints, radius);
+    SECTION("Numerous points to be validated" ) {
+        auto pointsInCorrectPosition = false;
+        REQUIRE(pointsInCorrectPosition);
+    }
+}

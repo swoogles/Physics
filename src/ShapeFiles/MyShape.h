@@ -130,6 +130,7 @@ private:
     static float calcRadius(float massBoth, float density);
 
     VecStruct getWeightedPosition();
+
 };
 
 typedef shared_ptr<MyShape> shapePointer_t;

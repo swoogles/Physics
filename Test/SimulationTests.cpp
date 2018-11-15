@@ -43,3 +43,23 @@ TEST_CASE( "Simulation is made", "[green]" ) {
 TEST_CASE( "non-ptr Simulation is made", "[green]" ) {
     shared_ptr<Simulation> simulation = Simulations::QuadrantTesting_simplest(NAIVE);
 }
+
+TEST_CASE("Detonate", "[simulation]") {
+    auto a = TestUtils::circleAt(0, 0, 0);
+    VecStruct newMomentum(5, 0, 0);
+    a->adjustMomentum(newMomentum);
+    SECTION("All objects are moving within certain range of original momentum.") {
+        REQUIRE(false);
+    }
+    SECTION("Interactions") {
+        SECTION("Some objects deflect without fragmenting") {
+            REQUIRE(false);
+        }
+        SECTION("High energy impacts generate more fragments than low energy") {
+            REQUIRE(false);
+        }
+
+    }
+}
+
+

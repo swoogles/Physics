@@ -37,5 +37,7 @@ class Circle: public MyShape {
 
 
     static float calcRadius(float mass, float density);
+
+    static vector<VecStruct> pointsEvenlyDistributedOnSphere(int numPoints, float radius);
 };
 #endif

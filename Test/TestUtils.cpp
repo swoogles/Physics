@@ -54,3 +54,20 @@ shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
             color
     );
 }
+
+ Circle TestUtils::simpleCircleAt(float x, float y, float z) {
+    auto mass = 100;
+    float density = 1;
+
+    sgVec4 aPos = { x, y, z, 1 };
+    sgVec4 startMom = { 0, 0, 0, 0 };
+    sgVec3 color = { 255, 255, 0 };
+
+    return Circle(
+            aPos,
+            mass,
+            startMom,
+            density,
+            color
+    );
+}
