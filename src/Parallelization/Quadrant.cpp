@@ -13,41 +13,6 @@ shapePointer_t Quadrant::getShapeInQuadrant() {
 }
 
 
-Quadrant::Quadrant(int level, VecStruct &pos, float width)
-  :isLeaf(true)
-  ,containsBody(false)
-  ,level(level)
-  ,dimensions(width, width, width)
-  ,borders(make_shared<Box>(pos, width, (sgVec3){ (float) (level*.10), (float) (1-level*.06), (float) (1-level*.06)} ) )
-  ,quadOctree(extents[2][2][2])
-  ,weightedPosition(0,0,0)
-{
-    // TODO Get this in a more idiomatic form
-  this->setMass(0);
-  // TODO Require shapeToInsert in constructor.
-  // TODO Can this be a more direct move?
-  this->setPos( pos );
-
-  sgVec3 CoMColor = { 0, 1, 0 };
-  sgVec4 comPos = { 0, 0, 0, 1};
-  float comMass = 0;
-  float comRadius = 1.0;
-  sgVec4 comMomentum = { 0, 0, 0 };
-  float comDensity = 1.0;
-
-  /*
-  centerOfMassRepresentation = make_shared<Circle>(
-          comPos,
-          comMass,
-          comRadius,
-          comMomentum,
-          comDensity,
-          CoMColor
-  );
-   */
-
-}
-
 Quadrant::Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float width)
         :isLeaf(true)
         ,containsBody(true)
@@ -106,7 +71,7 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(shapePointer_t newShape) {
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
-        QuadrantPointer_t newSubQuadrant = this->makeSubQuadrant(newShape, targetIndices);
+        QuadrantPointer_t newSubQuadrant = this->makeSubQuadrant(newShape);
         this->assignSubQuadrantAt(targetIndices, newSubQuadrant);
         return newSubQuadrant;
     } else {
@@ -125,21 +90,14 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(VecStruct pointI
 }
 
 
-QuadrantPointer_t Quadrant::makeSubQuadrant(OctreeCoordinates coordinates) {
+// Note/warning: This makes the assumption that newShape *belongs* in the subQuadrant that matches the coordinates.
+// Could be dangerous.
+QuadrantPointer_t Quadrant::makeSubQuadrant(shapePointer_t newShape) {
+    auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->getPos());
     VecStruct offsets =
             dimensions
                     .scaledBy(.25)
-                    .withElementsMultipliedBy(coordinates.polarities());
-    VecStruct newPos = pos.plus( offsets );
-
-    return std::move(std::make_shared<Quadrant>( this->level + 1, newPos, this->getWidth() / 2.0 ) );
-}
-
-QuadrantPointer_t Quadrant::makeSubQuadrant(shapePointer_t newShape, OctreeCoordinates coordinates) {
-    VecStruct offsets =
-            dimensions
-                    .scaledBy(.25)
-                    .withElementsMultipliedBy(coordinates.polarities());
+                    .withElementsMultipliedBy(targetIndices.polarities());
     VecStruct newPos = pos.plus( offsets );
 
     return std::move(std::make_shared<Quadrant>( newShape, this->level + 1, newPos, this->getWidth() / 2.0 ) );

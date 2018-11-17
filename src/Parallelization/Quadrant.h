@@ -54,7 +54,6 @@ class Quadrant : public Box
     void assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newSubQuadrant);
     OctreeCoordinates coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant);
   public:
-    Quadrant(int level, VecStruct &pos, float width);
     Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float width);
 
     void insertShape(shapePointer_t newShape);
@@ -70,8 +69,7 @@ class Quadrant : public Box
     vector<shared_ptr<Quadrant>> children();
     unique_ptr<vector<shared_ptr<Quadrant>>> children(unique_ptr<vector<shared_ptr<Quadrant>>> inVector);
 
-    QuadrantPointer_t makeSubQuadrant(OctreeCoordinates coordinates);
-    QuadrantPointer_t makeSubQuadrant(shapePointer_t newShape, OctreeCoordinates coordinates);
+    QuadrantPointer_t makeSubQuadrant(shapePointer_t newShape);
     void applyToAllChildren(function<void (Quadrant)> functor);
 
     shared_ptr<Box> getBorders();
