@@ -34,11 +34,6 @@
 
 using std::size_t;
 
-void myTimer(int v) {
-  glutPostRedisplay();
-  glutTimerFunc(1000/FPS, myTimer, v);
-}
-
 static int main_window;
 
 static int control_center_num;
@@ -121,36 +116,6 @@ void configureControlWindow(
   glutInitWindowSize(controlWinWidth,controlWinHeight);
 }
 
-void mainGlut(int argcp, char **argv) {
-  size_t mainWinPosX = 100;
-  size_t mainWinPosY = 50;
-  size_t mainWinHeight = 720;
-  size_t mainWinWidth = 1280;
-
-  glutInit(&argcp, argv);
-  glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-  glutInitWindowPosition(mainWinPosX,mainWinPosY);
-  glutInitWindowSize(mainWinWidth,mainWinHeight);
-  main_window = glutCreateWindow("Center Stage");
-  glutSetWindow(main_window);
-  GraphicalOperations::staticSimulation = globalSimulation;
-  GraphicalOperations::staticControlCenter = globalControlCenter;
-  glutDisplayFunc(GraphicalOperations::display);
-
-  glutMouseFunc(myMouse);
-  glutKeyboardFunc(myKey);
-
-  glutIdleFunc(idle);
-  glutTimerFunc(1000, myTimer, FPS);
-
-  configureControlWindow(
-      mainWinPosX,
-      mainWinPosY,
-      mainWinHeight,
-      mainWinWidth
-  );
-}
-
 void postSimulationGlInit() {
   glutDisplayFunc(controlDisplay);
   glutMouseFunc(myMouse);
@@ -163,7 +128,9 @@ int main(int argcp, char **argv) {
   auto properties = init( simulation );
 
   openGlInit();
-  mainGlut(argcp, argv);
+  GraphicalOperations graphicalOperations;
+  main_window = graphicalOperations.mainGlut(argcp, argv, idle, globalSimulation, globalControlCenter);
+//  mainGlut(argcp, argv);
   puInit();
 
   Observer::init();

@@ -15,12 +15,23 @@
 #include <plib/pu.h>
 #include <plib/puAux.h>
 
+#include "inputFunctions.h"
+
 #include <Physics/Simulation.h>
 
 class GraphicalOperations {
 public:
     static void display();
-    GraphicalOperations(SimulationPtr_t simulation, control_center controlCenter);
+    GraphicalOperations();
+
+    int mainGlut(int argcp, char **argv, void (*callback)(void), SimulationPtr_t simulation,
+                     control_center controlCenter);
+    void configureControlWindow(
+            int mainWinPosX,
+            int mainWinPosY,
+            int mainWinHeight,
+            int mainWinWidth
+    );
 
     // Make private, at the very least
     static SimulationPtr_t staticSimulation;
@@ -28,8 +39,6 @@ public:
 private:
     SimulationPtr_t globalSimulation;
     control_center globalControlCenter;
-
-    function<void(Quadrant)> quadrantDrawingFunction;
 
     static void fullQuadrantDrawingFunction(Quadrant quadrant);
 
