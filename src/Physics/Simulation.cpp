@@ -199,10 +199,10 @@ void Simulation::calcForcesAll_LessNaive(float dt)
 
 
 
-PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &curObject, const QuadrantPointer_t &curQuadrant, float dt) {
+PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &curObject, Quadrant &curQuadrant, float dt) {
     //1. a.
     PairCollection deleteList;
-    shapePointer_t shapeInQuadrant = curQuadrant->getShapeInQuadrant();
+    shapePointer_t shapeInQuadrant = curQuadrant.getShapeInQuadrant();
 
     //b.
     if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant ) {
@@ -230,17 +230,18 @@ PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &cu
 
 
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
-PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel)
+PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Quadrant &curQuadrant, float dt,
+                                                    int recursionLevel)
 {
-    if ( curQuadrant->isExternal() ) {
+    if ( curQuadrant.isExternal() ) {
         return calculateForceOnExternalNode(curObject, curQuadrant, dt);
     }
     else {
         PairCollection deleteList;
-        float distance = curObject->distanceTo(*curQuadrant);
+        float distance = curObject->distanceTo(curQuadrant);
         //2.a
-        if ( curQuadrant->getWidth() / distance < octreeTheta ) {
-            VecStruct gravVec = calcForceGravNew( *curObject, *curQuadrant, dt);
+        if ( curQuadrant.getWidth() / distance < octreeTheta ) {
+            VecStruct gravVec = calcForceGravNew( *curObject, curQuadrant, dt);
             //b.
             curObject->adjustMomentum(gravVec);
         } else { //3.
@@ -254,9 +255,9 @@ PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Qu
             for ( int x = 0; x < 2; x++ ) {
                 for ( int y = 0; y < 2; y++ ) {
                     for ( int z = 0; z < 2; z++ ) {
-                        targetQuadrant = curQuadrant->getQuadrantFromCell( x, y, z );
+                        targetQuadrant = curQuadrant.getQuadrantFromCell( x, y, z );
                         if ( targetQuadrant != nullptr ) {
-                            deleteList.insertUniqueElements(calcForceOnObject_Octree(curObject, targetQuadrant, dt, recursionLevel + 1)) ;
+                            deleteList.insertUniqueElements(calcForceOnObject_Octree(curObject, *targetQuadrant, dt, recursionLevel + 1)) ;
                         }
                     }
                 }
@@ -278,7 +279,7 @@ void Simulation::calcForcesAll(float dt) {
             PairCollection deleteList;
 
             for ( const auto & curShape : this->physicalObjects.getShapes() ) {
-                deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, this->getQuadrant(), dt, 0));
+                deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, *this->getQuadrant(), dt, 0));
             }
 
             this->removePhysicalObjects(deleteList.doomed().getShapes() );

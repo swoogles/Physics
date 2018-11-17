@@ -41,8 +41,9 @@ private:
 
 	void refreshQuadrant();
 
-	PairCollection calculateForceOnExternalNode(const shapePointer_t &curObject, const QuadrantPointer_t &curQuadrant, float dt);
-	PairCollection calcForceOnObject_Octree(shapePointer_t curObject, QuadrantPointer_t curQuadrant, float dt, int recursionLevel);
+	PairCollection calculateForceOnExternalNode(const shapePointer_t &curObject, Quadrant &curQuadrant, float dt);
+	PairCollection calcForceOnObject_Octree(shapePointer_t curObject, Quadrant &curQuadrant, float dt,
+											int recursionLevel);
 
 	void calcForcesAll_LessNaive(float dt);
 	void calcForcesAll(float dt);
