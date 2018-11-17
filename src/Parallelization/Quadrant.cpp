@@ -51,7 +51,7 @@ Quadrant::Quadrant(int level, VecStruct &pos, float width)
 Quadrant::Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float width)
         :isLeaf(true)
         ,containsBody(true)
-        ,shapeInQuadrant(std::move(newShape))
+        ,shapeInQuadrant(newShape)
         ,level(level)
         ,dimensions(width, width, width)
         ,borders(make_shared<Box>(pos, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
@@ -93,44 +93,37 @@ void Quadrant::insertShape(shapePointer_t insertedShape) {
     this->adjustMass(insertedShape->getMass());
     this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
 
-    if ( !containsBody ) {
-        shapeInQuadrant = insertedShape;
-        containsBody = true;
-    }
-    else {
-        this->subQuadrantThatContains(insertedShape->getPos())
-                ->insertShape(insertedShape);
-        if (isLeaf) {
-            isLeaf = false;
-            this->subQuadrantThatContains(shapeInQuadrant->getPos())
-                ->insertShape(std::move(shapeInQuadrant));
-        }
+    this->subQuadrantThatContains(insertedShape);
+    if ( isLeaf ) {
+        isLeaf = false;
+        this->subQuadrantThatContains(shapeInQuadrant);
     }
     // 3.d centerOfMassRepresentation->setPos( CoMPosition );
 }
 
-OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant) {
-    return OctreeCoordinates(
-        pointInsideQuadrant.x() < pos.x(),
-                pointInsideQuadrant.y() < pos.y(),
-                pointInsideQuadrant.z() < pos.z()
-    );
-}
-
-// TODO This is scary. A determination shouldn't create anything.
-QuadrantPointer_t Quadrant::subQuadrantThatContains(VecStruct insertPos) {
-    auto targetIndices = this->coordinatesForSubQuadrantContaining(insertPos);
+QuadrantPointer_t Quadrant::subQuadrantThatContains(shapePointer_t newShape) {
+    auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->getPos());
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
-        QuadrantPointer_t newSubQuadrant = this->makeSubQuadrant(targetIndices);
+        QuadrantPointer_t newSubQuadrant = this->makeSubQuadrant(newShape, targetIndices);
         this->assignSubQuadrantAt(targetIndices, newSubQuadrant);
         return newSubQuadrant;
     } else {
+        insertionQuadrant->insertShape(newShape);
         return insertionQuadrant;
    };
 
 }
+
+OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant) {
+    return OctreeCoordinates(
+            pointInsideQuadrant.x() < pos.x(),
+            pointInsideQuadrant.y() < pos.y(),
+            pointInsideQuadrant.z() < pos.z()
+    );
+}
+
 
 QuadrantPointer_t Quadrant::makeSubQuadrant(OctreeCoordinates coordinates) {
     VecStruct offsets =
@@ -140,6 +133,16 @@ QuadrantPointer_t Quadrant::makeSubQuadrant(OctreeCoordinates coordinates) {
     VecStruct newPos = pos.plus( offsets );
 
     return std::move(std::make_shared<Quadrant>( this->level + 1, newPos, this->getWidth() / 2.0 ) );
+}
+
+QuadrantPointer_t Quadrant::makeSubQuadrant(shapePointer_t newShape, OctreeCoordinates coordinates) {
+    VecStruct offsets =
+            dimensions
+                    .scaledBy(.25)
+                    .withElementsMultipliedBy(coordinates.polarities());
+    VecStruct newPos = pos.plus( offsets );
+
+    return std::move(std::make_shared<Quadrant>( newShape, this->level + 1, newPos, this->getWidth() / 2.0 ) );
 }
 
 bool Quadrant::positionIsInQuadrantBoundaries(VecStruct insertPos) {

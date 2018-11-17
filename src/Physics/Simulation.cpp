@@ -39,10 +39,14 @@ void Simulation::refreshQuadrant()
     VecStruct pos(0, 0, 0, true);
 
     float side = 10e7; //Formation Value . ACK!!!! How miserably hard-coded!!
-    quadrant = std::make_shared<Quadrant>( 1, pos, side ) ;
+    quadrant = nullptr;
 
     for ( const auto & curShape : physicalObjects.getShapes() ) {
-        quadrant->insertShape( curShape );
+        if ( quadrant == nullptr ) {
+            quadrant = std::make_shared<Quadrant>( curShape, 1, pos, side ) ;
+        } else {
+            quadrant->insertShape(curShape);
+        }
     }
 }
 

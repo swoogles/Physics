@@ -43,7 +43,7 @@ class Quadrant : public Box
 
     array_typeNew  quadOctree;
 
-    QuadrantPointer_t subQuadrantThatContains(VecStruct insertPos);
+    QuadrantPointer_t subQuadrantThatContains(shapePointer_t newShape);
 
     //! Alters mass of object by dMass
     void adjustMass(float dMass);
@@ -71,6 +71,7 @@ class Quadrant : public Box
     unique_ptr<vector<shared_ptr<Quadrant>>> children(unique_ptr<vector<shared_ptr<Quadrant>>> inVector);
 
     QuadrantPointer_t makeSubQuadrant(OctreeCoordinates coordinates);
+    QuadrantPointer_t makeSubQuadrant(shapePointer_t newShape, OctreeCoordinates coordinates);
     void applyToAllChildren(function<void (Quadrant)> functor);
 
     shared_ptr<Box> getBorders();
