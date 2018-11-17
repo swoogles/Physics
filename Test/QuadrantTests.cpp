@@ -12,6 +12,7 @@
 #include <plib/sg.h>
 
 #include <memory>
+#include <functional>
 
 TEST_CASE("Get children", "[Quadrant]") {
     VecStruct pos;
@@ -21,6 +22,34 @@ TEST_CASE("Get children", "[Quadrant]") {
         REQUIRE(quadrant.children().empty());
         REQUIRE(quadrant.getMass() == 0);
         REQUIRE(quadrant.getShapeInQuadrant() == nullptr);
+    }
+
+    SECTION("Version with initial shape should match behavior of shape-added-later version") {
+        auto a = TestUtils::circleAt(5, 5, 5);
+        auto b = TestUtils::circleAt(5, 5, -5);
+        auto c = TestUtils::circleAt(5, -5, 5);
+        auto d = TestUtils::circleAt(-5, 5, 5);
+
+        Quadrant lessMutableQuadrant(a, 0, pos, width);
+        lessMutableQuadrant.insertShape(b);
+        lessMutableQuadrant.insertShape(c);
+        lessMutableQuadrant.insertShape(d);
+
+        Quadrant mutableQuadrant(0, pos, width);
+        mutableQuadrant.insertShape(a);
+        mutableQuadrant.insertShape(b);
+        mutableQuadrant.insertShape(c);
+        mutableQuadrant.insertShape(d);
+
+        int counter = 0;
+        function<void(Quadrant)> countingFunction = [&counter](Quadrant quadrant) {
+            counter += 1;
+        };
+        lessMutableQuadrant.applyToAllChildren(countingFunction);
+        REQUIRE(counter == 5);
+        counter = 0;
+        mutableQuadrant.applyToAllChildren(countingFunction);
+        REQUIRE(counter == 5);
     }
 
     SECTION("SubQuadrant") {
