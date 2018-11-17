@@ -32,13 +32,9 @@ TEST_CASE("Get children", "[Quadrant]") {
         auto d = TestUtils::circleAt(-5, 5, 5);
 
         Quadrant lessMutableQuadrant(a, 0, pos, width);
-        cout << "1 " << endl;
         lessMutableQuadrant.insertShape(b);
-        cout << "2 " << endl;
         lessMutableQuadrant.insertShape(c);
-        cout << "3 " << endl;
         lessMutableQuadrant.insertShape(d);
-        cout << "4 " << endl;
 
         int counter = 0;
         function<void(Quadrant)> countingFunction = [&counter](Quadrant quadrant) {
@@ -54,63 +50,59 @@ TEST_CASE("Get children", "[Quadrant]") {
         auto offset = subWidth / 2.0f;
         SECTION("[0,0,0]") { // 1
             auto subShape =  TestUtils::circleAt(5, 5, 5);
-            cout << "Making subQuadrant for shape: " << subShape->getPos() << endl;
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
-            cout << "Made subQuadrant for shape: " << subShape->getPos() << endl;
             auto subQuadrantPos = subQuadrant->getPos();
             REQUIRE(subQuadrantPos.hasValues(offset, offset, offset));
         }
 
-        /*
         SECTION("[0,0,1]") { // 2
-            OctreeCoordinates coordinates(false, false, true);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(coordinates);
+            auto subShape =  TestUtils::circleAt(5, 5, -5);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
             auto subQuadrantPos = subQuadrant->getPos();
             REQUIRE(subQuadrantPos.hasValues(offset, offset, -offset));
         }
 
         SECTION("[0,1,0]") { // 3
-            OctreeCoordinates coordinates(false, true, false);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(coordinates);
+            auto subShape =  TestUtils::circleAt(5, -5, 5);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
             auto subQuadrantPos = subQuadrant->getPos();
             REQUIRE(subQuadrantPos.hasValues(offset, -offset, offset));
         }
 
         SECTION("[0,1,1]") { // 4
-            OctreeCoordinates coordinates(false, true, true);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(coordinates);
+            auto subShape =  TestUtils::circleAt(5, -5, -5);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
             auto subQuadrantPos = subQuadrant->getPos();
             REQUIRE(subQuadrantPos.hasValues(offset, -offset, -offset));
         }
 
         SECTION("[1,0,0]") { // 5
-            OctreeCoordinates coordinates(true, false, false);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(coordinates);
+            auto subShape =  TestUtils::circleAt(-5, 5, 5);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
             auto subQuadrantPos = subQuadrant->getPos();
             REQUIRE(subQuadrantPos.hasValues(-offset, offset, offset));
         }
 
         SECTION("[1,0,1]") { // 6
-            OctreeCoordinates coordinates(true, false, true);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(coordinates);
+            auto subShape =  TestUtils::circleAt(-5, 5, -5);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
             auto subQuadrantPos = subQuadrant->getPos();
             REQUIRE(subQuadrantPos.hasValues(-offset, offset, -offset));
         }
 
         SECTION("[1,1,0]") { // 7
-            OctreeCoordinates coordinates(true, true, false);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(coordinates);
+            auto subShape =  TestUtils::circleAt(-5, -5, 5);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
             auto subQuadrantPos = subQuadrant->getPos();
             REQUIRE(subQuadrantPos.hasValues(-offset, -offset, offset));
         }
 
         SECTION("[1,1,1]") { // 8
-            OctreeCoordinates coordinates(true, true, true);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(coordinates);
+            auto subShape =  TestUtils::circleAt(-5, -5, -5);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
             auto subQuadrantPos = subQuadrant->getPos();
             REQUIRE(subQuadrantPos.hasValues(-offset, -offset, -offset));
         }
-         */
     }
 
     SECTION("Multiple Insertions") {
@@ -120,10 +112,6 @@ TEST_CASE("Get children", "[Quadrant]") {
         quadrant.insertShape(b);
         quadrant.insertShape(TestUtils::circleAt(-5, 5, 5));
         quadrant.insertShape(TestUtils::circleAt(5, -5, 5));
-
-        for (const auto &child: quadrant.children()) {
-            cout << "CHILD: " << child << endl;
-        }
 
         for (const auto &subQuadrant: quadrant.children()) {
             REQUIRE_FALSE(subQuadrant == nullptr);
