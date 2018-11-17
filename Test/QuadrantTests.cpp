@@ -32,9 +32,9 @@ TEST_CASE("Get children", "[Quadrant]") {
         auto d = TestUtils::circleAt(-5, 5, 5);
 
         Quadrant lessMutableQuadrant(a, 0, pos, width);
-        lessMutableQuadrant.insertShape(b);
-        lessMutableQuadrant.insertShape(c);
-        lessMutableQuadrant.insertShape(d);
+        lessMutableQuadrant.insert(b);
+        lessMutableQuadrant.insert(c);
+        lessMutableQuadrant.insert(d);
 
         int counter = 0;
         function<void(Quadrant)> countingFunction = [&counter](Quadrant quadrant) {
@@ -107,11 +107,11 @@ TEST_CASE("Get children", "[Quadrant]") {
 
     SECTION("Multiple Insertions") {
         auto a = TestUtils::circleAt(5, 5, 5);
-        quadrant.insertShape(a);
+        quadrant.insert(a);
         auto b = TestUtils::circleAt(5, 5, -5);
-        quadrant.insertShape(b);
-        quadrant.insertShape(TestUtils::circleAt(-5, 5, 5));
-        quadrant.insertShape(TestUtils::circleAt(5, -5, 5));
+        quadrant.insert(b);
+        quadrant.insert(TestUtils::circleAt(-5, 5, 5));
+        quadrant.insert(TestUtils::circleAt(5, -5, 5));
 
         for (const auto &subQuadrant: quadrant.children()) {
             REQUIRE_FALSE(subQuadrant == nullptr);

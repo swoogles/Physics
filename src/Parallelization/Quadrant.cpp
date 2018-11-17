@@ -52,7 +52,7 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
      *  Expand the Quadrant until it *does* include the shape
 */
 
-void Quadrant::insertShape(shapePointer_t insertedShape) {
+void Quadrant::insert(shapePointer_t insertedShape) {
     if (!positionIsInQuadrantBoundaries(insertedShape->getPos())) { return; }
 
     this->adjustMass(insertedShape->getMass());
@@ -75,7 +75,7 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(shapePointer_t newShape) {
         this->assignSubQuadrantAt(targetIndices, newSubQuadrant);
         return newSubQuadrant;
     } else {
-        insertionQuadrant->insertShape(std::move(newShape));
+        insertionQuadrant->insert(std::move(newShape));
         return insertionQuadrant;
    };
 

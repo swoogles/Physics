@@ -56,7 +56,7 @@ class Quadrant : public Box
   public:
     Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float width);
 
-    void insertShape(shapePointer_t newShape);
+    void insert(shapePointer_t newShape);
 
     inline float getWidth() { return dimensions.vec[0]; }
 
