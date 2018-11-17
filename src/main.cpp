@@ -9,6 +9,7 @@
 #include <float.h>
 
 #include "inputFunctions.h"
+#include "GraphicalOperations.h"
 
 //GUI stuff
 #include "Windows/control_center.h"
@@ -47,48 +48,6 @@ SimulationPtr_t globalSimulation;
 
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
-
-void drawShapeInQuadrant(Quadrant quadrant) {
-    auto shape = quadrant.getShapeInQuadrant();
-    if (shape != nullptr) Drawing::draw(shape);
-};
-
-void drawingFuncFixed(Quadrant quadrant) {
-  Drawing::draw(quadrant.getBorders());
-}
-
-// You want to avoid passing argument to this method, because it would slow down every single
-// call.
-// TODO Allow an arbitrary list of objects to be displayed
-void display()
-{
-  glClearColor(0,0,0,0);
-  glClear(GL_COLOR_BUFFER_BIT);
-
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-
-  Observer * curObserver = Observer::getCurObserver();
-  curObserver->getView();
-
-  glMatrixMode(GL_MODELVIEW);
-
-  function<void(Quadrant)> fullQuadrantDrawingFunction = [](Quadrant quadrant) {
-      if (globalControlCenter.shouldRenderOctree()) {
-        drawingFuncFixed(quadrant);
-      }
-      drawShapeInQuadrant(quadrant);
-  };
-
-  globalSimulation->getQuadrant()->applyToAllChildren(fullQuadrantDrawingFunction);
-
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
-
-  puDisplay();
-  glutSwapBuffers();
-  glutPostRedisplay();
-}
 
 void controlDisplay() {
   glutSetWindow(control_center_num);
@@ -174,7 +133,9 @@ void mainGlut(int argcp, char **argv) {
   glutInitWindowSize(mainWinWidth,mainWinHeight);
   main_window = glutCreateWindow("Center Stage");
   glutSetWindow(main_window);
-  glutDisplayFunc(display);
+  GraphicalOperations::staticSimulation = globalSimulation;
+  GraphicalOperations::staticControlCenter = globalControlCenter;
+  glutDisplayFunc(GraphicalOperations::display);
 
   glutMouseFunc(myMouse);
   glutKeyboardFunc(myKey);
