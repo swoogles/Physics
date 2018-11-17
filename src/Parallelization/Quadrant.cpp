@@ -16,7 +16,7 @@ shapePointer_t Quadrant::getShapeInQuadrant() {
 Quadrant::Quadrant(shapePointer_t newShape, int level, VecStruct &pos, float width)
         :isLeaf(true)
         ,containsBody(true)
-        ,shapeInQuadrant(newShape)
+        ,shapeInQuadrant(std::move(newShape))
         ,level(level)
         ,dimensions(width, width, width)
         ,borders(make_shared<Box>(pos, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
@@ -58,10 +58,10 @@ void Quadrant::insertShape(shapePointer_t insertedShape) {
     this->adjustMass(insertedShape->getMass());
     this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
 
-    this->subQuadrantThatContains(insertedShape);
+    this->subQuadrantThatContains(std::move(insertedShape));
     if ( isLeaf ) {
         isLeaf = false;
-        this->subQuadrantThatContains(shapeInQuadrant);
+        this->subQuadrantThatContains(std::move(shapeInQuadrant));
     }
     // 3.d centerOfMassRepresentation->setPos( CoMPosition );
 }
@@ -71,11 +71,11 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(shapePointer_t newShape) {
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
-        QuadrantPointer_t newSubQuadrant = this->makeSubQuadrant(newShape);
+        QuadrantPointer_t newSubQuadrant = this->makeSubQuadrant(std::move(newShape));
         this->assignSubQuadrantAt(targetIndices, newSubQuadrant);
         return newSubQuadrant;
     } else {
-        insertionQuadrant->insertShape(newShape);
+        insertionQuadrant->insertShape(std::move(newShape));
         return insertionQuadrant;
    };
 
