@@ -19,6 +19,9 @@
 
 #include <Physics/Simulation.h>
 
+#define WW 5
+#define WH 5
+
 class GraphicalOperations {
 public:
     static void display();
@@ -42,6 +45,7 @@ private:
 
     static void fullQuadrantDrawingFunction(Quadrant quadrant);
 
+    void openGlInit();
 };
 
 

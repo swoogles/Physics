@@ -28,8 +28,6 @@
 
 #include <functional>
 
-#define WW 5
-#define WH 5
 #define FPS 1
 
 using std::size_t;
@@ -55,13 +53,6 @@ void controlDisplay() {
   glutPostRedisplay();
 }
 
-void openGlInit() {
-  glViewport(-WW,WW,-WH,WH);
-
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-}
-
 void determineViewBasedOnSimulation(Simulation & simulation, Observer * observer) {
   float minX, minY, maxX, maxY;
   simulation.getXYMinsAndMaxes( minX, maxX, minY, maxY );
@@ -73,7 +64,6 @@ PhysicsSandboxProperties init(char simulation) {
 
   PhysicsSandboxProperties properties(billProperties);
 
-  cout << "dt: " << properties.dt << endl;
   globalSimulation = Simulations::createSimulation(simulation, properties);
   return properties;
 }
@@ -98,24 +88,6 @@ void idle() {
 
 }
 
-void configureControlWindow(
-    int mainWinPosX,
-    int mainWinPosY,
-    int mainWinHeight,
-    int mainWinWidth
-
-) {
-  int controlWinPosX = mainWinPosX;
-  int controlWinPosY = mainWinPosY + mainWinHeight + 30;
-  int controlWinWidth = mainWinWidth;
-  int controlWinHeight = 200;
-
-
-  glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-  glutInitWindowPosition(controlWinPosX,controlWinPosY);
-  glutInitWindowSize(controlWinWidth,controlWinHeight);
-}
-
 void postSimulationGlInit() {
   glutDisplayFunc(controlDisplay);
   glutMouseFunc(myMouse);
@@ -127,11 +99,8 @@ int main(int argcp, char **argv) {
 
   auto properties = init( simulation );
 
-  openGlInit();
   GraphicalOperations graphicalOperations;
   main_window = graphicalOperations.mainGlut(argcp, argv, idle, globalSimulation, globalControlCenter);
-//  mainGlut(argcp, argv);
-  puInit();
 
   Observer::init();
   Observer * curObserver = Observer::getCurObserver();

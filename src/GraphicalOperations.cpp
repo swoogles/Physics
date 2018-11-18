@@ -62,6 +62,7 @@ GraphicalOperations::GraphicalOperations() {
 
 int GraphicalOperations::mainGlut(int argcp, char **argv, void (*callback)(void), SimulationPtr_t simulation,
                                   control_center controlCenter) {
+    this->openGlInit();
     size_t mainWinPosX = 100;
     size_t mainWinPosY = 50;
     size_t mainWinHeight = 720;
@@ -89,6 +90,9 @@ int GraphicalOperations::mainGlut(int argcp, char **argv, void (*callback)(void)
             mainWinHeight,
             mainWinWidth
     );
+
+    puInit();
+
     return main_window;
 }
 
@@ -108,4 +112,11 @@ void GraphicalOperations::configureControlWindow(
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(controlWinPosX,controlWinPosY);
     glutInitWindowSize(controlWinWidth,controlWinHeight);
+}
+
+void GraphicalOperations::openGlInit() {
+    glViewport(-WW,WW,-WH,WH);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
