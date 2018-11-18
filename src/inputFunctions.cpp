@@ -10,7 +10,6 @@
 using namespace std;
 
 void stopAutoScaling() {
-	control_center::uncheckAutoScaling();
 	WorldSettings::setAutoScaling(false);
 }
 

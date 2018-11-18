@@ -145,7 +145,7 @@ int main(int argcp, char **argv) {
 
   postSimulationGlInit();
 
-  globalControlCenter.init(properties.dt, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+  globalControlCenter.init(properties.dt, glutGet(GLUT_WINDOW_WIDTH));
 
   glutMainLoop();
 
