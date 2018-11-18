@@ -42,7 +42,7 @@ void GraphicalOperations::display() {
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
 
-    Observer::getCurObserverRef().applyView();
+    GraphicalOperations::observer->applyView();
 
     glMatrixMode(GL_MODELVIEW);
 

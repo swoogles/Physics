@@ -4,9 +4,6 @@
  */
 
 #include <GL/glut.h>
-#include <GL/glu.h>
-
-#include <float.h>
 
 #include "inputFunctions.h"
 #include "GraphicalOperations.h"
@@ -24,12 +21,6 @@
 #include "Physics/PhysicsSandboxProperties.h"
 
 #include "BillProperties.h"
-
-#include <functional>
-
-#define FPS 1
-
-using std::size_t;
 
 static int control_center_num;
 
@@ -111,7 +102,6 @@ int main(int argcp, char **argv) {
 
   control_center_num = glutCreateWindow("Control Center");
 
-  // TODO InputFunction->init(Observer)
   InputFunctions::init(Observer::getCurObserver());
   postSimulationGlInit();
 
