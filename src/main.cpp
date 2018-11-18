@@ -23,13 +23,6 @@ SimulationPtr_t globalSimulation;
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
-PhysicsSandboxProperties init(char simulation) {
-  PhysicsSandboxProperties properties("simulation.properties");
-
-  globalSimulation = Simulations::createSimulation(simulation, properties);
-  return properties;
-}
-
 void idle() {
   auto dt = globalControlCenter.getDt();
   if (! globalControlCenter.isPaused() ) {
@@ -49,8 +42,8 @@ void idle() {
 
 int main(int argcp, char **argv) {
   char simulation = argv[2][0];
-
-  auto properties = init( simulation );
+  PhysicsSandboxProperties properties("simulation.properties");
+  globalSimulation = Simulations::createSimulation(simulation, properties);
 
   auto windowDimensions =
           WindowDimensions(
