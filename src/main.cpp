@@ -53,12 +53,6 @@ void controlDisplay() {
   glutPostRedisplay();
 }
 
-void determineViewBasedOnSimulation(Simulation & simulation, Observer * observer) {
-  float minX, minY, maxX, maxY;
-  simulation.getXYMinsAndMaxes( minX, maxX, minY, maxY );
-  observer->calcMinPullback( 45.0, minX, minY, maxX, maxY);
-}
-
 PhysicsSandboxProperties init(char simulation) {
   BillProperties billProperties("simulation.properties");
 
@@ -81,9 +75,7 @@ void idle() {
 
   // Not sure if I can use Observer the way that I want to here, due to the constaints of the input methods
   if (WorldSettings::isAutoScaling()) {
-    float minX, maxX, minY, maxY;
-    globalSimulation->getXYMinsAndMaxes( minX, maxX, minY, maxY );
-    curObserver->calcMinPullback( 45.0, minX, minY, maxX, maxY);
+    curObserver->calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
   }
 
 }
@@ -105,7 +97,7 @@ int main(int argcp, char **argv) {
   Observer::init();
   Observer * curObserver = Observer::getCurObserver();
 
-  determineViewBasedOnSimulation(*globalSimulation, curObserver);
+  curObserver->calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
 
   //Creates main menu bar
   globalMainDisplay.init(glutGet(GLUT_WINDOW_WIDTH));

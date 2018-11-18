@@ -67,6 +67,15 @@ void Simulation::getXYMinsAndMaxes( float & minX, float & maxX, float & minY, fl
   maxY = this->maxY;
 }
 
+MaximumValues Simulation::getXYMinsAndMaxes() {
+    return {
+            this->minX,
+            this->minY,
+            this->maxX,
+            this->maxY
+    };
+}
+
 
 void Simulation::resetXYMinsAndMaxes() {
 	minX = FLT_MAX;

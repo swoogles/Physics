@@ -66,22 +66,21 @@ void Observer::update(float dt) {
   adjustAngle(angVelocity.z(), rotVec);
 }
 
-void Observer::calcMinPullback(float fov, float minX, float minY, float maxX, float maxY)
-{
+void Observer::calcMinPullback(float fov, MaximumValues maximumValues) {
     float absMaxX;
     float absMaxY;
     float pullBack;
 
-    if (abs(minX) > maxX) {
-        absMaxX = abs(minX);
+    if (abs(maximumValues.minX) > maximumValues.maxX) {
+        absMaxX = abs(maximumValues.minX);
     } else {
-        absMaxX = maxX;
+        absMaxX = maximumValues.maxX;
     }
 
-    if (abs(minY) > maxY) {
-        absMaxY = abs(minY);
+    if (abs(maximumValues.minY) > maximumValues.maxY) {
+        absMaxY = abs(maximumValues.minY);
     } else {
-        absMaxY = maxY;
+        absMaxY = maximumValues.maxY;
     }
 
     if (absMaxY > absMaxX) {
@@ -91,6 +90,7 @@ void Observer::calcMinPullback(float fov, float minX, float minY, float maxX, fl
     }
 
     setPos(0,0,-pullBack*2);
+
 }
 
 void Observer::BuildPerspProjMat(float *m, float fov, float aspect,

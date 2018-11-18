@@ -6,6 +6,7 @@
 #include <plib/sg.h>
 
 #include "../Dimensions/Moveable.h"
+#include "../MaximumValues.h"
 
 /*! \brief Moveable "camera" entities that can give views from different frames of reference
  *
@@ -54,7 +55,7 @@ public:
 	//! Stores all created Observers
 	static std::vector<Observer *> observers;
 
-  void calcMinPullback(float fov, float minX, float minY, float maxX, float maxY);
+	void calcMinPullback(float fov, MaximumValues maximumValues);
 
   //! Similar as MyShape::update(float), except only uses angular velocity right now
   void update(float);
