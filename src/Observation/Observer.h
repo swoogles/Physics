@@ -37,7 +37,7 @@ public:
 	 * \n -Translates using pos
 	 * \n -Rotates by multiplying by orientationMat
 	 */
-	void getView();
+	void applyView();
 
 	//! Move observer closer to target
 	void zoomIn();
@@ -49,8 +49,7 @@ public:
 	//! Returns true if Observer is currently set to autoscale with simulation
 	bool isAutoScaling();
 
-	//! Returns an integer indicating the active Observer
-	static Observer * getCurObserver();
+	static Observer & getCurObserverRef();
 
 	//! Stores all created Observers
 	static std::vector<Observer *> observers;

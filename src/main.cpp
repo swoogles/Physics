@@ -70,12 +70,11 @@ void idle() {
   }
 
   // Should just directly call Observer::getCurObserverInstance()
-  Observer * curObserver = Observer::getCurObserver();
-  curObserver->update(dt);
+  Observer::getCurObserverRef().update(dt);
 
   // Not sure if I can use Observer the way that I want to here, due to the constaints of the input methods
   if (WorldSettings::isAutoScaling()) {
-    curObserver->calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
+    Observer::getCurObserverRef().calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
   }
 
 }
@@ -95,9 +94,7 @@ int main(int argcp, char **argv) {
   main_window = graphicalOperations.mainGlut(argcp, argv, idle, globalSimulation, globalControlCenter);
 
   Observer::init();
-  Observer * curObserver = Observer::getCurObserver();
-
-  curObserver->calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
+  Observer::getCurObserverRef().calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
 
   //Creates main menu bar
   globalMainDisplay.init(glutGet(GLUT_WINDOW_WIDTH));

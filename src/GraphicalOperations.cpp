@@ -41,8 +41,7 @@ void GraphicalOperations::display() {
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
 
-    Observer * curObserver = Observer::getCurObserver();
-    curObserver->getView();
+    Observer::getCurObserverRef().applyView();
 
     glMatrixMode(GL_MODELVIEW);
 

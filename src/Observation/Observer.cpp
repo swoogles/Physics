@@ -25,7 +25,7 @@ Observer::Observer()
   Observer::BuildPerspProjMat(perspectiveMat, fov, aspect, znear, zfar);
 }
 
-void Observer::getView() {
+void Observer::applyView() {
 	glLoadMatrixf(perspectiveMat);
 
 	glTranslatef(pos.x(), pos.y(), pos.z());
@@ -51,8 +51,8 @@ bool Observer::isAutoScaling() {
 	return autoScale;
 }
 
-Observer * Observer::getCurObserver() {
-	return observers.at(curObserver);
+Observer &Observer::getCurObserverRef() {
+    return *observers.at(curObserver);
 }
 
 void Observer::update(float dt) {

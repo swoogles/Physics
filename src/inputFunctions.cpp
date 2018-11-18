@@ -15,13 +15,12 @@ void stopAutoScaling() {
 
 void myMouse(int button, int state, int x, int y) {
 	if (state == GLUT_UP) {
-		Observer * curObserver = Observer::getCurObserver();
 		if (button == GLUT_WHEEL_UP) {
-			curObserver->zoomIn();
+			Observer::getCurObserverRef().zoomIn();
 			stopAutoScaling();
 		}
 		if (button == GLUT_WHEEL_DOWN) {
-			curObserver->zoomOut();
+			Observer::getCurObserverRef().zoomOut();
 			stopAutoScaling();
 		}
 

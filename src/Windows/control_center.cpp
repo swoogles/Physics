@@ -98,10 +98,8 @@ void control_center::init(float dt, int windowWidth) {
 
 void control_center::flipAutoScaling(puObject * caller) {
   // TODO Get this actually working. Don't think it's doing anything right now.
-  Observer * curObserver = Observer::getCurObserver();
-
-  bool isAutoScaling = curObserver->isAutoScaling();
-  curObserver->setAutoScaling(! isAutoScaling);
+  bool isAutoScaling = Observer::getCurObserverRef().isAutoScaling();
+  Observer::getCurObserverRef().setAutoScaling(! isAutoScaling);
 }
 
 void control_center::alterDT(puObject * caller) {
@@ -120,32 +118,27 @@ void control_center::pause_cb(puObject * caller) {
 }
 
 void control_center::rotRight(puObject *) {
-  Observer * curObserver =  Observer::getCurObserver();
   VecStruct angVelocity(0,.5,0);
-  curObserver->adjustAngVelocity(angVelocity);
+  Observer::getCurObserverRef().adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotLeft(puObject *) {
-  Observer * curObserver =  Observer::getCurObserver();
   VecStruct angVelocity(0,-.5,0);
-  curObserver->adjustAngVelocity(angVelocity);
+  Observer::getCurObserverRef().adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotUp(puObject *) {
-  Observer * curObserver =  Observer::getCurObserver();
   VecStruct angVelocity(+.5,0,0);
-  curObserver->adjustAngVelocity(angVelocity);
+  Observer::getCurObserverRef().adjustAngVelocity(angVelocity);
 }
 void control_center::rotDown(puObject *) {
-  Observer * curObserver =  Observer::getCurObserver();
   VecStruct angVelocity(-.5,0,0);
-  curObserver->adjustAngVelocity(angVelocity);
+  Observer::getCurObserverRef().adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotStop(puObject *) {
-  Observer * curObserver =  Observer::getCurObserver();
   VecStruct angVelocity(0,0,0);
-  curObserver->setAngVelocity(angVelocity);
+  Observer::getCurObserverRef().adjustAngVelocity(angVelocity);
 }
 
 bool control_center::isPaused() {
