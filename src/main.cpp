@@ -46,7 +46,7 @@ void idle() {
 
   // Not sure if I can use Observer the way that I want to here, due to the constaints of the input methods
   if (WorldSettings::isAutoScaling()) {
-    Observer::getCurObserverRef().calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
+    Observer::getCurObserverRef().calcMinPullback(globalSimulation->getXYMinsAndMaxes());
   }
 
 }
@@ -64,21 +64,22 @@ int main(int argcp, char **argv) {
                   1280
           );
 
-  Observer::init(windowDimensions);
-  Observer::getCurObserverRef().calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
+  auto observer = Observer::init(windowDimensions);
+  observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
 
   GraphicalOperations graphicalOperations;
   graphicalOperations.mainGlut(
           idle,
           globalSimulation,
           globalControlCenter,
-          Observer::getCurObserver(), windowDimensions
+          observer,
+          windowDimensions
   );
 
   //Creates main menu bar
   globalMainDisplay.init(windowDimensions.width);
 
-  InputFunctions::init(Observer::getCurObserver());
+  InputFunctions::init(observer);
 
   globalControlCenter.init(properties.dt, windowDimensions.width);
 

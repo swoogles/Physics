@@ -25,12 +25,14 @@ private:
 	bool autoScale;
 	static int curObserver;
 
-	static void BuildPerspProjMat(float *m, float fov, float aspect, float znear, float zfar);
+	float fov;
+
+	void BuildPerspProjMat(float *m, float aspect, float znear, float zfar);
 
 	//! Stores all created Observers
 	static std::vector<shared_ptr<Observer>> observers;
 public:
-	static void init(WindowDimensions windowDimensions);
+	static shared_ptr<Observer> init(WindowDimensions windowDimensions);
 
 	//! Creates an Observer at the origin looking in the -Z direction
 	Observer(WindowDimensions windowDimensions);
@@ -56,7 +58,7 @@ public:
 	static shared_ptr<Observer> getCurObserver();
 	static Observer & getCurObserverRef();
 
-	void calcMinPullback(float fov, MaximumValues maximumValues);
+	void calcMinPullback(MaximumValues maximumValues);
 
   //! Similar as MyShape::update(float), except only uses angular velocity right now
   void update(float);

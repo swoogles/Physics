@@ -3,9 +3,11 @@
 std::vector<shared_ptr<Observer>> Observer::observers(0);
 int Observer::curObserver; // TODO should be in .h file?
 
-void Observer::init(WindowDimensions windowDimensions) {
-    observers.push_back(make_shared<Observer>(windowDimensions));
+shared_ptr<Observer> Observer::init(WindowDimensions windowDimensions) {
+    auto initialObserver = make_shared<Observer>(windowDimensions);
+    observers.push_back(initialObserver);
     curObserver = observers.size() - 1;
+    return initialObserver;
 }
 
 Observer::Observer(WindowDimensions windowDimensions)
@@ -13,16 +15,16 @@ Observer::Observer(WindowDimensions windowDimensions)
           , autoScale( true )
 
 {
+    this->fov = 45.0f;
 	sgMakeIdentQuat(orientationQuat);
 	sgQuatToMatrix(orientationMat, orientationQuat);
 
-	float fov=45.0f; // in degrees
 	float aspect= windowDimensions.width;
 	aspect /= windowDimensions.height;
 	float znear=1.0f;
 	float zfar=1e12f;
 	perspectiveMat = new float [16];
-  Observer::BuildPerspProjMat(perspectiveMat, fov, aspect, znear, zfar);
+    this->BuildPerspProjMat(perspectiveMat, aspect, znear, zfar);
 }
 
 void Observer::applyView() {
@@ -70,7 +72,7 @@ void Observer::update(float dt) {
   adjustAngle(angVelocity.z(), rotVec);
 }
 
-void Observer::calcMinPullback(float fov, MaximumValues maximumValues) {
+void Observer::calcMinPullback(MaximumValues maximumValues) {
     float absMaxX;
     float absMaxY;
     float pullBack;
@@ -88,19 +90,18 @@ void Observer::calcMinPullback(float fov, MaximumValues maximumValues) {
     }
 
     if (absMaxY > absMaxX) {
-        pullBack = absMaxY / tan(fov * M_PI / 360);
+        pullBack = absMaxY / tan(this->fov * M_PI / 360);
     } else {
-        pullBack = absMaxX / tan(fov * M_PI / 360);
+        pullBack = absMaxX / tan(this->fov * M_PI / 360);
     }
 
     setPos(0,0,-pullBack*2);
 
 }
 
-void Observer::BuildPerspProjMat(float *m, float fov, float aspect,
-float znear, float zfar)
+void Observer::BuildPerspProjMat(float *m, float aspect, float znear, float zfar)
 {
-  float xymax = znear * tan(fov * M_PI/360.0);
+  float xymax = znear * tan(this->fov * M_PI/360.0);
   float ymin = -xymax;
   float xmin = -xymax;
 
