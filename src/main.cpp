@@ -105,7 +105,7 @@ int main(int argcp, char **argv) {
                                              Observer::getCurObserver(), windowDimensions);
 
   //Creates main menu bar
-  globalMainDisplay.init(glutGet(GLUT_WINDOW_WIDTH));
+  globalMainDisplay.init(windowDimensions.width);
 
   control_center_num = glutCreateWindow("Control Center");
 
@@ -113,7 +113,7 @@ int main(int argcp, char **argv) {
   InputFunctions::init(Observer::getCurObserver());
   postSimulationGlInit();
 
-  globalControlCenter.init(properties.dt, glutGet(GLUT_WINDOW_WIDTH));
+  globalControlCenter.init(properties.dt, windowDimensions.width);
 
   glutMainLoop();
 
