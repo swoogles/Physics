@@ -8,6 +8,8 @@ SimulationPtr_t GraphicalOperations::staticSimulation;
 control_center GraphicalOperations::staticControlCenter;
 shared_ptr<Observer> GraphicalOperations::observer;
 
+int GraphicalOperations::control_center_num;
+
 #define FPS 1
 
 using std::size_t;
@@ -101,6 +103,8 @@ int GraphicalOperations::mainGlut(
             mainWinWidth
     );
 
+    control_center_num = glutCreateWindow("Control Center");
+
     puInit();
 
     return main_window;
@@ -129,4 +133,23 @@ void GraphicalOperations::openGlInit() {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+}
+
+void GraphicalOperations::controlDisplay() {
+    glutSetWindow(control_center_num);
+    glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    puDisplay(control_center_num);
+
+    glutSwapBuffers();
+    glutPostRedisplay();
+}
+
+void GraphicalOperations::postSimulationGlInit() {
+    glutDisplayFunc(GraphicalOperations::controlDisplay);
+    glutMouseFunc(InputFunctions::myMouse);
+    glutKeyboardFunc(InputFunctions::myKey);
+
+    glutMainLoop();
 }

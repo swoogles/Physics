@@ -3,9 +3,6 @@
  *      Author: Bill Frasure
  */
 
-#include <GL/glut.h>
-
-#include "inputFunctions.h"
 #include "GraphicalOperations.h"
 
 //GUI stuff
@@ -22,24 +19,11 @@
 
 #include "BillProperties.h"
 
-static int control_center_num;
-
 // GLOBALS
 SimulationPtr_t globalSimulation;
 
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
-
-void controlDisplay() {
-  glutSetWindow(control_center_num);
-  glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
-  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  puDisplay(control_center_num);
-
-  glutSwapBuffers();
-  glutPostRedisplay();
-}
 
 PhysicsSandboxProperties init(char simulation) {
   BillProperties billProperties("simulation.properties");
@@ -65,12 +49,6 @@ void idle() {
     Observer::getCurObserverRef().calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
   }
 
-}
-
-void postSimulationGlInit() {
-  glutDisplayFunc(controlDisplay);
-  glutMouseFunc(InputFunctions::myMouse);
-  glutKeyboardFunc(InputFunctions::myKey);
 }
 
 int main(int argcp, char **argv) {
@@ -100,14 +78,12 @@ int main(int argcp, char **argv) {
   //Creates main menu bar
   globalMainDisplay.init(windowDimensions.width);
 
-  control_center_num = glutCreateWindow("Control Center");
-
   InputFunctions::init(Observer::getCurObserver());
-  postSimulationGlInit();
 
   globalControlCenter.init(properties.dt, windowDimensions.width);
 
-  glutMainLoop();
+  graphicalOperations.postSimulationGlInit();
+
 
   return 0;
 }

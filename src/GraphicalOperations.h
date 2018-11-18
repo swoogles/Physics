@@ -37,6 +37,8 @@ public:
             int mainWinWidth
     );
 
+    void postSimulationGlInit();
+
     // Make private, at the very least
     static SimulationPtr_t staticSimulation;
     static control_center staticControlCenter;
@@ -49,6 +51,9 @@ private:
     static void fullQuadrantDrawingFunction(Quadrant quadrant);
 
     void openGlInit();
+
+    static int control_center_num;
+    static void controlDisplay();
 };
 
 
