@@ -3,12 +3,12 @@
 std::vector<shared_ptr<Observer>> Observer::observers(0);
 int Observer::curObserver; // TODO should be in .h file?
 
-void Observer::init() {
-    observers.push_back(make_shared<Observer>());
+void Observer::init(WindowDimensions windowDimensions) {
+    observers.push_back(make_shared<Observer>(windowDimensions));
     curObserver = observers.size() - 1;
 }
 
-Observer::Observer() 
+Observer::Observer(WindowDimensions windowDimensions)
           :id( curObserver++ )
           , autoScale( true )
 
@@ -17,8 +17,8 @@ Observer::Observer()
 	sgQuatToMatrix(orientationMat, orientationQuat);
 
 	float fov=45.0f; // in degrees
-	float aspect= glutGet(GLUT_WINDOW_WIDTH);
-	aspect /= glutGet(GLUT_WINDOW_HEIGHT);
+	float aspect= windowDimensions.width;
+	aspect /= windowDimensions.height;
 	float znear=1.0f;
 	float zfar=1e12f;
 	perspectiveMat = new float [16];

@@ -16,6 +16,7 @@
 #include <plib/puAux.h>
 
 #include "inputFunctions.h"
+#include "WindowDimensions.h"
 
 #include <Physics/Simulation.h>
 
@@ -28,7 +29,8 @@ public:
     GraphicalOperations();
 
     int mainGlut(int argcp, char **argv, void (*callback)(void), SimulationPtr_t simulation,
-                     control_center controlCenter);
+                 control_center controlCenter,
+                 shared_ptr<Observer> observer, WindowDimensions dimensions);
     void configureControlWindow(
             int mainWinPosX,
             int mainWinPosY,
@@ -42,6 +44,8 @@ public:
 private:
     SimulationPtr_t globalSimulation;
     control_center globalControlCenter;
+
+    static shared_ptr<Observer> observer;
 
     static void fullQuadrantDrawingFunction(Quadrant quadrant);
 

@@ -90,11 +90,19 @@ int main(int argcp, char **argv) {
 
   auto properties = init( simulation );
 
-  GraphicalOperations graphicalOperations;
-  main_window = graphicalOperations.mainGlut(argcp, argv, idle, globalSimulation, globalControlCenter);
+  auto windowDimensions = WindowDimensions(
+    100,
+    50,
+    720,
+    1280
+  );
 
-  Observer::init();
+  Observer::init(windowDimensions);
   Observer::getCurObserverRef().calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
+
+  GraphicalOperations graphicalOperations;
+  main_window = graphicalOperations.mainGlut(argcp, argv, idle, globalSimulation, globalControlCenter,
+                                             Observer::getCurObserver(), windowDimensions);
 
   //Creates main menu bar
   globalMainDisplay.init(glutGet(GLUT_WINDOW_WIDTH));

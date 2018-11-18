@@ -8,6 +8,8 @@
 #include "../Dimensions/Moveable.h"
 #include "../MaximumValues.h"
 
+#include "../WindowDimensions.h"
+
 /*! \brief Moveable "camera" entities that can give views from different frames of reference
  *
  *  This class allows normal simulations to be observed from different positions and orientations, but was really created for eventually helping to
@@ -25,11 +27,13 @@ private:
 
 	static void BuildPerspProjMat(float *m, float fov, float aspect, float znear, float zfar);
 
+	//! Stores all created Observers
+	static std::vector<shared_ptr<Observer>> observers;
 public:
-	static void init();
+	static void init(WindowDimensions windowDimensions);
 
 	//! Creates an Observer at the origin looking in the -Z direction
-	Observer();
+	Observer(WindowDimensions windowDimensions);
 	/*! \brief Does matrix operations needed to get the observers point of view
 	 *
 	 * Steps:
@@ -51,9 +55,6 @@ public:
 
 	static shared_ptr<Observer> getCurObserver();
 	static Observer & getCurObserverRef();
-
-	//! Stores all created Observers
-	static std::vector<shared_ptr<Observer>> observers;
 
 	void calcMinPullback(float fov, MaximumValues maximumValues);
 

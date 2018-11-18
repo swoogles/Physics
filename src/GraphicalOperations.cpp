@@ -6,6 +6,7 @@
 
 SimulationPtr_t GraphicalOperations::staticSimulation;
 control_center GraphicalOperations::staticControlCenter;
+shared_ptr<Observer> GraphicalOperations::observer;
 
 #define FPS 1
 
@@ -59,8 +60,10 @@ void GraphicalOperations::display() {
 GraphicalOperations::GraphicalOperations() {
 }
 
-int GraphicalOperations::mainGlut(int argcp, char **argv, void (*callback)(void), SimulationPtr_t simulation,
-                                  control_center controlCenter) {
+int
+GraphicalOperations::mainGlut(int argcp, char **argv, void (*callback)(void), SimulationPtr_t simulation,
+                              control_center controlCenter,
+                              shared_ptr<Observer> observer, WindowDimensions dimensions) {
     this->openGlInit();
     size_t mainWinPosX = 100;
     size_t mainWinPosY = 50;
@@ -69,12 +72,13 @@ int GraphicalOperations::mainGlut(int argcp, char **argv, void (*callback)(void)
 
     glutInit(&argcp, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowPosition(mainWinPosX,mainWinPosY);
-    glutInitWindowSize(mainWinWidth,mainWinHeight);
+    glutInitWindowPosition(dimensions.xPos,dimensions.yPos);
+    glutInitWindowSize(dimensions.width,dimensions.height);
     int main_window = glutCreateWindow("Center Stage");
     glutSetWindow(main_window);
     GraphicalOperations::staticSimulation = simulation;
     GraphicalOperations::staticControlCenter = controlCenter;
+    GraphicalOperations::observer = observer;
     glutDisplayFunc(GraphicalOperations::display);
 
     glutMouseFunc(InputFunctions::myMouse);
