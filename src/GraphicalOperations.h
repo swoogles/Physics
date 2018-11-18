@@ -28,9 +28,8 @@ public:
     static void display();
     GraphicalOperations();
 
-    int mainGlut(int argcp, char **argv, void (*callback)(void), SimulationPtr_t simulation,
-                 control_center controlCenter,
-                 shared_ptr<Observer> observer, WindowDimensions dimensions);
+    int mainGlut(void (*callback)(void), SimulationPtr_t simulation, control_center controlCenter,
+                     shared_ptr<Observer> observer, WindowDimensions dimensions);
     void configureControlWindow(
             int mainWinPosX,
             int mainWinPosY,

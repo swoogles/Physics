@@ -23,7 +23,6 @@
 #include "Physics/WorldSettings.h"
 #include "Physics/PhysicsSandboxProperties.h"
 
-#include "ShapeFiles/Drawing.h"
 #include "BillProperties.h"
 
 #include <functional>
@@ -31,8 +30,6 @@
 #define FPS 1
 
 using std::size_t;
-
-static int main_window;
 
 static int control_center_num;
 
@@ -65,7 +62,7 @@ PhysicsSandboxProperties init(char simulation) {
 void idle() {
   auto dt = globalControlCenter.getDt();
   if (! globalControlCenter.isPaused() ) {
-      globalSimulation->update(dt);
+    globalSimulation->update(dt);
     globalMainDisplay.update(dt);
   }
 
@@ -90,19 +87,24 @@ int main(int argcp, char **argv) {
 
   auto properties = init( simulation );
 
-  auto windowDimensions = WindowDimensions(
-    100,
-    50,
-    720,
-    1280
-  );
+  auto windowDimensions =
+          WindowDimensions(
+                  100,
+                  50,
+                  720,
+                  1280
+          );
 
   Observer::init(windowDimensions);
   Observer::getCurObserverRef().calcMinPullback( 45.0, globalSimulation->getXYMinsAndMaxes());
 
   GraphicalOperations graphicalOperations;
-  main_window = graphicalOperations.mainGlut(argcp, argv, idle, globalSimulation, globalControlCenter,
-                                             Observer::getCurObserver(), windowDimensions);
+  graphicalOperations.mainGlut(
+          idle,
+          globalSimulation,
+          globalControlCenter,
+          Observer::getCurObserver(), windowDimensions
+  );
 
   //Creates main menu bar
   globalMainDisplay.init(windowDimensions.width);

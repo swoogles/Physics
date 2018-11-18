@@ -60,17 +60,24 @@ void GraphicalOperations::display() {
 GraphicalOperations::GraphicalOperations() {
 }
 
-int
-GraphicalOperations::mainGlut(int argcp, char **argv, void (*callback)(void), SimulationPtr_t simulation,
-                              control_center controlCenter,
-                              shared_ptr<Observer> observer, WindowDimensions dimensions) {
+int GraphicalOperations::mainGlut(
+        void (*callback)(void),
+        SimulationPtr_t simulation,
+        control_center controlCenter,
+        shared_ptr<Observer> observer,
+        WindowDimensions dimensions
+) {
     this->openGlInit();
     size_t mainWinPosX = 100;
     size_t mainWinPosY = 50;
     size_t mainWinHeight = 720;
     size_t mainWinWidth = 1280;
 
-    glutInit(&argcp, argv);
+    char fakeParam[] = "fake";
+    char *fakeargv[] = { fakeParam, NULL };
+    int fakeargc = 1;
+    glutInit( &fakeargc, fakeargv );
+
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(dimensions.xPos,dimensions.yPos);
     glutInitWindowSize(dimensions.width,dimensions.height);
