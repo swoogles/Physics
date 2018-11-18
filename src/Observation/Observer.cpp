@@ -1,7 +1,7 @@
 #include "Observer.h"
 
 std::vector<shared_ptr<Observer>> Observer::observers(0);
-int Observer::curObserver; // TODO should be in .h file?
+int Observer::curObserver;
 
 shared_ptr<Observer> Observer::init(WindowDimensions windowDimensions) {
     auto initialObserver = make_shared<Observer>(windowDimensions);

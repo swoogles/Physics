@@ -63,8 +63,7 @@ private:
     // TODO Take dt as a parameter here.
 	void update(float dt);
 
-	void getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY );
-	MaximumValues getXYMinsAndMaxes();
+    MaximumValues getXYMinsAndMaxes();
 
 	size_t getSize();
 	double getMass();

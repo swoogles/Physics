@@ -60,13 +60,6 @@ void Simulation::updateXYMinsAndMaxes(VecStruct curPos) {
     minY = std::min(minY, curPos.y());
 }
 
-void Simulation::getXYMinsAndMaxes( float & minX, float & maxX, float & minY, float & maxY ) {
-  minX = this->minX;
-  maxX = this->maxX;
-  minY = this->minY;
-  maxY = this->maxY;
-}
-
 MaximumValues Simulation::getXYMinsAndMaxes() {
     return {
             this->minX,
