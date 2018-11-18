@@ -23,8 +23,13 @@
 # define GLUT_WHEEL_DOWN 4
 #endif
 
-void myMouse(int button, int state, int x, int y);
-
-void myKey(unsigned char, int x, int y);
+class InputFunctions {
+public:
+    static void init(shared_ptr<Observer> observer);
+    static void myMouse(int button, int state, int x, int y);
+    static void myKey(unsigned char, int x, int y);
+private:
+    static shared_ptr<Observer> observer;
+};
 
 #endif /* INPUTFUNCTIONS_H_ */

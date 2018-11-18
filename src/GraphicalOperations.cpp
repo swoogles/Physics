@@ -77,8 +77,8 @@ int GraphicalOperations::mainGlut(int argcp, char **argv, void (*callback)(void)
     GraphicalOperations::staticControlCenter = controlCenter;
     glutDisplayFunc(GraphicalOperations::display);
 
-    glutMouseFunc(myMouse);
-    glutKeyboardFunc(myKey);
+    glutMouseFunc(InputFunctions::myMouse);
+    glutKeyboardFunc(InputFunctions::myKey);
 
     glutIdleFunc(callback);
     glutTimerFunc(1000, myTimer, FPS);

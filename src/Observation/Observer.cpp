@@ -1,10 +1,10 @@
 #include "Observer.h"
 
-std::vector<Observer *> Observer::observers(0);
+std::vector<shared_ptr<Observer>> Observer::observers(0);
 int Observer::curObserver; // TODO should be in .h file?
 
 void Observer::init() {
-    observers.push_back(new Observer);
+    observers.push_back(make_shared<Observer>());
     curObserver = observers.size() - 1;
 }
 
@@ -49,6 +49,10 @@ void Observer::setAutoScaling(bool shouldScale) {
 
 bool Observer::isAutoScaling() {
 	return autoScale;
+}
+
+shared_ptr<Observer> Observer::getCurObserver() {
+    return observers.at(curObserver);
 }
 
 Observer &Observer::getCurObserverRef() {
@@ -133,3 +137,4 @@ float znear, float zfar)
   m[14] = qn;
   m[15] = 0;
 }
+

@@ -49,10 +49,11 @@ public:
 	//! Returns true if Observer is currently set to autoscale with simulation
 	bool isAutoScaling();
 
+	static shared_ptr<Observer> getCurObserver();
 	static Observer & getCurObserverRef();
 
 	//! Stores all created Observers
-	static std::vector<Observer *> observers;
+	static std::vector<shared_ptr<Observer>> observers;
 
 	void calcMinPullback(float fov, MaximumValues maximumValues);
 

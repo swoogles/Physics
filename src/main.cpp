@@ -81,8 +81,8 @@ void idle() {
 
 void postSimulationGlInit() {
   glutDisplayFunc(controlDisplay);
-  glutMouseFunc(myMouse);
-  glutKeyboardFunc(myKey);
+  glutMouseFunc(InputFunctions::myMouse);
+  glutKeyboardFunc(InputFunctions::myKey);
 }
 
 int main(int argcp, char **argv) {
@@ -101,6 +101,8 @@ int main(int argcp, char **argv) {
 
   control_center_num = glutCreateWindow("Control Center");
 
+  // TODO InputFunction->init(Observer)
+  InputFunctions::init(Observer::getCurObserver());
   postSimulationGlInit();
 
   globalControlCenter.init(properties.dt, glutGet(GLUT_WINDOW_WIDTH));
