@@ -17,7 +17,7 @@ class BillProperties
     explicit BillProperties(string fileName);
 
     bool static isValidProperty( string line );
-    string at( const char target[] );
+    string at( const char target[] ) const;
 };
 #endif /* BILL_PROPERTIES_H_ */
 

@@ -5,7 +5,7 @@ BillProperties::BillProperties(string fileName)
   readProperties();
 }
 
-string BillProperties::at( const char target[]  )
+string BillProperties::at( const char target[]  ) const
 {
   return properties.at( target );
 }

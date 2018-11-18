@@ -10,6 +10,7 @@ class PhysicsSandboxProperties  {
 private:
     ForceCalculationMethod parseForceCalculationProperty(std::string value);
     int parseStringAsInt(std::string value);
+    const BillProperties properties;
 public:
     // TODO privatize these
     const ForceCalculationMethod forceCalculationMethod;
@@ -17,7 +18,7 @@ public:
     const float dt;
     const float octreeTheta;
 
-    PhysicsSandboxProperties(BillProperties billProperties);
+    PhysicsSandboxProperties(string fileName);
 
 };
 

@@ -17,8 +17,6 @@
 #include "Physics/WorldSettings.h"
 #include "Physics/PhysicsSandboxProperties.h"
 
-#include "BillProperties.h"
-
 // GLOBALS
 SimulationPtr_t globalSimulation;
 
@@ -26,9 +24,7 @@ control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
 PhysicsSandboxProperties init(char simulation) {
-  BillProperties billProperties("simulation.properties");
-
-  PhysicsSandboxProperties properties(billProperties);
+  PhysicsSandboxProperties properties("simulation.properties");
 
   globalSimulation = Simulations::createSimulation(simulation, properties);
   return properties;
