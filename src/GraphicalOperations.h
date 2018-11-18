@@ -25,11 +25,23 @@
 
 class GraphicalOperations {
 public:
-    static void display();
     GraphicalOperations();
 
     int mainGlut(void (*callback)(void), SimulationPtr_t simulation, control_center controlCenter,
                      shared_ptr<Observer> observer, WindowDimensions dimensions);
+    void postSimulationGlInit();
+
+private:
+    static shared_ptr<Observer> observer;
+    static SimulationPtr_t staticSimulation;
+    static control_center staticControlCenter;
+
+    static void display();
+
+    static void fullQuadrantDrawingFunction(Quadrant quadrant);
+
+    void openGlInit();
+
     void configureControlWindow(
             int mainWinPosX,
             int mainWinPosY,
@@ -37,20 +49,6 @@ public:
             int mainWinWidth
     );
 
-    void postSimulationGlInit();
-
-    // Make private, at the very least
-    static SimulationPtr_t staticSimulation;
-    static control_center staticControlCenter;
-private:
-    SimulationPtr_t globalSimulation;
-    control_center globalControlCenter;
-
-    static shared_ptr<Observer> observer;
-
-    static void fullQuadrantDrawingFunction(Quadrant quadrant);
-
-    void openGlInit();
 
     static int control_center_num;
     static void controlDisplay();

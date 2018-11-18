@@ -31,11 +31,11 @@ void idle() {
   }
 
   // Should just directly call Observer::getCurObserverInstance()
-  Observer::getCurObserverRef().update(dt);
+  auto observer = Observer::getCurObserver();
+  observer->update(dt);
 
-  // Not sure if I can use Observer the way that I want to here, due to the constaints of the input methods
   if (WorldSettings::isAutoScaling()) {
-    Observer::getCurObserverRef().calcMinPullback(globalSimulation->getXYMinsAndMaxes());
+    observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
   }
 
 }
@@ -73,7 +73,6 @@ int main(int argcp, char **argv) {
   globalControlCenter.init(properties.dt, windowDimensions.width);
 
   graphicalOperations.postSimulationGlInit();
-
 
   return 0;
 }
