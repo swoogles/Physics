@@ -8,6 +8,10 @@
 #include "../Dimensions/VecStruct.h"
 #include "ShapeType.h"
 
+#include <../lib/units.h>
+
+using namespace units::mass;
+
 using std::shared_ptr;
 
 /*! \brief The class at the heart of all the physical calculations

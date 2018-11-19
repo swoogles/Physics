@@ -52,11 +52,11 @@ void Moveable::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
 }
 
 void Moveable::adjustVelocity(VecStruct dVel) {
-	this->momentum = momentum.scaledBy(1/mass).plus(dVel).scaledBy(mass);
+	this->momentum = momentum.scaledBy(1/mass.value()).plus(dVel).scaledBy(mass.value());
 }
 
 VecStruct Moveable::getVelocity() {
-	return momentum.scaledBy(1/mass);
+	return momentum.scaledBy(1/mass.value());
 }
 
 // Angular Momentum and Velocity
@@ -77,7 +77,7 @@ void Moveable::adjustAngVelocity(VecStruct dAngVelocity) {
 }
 
 void Moveable::update(float dt) {
-	VecStruct prevVelocity(prevMomentum.scaledBy(1/mass));
+	VecStruct prevVelocity(prevMomentum.scaledBy(1/mass.value()));
 	auto dPos =
 			this->getVelocity()
 			.plus(prevVelocity)

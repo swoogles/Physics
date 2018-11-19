@@ -6,6 +6,9 @@
 #include <iostream>
 #include "VecStruct.h"
 #include "MatrixStruct.h"
+#include <../lib/units.h>
+
+using namespace units::mass;
 
 using namespace std;
 
@@ -38,7 +41,9 @@ protected:
 	VecStruct angVelocity;
 	VecStruct prevAngVelocity;
 
-	float mass; // TODO This gots'ta go.
+
+//	mass_t mass; // TODO This gots'ta go.
+	kilogram_t mass;
 	float density;
 
 	VecStruct color;

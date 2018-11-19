@@ -113,7 +113,7 @@ bool Quadrant::positionIsInQuadrantBoundaries(VecStruct insertPos) {
 }
 
 void Quadrant::adjustMass(float dMass) {
-	mass += dMass;
+	mass += kilogram_t(dMass);
 }
 
 vector<shared_ptr<Quadrant>> Quadrant::children() {

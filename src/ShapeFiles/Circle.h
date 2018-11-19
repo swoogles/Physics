@@ -3,6 +3,10 @@
 
 #include "MyShape.h"
 
+#include <../lib/units.h>
+
+using namespace units::mass;
+
 class Circle: public MyShape {
   private:
     float radius;

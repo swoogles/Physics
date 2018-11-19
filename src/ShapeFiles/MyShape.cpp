@@ -60,11 +60,11 @@ VecStruct MyShape::getAngMomentum() {
 }
 
 void MyShape::setMass(float newMass) {
-	mass = newMass;
+	mass = kilogram_t(newMass);
 }
 
 float MyShape::getMass() {
-	return mass;
+	return mass.value();
 }
 
 float MyShape::getDensity() {
@@ -77,13 +77,13 @@ VecStruct MyShape::getColor() const {
 }
 
 void MyShape::calcColor() {
-  float totalMass = mass;
+  float totalMass = mass.value();
 
-	float redAmount = 0.25f + mass / (totalMass/3.0f);
+	float redAmount = 0.25f + mass.value() / (totalMass/3.0f);
 	if (redAmount > 1.0)
 		redAmount = 1.0;
 
-	float greenAmount = mass / (0.8f *totalMass);
+	float greenAmount = mass.value() / (0.8f *totalMass);
 	if (greenAmount > 1.0) {
 		greenAmount = 1.0;
 	}

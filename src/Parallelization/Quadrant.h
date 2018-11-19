@@ -17,6 +17,10 @@
 
 #include <functional>
 
+#include "ShapeType.h"
+
+#include <../lib/units.h>
+
 using boost::extents;
 using boost::multi_array;
 
