@@ -34,6 +34,8 @@ TEST_CASE("Successfully load a test properties file", "[BillProperties][green]")
 
     cout << "Directory: " << GetCurrentWorkingDir() << endl;
     BillProperties properties = BillProperties("simulation.properties_prototype");
-    REQUIRE(properties.at("numShapes").compare("20") == 0);
-    REQUIRE(properties.at("dt").compare("10000.0") == 0);
+    const char numShapesProperty[] = "numShapes";
+    REQUIRE(properties.at(numShapesProperty).compare("20") == 0);
+    const char dtProperty[] = "dt";
+    REQUIRE(properties.at(dtProperty).compare("10000.0") == 0);
 }
