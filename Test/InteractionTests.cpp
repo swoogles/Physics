@@ -9,10 +9,16 @@
 #include "../src/ShapeFiles/Circle.h"
 #include "../src/Physics/Interactions.h"
 
+#include <../src/lib/units.h>
+
+using namespace units::energy;
+using namespace units::force;
+using namespace units::literals;
+
 TEST_CASE( "Split a physical object", "[todo]" ) {
     Interactions interactions;
     auto object = TestUtils::simpleCircleAt(0, 0, 0);
-    auto joulesOfKineticEnergy = 100;
+    auto joulesOfKineticEnergy = 100_J;
     auto numberOfPieces = 3;
     auto fragments = interactions.crackPhysicalObject(object, joulesOfKineticEnergy, numberOfPieces);
     SECTION("Broke into the desired number of fragments") {

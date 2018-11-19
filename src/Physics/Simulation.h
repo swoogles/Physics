@@ -10,6 +10,11 @@
 #include "CollisionType.h"
 #include <stdexcept>
 #include "../MaximumValues.h"
+#include "lib/units.h"
+
+using namespace units::energy;
+using namespace units::force;
+//using namespace units::in;
 
 class Simulation {
 private:

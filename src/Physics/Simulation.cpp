@@ -211,14 +211,13 @@ PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &cu
     shapePointer_t shapeInQuadrant = curQuadrant.getShapeInQuadrant();
 
     //b.
-    if ( shapeInQuadrant != nullptr && curObject != shapeInQuadrant ) {
+    if ( curObject != shapeInQuadrant ) {
+        VecStruct gravVec = calcForceGravNew( *curObject, *shapeInQuadrant, dt);
+        curObject->adjustMomentum(gravVec);
         //c.
         if ( curObject->isTouching( *shapeInQuadrant ) ) {
             TouchingPair pair(curObject, shapeInQuadrant);
             deleteList.insertIfUnique(pair);
-        } else {
-            VecStruct gravVec = calcForceGravNew( *curObject, *shapeInQuadrant, dt);
-            curObject->adjustMomentum(gravVec);
         }
     }
 
@@ -313,6 +312,7 @@ ShapeList Simulation::crackPhysicalObject(MyShape &shape) {
     return ShapeList();
 }
 
-ShapeList Interactions::crackPhysicalObject(MyShape &shape, float kineticEnergy, int numberOfPieces) {
+ShapeList Interactions::crackPhysicalObject(MyShape &shape, joule_t kineticEnergy, int numberOfPieces) {
+//    float energyPerFragment =
     return ShapeList();
 }
