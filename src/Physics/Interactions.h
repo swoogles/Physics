@@ -12,7 +12,7 @@ using std::size_t;
 
 class Interactions {
 public:
-    ShapeList crackPhysicalObject(MyShape &shape, float kineticEnergy, int numberOfPieces);
+    ShapeList crackPhysicalObject(MyShape &shape, joule_t kineticEnergy, int numberOfPieces);
 };
 
 /*! \brief Calculates new velocities after a collision
