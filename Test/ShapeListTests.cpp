@@ -12,6 +12,10 @@
 #include "../src/Physics/Simulations.h"
 #include "../src/Physics/Interactions.h"
 
+#include <../lib/units.h>
+
+using namespace units::mass;
+
 TEST_CASE( "Remove ref", "[ShapeList]" ) {
     ShapeList shapes(vectorT { TestUtils::testCircle(), TestUtils::testCircle()});
     REQUIRE(shapes.size() == 2);
@@ -59,7 +63,7 @@ TEST_CASE( "Construct a list with a single item", "[ShapeList][red]" ) {
     auto a = TestUtils::testCircle();
     ShapeList singleItemList(a);
     REQUIRE(singleItemList.size() == 1);
-    REQUIRE(singleItemList.getShapes()[0]->getMass() == 100);
+    REQUIRE(singleItemList.getShapes()[0]->getMass() == kilogram_t(100));
     REQUIRE(singleItemList.contains(a));
 }
 

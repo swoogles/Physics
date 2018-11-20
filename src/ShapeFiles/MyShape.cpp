@@ -59,12 +59,12 @@ VecStruct MyShape::getAngMomentum() {
     return retVec;
 }
 
-void MyShape::setMass(float newMass) {
-	mass = kilogram_t(newMass);
+void MyShape::setMass(kilogram_t newMass) {
+	mass = newMass;
 }
 
-float MyShape::getMass() {
-	return mass.value();
+kilogram_t MyShape::getMass() {
+	return mass;
 }
 
 float MyShape::getDensity() {
@@ -105,23 +105,23 @@ bool MyShape::isTouching(MyShape &otherShape)
 // TODO Don't implement this at MyShape. It should have separate implementations for Circles and Boxes (If boxes even need it)
 void MyShape::mergeWith(MyShape &otherShape)
 {
-  float combinedMass = this->getMass() + otherShape.getMass();
+  kilogram_t combinedMass = this->getMass() + otherShape.getMass();
   float density = this->getDensity();
 
-  float newRadius = calcRadius(combinedMass, density);
+  float newRadius = calcRadius(combinedMass.value(), density);
 
   VecStruct totalAngMom = calcMergedAngMomentum(otherShape);
 
   VecStruct COM =
           this->getWeightedPosition()
           .plus(otherShape.getWeightedPosition())
-          .scaledBy(1/(combinedMass));
+          .scaledBy(1/(combinedMass.value()));
 
   this->setMass(combinedMass);
   this->setRadius(newRadius);
 
   // TODO Verify this stuff
-  otherShape.setMass(0);
+  otherShape.setMass(kilogram_t(0));
   otherShape.setRadius(0);
   // TODO /Verify this stuff
 
@@ -172,6 +172,6 @@ meter_t MyShape::getRadius() { return meter_t(1);}
 
 VecStruct MyShape::getWeightedPosition() {
 //    return VecStruct();
-    return this->getPos().scaledBy(this->getMass() );
+    return this->getPos().scaledBy(this->getMass().value() );
 }
 

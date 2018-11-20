@@ -22,7 +22,7 @@ void saveShapes(char * fileName, vectorT shapes) {
 		VecStruct pos(curShape->getPos());
 		vecFilePrint(myfile, pos.vec);
 
-		myfile << curShape->getMass() << endl;
+		myfile << curShape->getMass().value() << endl;
 
 		auto momentum = curShape->getMomentum();
 		vecFilePrint(myfile, momentum.vec);

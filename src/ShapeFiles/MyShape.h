@@ -80,10 +80,10 @@ private:
     VecStruct getAngMomentum();
 
     //! Sets mass of object to newMass
-    void setMass(float newMass);
+    void setMass(kilogram_t newMass);
 
     //! Returns mass of object
-    float getMass();
+    kilogram_t getMass();
 
     //! Returns density of object
     float getDensity();

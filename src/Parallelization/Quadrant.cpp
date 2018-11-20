@@ -55,7 +55,7 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
 void Quadrant::insert(shapePointer_t insertedShape) {
     if (!positionIsInQuadrantBoundaries(insertedShape->getPos())) { return; }
 
-    this->adjustMass(insertedShape->getMass());
+    this->adjustMass(insertedShape->getMass().value());
     this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
 
     this->subQuadrantThatContains(std::move(insertedShape));

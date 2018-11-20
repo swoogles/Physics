@@ -42,8 +42,7 @@ protected:
 	VecStruct prevAngVelocity;
 
 
-//	mass_t mass; // TODO This gots'ta go.
-	kilogram_t mass;
+	kilogram_t mass; // TODO This should go into MyShape
 	float density;
 
 	VecStruct color;

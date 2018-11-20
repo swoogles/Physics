@@ -120,7 +120,7 @@ VecStruct calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
     float rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
 
     float G = 6.67384e-11;
-    float forceMagnitude = (G * object1.getMass() * object2.getMass()) / rSquared;
+    float forceMagnitude = (G * object1.getMass() * object2.getMass()).value() / rSquared;
 
     return sepVec
             .unit()
@@ -134,13 +134,13 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
 
     float c = n.scalarProduct4(object1.getVelocity().minus(object2.getVelocity()));
 
-    auto combinedMass = object2.getMass() + object1.getMass();
-    float multiplierA = -2 * ( object2.getMass() * c ) / combinedMass;
+    auto combinedMass = (object2.getMass() + object1.getMass()).value();
+    float multiplierA = -2 * ( object2.getMass().value() * c ) / combinedMass;
     VecStruct aVec = n.scaledBy(multiplierA);
 
     object1.adjustVelocity(aVec);
 
-    float multiplierB = 2 * ( object1.getMass() * c ) / combinedMass;
+    float multiplierB = 2 * ( object1.getMass().value() * c ) / combinedMass;
     VecStruct bVec = n.scaledBy(multiplierB);
 
     object2.adjustVelocity(bVec);
@@ -294,10 +294,11 @@ size_t Simulation::getSize() {
     return this->physicalObjects.getShapes().size();
 }
 
+// TODO Update this very soon
 double Simulation::getMass() {
     double mass = 0;
     for (const auto & shape : this->physicalObjects.getShapes()) {
-        mass += shape->getMass();
+        mass += shape->getMass().value();
     }
     return mass;
 }
