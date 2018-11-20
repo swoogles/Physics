@@ -179,10 +179,7 @@ void Simulation::calcForcesAll_LessNaive(float dt)
                     object2.adjustMomentum(gravVec.scaledBy(-1).vec);
                 }
 
-                float distance = object1.distanceTo(object2);
-                float minSep = object1.getRadius() + object2.getRadius();
-
-                if (distance < minSep) {
+                if (object1.isTouching(object2)) {
                     if (this->collisionType == CollisionType::ELASTIC) {
                         elasticCollision( object1, object2, dt );
                     }
