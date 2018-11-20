@@ -6,10 +6,13 @@
 #include <../lib/units.h>
 
 using namespace units::mass;
+using namespace units::length;
 
 class Circle: public MyShape {
   private:
-    float radius;
+//    float radius;
+    meter_t radius;
+
   public:
 
     Circle(
@@ -32,7 +35,7 @@ class Circle: public MyShape {
 
     float getScale();
 
-    float getRadius();
+    meter_t getRadius();
     void setRadius(float);
 
     float getMomentOfInertia();

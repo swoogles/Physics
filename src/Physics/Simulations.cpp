@@ -383,7 +383,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 
 		//Check if being placed on previously created object
 		while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-			randomSplitBodyPlacement(startPlacement, curShape->getRadius(), target);
+			randomSplitBodyPlacement(startPlacement, curShape->getRadius().value(), target);
 			curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		}
     physicalObjects.addShapeToList( curShape );

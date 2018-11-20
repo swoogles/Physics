@@ -97,7 +97,7 @@ ShapeType MyShape::getType() { }
 bool MyShape::isTouching(MyShape &otherShape)
 {
   VecStruct sepVec(this->getVectorToObject(otherShape));
-  float minSep = this->getRadius() + otherShape.getRadius();
+  float minSep = (this->getRadius() + otherShape.getRadius()).value();
 
   return (sepVec.length() < minSep);
 }
@@ -144,7 +144,7 @@ VecStruct MyShape::calcMergedAngMomentum(MyShape &otherShape)
 
     vecPtr sepVec(VecStruct::vecFromAtoB(aPos, bPos));
 
-    VecStruct hitPointOnA = sepVec->unit().scaledBy(this->getRadius());
+    VecStruct hitPointOnA = sepVec->unit().scaledBy(this->getRadius().value());
 
     VecStruct hitPt = aPos.plus(hitPointOnA);
 
@@ -168,7 +168,7 @@ float MyShape::calcRadius(float massBoth, float density) {
 }
 
 void MyShape::setRadius(float) {}
-float MyShape::getRadius() { return 1;}
+meter_t MyShape::getRadius() { return meter_t(1);}
 
 VecStruct MyShape::getWeightedPosition() {
 //    return VecStruct();

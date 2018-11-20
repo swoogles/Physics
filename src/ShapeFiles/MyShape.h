@@ -11,6 +11,7 @@
 #include <../lib/units.h>
 
 using namespace units::mass;
+using namespace units::length;
 
 using std::shared_ptr;
 
@@ -57,7 +58,7 @@ private:
     //! Purely virtual method used by Circle
     virtual void setRadius(float );
     //! Purely virtual method used by Circle
-    virtual float getRadius();
+    virtual meter_t getRadius();
 
     //! Alters momentum by <dMomentum>
     void adjustMomentum(VecStruct dMomentum);
