@@ -490,7 +490,7 @@ void Simulations::randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       if (switchB)
       {
         // Set the range of momenta, and have them be half positive/half negative
-        randMult = rand()%10;
+        randMult = rand()%100;
         if (randMult % 2 == 0)
           randMult *= -1;
 
@@ -499,7 +499,7 @@ void Simulations::randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       else {
         randMult *= -1;
       }
-      startMom[i] = randMult * pieceMass * 0.000020; // Good mix
+      startMom[i] = randMult * pieceMass * 0.001000; // Good mix
     }
   }
 
@@ -556,7 +556,7 @@ float randomFloat() {
  * https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
  */
 void Simulations::randomPointInSphere(sgVec4 startPos, float maxDistance, sgVec4 target) {
-    auto factor = 1e5;
+    auto factor = 5e5;
 
     auto u = randomFloat();
 //    cout << "u: " << u << endl;

@@ -12,13 +12,13 @@ shared_ptr<Circle> TestUtils::testCircle() {
     sgVec4 startMom = { 0, 0, 0, 0 };
     sgVec3 color = { 255, 255, 0 };
 
-    return std::make_shared<Circle>(
+    return std::move(std::make_shared<Circle>(
             aPos,
             mass,
             startMom,
             density,
             color
-    );
+    ));
 }
 
 unique_ptr<Circle> TestUtils::improvedTestCircle() {

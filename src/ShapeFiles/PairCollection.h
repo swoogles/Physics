@@ -8,6 +8,7 @@
 
 using std::vector;
 
+// TODO Handle chained collisions
 class PairCollection {
 public:
     PairCollection();
@@ -19,6 +20,7 @@ public:
     void mergePairs();
 //    bool any_of( std::function< bool(const TouchingPair &)>& const lambda );
     inline std::vector<TouchingPair> brittlePairs() { return pairs; }
+    bool containsPair(const TouchingPair & newPair);
 
 private:
     std::vector<TouchingPair> pairs;
