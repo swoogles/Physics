@@ -310,7 +310,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
             startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
             randomSplitBodyMomentum(startMomentum, pieceMass);
 //            randomSplitBodyPlacement(startPlacement, pieceRadius, target);
-            randomPointInSphere(startPlacement, 1e5, target);
+            randomPointInSphere(startPlacement, properties.sandboxWidth, target);
         }
         else {
             sgNegateVec4(startMomentum);
@@ -327,7 +327,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 
         //Check if being placed on previously created object
         while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-            randomPointInSphere(startPlacement, 1e5, target);
+            randomPointInSphere(startPlacement, properties.sandboxWidth, target);
             VecStruct newPos(startPlacement);
             curShape->setPos( newPos );
         }
@@ -362,7 +362,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 
 		if (i % 2 == 0) {
 			randomSplitBodyMomentum(startMomentum, pieceMass);
-            randomPointInSphere(startPlacement, 1e5, target);
+            randomPointInSphere(startPlacement, properties.sandboxWidth, target);
 		}
 		else {
 			sgNegateVec4(startMomentum);
@@ -383,7 +383,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 
 		//Check if being placed on previously created object
 		while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-            randomPointInSphere(startPlacement, 1e5, target);
+            randomPointInSphere(startPlacement, properties.sandboxWidth, target);
 			curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		}
     physicalObjects.addShapeToList( curShape );
@@ -556,8 +556,6 @@ float randomFloat() {
  * https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
  */
 void Simulations::randomPointInSphere(sgVec4 startPos, float maxDistance, sgVec4 target) {
-    auto factor = 5e5;
-
     auto u = randomFloat();
 //    cout << "u: " << u << endl;
 //    auto v = rand();
@@ -588,7 +586,7 @@ void Simulations::randomPointInSphere(sgVec4 startPos, float maxDistance, sgVec4
     startPos[2] = z;
 
     startPos[3] = 1;
-    sgScaleVec3(startPos, factor);
+    sgScaleVec3(startPos, maxDistance);
 
     sgAddVec4( startPos, target );
 

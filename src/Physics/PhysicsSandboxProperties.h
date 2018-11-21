@@ -17,6 +17,7 @@ public:
     const int numShapes;
     const float dt;
     const float octreeTheta;
+    const float sandboxWidth;
 
     PhysicsSandboxProperties(string fileName);
 

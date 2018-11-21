@@ -6,3 +6,4 @@ numShapes=20
 dt=10000.0
 # Higher is lower quality simulation, but faster
 octree_theta=0.5
+sandbox_width=1e2

@@ -38,4 +38,7 @@ TEST_CASE("Successfully load a test properties file", "[BillProperties][green]")
     REQUIRE(properties.at(numShapesProperty).compare("20") == 0);
     const char dtProperty[] = "dt";
     REQUIRE(properties.at(dtProperty).compare("10000.0") == 0);
+
+    const char sandboxWidthProperty[] = "sandbox_width";
+    REQUIRE(properties.at(sandboxWidthProperty).compare("1e2") == 0);
 }

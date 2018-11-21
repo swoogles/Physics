@@ -24,7 +24,8 @@ PhysicsSandboxProperties::PhysicsSandboxProperties(string fileName)
 forceCalculationMethod(parseForceCalculationProperty(properties.at("forceCalculationMethod" ))),
 numShapes(parseStringAsInt(properties.at("numShapes"))),
 dt(Serializer::parseStringAsFloat(properties.at("dt"))),
-octreeTheta(Serializer::parseStringAsFloat(properties.at("octree_theta")))
+octreeTheta(Serializer::parseStringAsFloat(properties.at("octree_theta"))),
+sandboxWidth(Serializer::parseStringAsFloat(properties.at("sandbox_width")))
 {
 
 }
