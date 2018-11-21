@@ -297,7 +297,6 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 
     const float objectDensity = AstronomicalValues::DENSITY_SUN;
     const float pieceMass = (AstronomicalValues::MASS_SUN )/(numPieces);
-    const float pieceRadius = MyShape::calcRadius(pieceMass, objectDensity);
     sgVec4 startPlacement, startMomentum;
     sgVec4 target = { 1000, 0, 0, 1};
 
@@ -310,7 +309,8 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
         if (i % 2 == 0) {
             startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
             randomSplitBodyMomentum(startMomentum, pieceMass);
-            randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+//            randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+            randomPointInSphere(startPlacement, 1e5, target);
         }
         else {
             sgNegateVec4(startMomentum);
@@ -327,7 +327,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 
         //Check if being placed on previously created object
         while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-            randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+            randomPointInSphere(startPlacement, 1e5, target);
             VecStruct newPos(startPlacement);
             curShape->setPos( newPos );
         }
@@ -362,7 +362,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 
 		if (i % 2 == 0) {
 			randomSplitBodyMomentum(startMomentum, pieceMass);
-			randomSplitBodyPlacement(startPlacement, pieceRadius, target);
+            randomPointInSphere(startPlacement, 1e5, target);
 		}
 		else {
 			sgNegateVec4(startMomentum);
@@ -383,7 +383,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 
 		//Check if being placed on previously created object
 		while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-			randomSplitBodyPlacement(startPlacement, curShape->getRadius().value(), target);
+            randomPointInSphere(startPlacement, 1e5, target);
 			curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
 		}
     physicalObjects.addShapeToList( curShape );
@@ -490,7 +490,7 @@ void Simulations::randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       if (switchB)
       {
         // Set the range of momenta, and have them be half positive/half negative
-        randMult = rand()%3;
+        randMult = rand()%10;
         if (randMult % 2 == 0)
           randMult *= -1;
 
@@ -499,7 +499,7 @@ void Simulations::randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       else {
         randMult *= -1;
       }
-      startMom[i] = randMult * pieceMass * 0.00050; // Good mix
+      startMom[i] = randMult * pieceMass * 0.000020; // Good mix
     }
   }
 
@@ -511,5 +511,86 @@ void Simulations::randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
     switchB = true;
   }
   startMom[3] = 0;
+}
+
+/*
+function getPoint() {
+    var x = Math.random() - 0.5;
+    var y = Math.random() - 0.5;
+    var z = Math.random() - 0.5;
+
+    var mag = Math.sqrt(x*x + y*y + z*z);
+    x /= mag; y /= mag; z /= mag;
+
+    var d = Math.random();
+    return {x: x*d, y: y*d, z: z*d};
+}
+ */
+
+
+
+/*
+function getPoint() {
+    var u = Math.random();
+    var v = Math.random();
+    var theta = u * 2.0 * Math.PI;
+    var phi = Math.acos(2.0 * v - 1.0);
+    var r = Math.cbrt(Math.random());
+    var sinTheta = Math.sin(theta);
+    var cosTheta = Math.cos(theta);
+    var sinPhi = Math.sin(phi);
+    var cosPhi = Math.cos(phi);
+    var x = r * sinPhi * cosTheta;
+    var y = r * sinPhi * sinTheta;
+    var z = r * cosPhi;
+    return {x: x, y: y, z: z};
+}
+ */
+
+float randomFloat() {
+    return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+}
+
+/*
+ * Algorithm explained and designed here:
+ * https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
+ */
+void Simulations::randomPointInSphere(sgVec4 startPos, float maxDistance, sgVec4 target) {
+    auto factor = 1e5;
+
+    auto u = randomFloat();
+//    cout << "u: " << u << endl;
+//    auto v = rand();
+    float v = randomFloat();
+//    cout << "v: " << v << endl;
+    auto theta = u * 2.0 * M_PI;
+//    cout << "theta: " << theta << endl;
+    auto phi = acos(2.0f * (float)v - 1.0f);
+//    cout << "phi: " << phi << endl;
+    auto r = std::cbrt(randomFloat());
+//    cout << "r: " << r << endl;
+    auto sinTheta = sin(theta);
+//    cout << "sinTheta: " << sinTheta << endl;
+    auto cosTheta = cos(theta);
+//    cout << "cosTheta: " << cosTheta << endl;
+    auto sinPhi = sin(phi);
+//    cout << "sinPhi: " << sinPhi << endl;
+    auto cosPhi = cos(phi);
+//    cout << "cosPhi: " << cosPhi << endl;
+    auto x = r * sinPhi * cosTheta;
+//    cout << "x: " << x << endl;
+    auto y = r * sinPhi * sinTheta;
+//    cout << "y: " << y << endl;
+    auto z = r * cosPhi;
+//    cout << "z: " << z << endl;
+    startPos[0] = x;
+    startPos[1] = y;
+    startPos[2] = z;
+
+    startPos[3] = 1;
+    sgScaleVec3(startPos, factor);
+
+    sgAddVec4( startPos, target );
+
 }
 
