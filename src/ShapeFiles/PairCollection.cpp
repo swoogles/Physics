@@ -7,85 +7,110 @@
 PairCollection::PairCollection() {
 }
 
+/*
+*  [A, B]  => [A, B]
+*  [B, C]     [A, C]
+*  If the first item in the new pair is a doomed link,
+*       make Pair(existingPair.1, newPair.2)
+*       */
+
+std::optional<TouchingPair> aCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
+    auto newPairA = newPair.getA().get();
+    auto pairB = existingPair.getB().get();
+    if(newPairA == pairB) {
+        return TouchingPair(existingPair.getA(), newPair.getB());
+    } else {
+        return {};
+    }
+}
+
+/*
+[A, B]  => [A, B]
+[C, B]     [A, C]
+If the 2nd, doomed item is the link in the chain,
+        make Pair(existingPair.1, newPair.1)
+        */
+std::optional<TouchingPair> bCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
+    auto newPairB = newPair.getB().get();
+    auto pairB = existingPair.getB().get();
+    if(newPairB == pairB) {
+        return TouchingPair(existingPair.getA(), newPair.getA());
+    } else {
+        return {};
+    }
+}
+
+/*
+[A, B]  => [A, B]
+[A, C]     [A, C]
+If the first, surving item is the link in the chain,
+        make Pair(newPair.1, newPair2) // Just use newPair as-is
+        */
+std::optional<TouchingPair> cCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
+    auto newPairA = newPair.getA().get();
+    auto pairA = existingPair.getA().get();
+    if(newPairA == pairA) {
+        return newPair;
+    } else {
+        return {};
+    }
+}
+
+/*
+[A, B]  => [A, B]
+[C, A]     [A, C]
+
+If the first item is the surviving, non-link in the chain,
+        make Pair(newPair.2, newPair1) // Just use newPair as-is
+        */
+std::optional<TouchingPair> dCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
+    auto newPairB = newPair.getB().get();
+    auto pairA = existingPair.getA().get();
+    if(newPairB == pairA) {
+        return TouchingPair(newPair.getB(), newPair.getA());
+    } else {
+        return {};
+    }
+}
+
 void PairCollection::insertIfUnique(const TouchingPair & newPair) {
+     // This scans the whole vector before the additional checks trigger a second sweep.
+     // Might be necessary though.
     if (!containsPair(newPair)) {
 
-        /*
-        *  [A, B]  => [A, B]
-        *  [B, C]     [A, C]
-        *  If the first item in the new pair is a doomed link,
-        *       make Pair(existingPair.1, newPair.2)
-        *       */
-
-        auto singleFunc = [&newPair](const TouchingPair pair) {
-            auto newPairA = newPair.getA().get();
-            auto pairB = pair.getB().get();
-            //Extra
-            return newPairA == pairB;
-        };
-        vector<TouchingPair>::iterator foundAchainedItem = std::find_if(pairs.begin(), pairs.end(), singleFunc);
-
-
-        /*
-        [A, B]  => [A, B]
-        [C, B]     [A, C]
-        If the 2nd, doomed item is the link in the chain,
-                make Pair(existingPair.1, newPair.1)
-                */
-        auto bFunc = [&newPair](const TouchingPair pair) {
-            auto newPairB = newPair.getB().get();
-            auto pairB = pair.getB().get();
-            //Extra
-            return newPairB == pairB;
-        };
-        vector<TouchingPair>::iterator foundAchainedItemB = std::find_if(pairs.begin(), pairs.end(), bFunc);
-        /*
-        [A, B]  => [A, B]
-        [A, C]     [A, C]
-        If the first, surving item is the link in the chain,
-                make Pair(newPair.1, newPair2) // Just use newPair as-is
-                */
-        auto cFunc = [&newPair](const TouchingPair pair) {
-            auto newPairA = newPair.getA().get();
-            auto pairA = pair.getA().get();
-            //Extra
-            return newPairA == pairA;
-        };
-
-        /*
-        [A, B]  => [A, B]
-        [C, A]     [A, C]
-
-        If the first, surving item is the surving, non-link in the chain,
-                make Pair(newPair.2, newPair1) // Just use newPair as-is
-                */
-        vector<TouchingPair>::iterator caseC = std::find_if(pairs.begin(), pairs.end(), cFunc);
-        auto dFunc = [&newPair](const TouchingPair pair) {
-            auto newPairB = newPair.getB().get();
-            auto pairA = pair.getA().get();
-            //Extra
-            return newPairB == pairA;
-        };
-        vector<TouchingPair>::iterator caseD = std::find_if(pairs.begin(), pairs.end(), dFunc);
-        if (foundAchainedItem != pairs.end()) {
-            cout << "Found first case !" << endl;
-            auto chainedA = foundAchainedItem->getA();
-            pairs.push_back(TouchingPair(chainedA, newPair.getB()));
-        } else if (foundAchainedItemB != pairs.end()) {
-            cout << "Found second case !" << endl;
-            auto chainedA = foundAchainedItemB->getA();
-            pairs.push_back(TouchingPair(chainedA, newPair.getA()));
-        } else if (caseC != pairs.end()) {
-            cout << "Found third case !" << endl;
-            auto chainedA = caseC->getA();
-            pairs.push_back(newPair);
-        } else if (caseD != pairs.end()) {
-            cout << "Found fourth case !" << endl;
-            auto chainedA = caseD->getA();
-            pairs.push_back(TouchingPair(newPair.getB(), newPair.getA()));
-        } else {
-            pairs.push_back(newPair);
+        optional<TouchingPair> result = nullopt;
+        std::for_each(
+                pairs.begin(),
+                pairs.end(),
+                [&newPair,&result]
+                        (auto pair) {
+                    if (!result.has_value()) {
+                        auto aResult = aCheck(newPair, pair);
+                        auto bResult = bCheck(newPair, pair);
+                        auto cResult = cCheck(newPair, pair);
+                        auto dResult = dCheck(newPair, pair);
+                        if (aResult.has_value()) {
+                            result = aResult;
+                            cout << "Optional A present!" << endl;
+                        } else if (bResult.has_value()) {
+                            result = bResult;
+                            cout << "Optional B present!" << endl;
+                        } else if (cResult.has_value()) {
+                            result = cResult;
+                            cout << "Optional C present!" << endl;
+                        } else if (dResult.has_value()) {
+                            result = dResult;
+                            cout << "Optional D present!" << endl;
+                        } else {
+                            cout << "Nothing special about this collision. Just add it." << endl;
+                        }
+                    }
+                });
+        if (result.has_value()) {
+            cout << "Mutated and got a final result!" << endl;
         }
+        pairs.push_back(result.value_or(newPair));
+
     }
 }
 

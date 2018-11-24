@@ -5,8 +5,11 @@
 #include "ShapeList.h"
 
 #include <algorithm>
+#include <optional>
+
 
 using std::vector;
+using std::optional;
 
 // TODO Handle chained collisions
 class PairCollection {
