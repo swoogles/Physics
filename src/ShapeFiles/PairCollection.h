@@ -10,6 +10,8 @@
 
 using std::vector;
 using std::optional;
+using std::for_each;
+
 
 // TODO Handle chained collisions
 class PairCollection {
@@ -22,11 +24,11 @@ public:
     ShapeList doomed();
     void mergePairs();
 //    bool any_of( std::function< bool(const TouchingPair &)>& const lambda );
-    inline std::vector<TouchingPair> brittlePairs() { return pairs; }
+    inline vector<TouchingPair> brittlePairs() { return pairs; }
     bool containsPair(const TouchingPair & newPair);
 
 private:
-    std::vector<TouchingPair> pairs;
+    vector<TouchingPair> pairs;
 
 };
 

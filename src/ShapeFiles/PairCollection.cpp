@@ -14,7 +14,7 @@ PairCollection::PairCollection() {
 *       make Pair(existingPair.1, newPair.2)
 *       */
 
-std::optional<TouchingPair> aCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
+optional<TouchingPair> aCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
     auto newPairA = newPair.getA().get();
     auto pairB = existingPair.getB().get();
     if(newPairA == pairB) {
@@ -30,7 +30,7 @@ std::optional<TouchingPair> aCheck(const TouchingPair & newPair, const TouchingP
 If the 2nd, doomed item is the link in the chain,
         make Pair(existingPair.1, newPair.1)
         */
-std::optional<TouchingPair> bCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
+optional<TouchingPair> bCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
     auto newPairB = newPair.getB().get();
     auto pairB = existingPair.getB().get();
     if(newPairB == pairB) {
@@ -46,7 +46,7 @@ std::optional<TouchingPair> bCheck(const TouchingPair & newPair, const TouchingP
 If the first, surving item is the link in the chain,
         make Pair(newPair.1, newPair2) // Just use newPair as-is
         */
-std::optional<TouchingPair> cCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
+optional<TouchingPair> cCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
     auto newPairA = newPair.getA().get();
     auto pairA = existingPair.getA().get();
     if(newPairA == pairA) {
@@ -63,7 +63,7 @@ std::optional<TouchingPair> cCheck(const TouchingPair & newPair, const TouchingP
 If the first item is the surviving, non-link in the chain,
         make Pair(newPair.2, newPair1) // Just use newPair as-is
         */
-std::optional<TouchingPair> dCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
+optional<TouchingPair> dCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
     auto newPairB = newPair.getB().get();
     auto pairA = existingPair.getA().get();
     if(newPairB == pairA) {
@@ -79,11 +79,10 @@ void PairCollection::insertIfUnique(const TouchingPair & newPair) {
     if (!containsPair(newPair)) {
 
         optional<TouchingPair> result = nullopt;
-        std::for_each(
+        for_each(
                 pairs.begin(),
                 pairs.end(),
-                [&newPair,&result]
-                        (auto pair) {
+                [&newPair,&result] (auto pair) {
                     if (!result.has_value()) {
                         auto aResult = aCheck(newPair, pair);
                         auto bResult = bCheck(newPair, pair);
@@ -106,9 +105,6 @@ void PairCollection::insertIfUnique(const TouchingPair & newPair) {
                         }
                     }
                 });
-        if (result.has_value()) {
-            cout << "Mutated and got a final result!" << endl;
-        }
         pairs.push_back(result.value_or(newPair));
 
     }
@@ -116,7 +112,7 @@ void PairCollection::insertIfUnique(const TouchingPair & newPair) {
 
 void PairCollection::insertUniqueElements(PairCollection newPairs) {
     auto brittlePairs = newPairs.brittlePairs();
-    std::for_each(brittlePairs.begin(), brittlePairs.end(), [this](const auto & pair) { this->insertIfUnique(pair); });
+    for_each(brittlePairs.begin(), brittlePairs.end(), [this](const auto & pair) { this->insertIfUnique(pair); });
 }
 
 size_t PairCollection::size() const {
@@ -124,7 +120,6 @@ size_t PairCollection::size() const {
 }
 
 ShapeList  PairCollection::survivors() {
-// Yikes, this was what was killing me
     vectorT survivors(pairs.size());
     std::transform (pairs.begin(), pairs.end(), survivors.begin(), [](TouchingPair pair) { return pair.getA();});
     ShapeList retSurvivors(survivors);
@@ -137,7 +132,7 @@ ShapeList PairCollection::doomed() {
 }
 
 void PairCollection::mergePairs() {
-    std::for_each(pairs.begin(), pairs.end(), [](TouchingPair pair) {
+    for_each(pairs.begin(), pairs.end(), [](TouchingPair pair) {
         pair.merge();
     });
 }
@@ -146,7 +141,3 @@ bool PairCollection::containsPair(const TouchingPair & newPair) {
     auto pairFunc = [&newPair](const TouchingPair pair) { return newPair.sameItems(pair); };
     return std::any_of(pairs.begin(), pairs.end(), pairFunc);
 }
-
-//bool any_of( std::function< bool(const TouchingPair &)>& const lambda ) {
-//    return std::any_of(pairs.begin(), pairs.end(), lambda);
-//}
