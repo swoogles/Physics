@@ -48,22 +48,22 @@ Circle::Circle(
 	this->radius = meter_t(radius);
 	sgCopyVec4(this->momentum.vec, momentum);
 //	ρ=(3m)/(4πr^2)
-	this->density = (3*mass) / (4 * M_PI * (radius * radius));
+	this->density = kilograms_per_cubic_meter_t((3*mass) / (4 * M_PI * (radius * radius)));
 	sgCopyVec3(this->color.vec, color);
 }
 
 Circle::Circle(
-		sgVec4 pos,
-		kilogram_t mass,
-		sgVec4 momentum,
-		float density,
-		sgVec3 color
+        sgVec4 pos,
+        kilogram_t mass,
+        sgVec4 momentum,
+        kilograms_per_cubic_meter_t density,
+        sgVec3 color
 ) {
 	sgCopyVec4(this->pos.vec, pos);
 	this->mass = mass;
 	// TODO calculate this
 //	this->radius = radius;
-	 this->radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density));
+	 this->radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));
 
 	sgCopyVec4(this->momentum.vec, momentum);
 	this->density = density;

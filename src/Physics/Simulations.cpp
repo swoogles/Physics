@@ -253,7 +253,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
     SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, properties);
 
     int numPieces = 1;
-    float objectDensity = AstronomicalValues::DENSITY_SUN;
+    kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = (properties.mass)/numPieces;
     sgVec4 startMomentum = { 0, 0, 0 };
     sgVec3 newColor = { 1, 0, 1 };
@@ -281,7 +281,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     ShapeList physicalObjects;
 
     int numPieces=2;
-    float objectDensity = AstronomicalValues::DENSITY_SUN;
+    kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = (kilogram_t(AstronomicalValues::MASS_SUN))/(numPieces);
     sgVec4 startMomentum = { 0, 0, 0 };
 
@@ -336,7 +336,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 {
     ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
-    const float objectDensity = AstronomicalValues::DENSITY_SUN;
+    const kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     const kilogram_t pieceMass = (properties.mass*1000.0)/numPieces;
     sgVec4 startPlacement, startMomentum;
     sgVec4 target = { 1000, 0, 0, 1};
@@ -381,7 +381,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 {
   ShapeList physicalObjects;
 
-	float objectDensity = AstronomicalValues::DENSITY_SUN;
+	kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
 	kilogram_t pieceMass = (properties.mass)/(properties.numShapes);
 	sgVec4 startPlacement, startMomentum;
 

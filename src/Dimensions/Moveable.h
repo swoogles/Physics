@@ -9,6 +9,7 @@
 #include <../lib/units.h>
 
 using namespace units::mass;
+using namespace units::density;
 
 using namespace std;
 
@@ -43,7 +44,7 @@ protected:
 
 
 	kilogram_t mass; // TODO This should go into MyShape
-	float density;
+	kilograms_per_cubic_meter_t density;
 
 	VecStruct color;
 

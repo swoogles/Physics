@@ -88,6 +88,7 @@ void openShapes(char * fileName, vectorT shapes) {
 			//Set start density
 			float density;
 			curFile >> density;
+			kilograms_per_cubic_meter_t typedDensity = kilograms_per_cubic_meter_t(density);
 
 			//Set start color
 			sgVec4 color;
@@ -97,7 +98,7 @@ void openShapes(char * fileName, vectorT shapes) {
 					pos,
 					typedMass,
 					momentum,
-					density,
+					typedDensity,
 					color
 					);
 			curShape->setAngMomentum(angularMomentumVec);

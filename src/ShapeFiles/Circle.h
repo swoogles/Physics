@@ -19,7 +19,7 @@ class Circle: public MyShape {
             sgVec4 pos,
             kilogram_t mass,
             sgVec4 momentum,
-            float density,
+            kilograms_per_cubic_meter_t density,
             sgVec3 color
     );
 

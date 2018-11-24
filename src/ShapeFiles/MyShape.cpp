@@ -67,7 +67,7 @@ kilogram_t MyShape::getMass() {
 	return mass;
 }
 
-float MyShape::getDensity() {
+kilograms_per_cubic_meter_t MyShape::getDensity() {
 	return density;
 }
 
@@ -106,9 +106,9 @@ bool MyShape::isTouching(MyShape &otherShape)
 void MyShape::mergeWith(MyShape &otherShape)
 {
   kilogram_t combinedMass = this->getMass() + otherShape.getMass();
-  float density = this->getDensity();
+  kilograms_per_cubic_meter_t density = this->getDensity();
 
-  float newRadius = calcRadius(combinedMass.value(), density);
+  float newRadius = calcRadius(combinedMass.value(), density.value());
 
   VecStruct totalAngMom = calcMergedAngMomentum(otherShape);
 

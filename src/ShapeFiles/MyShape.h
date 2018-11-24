@@ -86,7 +86,7 @@ private:
     kilogram_t getMass();
 
     //! Returns density of object
-    float getDensity();
+    kilograms_per_cubic_meter_t getDensity();
 
     VecStruct getColor() const;
 
