@@ -11,6 +11,45 @@ float astronomicalSideLength = 10e5; //Formation Value
 float billiardsSideLength = 200;
 float smallAstronomicalSideLength = 1.8e4;
 
+SimulationPointer_t
+Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties)
+{
+    ForceCalculationMethod forceCalculationMethod = simulationProperties.forceCalculationMethod;
+    //******CURRENT SIMULATION*****
+    if ( simNumber == '0' ) {
+    } else if ( simNumber == '1' ) {
+        return Simulations::bodyFormation_ArbitraryList(simulationProperties.numShapes, simulationProperties);
+    } else if ( simNumber == '2' ) {
+        return Simulations::disruption_ArbitraryList(simulationProperties);
+    } else if ( simNumber == '3' ) {
+    } else if ( simNumber == '4' ) {
+        return Simulations::billiards1(15, forceCalculationMethod);
+    } else if ( simNumber == '5' ) {
+        return Simulations::billiards2_ReturnSimulation(15, forceCalculationMethod);
+    } else if ( simNumber == '6' ) {
+        sgVec4 groupMomentum;
+        groupMomentum[0]=0;
+        groupMomentum[1]=2800;
+        groupMomentum[2]=0;
+        groupMomentum[3]=1;
+        sgVec4 target = { -2000, 0, 0, 1 };
+        Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties, target, groupMomentum);
+
+        target[0]=-target[0];
+        groupMomentum[1]*=-1;
+
+        Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties, target, groupMomentum);
+    } else if ( simNumber == '7' ) {
+        return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
+    } else if ( simNumber == '8' ) {
+        return Simulations::billiards3_ArbitraryList(5, forceCalculationMethod);
+    } else {
+        exit(1);
+    }
+
+}
+
+
 void Simulations::simpleOrbit() {
 
 	sgVec4 startPos = { 0, 0, 0, 1 };
@@ -213,7 +252,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
 
     int numPieces = 1;
     float objectDensity = AstronomicalValues::DENSITY_SUN;
-    float pieceMass = (AstronomicalValues::MASS_SUN)/numPieces;
+    float pieceMass = (properties.mass.value())/numPieces;
     sgVec4 startMomentum = { 0, 0, 0 };
     sgVec3 newColor = { 1, 0, 1 };
 
@@ -302,14 +341,12 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 
     sgVec3 newColor = { 1, 1, 1 };
 
-
     srand ( time(NULL) );
 
     for (int i = 0; i < numPieces; i++) {
         if (i % 2 == 0) {
             startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
             randomSplitBodyMomentum(startMomentum, pieceMass);
-//            randomSplitBodyPlacement(startPlacement, pieceRadius, target);
             randomPointInSphere(startPlacement, properties.sandboxWidth, target);
         }
         else {
@@ -343,7 +380,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
   ShapeList physicalObjects;
 
 	float objectDensity = AstronomicalValues::DENSITY_SUN;
-	float pieceMass = (AstronomicalValues::MASS_SUN)/(properties.numShapes);
+	float pieceMass = (properties.mass.value())/(properties.numShapes);
 	sgVec4 startPlacement, startMomentum;
 
 	float pieceRadius = 100; // TOTALLY ARBITRARY VALUE!!
@@ -390,44 +427,6 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 	}
 
     return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, properties.forceCalculationMethod, properties.octreeTheta);
-}
-
-SimulationPointer_t
-Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties)
-{
-    ForceCalculationMethod forceCalculationMethod = simulationProperties.forceCalculationMethod;
-	//******CURRENT SIMULATION*****
-  if ( simNumber == '0' ) {
-  } else if ( simNumber == '1' ) {
-    return Simulations::bodyFormation_ArbitraryList(simulationProperties.numShapes, simulationProperties);
-  } else if ( simNumber == '2' ) {
-	  return Simulations::disruption_ArbitraryList(simulationProperties);
-  } else if ( simNumber == '3' ) {
-  } else if ( simNumber == '4' ) {
-    return Simulations::billiards1(15, forceCalculationMethod);
-  } else if ( simNumber == '5' ) {
-    return Simulations::billiards2_ReturnSimulation(15, forceCalculationMethod);
-  } else if ( simNumber == '6' ) {
-    sgVec4 groupMomentum;
-    groupMomentum[0]=0;
-    groupMomentum[1]=2800;
-    groupMomentum[2]=0;
-    groupMomentum[3]=1;
-    sgVec4 target = { -2000, 0, 0, 1 };
-      Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties, target, groupMomentum);
-
-    target[0]=-target[0];
-    groupMomentum[1]*=-1;
-
-      Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties, target, groupMomentum);
-  } else if ( simNumber == '7' ) {
-      return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
-  } else if ( simNumber == '8' ) {
-      return Simulations::billiards3_ArbitraryList(5, forceCalculationMethod);
-  } else {
-      exit(1);
-  }
-
 }
 
 float Simulations::getSplitBodyRadius(float volume, int numPieces ) {
