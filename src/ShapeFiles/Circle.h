@@ -36,14 +36,14 @@ class Circle: public MyShape {
     float getScale();
 
     meter_t getRadius();
-    void setRadius(float);
+    void setRadius(meter_t radius);
 
     float getMomentOfInertia();
 
     ShapeType getType();
 
 
-    static float calcRadius(float mass, float density);
+    static meter_t calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density);
 
     static vector<VecStruct> pointsEvenlyDistributedOnSphere(int numPoints, float radius);
 };

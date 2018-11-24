@@ -56,7 +56,7 @@ private:
     virtual float getScale();
 
     //! Purely virtual method used by Circle
-    virtual void setRadius(float );
+    virtual void setRadius(meter_t radius);
     //! Purely virtual method used by Circle
     virtual meter_t getRadius();
 
@@ -132,7 +132,7 @@ private:
      *  \brief Finds radius after 2 circular objects are merged
      *
      */
-    static float calcRadius(float massBoth, float density);
+    static meter_t calcRadius(kilogram_t massBoth, kilograms_per_cubic_meter_t density);
 
     VecStruct getWeightedPosition();
 

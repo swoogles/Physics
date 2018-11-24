@@ -23,8 +23,8 @@ meter_t Circle::getRadius() {
 	return radius;
 }
 
-void Circle::setRadius(float inRadius) {
-	radius = meter_t(inRadius);
+void Circle::setRadius(meter_t radius) {
+	this->radius = radius;
 }
 
 ShapeType Circle::getType() {
@@ -71,8 +71,8 @@ Circle::Circle(
 
 }
 
-float Circle::calcRadius(float mass, float density) {
-	return sqrt(((3*mass) / 4 * M_PI ) / density);
+meter_t Circle::calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density) {
+	return meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));
 }
 
 /*

@@ -108,7 +108,7 @@ void MyShape::mergeWith(MyShape &otherShape)
   kilogram_t combinedMass = this->getMass() + otherShape.getMass();
   kilograms_per_cubic_meter_t density = this->getDensity();
 
-  float newRadius = calcRadius(combinedMass.value(), density.value());
+  meter_t newRadius = calcRadius(combinedMass, density);
 
   VecStruct totalAngMom = calcMergedAngMomentum(otherShape);
 
@@ -122,7 +122,7 @@ void MyShape::mergeWith(MyShape &otherShape)
 
   // TODO Verify this stuff
   otherShape.setMass(kilogram_t(0));
-  otherShape.setRadius(0);
+  otherShape.setRadius(meter_t(0));
   // TODO /Verify this stuff
 
   this->adjustMomentum(otherShape.getMomentum());
@@ -163,11 +163,11 @@ VecStruct MyShape::calcMergedAngMomentum(MyShape &otherShape)
 }
 
 // This was t-totally fucked before
-float MyShape::calcRadius(float massBoth, float density) {
-    return sqrt(((3*massBoth) / 4 * M_PI ) / density);
+meter_t MyShape::calcRadius(kilogram_t massBoth, kilograms_per_cubic_meter_t density) {
+    return meter_t(sqrt(((3*massBoth.value()) / 4 * M_PI ) / density.value()));
 }
 
-void MyShape::setRadius(float) {}
+void MyShape::setRadius(meter_t radius) {}
 meter_t MyShape::getRadius() { return meter_t(1);}
 
 VecStruct MyShape::getWeightedPosition() {
