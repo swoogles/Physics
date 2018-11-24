@@ -296,7 +296,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
     ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
     const float objectDensity = AstronomicalValues::DENSITY_SUN;
-    const float pieceMass = (AstronomicalValues::MASS_SUN )/(numPieces);
+    const float pieceMass = (properties.mass.value()*1000.0f)/(numPieces);
     sgVec4 startPlacement, startMomentum;
     sgVec4 target = { 1000, 0, 0, 1};
 

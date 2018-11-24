@@ -25,7 +25,8 @@ forceCalculationMethod(parseForceCalculationProperty(properties.at("forceCalcula
 numShapes(parseStringAsInt(properties.at("numShapes"))),
 dt(Serializer::parseStringAsFloat(properties.at("dt"))),
 octreeTheta(Serializer::parseStringAsFloat(properties.at("octree_theta"))),
-sandboxWidth(Serializer::parseStringAsFloat(properties.at("sandbox_width")))
+sandboxWidth(Serializer::parseStringAsFloat(properties.at("sandbox_width"))),
+mass(kilogram_t(Serializer::parseStringAsFloat(properties.at("mass"))))
 {
 
 }

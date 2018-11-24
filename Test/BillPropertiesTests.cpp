@@ -20,6 +20,8 @@
 #endif
 #include<iostream>
 
+#include "../src/Physics/PhysicsSandboxProperties.h"
+
 using namespace std;
 
 std::string GetCurrentWorkingDir( void ) {
@@ -41,4 +43,12 @@ TEST_CASE("Successfully load a test properties file", "[BillProperties][green]")
 
     const char sandboxWidthProperty[] = "sandbox_width";
     REQUIRE(properties.at(sandboxWidthProperty).compare("1e2") == 0);
+
+    const char mass[] = "mass";
+    cout << "mass: " << mass << endl;
+    REQUIRE(properties.at(mass).compare("598910") == 0);
+
+    PhysicsSandboxProperties physicsSandboxProperties("simulation.properties_prototype");
+    const double expectedMass = 598910.0;
+    REQUIRE(physicsSandboxProperties.mass.value() == expectedMass );
 }

@@ -5,6 +5,9 @@
 #include <ForceCalculationMethod.h>
 
 #include "../Conversions/Serializer.h"
+#include <../lib/units.h>
+
+using namespace units::mass;
 
 class PhysicsSandboxProperties  {
 private:
@@ -18,6 +21,7 @@ public:
     const float dt;
     const float octreeTheta;
     const float sandboxWidth;
+    const kilogram_t mass;
 
     PhysicsSandboxProperties(string fileName);
 
