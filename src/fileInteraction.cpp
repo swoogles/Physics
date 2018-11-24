@@ -71,6 +71,7 @@ void openShapes(char * fileName, vectorT shapes) {
 			//Set start mass
 			float mass;
 			curFile >> mass;
+			kilogram_t typedMass = kilogram_t(mass);
 
 			//Set start momentum
 			sgVec4 momentum;
@@ -94,7 +95,7 @@ void openShapes(char * fileName, vectorT shapes) {
 
 			shapePointer_t curShape = std::make_shared<Circle>(
 					pos,
-					mass,
+					typedMass,
 					momentum,
 					density,
 					color

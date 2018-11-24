@@ -50,6 +50,7 @@ Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulatio
 }
 
 
+/*
 void Simulations::simpleOrbit() {
 
 	sgVec4 startPos = { 0, 0, 0, 1 };
@@ -85,6 +86,7 @@ void Simulations::simpleOrbit() {
             earthColor
     );
 }
+ */
 
 SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod forceCalculationMethod) {
     ShapeList physicalObjects;
@@ -252,7 +254,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
 
     int numPieces = 1;
     float objectDensity = AstronomicalValues::DENSITY_SUN;
-    float pieceMass = (properties.mass.value())/numPieces;
+    kilogram_t pieceMass = (properties.mass)/numPieces;
     sgVec4 startMomentum = { 0, 0, 0 };
     sgVec3 newColor = { 1, 0, 1 };
 
@@ -280,7 +282,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
 
     int numPieces=2;
     float objectDensity = AstronomicalValues::DENSITY_SUN;
-    float pieceMass = (AstronomicalValues::MASS_SUN)/(numPieces);
+    kilogram_t pieceMass = (kilogram_t(AstronomicalValues::MASS_SUN))/(numPieces);
     sgVec4 startMomentum = { 0, 0, 0 };
 
     sgVec3 newColor = { 1, 1, 1 };
@@ -335,7 +337,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
     ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
     const float objectDensity = AstronomicalValues::DENSITY_SUN;
-    const float pieceMass = (properties.mass.value()*1000.0f)/(numPieces);
+    const kilogram_t pieceMass = (properties.mass*1000.0)/numPieces;
     sgVec4 startPlacement, startMomentum;
     sgVec4 target = { 1000, 0, 0, 1};
 
@@ -380,11 +382,8 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
   ShapeList physicalObjects;
 
 	float objectDensity = AstronomicalValues::DENSITY_SUN;
-	float pieceMass = (properties.mass.value())/(properties.numShapes);
+	kilogram_t pieceMass = (properties.mass)/(properties.numShapes);
 	sgVec4 startPlacement, startMomentum;
-
-	float pieceRadius = 100; // TOTALLY ARBITRARY VALUE!!
-	pieceMass = pieceMass * (4.0/3.0) * M_PI * (objectDensity);
 
 	srand ( time(NULL) );
 
@@ -477,7 +476,7 @@ void Simulations::randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume,
   sgAddVec4( startPos, target );
 }
 
-void Simulations::randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
+void Simulations::randomSplitBodyMomentum(sgVec4 startMom, kilogram_t pieceMass) {
   static int randMult;
 
   static bool switchB = false;
@@ -498,7 +497,7 @@ void Simulations::randomSplitBodyMomentum(sgVec4 startMom, float pieceMass) {
       else {
         randMult *= -1;
       }
-      startMom[i] = randMult * pieceMass * 0.001000; // Good mix
+      startMom[i] = randMult * pieceMass.value() * 0.001000; // Good mix
     }
   }
 

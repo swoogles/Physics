@@ -99,7 +99,7 @@ class Simulations
      *  \param startMom Random starting momentum is returned here
      *  \param pieceMass Determines magnitude of momentum
      */
-    static void randomSplitBodyMomentum(sgVec4 startMom, float pieceMass);
+    static void randomSplitBodyMomentum(sgVec4 startMom, kilogram_t pieceMass);
 
     typedef unique_ptr<Simulation> SimulationPointer_t;
   public:

@@ -17,7 +17,7 @@ class Circle: public MyShape {
 
     Circle(
             sgVec4 pos,
-            float mass,
+            kilogram_t mass,
             sgVec4 momentum,
             float density,
             sgVec3 color

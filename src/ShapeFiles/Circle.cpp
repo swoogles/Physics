@@ -54,16 +54,16 @@ Circle::Circle(
 
 Circle::Circle(
 		sgVec4 pos,
-		float mass,
+		kilogram_t mass,
 		sgVec4 momentum,
 		float density,
 		sgVec3 color
-		) {
+) {
 	sgCopyVec4(this->pos.vec, pos);
-	this->mass = kilogram_t(mass);
+	this->mass = mass;
 	// TODO calculate this
 //	this->radius = radius;
-	 this->radius =   meter_t(sqrt(((3*mass) / 4 * M_PI ) / density));
+	 this->radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density));
 
 	sgCopyVec4(this->momentum.vec, momentum);
 	this->density = density;

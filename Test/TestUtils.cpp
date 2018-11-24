@@ -5,7 +5,7 @@
 #include "TestUtils.h"
 
 shared_ptr<Circle> TestUtils::testCircle() {
-    auto mass = 100;
+    auto mass = kilogram_t(100);
     float density = 1;
 
     sgVec4 aPos = { 0, 0, 0, 1 };
@@ -22,7 +22,7 @@ shared_ptr<Circle> TestUtils::testCircle() {
 }
 
 unique_ptr<Circle> TestUtils::improvedTestCircle() {
-    auto mass = 100;
+    auto mass = kilogram_t(100);
     float density = 1;
 
     sgVec4 aPos = { 0, 0, 0, 1 };
@@ -39,7 +39,7 @@ unique_ptr<Circle> TestUtils::improvedTestCircle() {
 }
 
 shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
-    auto mass = 100;
+    auto mass = kilogram_t(100);
     float density = 1;
 
     sgVec4 aPos = { x, y, z, 1 };
@@ -56,7 +56,7 @@ shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
 }
 
  Circle TestUtils::simpleCircleAt(float x, float y, float z) {
-    auto mass = 100;
+    auto mass = kilogram_t(100);
     float density = 1;
 
     sgVec4 aPos = { x, y, z, 1 };
