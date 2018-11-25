@@ -15,7 +15,7 @@
 Circle::~Circle() {
 }
 
-float Circle::getScale() {
+double Circle::getScale() {
     return radius.value();
 }
 
@@ -31,17 +31,17 @@ ShapeType Circle::getType() {
 	return ShapeType::circle;
 }
 
-float Circle::getMomentOfInertia() {
+double Circle::getMomentOfInertia() {
 	return (2 * mass.value() * (radius.value() * radius.value()))/ 5;
 }
 
 Circle::Circle(
-		sgVec4 pos,
-		float mass,
-		float radius,
-		sgVec4 momentum,
-		sgVec3 color
-		) {
+        sgVec4 pos,
+        double mass,
+        float radius,
+        sgVec4 momentum,
+        sgVec3 color
+) {
 
 	sgCopyVec4(this->pos.vec, pos);
 	this->mass = kilogram_t(mass);
@@ -61,14 +61,10 @@ Circle::Circle(
 ) {
 	sgCopyVec4(this->pos.vec, pos);
 	this->mass = mass;
-	// TODO calculate this
-//	this->radius = radius;
-	 this->radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));
-
+    this->radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));
 	sgCopyVec4(this->momentum.vec, momentum);
 	this->density = density;
 	sgCopyVec3(this->color.vec, color);
-
 }
 
 meter_t Circle::calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density) {

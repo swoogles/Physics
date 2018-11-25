@@ -60,17 +60,17 @@ VecStruct Moveable::getVelocity() {
 }
 
 // Angular Momentum and Velocity
-float Moveable::getMomentOfInertia() { return 1;}
+double Moveable::getMomentOfInertia() { return 1;}
 
 void Moveable::setAngVelocity(VecStruct newAngVelocity) {
 	this->prevAngVelocity = angVelocity;
-	float I = getMomentOfInertia();
+	double I = getMomentOfInertia();
 	this->angVelocity = newAngVelocity;
 	this->angMomentum = angVelocity.scaledBy(I);
 }
 
 void Moveable::adjustAngVelocity(VecStruct dAngVelocity) {
-	float I = getMomentOfInertia();
+	double I = getMomentOfInertia();
 	VecStruct dAngV(dAngVelocity);
 	this->angVelocity = angVelocity.plus(dAngV);
 	this->angMomentum = angVelocity.scaledBy(I);

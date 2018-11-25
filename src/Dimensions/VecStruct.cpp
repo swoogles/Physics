@@ -28,7 +28,7 @@ VecStruct::VecStruct(float x, float y, float z, bool anchored)
 }
 
 
-VecStruct VecStruct::scaledBy(float scalingFactor) {
+VecStruct VecStruct::scaledBy(double scalingFactor) {
     // TODO Make sure Vec3 behavior is appropriate here.
     sgVec4 newVec;
     sgScaleVec3 ( newVec, this->vec, scalingFactor );

@@ -10,7 +10,7 @@ public:
 	Box();
     Box(VecStruct pos, float sideLength, sgVec3 color);
 
-	float getScale();
+	double getScale();
 
     virtual float getWidth();
 

@@ -295,10 +295,10 @@ size_t Simulation::getSize() {
 }
 
 // TODO Update this very soon
-double Simulation::getMass() {
-    double mass = 0;
+kilogram_t Simulation::getMass() {
+    kilogram_t mass = kilogram_t(0);
     for (const auto & shape : this->physicalObjects.getShapes()) {
-        mass += shape->getMass().value();
+        mass += shape->getMass();
     }
     return mass;
 }

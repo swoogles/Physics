@@ -71,7 +71,7 @@ private:
     MaximumValues getXYMinsAndMaxes();
 
 	size_t getSize();
-	double getMass();
+	kilogram_t getMass();
 
 	QuadrantPointer_t getQuadrant();
 } ;

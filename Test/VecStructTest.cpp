@@ -25,7 +25,7 @@ TEST_CASE( "Basics", "[VecStruct]" ) {
         REQUIRE( obj.unit() == expectedUnitResult);
     }
 
-    VecStruct scaled = obj.scaledBy(-2);
+    VecStruct scaled = obj.scaledBy(-2.0);
     VecStruct expectedScaledResult(-2, -4, -6);
     REQUIRE( scaled == expectedScaledResult );
 

@@ -12,7 +12,7 @@ TEST_CASE( "Randomly distribute objects in a sphere", "[current]" ) {
     srand (static_cast <unsigned> (time(0)));
 
     sgVec4 startPos;
-    float maxDistance = 10;
+    double maxDistance = 10;
     sgVec4 target{0,0,0,0};
     Simulations::randomPointInSphere(startPos, maxDistance, target);
     VecStruct res(startPos);

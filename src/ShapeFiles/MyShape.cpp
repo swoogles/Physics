@@ -7,7 +7,7 @@
 
 #include "MyShape.h"
 
-float MyShape::distanceTo(MyShape &object2) {
+double MyShape::distanceTo(MyShape &object2) {
     return this->getVectorToObject(object2).length();
 }
 
@@ -32,7 +32,7 @@ MyShape::MyShape() = default;
 //   this->setColor( newColor );
 // }
 
-float MyShape::getScale(){}
+double MyShape::getScale(){}
 
 void MyShape::adjustMomentum(VecStruct dMomentum) {
     this->momentum = momentum.plus(dMomentum);
@@ -44,12 +44,12 @@ VecStruct MyShape::getMomentum() {
 }
 
 // Angular Momentum and Velocity
-float MyShape::getMomentOfInertia() { return 1;}
+double MyShape::getMomentOfInertia() { return 1;}
 
 void MyShape::setAngMomentum(VecStruct newAngMomentum) {
     this->prevAngVelocity = angVelocity;
 	this->prevAngVelocity = angVelocity;
-	float I = getMomentOfInertia();
+	double I = getMomentOfInertia();
 	this->angMomentum = newAngMomentum;
 	this->angVelocity = angMomentum.scaledBy(1.0f/I);
 }
@@ -77,13 +77,13 @@ VecStruct MyShape::getColor() const {
 }
 
 void MyShape::calcColor() {
-  float totalMass = mass.value();
+  double totalMass = mass.value();
 
-	float redAmount = 0.25f + mass.value() / (totalMass/3.0f);
+	double redAmount = 0.25f + mass.value() / (totalMass/3.0f);
 	if (redAmount > 1.0)
 		redAmount = 1.0;
 
-	float greenAmount = mass.value() / (0.8f *totalMass);
+	double greenAmount = mass.value() / (0.8f *totalMass);
 	if (greenAmount > 1.0) {
 		greenAmount = 1.0;
 	}
@@ -97,7 +97,7 @@ ShapeType MyShape::getType() { }
 bool MyShape::isTouching(MyShape &otherShape)
 {
   VecStruct sepVec(this->getVectorToObject(otherShape));
-  float minSep = (this->getRadius() + otherShape.getRadius()).value();
+  double minSep = (this->getRadius() + otherShape.getRadius()).value();
 
   return (sepVec.length() < minSep);
 }

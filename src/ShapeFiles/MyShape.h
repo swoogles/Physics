@@ -53,7 +53,7 @@ private:
     */
     MyShape();
 
-    virtual float getScale();
+    virtual double getScale();
 
     //! Purely virtual method used by Circle
     virtual void setRadius(meter_t radius);
@@ -71,7 +71,7 @@ private:
      *  Calculation varies for different types of object
      *  \return Moment of Inertia value
      */
-    virtual float getMomentOfInertia();
+    virtual double getMomentOfInertia();
 
     //! Sets angular momentum of object to <newAngMomentum>
     void setAngMomentum(VecStruct newAngMomentum);
@@ -111,7 +111,7 @@ private:
     /*!
       * Simple method for getting distance between 2 objects
       */
-    float distanceTo(MyShape &object2);
+    double distanceTo(MyShape &object2);
 
     bool isTouching(MyShape &otherShape);
 

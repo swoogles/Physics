@@ -25,7 +25,7 @@ class Circle: public MyShape {
 
     Circle(
             sgVec4 pos,
-            float mass,
+            double mass,
             float radius,
             sgVec4 momentum,
             sgVec3 color
@@ -33,12 +33,12 @@ class Circle: public MyShape {
 
     virtual ~Circle();
 
-    float getScale();
+    double getScale();
 
     meter_t getRadius();
     void setRadius(meter_t radius);
 
-    float getMomentOfInertia();
+    double getMomentOfInertia();
 
     ShapeType getType();
 

@@ -7,10 +7,6 @@
 
 #include "Simulations.h"
 
-float astronomicalSideLength = 10e5; //Formation Value
-float billiardsSideLength = 200;
-float smallAstronomicalSideLength = 1.8e4;
-
 SimulationPointer_t
 Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties)
 {
@@ -92,7 +88,7 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     ShapeList physicalObjects;
 
     int numPieces = 0;
-    float cueMass = 100.0;
+    kilogram_t cueMass = kilogram_t(100.0);
 
     float ballMass = 0.156;
     float ballRadius = .95;
@@ -100,13 +96,8 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     for (int i = 1; i < numRows+1; i++)
         numPieces+=i;
 
-    sgVec4 cueVelocity;
-    cueVelocity[0] = 30;
-    cueVelocity[1] = -75;
-    cueVelocity[2] = 0;
-
-    sgVec4 cueMomentum;
-    sgScaleVec4(cueMomentum, cueVelocity, cueMass);
+    VecStruct cueVelocity(30, -75, 0);
+    VecStruct cueMomentum = cueVelocity.scaledBy(cueMass.value());
 
     sgVec3 newColor;
     newColor[0] = 1;
@@ -118,9 +109,9 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
     curShape = make_shared<Circle>(
             cuePos,
-            cueMass,
+            cueMass.value(),
             ballRadius,
-            cueMomentum,
+            cueMomentum.vec,
             newColor
     );
 
@@ -553,7 +544,7 @@ float randomFloat() {
  * Algorithm explained and designed here:
  * https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
  */
-void Simulations::randomPointInSphere(sgVec4 startPos, float maxDistance, sgVec4 target) {
+void Simulations::randomPointInSphere(sgVec4 startPos, double maxDistance, sgVec4 target) {
     auto u = randomFloat();
 //    cout << "u: " << u << endl;
 //    auto v = rand();

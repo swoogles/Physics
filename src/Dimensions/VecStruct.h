@@ -28,7 +28,7 @@ public:
     inline float y() const {return vec[1];}
     inline float z() const {return vec[2];}
 
-    VecStruct scaledBy(float scalingFactor);
+    VecStruct scaledBy(double scalingFactor);
     VecStruct withElementsMultipliedBy(const VecStruct &other);
     VecStruct plus(const VecStruct & other);
     VecStruct minus(const VecStruct & other);

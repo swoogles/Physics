@@ -126,7 +126,7 @@ class Simulations
     static SimulationPointer_t
     createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
 
-    static void randomPointInSphere(sgVec4 startPos, float maxDistance, sgVec4 target);
+    static void randomPointInSphere(sgVec4 startPos, double maxDistance, sgVec4 target);
 
 };
 

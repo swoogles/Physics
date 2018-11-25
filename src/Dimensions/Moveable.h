@@ -53,7 +53,7 @@ protected:
 	 *  Calculation varies for different types of object
 	 *  \return Moment of Inertia value
 	 */
-	virtual float getMomentOfInertia();
+	virtual double getMomentOfInertia();
 
 public:
 	/*! \brief Sets default values of members common to all shapes
