@@ -7,7 +7,9 @@
 
 using std::size_t;
 
-typedef typename std::vector<shared_ptr<Circle>> particleVector;
+typedef particle_t item_t;
+
+typedef typename std::vector<item_t> particleVector;
 
 class ParticleList {
   private:
@@ -16,19 +18,19 @@ class ParticleList {
 
   public:
     ParticleList();
-    ParticleList(shared_ptr<Circle> initialShape);
+    ParticleList(item_t initialShape);
     ParticleList(particleVector shapesIn);
     bool hasConflictsWith(Circle &insertShape);
-    size_t addShapeToList(shared_ptr<Circle> insertShape);
+    size_t addShapeToList(item_t insertShape);
     size_t addList(ParticleList addList);
 
-    int removeShapeFromList(shared_ptr<Circle> shapeToRemove);
+    int removeShapeFromList(item_t shapeToRemove);
     int remove(ParticleList & shapesToRemove);
     size_t clearShapes();
     particleVector getShapes();
     void update(const float dt);
     inline size_t size() { return shapes.size(); };
 
-    bool contains(shared_ptr<Circle> searchShape) const;
+    bool contains(item_t searchShape) const;
 };
 #endif

@@ -15,6 +15,8 @@
 
 using namespace units::energy;
 using namespace units::force;
+
+typedef particle_t physicalObject_t;
 //using namespace units::in;
 
 class Simulation {
@@ -48,8 +50,8 @@ private:
 
 	void refreshQuadrant();
 
-	PairCollection calculateForceOnExternalNode(const shared_ptr<Circle> &curObject, Quadrant &curQuadrant, float dt);
-	PairCollection calcForceOnObject_Octree(shared_ptr<Circle> curObject, Quadrant &curQuadrant, float dt,
+	PairCollection calculateForceOnExternalNode(const physicalObject_t &curObject, Quadrant &curQuadrant, float dt);
+	PairCollection calcForceOnObject_Octree(physicalObject_t curObject, Quadrant &curQuadrant, float dt,
 											int recursionLevel);
 
 	void calcForcesAll_LessNaive(float dt);
@@ -62,7 +64,7 @@ private:
                    ForceCalculationMethod forceCalculationMethod, float octreeTheta);
 	Simulation(Simulation && originalSimulation, ParticleList newObjects);
 
-    void addPhysicalObjectToList(shared_ptr<Circle> newShape);
+    void addPhysicalObjectToList(physicalObject_t newShape);
 
     double getTimeElapsed();
 

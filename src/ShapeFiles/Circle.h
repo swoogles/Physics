@@ -47,4 +47,6 @@ class Circle: public MyShape {
 
     static vector<VecStruct> pointsEvenlyDistributedOnSphere(int numPoints, float radius);
 };
+
+typedef shared_ptr<Circle> particle_t;
 #endif

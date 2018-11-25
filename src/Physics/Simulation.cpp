@@ -106,7 +106,7 @@ void Simulation::removePhysicalObjects(ParticleList shapesToRemove) {
 }
 
 void Simulation::addPhysicalObjectToList(
-        shared_ptr<Circle> newShape) { physicalObjects.addShapeToList(std::move(newShape)); }
+        physicalObject_t newShape) { physicalObjects.addShapeToList(std::move(newShape)); }
 
 void Simulation::updateTimeElapsed(float dt) { timeElapsed += dt; }
 
@@ -203,11 +203,11 @@ void Simulation::calcForcesAll_LessNaive(float dt)
 
 
 
-PairCollection Simulation::calculateForceOnExternalNode(const shared_ptr<Circle> &curObject, Quadrant &curQuadrant,
+PairCollection Simulation::calculateForceOnExternalNode(const physicalObject_t &curObject, Quadrant &curQuadrant,
                                                         float dt) {
     //1. a.
     PairCollection deleteList;
-    shared_ptr<Circle> shapeInQuadrant = curQuadrant.getShapeInQuadrant();
+    physicalObject_t shapeInQuadrant = curQuadrant.getShapeInQuadrant();
 
     //b.
     if ( curObject != shapeInQuadrant ) {
@@ -234,7 +234,7 @@ PairCollection Simulation::calculateForceOnExternalNode(const shared_ptr<Circle>
 
 
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
-PairCollection Simulation::calcForceOnObject_Octree(shared_ptr<Circle> curObject, Quadrant &curQuadrant, float dt,
+PairCollection Simulation::calcForceOnObject_Octree(physicalObject_t curObject, Quadrant &curQuadrant, float dt,
                                                     int recursionLevel)
 {
     if ( curQuadrant.isExternal() ) {

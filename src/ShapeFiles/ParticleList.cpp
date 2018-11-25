@@ -15,7 +15,7 @@ void ParticleList::ensureNoNullEntries(string caller) {
 ParticleList::ParticleList() = default;
 
 
-ParticleList::ParticleList(shared_ptr<Circle> initialShape): shapes{std::move(initialShape)} {
+ParticleList::ParticleList(item_t initialShape): shapes{std::move(initialShape)} {
 }
 
 ParticleList::ParticleList(particleVector shapesIn)
@@ -27,7 +27,7 @@ bool ParticleList::hasConflictsWith(Circle &insertShape)
 {
   bool conflict = false;
 
-  shared_ptr<Circle> object1;
+  item_t object1;
 
   for (size_t i = 0; i < shapes.size() && conflict == false; i++)
   {
@@ -37,7 +37,7 @@ bool ParticleList::hasConflictsWith(Circle &insertShape)
   return conflict;
 }
 
-size_t ParticleList::addShapeToList(shared_ptr<Circle> insertShape)
+size_t ParticleList::addShapeToList(item_t insertShape)
 {
   shapes.push_back(std::move(insertShape));
   return shapes.size();
@@ -100,7 +100,7 @@ int ParticleList::remove(ParticleList &shapesToRemove) {
 
 }
 
-int ParticleList::removeShapeFromList(shared_ptr<Circle> shapeToRemove) {
+int ParticleList::removeShapeFromList(item_t shapeToRemove) {
     size_t newSize =  shapes.size() - 1;
 
     auto newIterator = std::remove_if(shapes.begin(), shapes.end(), [shapeToRemove](auto shape) {
@@ -114,8 +114,8 @@ int ParticleList::removeShapeFromList(shared_ptr<Circle> shapeToRemove) {
     return 0;
 }
 
-bool ParticleList::contains(shared_ptr<Circle> searchShape) const {
-    return std::any_of(shapes.begin(), shapes.end(), [searchShape](shared_ptr<Circle> curShape) {
+bool ParticleList::contains(item_t searchShape) const {
+    return std::any_of(shapes.begin(), shapes.end(), [searchShape](item_t curShape) {
         return searchShape == curShape;
     });
 }
