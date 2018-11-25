@@ -8,12 +8,12 @@ bool withinBoundaries(VecStruct & insertPos, VecStruct & minBoundaries, VecStruc
   return withinBoundaries;
 }
 
-shared_ptr<Circle> Quadrant::getShapeInQuadrant() {
+entity_t Quadrant::getShapeInQuadrant() {
   return shapeInQuadrant;
 }
 
 
-Quadrant::Quadrant(shared_ptr<Circle> newShape, int level, VecStruct &pos, float width)
+Quadrant::Quadrant(entity_t newShape, int level, VecStruct &pos, float width)
         :isLeaf(true)
         ,containsBody(true)
         ,shapeInQuadrant(std::move(newShape))
@@ -51,7 +51,7 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
      *  Expand the Quadrant until it *does* include the shape
 */
 
-void Quadrant::insert(shared_ptr<Circle> insertedShape) {
+void Quadrant::insert(entity_t insertedShape) {
     if (!positionIsInQuadrantBoundaries(insertedShape->getPos())) { return; }
 
     this->adjustMass(insertedShape->getMass().value());
@@ -65,7 +65,7 @@ void Quadrant::insert(shared_ptr<Circle> insertedShape) {
     // 3.d centerOfMassRepresentation->setPos( CoMPosition );
 }
 
-QuadrantPointer_t Quadrant::subQuadrantThatContains(shared_ptr<Circle> newShape) {
+QuadrantPointer_t Quadrant::subQuadrantThatContains(entity_t newShape) {
     auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->getPos());
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
@@ -91,7 +91,7 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(VecStruct pointI
 
 // Note/warning: This makes the assumption that newShape *belongs* in the subQuadrant that matches the coordinates.
 // Could be dangerous.
-QuadrantPointer_t Quadrant::makeSubQuadrant(shared_ptr<Circle> newShape) {
+QuadrantPointer_t Quadrant::makeSubQuadrant(entity_t newShape) {
     auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->getPos());
     VecStruct offsets =
             dimensions

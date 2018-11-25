@@ -27,6 +27,8 @@ using boost::multi_array;
 using std::make_shared;
 using std::weak_ptr;
 
+typedef shared_ptr<Circle> entity_t;
+
 class Quadrant : public Box
 {
   private:
@@ -37,7 +39,7 @@ class Quadrant : public Box
     bool containsBody;
     int level;
 
-    shared_ptr<Circle> shapeInQuadrant;
+    entity_t shapeInQuadrant;
 
     VecStruct weightedPosition;
     VecStruct dimensions;
@@ -47,7 +49,7 @@ class Quadrant : public Box
 
     array_typeNew  quadOctree;
 
-    QuadrantPointer_t subQuadrantThatContains(shared_ptr<Circle> newShape);
+    QuadrantPointer_t subQuadrantThatContains(entity_t newShape);
 
     //! Alters mass of object by dMass
     void adjustMass(float dMass);
@@ -58,22 +60,22 @@ class Quadrant : public Box
     void assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newSubQuadrant);
     OctreeCoordinates coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant);
   public:
-    Quadrant(shared_ptr<Circle> newShape, int level, VecStruct &pos, float width);
+    Quadrant(entity_t newShape, int level, VecStruct &pos, float width);
 
-    void insert(shared_ptr<Circle> newShape);
+    void insert(entity_t newShape);
 
     inline float getWidth() { return dimensions.vec[0]; }
 
     inline bool isExternal() { return isLeaf; }
 
-    shared_ptr<Circle> getShapeInQuadrant();
+    entity_t getShapeInQuadrant();
 
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 
     vector<shared_ptr<Quadrant>> children();
     unique_ptr<vector<shared_ptr<Quadrant>>> children(unique_ptr<vector<shared_ptr<Quadrant>>> inVector);
 
-    QuadrantPointer_t makeSubQuadrant(shared_ptr<Circle> newShape);
+    QuadrantPointer_t makeSubQuadrant(entity_t newShape);
     void applyToAllChildren(function<void (Quadrant)> functor);
 
     shared_ptr<Box> getBorders();
