@@ -2,6 +2,7 @@
 #define PHYSICS_TOUCHINGPAIR_H
 
 #include "MyShape.h"
+#include "Circle.h"
 
 /*
 List(
@@ -15,18 +16,18 @@ List(
 
 class TouchingPair {
 private:
-    shared_ptr<MyShape> a;
-    shared_ptr<MyShape> b;
+    shared_ptr<Circle> a;
+    shared_ptr<Circle> b;
 
 public:
-    TouchingPair(shared_ptr<MyShape> aIn, shared_ptr<MyShape> bIn);
+    TouchingPair(shared_ptr<Circle> aIn, shared_ptr<Circle> bIn);
 
     bool sameItems(const TouchingPair & touchingPair) const;
-    bool contains(MyShape &shape) const;
-    bool contains(shared_ptr<MyShape> searchShape) const;
-    inline shared_ptr<MyShape> getA() const { return a; };
-    inline shared_ptr<MyShape> getB() const { return b; };
-    shapePointer_t merge();
+    bool contains(Circle &shape) const;
+    bool contains(shared_ptr<Circle> searchShape) const;
+    inline shared_ptr<Circle> getA() const { return a; };
+    inline shared_ptr<Circle> getB() const { return b; };
+    shared_ptr<Circle> merge();
 };
 
 

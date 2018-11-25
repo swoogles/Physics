@@ -27,7 +27,7 @@ TEST_CASE( "New simulation is created from original Simulation and additional sh
     SimulationPointer_t simulation = Simulations::QuadrantTesting_simplest(NAIVE);
     REQUIRE(simulation->getSize() == 3);
     auto a = TestUtils::testCircle();
-    ShapeList newShapes(a);
+    ParticleList newShapes(a);
     Simulation & simRef = *simulation;
     Simulation newSimulation(std::move(simRef), newShapes);
     REQUIRE(newSimulation.getSize() == 4);

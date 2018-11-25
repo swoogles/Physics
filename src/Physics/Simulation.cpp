@@ -2,7 +2,7 @@
 #include "Interactions.h"
 
 
-Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
+Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
                        ForceCalculationMethod forceCalculationMethod, float octreeTheta)
         :physicalObjects(std::move(physicalObjects))
         ,timeElapsed(0)
@@ -20,7 +20,7 @@ Simulation::Simulation(ShapeList physicalObjects, CollisionType collisionType, b
     this->refreshQuadrant();
 }
 
-Simulation::Simulation(Simulation &&originalSimulation, ShapeList newObjects)
+Simulation::Simulation(Simulation &&originalSimulation, ParticleList newObjects)
         :physicalObjects(std::move(originalSimulation.physicalObjects))
         ,timeElapsed(originalSimulation.timeElapsed)
         ,minX(FLT_MAX)
@@ -101,11 +101,12 @@ void Simulation::update(float dt)
   refreshQuadrant();
 }
 
-void Simulation::removePhysicalObjects(ShapeList shapesToRemove) {
+void Simulation::removePhysicalObjects(ParticleList shapesToRemove) {
     physicalObjects.remove(shapesToRemove);
 }
 
-void Simulation::addPhysicalObjectToList(shapePointer_t newShape) { physicalObjects.addShapeToList(std::move(newShape)); }
+void Simulation::addPhysicalObjectToList(
+        shared_ptr<Circle> newShape) { physicalObjects.addShapeToList(std::move(newShape)); }
 
 void Simulation::updateTimeElapsed(float dt) { timeElapsed += dt; }
 
@@ -158,8 +159,8 @@ void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
 // TODO This should return the deleted list, so that it can coexist with the Octree version
 void Simulation::calcForcesAll_LessNaive(float dt)
 {
-    vectorT physicalObjects = this->physicalObjects.getShapes();
-    ShapeList deleteList;
+    particleVector physicalObjects = this->physicalObjects.getShapes();
+    ParticleList deleteList;
 
     if (!physicalObjects.empty()) {
         for (size_t i = 0; i < physicalObjects.size()-1; i++) {
@@ -202,10 +203,11 @@ void Simulation::calcForcesAll_LessNaive(float dt)
 
 
 
-PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &curObject, Quadrant &curQuadrant, float dt) {
+PairCollection Simulation::calculateForceOnExternalNode(const shared_ptr<Circle> &curObject, Quadrant &curQuadrant,
+                                                        float dt) {
     //1. a.
     PairCollection deleteList;
-    shapePointer_t shapeInQuadrant = curQuadrant.getShapeInQuadrant();
+    shared_ptr<Circle> shapeInQuadrant = curQuadrant.getShapeInQuadrant();
 
     //b.
     if ( curObject != shapeInQuadrant ) {
@@ -232,7 +234,7 @@ PairCollection Simulation::calculateForceOnExternalNode(const shapePointer_t &cu
 
 
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
-PairCollection Simulation::calcForceOnObject_Octree(shapePointer_t curObject, Quadrant &curQuadrant, float dt,
+PairCollection Simulation::calcForceOnObject_Octree(shared_ptr<Circle> curObject, Quadrant &curQuadrant, float dt,
                                                     int recursionLevel)
 {
     if ( curQuadrant.isExternal() ) {
@@ -303,14 +305,14 @@ kilogram_t Simulation::getMass() {
     return mass;
 }
 
-ShapeList Simulation::crackPhysicalObject(MyShape &shape) {
+ParticleList Simulation::crackPhysicalObject(MyShape &shape) {
     int numberOfFragments = 2;
     VecStruct initialMomentum(shape.getMomentum());
 
-    return ShapeList();
+    return ParticleList();
 }
 
-ShapeList Interactions::crackPhysicalObject(MyShape &shape, joule_t kineticEnergy, int numberOfPieces) {
+ParticleList Interactions::crackPhysicalObject(MyShape &shape, joule_t kineticEnergy, int numberOfPieces) {
 //    float energyPerFragment =
-    return ShapeList();
+    return ParticleList();
 }

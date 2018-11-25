@@ -119,16 +119,16 @@ size_t PairCollection::size() const {
     return pairs.size();
 }
 
-ShapeList  PairCollection::survivors() {
-    vectorT survivors(pairs.size());
+ParticleList  PairCollection::survivors() {
+    particleVector survivors(pairs.size());
     std::transform (pairs.begin(), pairs.end(), survivors.begin(), [](TouchingPair pair) { return pair.getA();});
-    ShapeList retSurvivors(survivors);
+    ParticleList retSurvivors(survivors);
     return retSurvivors;
 }
-ShapeList PairCollection::doomed() {
-    vectorT doomed(pairs.size());
+ParticleList PairCollection::doomed() {
+    particleVector doomed(pairs.size());
     std::transform (pairs.begin(), pairs.end(), doomed.begin(), [](TouchingPair pair) { return pair.getB();});
-    return ShapeList (doomed);
+    return ParticleList (doomed);
 }
 
 void PairCollection::mergePairs() {

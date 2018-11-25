@@ -7,10 +7,11 @@
 
 #include "PairCollection.h"
 #include "ShapeList.h"
+#include "ParticleList.h"
 
 class ComplicatedFunctions {
 public:
-    static ShapeList nonCollidingObjects(ShapeList allShapes, PairCollection collidingObjects);
+    static ParticleList nonCollidingObjects(ParticleList allShapes, PairCollection collidingObjects);
 
 };
 

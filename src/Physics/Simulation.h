@@ -9,6 +9,7 @@
 #include "ForceCalculationMethod.h"
 #include "CollisionType.h"
 #include <stdexcept>
+#include <ShapeFiles/ParticleList.h>
 #include "../MaximumValues.h"
 #include "lib/units.h"
 
@@ -18,7 +19,7 @@ using namespace units::force;
 
 class Simulation {
 private:
-	ShapeList physicalObjects;
+	ParticleList physicalObjects;
 	double timeElapsed;
 
 	float minX, maxX, minY, maxY;
@@ -40,28 +41,28 @@ private:
     void resetXYMinsAndMaxes();
     void updateXYMinsAndMaxes(VecStruct curPos);
 
-	void removePhysicalObjects( ShapeList shapesToRemove );
+	void removePhysicalObjects( ParticleList shapesToRemove );
 
     //! Return gravity field vector in retGravField
 	VecStruct getConstGravFieldVal();
 
 	void refreshQuadrant();
 
-	PairCollection calculateForceOnExternalNode(const shapePointer_t &curObject, Quadrant &curQuadrant, float dt);
-	PairCollection calcForceOnObject_Octree(shapePointer_t curObject, Quadrant &curQuadrant, float dt,
+	PairCollection calculateForceOnExternalNode(const shared_ptr<Circle> &curObject, Quadrant &curQuadrant, float dt);
+	PairCollection calcForceOnObject_Octree(shared_ptr<Circle> curObject, Quadrant &curQuadrant, float dt,
 											int recursionLevel);
 
 	void calcForcesAll_LessNaive(float dt);
 	void calcForcesAll(float dt);
 
-	ShapeList crackPhysicalObject(MyShape & shape);
+	ParticleList crackPhysicalObject(MyShape & shape);
 
   public:
-    Simulation(ShapeList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
+    Simulation(ParticleList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
                    ForceCalculationMethod forceCalculationMethod, float octreeTheta);
-	Simulation(Simulation && originalSimulation, ShapeList newObjects);
+	Simulation(Simulation && originalSimulation, ParticleList newObjects);
 
-    void addPhysicalObjectToList( shapePointer_t newShape );
+    void addPhysicalObjectToList(shared_ptr<Circle> newShape);
 
     double getTimeElapsed();
 

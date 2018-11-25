@@ -3,6 +3,7 @@
 
 #include "TouchingPair.h"
 #include "ShapeList.h"
+#include <ShapeFiles/ParticleList.h>
 
 #include <algorithm>
 #include <optional>
@@ -20,8 +21,8 @@ public:
     void insertIfUnique(const TouchingPair & newPair);
     void insertUniqueElements(PairCollection newPairs);
     size_t size() const;
-    ShapeList survivors();
-    ShapeList doomed();
+    ParticleList survivors();
+    ParticleList doomed();
     void mergePairs();
 //    bool any_of( std::function< bool(const TouchingPair &)>& const lambda );
     inline vector<TouchingPair> brittlePairs() { return pairs; }

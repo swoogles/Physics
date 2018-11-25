@@ -4,9 +4,9 @@
 
 #include "TouchingPair.h"
 
-bool TouchingPair::contains(MyShape &shape) const {
-    MyShape & aRef = *a;
-    MyShape & bRef = *b;
+bool TouchingPair::contains(Circle &shape) const {
+    Circle & aRef = *a;
+    Circle & bRef = *b;
     return (&aRef == &shape || &bRef == &shape);
 }
 
@@ -19,17 +19,17 @@ bool TouchingPair::sameItems(const TouchingPair & other)  const {
     } else return false;
 }
 
-TouchingPair::TouchingPair(const shared_ptr<MyShape> aIn, const shared_ptr<MyShape> bIn)
+TouchingPair::TouchingPair(shared_ptr<Circle> aIn, shared_ptr<Circle> bIn)
         :a(aIn)
         ,b(bIn)
 { }
 
-shapePointer_t TouchingPair::merge() {
+shared_ptr<Circle> TouchingPair::merge() {
     // Simpler when merge returns A's pointer directly.
     a->mergeWith(*b);
     return a;
 }
 
-bool TouchingPair::contains(shared_ptr<MyShape> search) const {
+bool TouchingPair::contains(shared_ptr<Circle> search) const {
     return a == search || b == search;
 }

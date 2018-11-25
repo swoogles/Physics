@@ -56,7 +56,7 @@ void Simulations::simpleOrbit() {
 	float sunRadius = getSplitBodyRadius(sunVolume, 1);
 
 
-  shapePointer_t curShape;
+  shared_ptr<Circle> curShape;
 
 	sgVec3 sunColor = { 255, 255, 0 };
 
@@ -85,7 +85,7 @@ void Simulations::simpleOrbit() {
  */
 
 SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod forceCalculationMethod) {
-    ShapeList physicalObjects;
+    ParticleList physicalObjects;
 
     int numPieces = 0;
     kilogram_t cueMass = kilogram_t(100.0);
@@ -104,7 +104,7 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     newColor[1] = 1;
     newColor[2] = 1;
 
-    shapePointer_t curShape;
+    shared_ptr<Circle> curShape;
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
     curShape = make_shared<Circle>(
@@ -141,7 +141,7 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
 
 SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceCalculationMethod forceCalculationMethod)
 {
-    ShapeList physicalObjects;
+    ParticleList physicalObjects;
 
     float cueMass = 100.0;
     float ballMass = 0.156;
@@ -154,7 +154,7 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
 
     sgVec3 newColor = { 1, 0, 1 };
 
-    shapePointer_t shapeForInsertion;
+    shared_ptr<Circle> shapeForInsertion;
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
     shapeForInsertion = make_shared<Circle>(
@@ -188,7 +188,7 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
 
 
 SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalculationMethod forceCalculationMethod) {
-    ShapeList physicalObjects;
+    ParticleList physicalObjects;
 
     float cueMass = 100.0;
     float ballMass = 0.156;
@@ -201,7 +201,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
 
     sgVec3 newColor = { 1, 1, 1 };
 
-    shapePointer_t shapeForInsertion;
+    shared_ptr<Circle> shapeForInsertion;
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*5, 0, 1};
     shapeForInsertion = make_shared<Circle>(
@@ -251,7 +251,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
 
     sgVec4 startPlacement = { -1e7 , 0, 0, 1};
 
-    shapePointer_t curShape = make_shared<Circle>(
+    shared_ptr<Circle> curShape = make_shared<Circle>(
             startPlacement,
             pieceMass,
             startMomentum,
@@ -259,7 +259,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
             newColor
     );
 
-    ShapeList disruptingObject(curShape);
+    ParticleList disruptingObject(curShape);
 //    Simulation & sim = *curSimulation;
     // TODO actually use this, once I can prevent the initial sharedPtr from killing it when this function exits
 //    Simulation disruptedSimulation(std::move(sim), disruptingObject);
@@ -269,7 +269,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
 
 SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod)
 {
-    ShapeList physicalObjects;
+    ParticleList physicalObjects;
 
     int numPieces=2;
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
@@ -278,7 +278,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
 
     sgVec3 newColor = { 1, 1, 1 };
 
-    shapePointer_t curShape;
+    shared_ptr<Circle> curShape;
     float d= 3e4;
 
     //#1
@@ -325,7 +325,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
 SimulationPointer_t
 Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties)
 {
-    ShapeList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
+    ParticleList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
     const kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     const kilogram_t pieceMass = (properties.mass*1000.0)/numPieces;
@@ -347,7 +347,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
             sgNegateVec4(startPlacement);
         }
 
-        const shapePointer_t curShape = make_shared<Circle>(
+        const shared_ptr<Circle> curShape = make_shared<Circle>(
                 startPlacement,
                 pieceMass,
                 startMomentum,
@@ -370,7 +370,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, float *target,
                                                                     float *groupMomentum)
 {
-  ShapeList physicalObjects;
+  ParticleList physicalObjects;
 
 	kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
 	kilogram_t pieceMass = (properties.mass)/(properties.numShapes);
@@ -384,7 +384,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
     newColor[2] = 1;
 
 
-    shapePointer_t curShape;
+    shared_ptr<Circle> curShape;
 	for (int i = 0; i < properties.numShapes; i++) {
 
 		if (i % 2 == 0) {

@@ -14,9 +14,9 @@
 #include <memory>
 
 TEST_CASE("normalize list of pairs", "[pairCollection]") {
-    auto a = TestUtils::testCircle();
+    shared_ptr<Circle> a = TestUtils::testCircle();
     cout << "a: " << &(*a) << endl;
-    auto b = TestUtils::testCircle();
+    shared_ptr<Circle> b = TestUtils::testCircle();
     cout << "b: " << &(*b) << endl;
     auto c = TestUtils::testCircle();
     cout << "c: " << &(*c) << endl;

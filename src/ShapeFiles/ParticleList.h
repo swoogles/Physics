@@ -1,5 +1,5 @@
-#ifndef SHAPE_LIST_H
-#define SHAPE_LIST_H
+#ifndef PARTICLE_LIST_H
+#define PARTICLE_LIST_H
 
 #include "Circle.h"
 #include <list>

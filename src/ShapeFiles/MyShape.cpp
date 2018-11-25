@@ -13,25 +13,6 @@ double MyShape::distanceTo(MyShape &object2) {
 
 MyShape::MyShape() = default;
 
-// MyShape::MyShape( const MyShape& copyShape )
-// {
-//   sgVec4 newPos;
-//   copyShape.getPos( newPos );
-//   this->setPos( newPos );
-// 
-//   sgVec4 newMom;
-//   copyShape.getMomentum( newMom );
-//   this->setMomentum( newMom );
-// 
-//   this->setMass( copyShape.getMass() );
-//   this->setDensity( copyShape.getDensity() );
-//   // this->setRadius( copyShape.getRadius() );
-// 
-//   sgVec4 newColor;;
-//   copyShape.getColor( newColor );
-//   this->setColor( newColor );
-// }
-
 double MyShape::getScale(){}
 
 void MyShape::adjustMomentum(VecStruct dMomentum) {
@@ -137,6 +118,7 @@ void MyShape::mergeWith(MyShape &otherShape)
 // TODO This should return totalAngMom, instead of mutating parameter.
 VecStruct MyShape::calcMergedAngMomentum(MyShape &otherShape)
 {
+    // TODO VecStruct is a little too vague here. *Everything* is a VecStruct??
     VecStruct aPos(this->getPos());
     VecStruct bPos(otherShape.getPos());
     VecStruct aMomentum(this->getMomentum());
