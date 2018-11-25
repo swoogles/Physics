@@ -114,7 +114,7 @@ double Simulation::getTimeElapsed() { return timeElapsed; }
 
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
-VecStruct calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
+VecStruct calcForceGravNew(Circle &object1, MyShape &object2, float dt)
 {
     VecStruct sepVec(object1.getVectorToObject(object2));
 
@@ -129,7 +129,7 @@ VecStruct calcForceGravNew(MyShape &object1, MyShape &object2, float dt)
             .scaledBy(dt);
 }
 
-void elasticCollision(MyShape &object1, MyShape &object2, float dt) {
+void elasticCollision(Circle &object1, Circle &object2, float dt) {
     VecStruct sepVecUnit = object1.getVectorToObject(object2).unit();
     VecStruct n(sepVecUnit);
 
@@ -164,14 +164,14 @@ void Simulation::calcForcesAll_LessNaive(float dt)
 
     if (!physicalObjects.empty()) {
         for (size_t i = 0; i < physicalObjects.size()-1; i++) {
-            MyShape & object1 = *physicalObjects.at(i);
+            Circle & object1 = *physicalObjects.at(i);
 
             if (constGravField) {
                 object1.adjustMomentum(this->getConstGravFieldVal().scaledBy(1 / dt));
             }
 
             for (size_t j = i + 1; j < physicalObjects.size(); j++) {
-                MyShape & object2 = *physicalObjects.at(j);
+                Circle & object2 = *physicalObjects.at(j);
 
                 if (this->gravBetweenObjects ) {
                     VecStruct gravVec = calcForceGravNew(object1, object2, dt );
@@ -305,14 +305,14 @@ kilogram_t Simulation::getMass() {
     return mass;
 }
 
-ParticleList Simulation::crackPhysicalObject(MyShape &shape) {
+ParticleList Simulation::crackPhysicalObject(Circle &shape) {
     int numberOfFragments = 2;
     VecStruct initialMomentum(shape.getMomentum());
 
     return ParticleList();
 }
 
-ParticleList Interactions::crackPhysicalObject(MyShape &shape, joule_t kineticEnergy, int numberOfPieces) {
+ParticleList Interactions::crackPhysicalObject(Circle &shape, joule_t kineticEnergy, int numberOfPieces) {
 //    float energyPerFragment =
     return ParticleList();
 }
