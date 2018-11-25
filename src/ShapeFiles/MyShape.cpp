@@ -83,67 +83,6 @@ bool MyShape::isTouching(MyShape &otherShape)
   return (sepVec.length() < minSep);
 }
 
-// TODO Don't implement this at MyShape. It should have separate implementations for Circles and Boxes (If boxes even need it)
-void MyShape::mergeWith(MyShape &otherShape)
-{
-  kilogram_t combinedMass = this->getMass() + otherShape.getMass();
-  kilograms_per_cubic_meter_t density = this->getDensity();
-
-  meter_t newRadius = calcRadius(combinedMass, density);
-
-  VecStruct totalAngMom = calcMergedAngMomentum(otherShape);
-
-  VecStruct COM =
-          this->getWeightedPosition()
-          .plus(otherShape.getWeightedPosition())
-          .scaledBy(1/(combinedMass.value()));
-
-  this->setMass(combinedMass);
-  this->setRadius(newRadius);
-
-  // TODO Verify this stuff
-  otherShape.setMass(kilogram_t(0));
-  otherShape.setRadius(meter_t(0));
-  // TODO /Verify this stuff
-
-  this->adjustMomentum(otherShape.getMomentum());
-
-  this->setAngMomentum(totalAngMom);
-
-  this->calcColor();
-
-  this->setPos(COM);
-}
-
-// TODO This should return totalAngMom, instead of mutating parameter.
-VecStruct MyShape::calcMergedAngMomentum(MyShape &otherShape)
-{
-    // TODO VecStruct is a little too vague here. *Everything* is a VecStruct??
-    VecStruct aPos(this->getPos());
-    VecStruct bPos(otherShape.getPos());
-    VecStruct aMomentum(this->getMomentum());
-    VecStruct bMomentum(otherShape.getMomentum());
-
-    vecPtr sepVec(VecStruct::vecFromAtoB(aPos, bPos));
-
-    VecStruct hitPointOnA = sepVec->unit().scaledBy(this->getRadius().value());
-
-    VecStruct hitPt = aPos.plus(hitPointOnA);
-
-    VecStruct rForA = aPos.minus(hitPt);
-
-    VecStruct newAngularMomentumForA = rForA.vectorProduct3(aMomentum);
-
-    VecStruct rForB = bPos.minus(hitPt);
-
-    VecStruct newAngularMomentumForB = rForB.vectorProduct3(bMomentum);
-    VecStruct totalAngMom = newAngularMomentumForA.plus(newAngularMomentumForB);
-
-    return totalAngMom
-            .plus(this->getAngMomentum())
-            .plus(otherShape.getAngMomentum());
-}
-
 // This was t-totally fucked before
 meter_t MyShape::calcRadius(kilogram_t massBoth, kilograms_per_cubic_meter_t density) {
     return meter_t(sqrt(((3*massBoth.value()) / 4 * M_PI ) / density.value()));

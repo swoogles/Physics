@@ -88,3 +88,63 @@ float calcRadius(float mass, int density ) {
 }
  */
 
+void Circle::mergeWith(Circle &otherShape)
+{
+	kilogram_t combinedMass = this->getMass() + otherShape.getMass();
+	kilograms_per_cubic_meter_t density = this->getDensity();
+
+	meter_t newRadius = calcRadius(combinedMass, density);
+
+	VecStruct totalAngMom = calcMergedAngMomentum(otherShape);
+
+	VecStruct COM =
+			this->getWeightedPosition()
+					.plus(otherShape.getWeightedPosition())
+					.scaledBy(1/(combinedMass.value()));
+
+	this->setMass(combinedMass);
+	this->setRadius(newRadius);
+
+	// TODO Verify this stuff
+	otherShape.setMass(kilogram_t(0));
+	otherShape.setRadius(meter_t(0));
+	// TODO /Verify this stuff
+
+	this->adjustMomentum(otherShape.getMomentum());
+
+	this->setAngMomentum(totalAngMom);
+
+	this->calcColor();
+
+	this->setPos(COM);
+}
+
+// TODO This should return totalAngMom, instead of mutating parameter.
+VecStruct Circle::calcMergedAngMomentum(Circle &otherShape)
+{
+	// TODO VecStruct is a little too vague here. *Everything* is a VecStruct??
+	VecStruct aPos(this->getPos());
+	VecStruct bPos(otherShape.getPos());
+	VecStruct aMomentum(this->getMomentum());
+	VecStruct bMomentum(otherShape.getMomentum());
+
+	vecPtr sepVec(VecStruct::vecFromAtoB(aPos, bPos));
+
+	VecStruct hitPointOnA = sepVec->unit().scaledBy(this->getRadius().value());
+
+	VecStruct hitPt = aPos.plus(hitPointOnA);
+
+	VecStruct rForA = aPos.minus(hitPt);
+
+	VecStruct newAngularMomentumForA = rForA.vectorProduct3(aMomentum);
+
+	VecStruct rForB = bPos.minus(hitPt);
+
+	VecStruct newAngularMomentumForB = rForB.vectorProduct3(bMomentum);
+	VecStruct totalAngMom = newAngularMomentumForA.plus(newAngularMomentumForB);
+
+	return totalAngMom
+			.plus(this->getAngMomentum())
+			.plus(otherShape.getAngMomentum());
+}
+
