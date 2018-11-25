@@ -59,6 +59,7 @@ shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
     auto mass = kilogram_t(100);
     auto density = kilograms_per_cubic_meter_t(1);
 
+    // TODO VecStruct<Pos> can be temporarily be played by a PosVec (SpatialVec?) class
     sgVec4 aPos = { x, y, z, 1 };
     sgVec4 startMom = { 0, 0, 0, 0 };
     sgVec3 color = { 255, 255, 0 };
