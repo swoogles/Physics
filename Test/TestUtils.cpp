@@ -6,7 +6,7 @@
 
 shared_ptr<Circle> TestUtils::testCircle() {
     auto mass = kilogram_t(100);
-    kilograms_per_cubic_meter_t density = kilograms_per_cubic_meter_t(1);
+    auto density = kilograms_per_cubic_meter_t(1);
 
     sgVec4 aPos = { 0, 0, 0, 1 };
     sgVec4 startMom = { 0, 0, 0, 0 };
@@ -23,7 +23,7 @@ shared_ptr<Circle> TestUtils::testCircle() {
 
 unique_ptr<Circle> TestUtils::improvedTestCircle() {
     auto mass = kilogram_t(100);
-    kilograms_per_cubic_meter_t density = kilograms_per_cubic_meter_t(1);
+    auto density = kilograms_per_cubic_meter_t(1);
 
     sgVec4 aPos = { 0, 0, 0, 1 };
     sgVec4 startMom = { 0, 0, 0, 0 };
@@ -40,7 +40,7 @@ unique_ptr<Circle> TestUtils::improvedTestCircle() {
 
 shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
     auto mass = kilogram_t(100);
-    kilograms_per_cubic_meter_t density = kilograms_per_cubic_meter_t(1);
+    auto density = kilograms_per_cubic_meter_t(1);
 
     sgVec4 aPos = { x, y, z, 1 };
     sgVec4 startMom = { 0, 0, 0, 0 };
@@ -57,7 +57,7 @@ shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
 
  Circle TestUtils::simpleCircleAt(float x, float y, float z) {
     auto mass = kilogram_t(100);
-    kilograms_per_cubic_meter_t density = kilograms_per_cubic_meter_t(1);
+    auto density = kilograms_per_cubic_meter_t(1);
 
     sgVec4 aPos = { x, y, z, 1 };
     sgVec4 startMom = { 0, 0, 0, 0 };
