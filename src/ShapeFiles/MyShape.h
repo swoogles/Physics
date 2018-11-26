@@ -91,12 +91,6 @@ private:
       */
     double distanceTo(MyShape &object2);
 
-    /*! \relates Circle
-     *  \brief Finds radius after 2 circular objects are merged
-     *
-     */
-    static meter_t calcRadius(kilogram_t massBoth, kilograms_per_cubic_meter_t density);
-
     VecStruct getWeightedPosition();
 
 };

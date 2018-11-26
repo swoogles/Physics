@@ -75,11 +75,6 @@ void MyShape::calcColor() {
 
 ShapeType MyShape::getType() { }
 
-// This was t-totally fucked before
-meter_t MyShape::calcRadius(kilogram_t massBoth, kilograms_per_cubic_meter_t density) {
-    return meter_t(sqrt(((3*massBoth.value()) / 4 * M_PI ) / density.value()));
-}
-
 VecStruct MyShape::getWeightedPosition() {
 //    return VecStruct();
     return this->getPos().scaledBy(this->getMass().value() );
