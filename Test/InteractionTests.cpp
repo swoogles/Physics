@@ -6,7 +6,7 @@
 
 #include "TestUtils.h"
 
-#include "../src/ShapeFiles/Circle.h"
+#include "ShapeFiles/Particle.h"
 #include "../src/Physics/Interactions.h"
 
 #include <../src/lib/units.h>
@@ -17,7 +17,7 @@ using namespace units::literals;
 
 TEST_CASE( "Split a physical object", "[todo]" ) {
     Interactions interactions;
-    Circle object = TestUtils::simpleCircleAt(0, 0, 0);
+    Particle object = TestUtils::simpleCircleAt(0, 0, 0);
     auto joulesOfKineticEnergy = 100_J;
     auto numberOfPieces = 3;
     auto fragments = interactions.crackPhysicalObject(object, joulesOfKineticEnergy, numberOfPieces);

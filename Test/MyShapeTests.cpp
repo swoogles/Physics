@@ -6,15 +6,15 @@
 
 #include "../src/ShapeFiles/TouchingPair.h"
 #include "../src/ShapeFiles/PairCollection.h"
-#include "../src/ShapeFiles/Circle.h"
+#include "ShapeFiles/Particle.h"
 #include "TestUtils.h"
 #include <plib/sg.h>
 
 #include <memory>
 
-TEST_CASE( "confirm size of Circle", "[green]" ) {
+TEST_CASE( "confirm size of Particle", "[green]" ) {
     auto a = TestUtils::testCircle();
-    cout << "Size of Circle: " << sizeof(*a) << endl;
+    cout << "Size of Particle: " << sizeof(*a) << endl;
 }
 
 
@@ -33,7 +33,7 @@ TEST_CASE("Equally distribute points on a sphere", "[todo]") {
     auto numPoints = 5;
     auto radius = 1;
 
-    auto results = Circle::pointsEvenlyDistributedOnSphere(numPoints, radius);
+    auto results = Particle::pointsEvenlyDistributedOnSphere(numPoints, radius);
     SECTION("Numerous points to be validated" ) {
         auto pointsInCorrectPosition = false;
         REQUIRE(pointsInCorrectPosition);

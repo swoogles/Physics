@@ -4,7 +4,7 @@
 
 #include "TestUtils.h"
 
-shared_ptr<Circle> TestUtils::testCircle() {
+shared_ptr<Particle> TestUtils::testCircle() {
     auto mass = kilogram_t(100);
     auto density = kilograms_per_cubic_meter_t(1);
 
@@ -12,7 +12,7 @@ shared_ptr<Circle> TestUtils::testCircle() {
     sgVec4 startMom = { 0, 0, 0, 0 };
     sgVec3 color = { 255, 255, 0 };
 
-    return std::move(std::make_shared<Circle>(
+    return std::move(std::make_shared<Particle>(
             aPos,
             mass,
             startMom,
@@ -21,7 +21,7 @@ shared_ptr<Circle> TestUtils::testCircle() {
     ));
 }
 
-unique_ptr<Circle> TestUtils::improvedTestCircle() {
+unique_ptr<Particle> TestUtils::improvedTestCircle() {
     auto mass = kilogram_t(100);
     auto density = kilograms_per_cubic_meter_t(1);
 
@@ -29,7 +29,7 @@ unique_ptr<Circle> TestUtils::improvedTestCircle() {
     sgVec4 startMom = { 0, 0, 0, 0 };
     sgVec3 color = { 255, 255, 0 };
 
-    return std::make_unique<Circle>(
+    return std::make_unique<Particle>(
             aPos,
             mass,
             startMom,
@@ -38,7 +38,7 @@ unique_ptr<Circle> TestUtils::improvedTestCircle() {
     );
 }
 
-shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
+shared_ptr<Particle> TestUtils::circleAt(float x, float y, float z) {
     auto mass = kilogram_t(100);
     auto density = kilograms_per_cubic_meter_t(1);
 
@@ -46,7 +46,7 @@ shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
     sgVec4 startMom = { 0, 0, 0, 0 };
     sgVec3 color = { 255, 255, 0 };
 
-    return std::make_shared<Circle>(
+    return std::make_shared<Particle>(
             aPos,
             mass,
             startMom,
@@ -55,7 +55,7 @@ shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
     );
 }
 
- Circle TestUtils::simpleCircleAt(float x, float y, float z) {
+ Particle TestUtils::simpleCircleAt(float x, float y, float z) {
     auto mass = kilogram_t(100);
     auto density = kilograms_per_cubic_meter_t(1);
 
@@ -64,7 +64,7 @@ shared_ptr<Circle> TestUtils::circleAt(float x, float y, float z) {
     sgVec4 startMom = { 0, 0, 0, 0 };
     sgVec3 color = { 255, 255, 0 };
 
-    return Circle(
+    return Particle(
             aPos,
             mass,
             startMom,

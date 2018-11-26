@@ -2,14 +2,14 @@
 
 #include "../src/ShapeFiles/TouchingPair.h"
 #include "../src/ShapeFiles/PairCollection.h"
-#include "../src/ShapeFiles/Circle.h"
+#include "ShapeFiles/Particle.h"
 #include "TestUtils.h"
 #include <plib/sg.h>
 
 #include <memory>
 
 // a function consuming a unique_ptr can take it by value or by rvalue reference
-std::unique_ptr<Circle> pass_through(std::unique_ptr<Circle> p)
+std::unique_ptr<Particle> pass_through(std::unique_ptr<Particle> p)
 {
     p->getScale();
     return p;

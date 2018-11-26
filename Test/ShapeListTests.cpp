@@ -7,7 +7,7 @@
 #include <plib/sg.h>
 #include "TestUtils.h"
 
-#include "../src/ShapeFiles/Circle.h"
+#include "ShapeFiles/Particle.h"
 #include "../src/Physics/Simulation.h"
 #include "../src/Physics/Simulations.h"
 #include "../src/Physics/Interactions.h"

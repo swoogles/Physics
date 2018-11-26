@@ -6,7 +6,7 @@
 
 #include <boost/numeric/ublas/vector_sparse.hpp>
 #include <plib/sg.h>
-#include "ShapeFiles/Circle.h"
+#include "ShapeFiles/Particle.h"
 
 typedef typename std::vector<shapePointer_t> vectorT;
 

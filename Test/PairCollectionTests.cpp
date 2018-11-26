@@ -6,7 +6,7 @@
 
 #include "../src/ShapeFiles/TouchingPair.h"
 #include "../src/ShapeFiles/PairCollection.h"
-#include "../src/ShapeFiles/Circle.h"
+#include "ShapeFiles/Particle.h"
 #include "../src/ShapeFiles/ComplicatedFunctions.h"
 #include "TestUtils.h"
 #include <plib/sg.h>
@@ -14,9 +14,9 @@
 #include <memory>
 
 TEST_CASE("normalize list of pairs", "[pairCollection]") {
-    shared_ptr<Circle> a = TestUtils::testCircle();
+    shared_ptr<Particle> a = TestUtils::testCircle();
     cout << "a: " << &(*a) << endl;
-    shared_ptr<Circle> b = TestUtils::testCircle();
+    shared_ptr<Particle> b = TestUtils::testCircle();
     cout << "b: " << &(*b) << endl;
     auto c = TestUtils::testCircle();
     cout << "c: " << &(*c) << endl;
@@ -142,7 +142,7 @@ TEST_CASE("normalize list of pairs", "[pairCollection]") {
             REQUIRE(nonColliders.contains(c));
             REQUIRE(nonColliders.contains(d));
 
-            std::vector<shared_ptr<Circle>> resultCircles(originalCircles.size());
+            std::vector<shared_ptr<Particle>> resultCircles(originalCircles.size());
         }
 
         SECTION("Merge the pairs") {

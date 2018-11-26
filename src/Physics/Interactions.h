@@ -13,7 +13,7 @@ using std::size_t;
 
 class Interactions {
 public:
-    ParticleList crackPhysicalObject(Circle &shape, joule_t kineticEnergy, int numberOfPieces);
+    ParticleList crackPhysicalObject(Particle &shape, joule_t kineticEnergy, int numberOfPieces);
 };
 
 /*! \brief Calculates new velocities after a collision
@@ -24,7 +24,7 @@ public:
  */
 void elasticCollision(MyShape &object1, MyShape &object2, float dt);
 
-VecStruct calcForceGravNew(Circle &object1, MyShape &object2, float dt) ;
+VecStruct calcForceGravNew(Particle &object1, MyShape &object2, float dt) ;
 
 /*! \brief Will eventually calculate drag force on a single object
  */

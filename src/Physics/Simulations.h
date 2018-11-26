@@ -2,7 +2,7 @@
 #define SIMULATIONS_H_
 
 #include <plib/sg.h>
-#include "../ShapeFiles/Circle.h"
+#include "ShapeFiles/Particle.h"
 #include "../ShapeFiles/ShapeList.h"
 #include "Simulation.h"
 #include "CollisionType.h"

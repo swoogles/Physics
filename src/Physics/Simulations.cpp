@@ -56,11 +56,11 @@ void Simulations::simpleOrbit() {
 	float sunRadius = getSplitBodyRadius(sunVolume, 1);
 
 
-  shared_ptr<Circle> curShape;
+  shared_ptr<Particle> curShape;
 
 	sgVec3 sunColor = { 255, 255, 0 };
 
-    curShape = make_shared<Circle>(
+    curShape = make_shared<Particle>(
             startPos,
             AstronomicalValues::MASS_SUN,
             startMom,
@@ -74,7 +74,7 @@ void Simulations::simpleOrbit() {
 
     sgVec3 earthColor = { 165,42,42 };
 
-    curShape = make_shared<Circle>(
+    curShape = make_shared<Particle>(
             startPos,
             MASS_EARTH,
             startMom,
@@ -104,10 +104,10 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     newColor[1] = 1;
     newColor[2] = 1;
 
-    shared_ptr<Circle> curShape;
+    shared_ptr<Particle> curShape;
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
-    curShape = make_shared<Circle>(
+    curShape = make_shared<Particle>(
             cuePos,
             cueMass.value(),
             ballRadius,
@@ -123,7 +123,7 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
         for (int j = i; j < cutOff; j+= 2) {
             sgVec4 ballPos = { (float) (j* 1.7), (float) (i*2.5), 0, 1};
 
-            curShape = make_shared<Circle>(
+            curShape = make_shared<Particle>(
                     ballPos,
                     ballMass,
                     ballRadius,
@@ -154,10 +154,10 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
 
     sgVec3 newColor = { 1, 0, 1 };
 
-    shared_ptr<Circle> shapeForInsertion;
+    shared_ptr<Particle> shapeForInsertion;
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
-    shapeForInsertion = make_shared<Circle>(
+    shapeForInsertion = make_shared<Particle>(
             cuePos,
             cueMass,
             ballRadius,
@@ -172,7 +172,7 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
             sgVec4 ballPos = { (float) j* 3, (float) i*3, 0, 1};
             newColor[1] = -( ( -.5 + (j/float(numRows)) ) * ( -.5 + (j/float(numRows)) ) )+ 1.0;
 
-            shapeForInsertion = make_shared<Circle>(
+            shapeForInsertion = make_shared<Particle>(
                     ballPos,
                     ballMass,
                     ballRadius,
@@ -201,10 +201,10 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
 
     sgVec3 newColor = { 1, 1, 1 };
 
-    shared_ptr<Circle> shapeForInsertion;
+    shared_ptr<Particle> shapeForInsertion;
 
     sgVec4 cuePos = { (float) numRows, (float) numRows*5, 0, 1};
-    shapeForInsertion = make_shared<Circle>(
+    shapeForInsertion = make_shared<Particle>(
             cuePos,
             cueMass,
             ballRadius,
@@ -224,7 +224,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
                 newColor[1] = -( ( -.5 + (z/float(numRows)) ) * ( -.5 + (z/float(numRows)) ) )+ 1.0;
 
 
-                shapeForInsertion = make_shared<Circle>(
+                shapeForInsertion = make_shared<Particle>(
                         ballPos,
                         ballMass,
                         ballRadius,
@@ -251,7 +251,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
 
     sgVec4 startPlacement = { -1e7 , 0, 0, 1};
 
-    shared_ptr<Circle> curShape = make_shared<Circle>(
+    shared_ptr<Particle> curShape = make_shared<Particle>(
             startPlacement,
             pieceMass,
             startMomentum,
@@ -278,14 +278,14 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
 
     sgVec3 newColor = { 1, 1, 1 };
 
-    shared_ptr<Circle> curShape;
+    shared_ptr<Particle> curShape;
     float d= 3e4;
 
     //#1
     sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
 
     physicalObjects.addShapeToList(
-            make_shared<Circle>(
+            make_shared<Particle>(
                     object1Placement,
                     pieceMass,
                     startMomentum,
@@ -298,7 +298,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     sgVec4 object2Placement = {  (float) -(7/8.0 * d), (float) +(7/8.0 * d), 1, 1};
 
     physicalObjects.addShapeToList(
-            make_shared<Circle>(
+            make_shared<Particle>(
                     object2Placement,
                     pieceMass,
                     startMomentum,
@@ -310,7 +310,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     sgVec4 object3Placement = {  (float) -(1/8.0 * d), (float) -(5/8.0 * d), 1, 1};
 
     physicalObjects.addShapeToList(
-            make_shared<Circle>(
+            make_shared<Particle>(
                     object3Placement,
                     pieceMass,
                     startMomentum,
@@ -347,7 +347,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
             sgNegateVec4(startPlacement);
         }
 
-        const shared_ptr<Circle> curShape = make_shared<Circle>(
+        const shared_ptr<Particle> curShape = make_shared<Particle>(
                 startPlacement,
                 pieceMass,
                 startMomentum,
@@ -384,7 +384,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
     newColor[2] = 1;
 
 
-    shared_ptr<Circle> curShape;
+    shared_ptr<Particle> curShape;
 	for (int i = 0; i < properties.numShapes; i++) {
 
 		if (i % 2 == 0) {
@@ -399,7 +399,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
     // Apply general group momentum to individual pieces momentum
     sgAddVec4( startMomentum, groupMomentum );
 
-        curShape = make_shared<Circle>(
+        curShape = make_shared<Particle>(
                 startPlacement,
                 pieceMass,
                 startMomentum,

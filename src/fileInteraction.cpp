@@ -94,7 +94,7 @@ void openShapes(char * fileName, vectorT shapes) {
 			sgVec4 color;
 			vecFileRead(curFile, color);
 
-			shapePointer_t curShape = std::make_shared<Circle>(
+			shapePointer_t curShape = std::make_shared<Particle>(
 					pos,
 					typedMass,
 					momentum,

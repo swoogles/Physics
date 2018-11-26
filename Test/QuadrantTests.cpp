@@ -6,7 +6,7 @@
 
 #include "../src/ShapeFiles/TouchingPair.h"
 #include "../src/ShapeFiles/PairCollection.h"
-#include "../src/ShapeFiles/Circle.h"
+#include "ShapeFiles/Particle.h"
 #include "../src/Parallelization/Quadrant.h"
 #include "TestUtils.h"
 #include <plib/sg.h>
@@ -17,7 +17,7 @@
 TEST_CASE("Get children", "[Quadrant]") {
     VecStruct pos;
     float width = 200;
-    shared_ptr<Circle> shape = TestUtils::circleAt(5, 5, 5);
+    shared_ptr<Particle> shape = TestUtils::circleAt(5, 5, 5);
     
     Quadrant quadrant(shape, 0, pos, width);
     SECTION("Basic properties") {

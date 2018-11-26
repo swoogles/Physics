@@ -8,7 +8,7 @@
 using namespace units::mass;
 using namespace units::length;
 
-class Circle: public MyShape {
+class Particle: public MyShape {
   private:
 //    float radius;
     meter_t radius;
@@ -29,11 +29,11 @@ class Circle: public MyShape {
      *
      *	\return The angular momentum to be assigned to the merged object
      */
-    VecStruct calcMergedAngMomentum(Circle &otherShape);
+    VecStruct calcMergedAngMomentum(Particle &otherShape);
 
   public:
 
-    Circle(
+    Particle(
             sgVec4 pos,
             kilogram_t mass,
             sgVec4 momentum,
@@ -41,7 +41,7 @@ class Circle: public MyShape {
             sgVec3 color
     );
 
-    Circle(
+    Particle(
             sgVec4 pos,
             double mass,
             float radius,
@@ -49,7 +49,7 @@ class Circle: public MyShape {
             sgVec3 color
     );
 
-    virtual ~Circle();
+    virtual ~Particle();
 
     double getScale();
 
@@ -76,12 +76,12 @@ class Circle: public MyShape {
      *
      *  Note: This function does NOT delete the second object, currently that must be handled outside
      */
-    void mergeWith(Circle &otherShape);
+    void mergeWith(Particle &otherShape);
 
-    bool isTouching(Circle &otherShape);
+    bool isTouching(Particle &otherShape);
 
 
 };
 
-typedef shared_ptr<Circle> particle_t;
+typedef shared_ptr<Particle> particle_t;
 #endif

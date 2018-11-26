@@ -5,7 +5,7 @@
 
 #include "../ShapeFiles/MyShape.h"
 #include "../ShapeFiles/Box.h"
-#include "../ShapeFiles/Circle.h"
+#include "ShapeFiles/Particle.h"
 #include "../ShapeFiles/ShapeList.h"
 #include "../ShapeFiles/PairCollection.h"
 #include "OctreeCoordinates.h"
@@ -27,7 +27,7 @@ using boost::multi_array;
 using std::make_shared;
 using std::weak_ptr;
 
-typedef shared_ptr<Circle> entity_t;
+typedef shared_ptr<Particle> entity_t;
 
 class Quadrant : public Box
 {
@@ -45,7 +45,7 @@ class Quadrant : public Box
     VecStruct dimensions;
 
     shared_ptr<Box> borders;
-//    shared_ptr<Circle> centerOfMassRepresentation;
+//    shared_ptr<Particle> centerOfMassRepresentation;
 
     array_typeNew  quadOctree;
 

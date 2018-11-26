@@ -1,41 +1,41 @@
-#include "Circle.h"
+#include "Particle.h"
 
-// Circle::Circle( const Circle& copyCircle )
+// Particle::Particle( const Particle& copyCircle )
 // {
 //   // super( copyCircle );
 //   this->radius = copyCircle.getRadius();
 // }
 // 
-// Circle::Circle( Circle& copyCircle )
+// Particle::Particle( Particle& copyCircle )
 // {
 //   // super( copyCircle );
 //   this->radius = copyCircle.getRadius();
 // }
 
-Circle::~Circle() {
+Particle::~Particle() {
 }
 
-double Circle::getScale() {
+double Particle::getScale() {
     return radius.value();
 }
 
-meter_t Circle::getRadius() {
+meter_t Particle::getRadius() {
 	return radius;
 }
 
-void Circle::setRadius(meter_t radius) {
+void Particle::setRadius(meter_t radius) {
 	this->radius = radius;
 }
 
-ShapeType Circle::getType() {
+ShapeType Particle::getType() {
 	return ShapeType::circle;
 }
 
-double Circle::getMomentOfInertia() {
+double Particle::getMomentOfInertia() {
 	return (2 * mass.value() * (radius.value() * radius.value()))/ 5;
 }
 
-Circle::Circle(
+Particle::Particle(
         sgVec4 pos,
         double mass,
         float radius,
@@ -52,7 +52,7 @@ Circle::Circle(
 	sgCopyVec3(this->color.vec, color);
 }
 
-Circle::Circle(
+Particle::Particle(
         sgVec4 pos,
         kilogram_t mass,
         sgVec4 momentum,
@@ -67,7 +67,7 @@ Circle::Circle(
 	sgCopyVec3(this->color.vec, color);
 }
 
-meter_t Circle::calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density) {
+meter_t Particle::calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density) {
 	return meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));
 }
 
@@ -75,7 +75,7 @@ meter_t Circle::calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density)
  * Consult method here:
  *   https://www.cmu.edu/biolphys/deserno/pdf/sphere_equi.pdf
  */
-vector<VecStruct> Circle::pointsEvenlyDistributedOnSphere(int numPoints, float radius) {
+vector<VecStruct> Particle::pointsEvenlyDistributedOnSphere(int numPoints, float radius) {
 	VecStruct invalidDefault(-1, -1, -1);
     return vector<VecStruct>{invalidDefault};
 }
@@ -88,7 +88,7 @@ float calcRadius(float mass, int density ) {
 }
  */
 
-void Circle::mergeWith(Circle &otherShape)
+void Particle::mergeWith(Particle &otherShape)
 {
 	kilogram_t combinedMass = this->getMass() + otherShape.getMass();
 	kilograms_per_cubic_meter_t density = this->getDensity();
@@ -120,7 +120,7 @@ void Circle::mergeWith(Circle &otherShape)
 }
 
 // TODO This should return totalAngMom, instead of mutating parameter.
-VecStruct Circle::calcMergedAngMomentum(Circle &otherShape)
+VecStruct Particle::calcMergedAngMomentum(Particle &otherShape)
 {
 	// TODO VecStruct is a little too vague here. *Everything* is a VecStruct??
 	VecStruct aPos(this->getPos());
@@ -148,7 +148,7 @@ VecStruct Circle::calcMergedAngMomentum(Circle &otherShape)
 			.plus(otherShape.getAngMomentum());
 }
 
-bool Circle::isTouching(Circle &otherShape)
+bool Particle::isTouching(Particle &otherShape)
 {
 	VecStruct sepVec(this->getVectorToObject(otherShape));
 	double minSep = (this->getRadius() + otherShape.getRadius()).value();

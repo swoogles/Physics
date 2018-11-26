@@ -1,7 +1,7 @@
 #ifndef PARTICLE_LIST_H
 #define PARTICLE_LIST_H
 
-#include "Circle.h"
+#include "Particle.h"
 #include <list>
 #include <algorithm>
 
@@ -20,7 +20,7 @@ class ParticleList {
     ParticleList();
     ParticleList(item_t initialShape);
     ParticleList(particleVector shapesIn);
-    bool hasConflictsWith(Circle &insertShape);
+    bool hasConflictsWith(Particle &insertShape);
     size_t addShapeToList(item_t insertShape);
     size_t addList(ParticleList addList);
 

@@ -5,15 +5,15 @@
 #ifndef PHYSICS_TESTUTILS_H
 #define PHYSICS_TESTUTILS_H
 
-#include "../src/ShapeFiles/Circle.h"
+#include "ShapeFiles/Particle.h"
 #include <plib/sg.h>
 
 class TestUtils {
 public:
-    static shared_ptr<Circle> testCircle();
-    static shared_ptr<Circle> circleAt(float x, float y, float z);
-    static Circle simpleCircleAt(float x, float y, float z);
-    static unique_ptr<Circle> improvedTestCircle();
+    static shared_ptr<Particle> testCircle();
+    static shared_ptr<Particle> circleAt(float x, float y, float z);
+    static Particle simpleCircleAt(float x, float y, float z);
+    static unique_ptr<Particle> improvedTestCircle();
 
 };
 

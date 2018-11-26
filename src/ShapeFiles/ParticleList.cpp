@@ -23,7 +23,7 @@ ParticleList::ParticleList(particleVector shapesIn)
     ensureNoNullEntries("ParticleList(particleVector)");
 }
 
-bool ParticleList::hasConflictsWith(Circle &insertShape)
+bool ParticleList::hasConflictsWith(Particle &insertShape)
 {
   bool conflict = false;
 

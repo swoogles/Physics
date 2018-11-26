@@ -5,19 +5,19 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/ShapeFiles/Box.cpp \
-../src/ShapeFiles/Circle.cpp \
+../src/ShapeFiles/Particle.cpp \
 ../src/ShapeFiles/MyShape.cpp \
 ../src/ShapeFiles/ShapeList.cpp 
 
 OBJS += \
 ./src/ShapeFiles/Box.o \
-./src/ShapeFiles/Circle.o \
+./src/ShapeFiles/Particle.o \
 ./src/ShapeFiles/MyShape.o \
 ./src/ShapeFiles/ShapeList.o 
 
 CPP_DEPS += \
 ./src/ShapeFiles/Box.d \
-./src/ShapeFiles/Circle.d \
+./src/ShapeFiles/Particle.d \
 ./src/ShapeFiles/MyShape.d \
 ./src/ShapeFiles/ShapeList.d 
 
