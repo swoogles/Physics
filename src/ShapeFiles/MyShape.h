@@ -38,11 +38,6 @@ private:
 
     virtual double getScale();
 
-    //! Purely virtual method used by Circle
-    virtual void setRadius(meter_t radius);
-    //! Purely virtual method used by Circle
-    virtual meter_t getRadius();
-
     //! Alters momentum by <dMomentum>
     void adjustMomentum(VecStruct dMomentum);
 
@@ -95,8 +90,6 @@ private:
       * Simple method for getting distance between 2 objects
       */
     double distanceTo(MyShape &object2);
-
-    bool isTouching(MyShape &otherShape);
 
     /*! \relates Circle
      *  \brief Finds radius after 2 circular objects are merged

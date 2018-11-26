@@ -75,21 +75,10 @@ void MyShape::calcColor() {
 
 ShapeType MyShape::getType() { }
 
-bool MyShape::isTouching(MyShape &otherShape)
-{
-  VecStruct sepVec(this->getVectorToObject(otherShape));
-  double minSep = (this->getRadius() + otherShape.getRadius()).value();
-
-  return (sepVec.length() < minSep);
-}
-
 // This was t-totally fucked before
 meter_t MyShape::calcRadius(kilogram_t massBoth, kilograms_per_cubic_meter_t density) {
     return meter_t(sqrt(((3*massBoth.value()) / 4 * M_PI ) / density.value()));
 }
-
-void MyShape::setRadius(meter_t radius) {}
-meter_t MyShape::getRadius() { return meter_t(1);}
 
 VecStruct MyShape::getWeightedPosition() {
 //    return VecStruct();

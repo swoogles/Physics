@@ -23,20 +23,6 @@ ShapeList::ShapeList(vectorT shapesIn)
     ensureNoNullEntries("ShapeList(vectorT)");
 }
 
-bool ShapeList::hasConflictsWith(MyShape &insertShape)
-{
-  bool conflict = false;
-
-  shapePointer_t object1;
-
-  for (size_t i = 0; i < shapes.size() && conflict == false; i++)
-  {
-    object1 = shapes.at(i);
-    conflict = object1->isTouching( insertShape  );
-  }
-  return conflict;
-}
-
 size_t ShapeList::addShapeToList(shapePointer_t insertShape)
 {
   shapes.push_back(std::move(insertShape));

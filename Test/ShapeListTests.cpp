@@ -70,7 +70,7 @@ TEST_CASE( "Construct a list with a single item", "[ShapeList][red]" ) {
 TEST_CASE( "hasConflicts with an existing item", "[ShapeList][green]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
-    ShapeList singleItemList(a);
+    ParticleList singleItemList(a);
     REQUIRE(singleItemList.hasConflictsWith(*b));
 }
 

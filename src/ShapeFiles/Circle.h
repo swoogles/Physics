@@ -78,6 +78,9 @@ class Circle: public MyShape {
      */
     void mergeWith(Circle &otherShape);
 
+    bool isTouching(Circle &otherShape);
+
+
 };
 
 typedef shared_ptr<Circle> particle_t;

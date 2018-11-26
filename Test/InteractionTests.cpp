@@ -17,7 +17,7 @@ using namespace units::literals;
 
 TEST_CASE( "Split a physical object", "[todo]" ) {
     Interactions interactions;
-    auto object = TestUtils::simpleCircleAt(0, 0, 0);
+    Circle object = TestUtils::simpleCircleAt(0, 0, 0);
     auto joulesOfKineticEnergy = 100_J;
     auto numberOfPieces = 3;
     auto fragments = interactions.crackPhysicalObject(object, joulesOfKineticEnergy, numberOfPieces);

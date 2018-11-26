@@ -18,6 +18,7 @@ TEST_CASE("Get children", "[Quadrant]") {
     VecStruct pos;
     float width = 200;
     shared_ptr<Circle> shape = TestUtils::circleAt(5, 5, 5);
+    
     Quadrant quadrant(shape, 0, pos, width);
     SECTION("Basic properties") {
         REQUIRE(quadrant.children().empty());

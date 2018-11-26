@@ -148,3 +148,11 @@ VecStruct Circle::calcMergedAngMomentum(Circle &otherShape)
 			.plus(otherShape.getAngMomentum());
 }
 
+bool Circle::isTouching(Circle &otherShape)
+{
+	VecStruct sepVec(this->getVectorToObject(otherShape));
+	double minSep = (this->getRadius() + otherShape.getRadius()).value();
+
+	return (sepVec.length() < minSep);
+}
+

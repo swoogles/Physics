@@ -19,8 +19,8 @@ TEST_CASE( "confirm size of Circle", "[green]" ) {
 
 
 TEST_CASE( "merge Circles", "[green]" ) {
-    auto a = TestUtils::improvedTestCircle();
-    auto b = TestUtils::improvedTestCircle();
+    particle_t a = TestUtils::improvedTestCircle();
+    particle_t b = TestUtils::improvedTestCircle();
     auto originalMass = a->getMass() + b->getMass();
     cout << "Radius of a: " << a->getRadius() << endl;
     cout << "Radius of b: " << b->getRadius() << endl;
