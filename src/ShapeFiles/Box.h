@@ -7,8 +7,7 @@ class Box: public MyShape {
 private:
 	float sideLength;
 public:
-	Box();
-    Box(VecStruct pos, float sideLength, sgVec3 color);
+	Box(VecStruct pos, float sideLength, sgVec3 color);
 
 	double getScale();
 
