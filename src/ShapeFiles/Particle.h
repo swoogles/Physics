@@ -49,8 +49,6 @@ class Particle: public MyShape {
             sgVec3 color
     );
 
-    virtual ~Particle();
-
     double getScale();
 
     meter_t getRadius();
@@ -76,8 +74,6 @@ class Particle: public MyShape {
     void mergeWith(Particle &otherShape);
 
     bool isTouching(Particle &otherShape);
-
-
 };
 
 typedef shared_ptr<Particle> particle_t;

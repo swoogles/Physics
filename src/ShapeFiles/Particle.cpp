@@ -1,20 +1,5 @@
 #include "Particle.h"
 
-// Particle::Particle( const Particle& copyCircle )
-// {
-//   // super( copyCircle );
-//   this->radius = copyCircle.getRadius();
-// }
-// 
-// Particle::Particle( Particle& copyCircle )
-// {
-//   // super( copyCircle );
-//   this->radius = copyCircle.getRadius();
-// }
-
-Particle::~Particle() {
-}
-
 double Particle::getScale() {
     return radius.value();
 }
@@ -38,7 +23,6 @@ Particle::Particle(
         sgVec4 momentum,
         sgVec3 color
 ):MyShape(ShapeType::circle) {
-
 	sgCopyVec4(this->pos.vec, pos);
 	this->mass = kilogram_t(mass);
 	this->radius = meter_t(radius);

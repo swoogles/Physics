@@ -1,10 +1,3 @@
-/*
- * MyShape.cpp
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #include "MyShape.h"
 
 double MyShape::distanceTo(MyShape &object2) {
@@ -26,7 +19,6 @@ VecStruct MyShape::getMomentum() {
     return vecStruct;
 }
 
-// Angular Momentum and Velocity
 double MyShape::getMomentOfInertia() { return 1;}
 
 void MyShape::setAngMomentum(VecStruct newAngMomentum) {

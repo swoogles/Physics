@@ -97,10 +97,3 @@ void Moveable::update(float dt) {
 	this->prevAngVelocity = angVelocity;
 
 }
-
-/*
-void Moveable::getUnitVecTo(Moveable * destination, sgVec4 unitv) {
-	sgSubVec4(unitv, pos, destination->pos);
-	sgNormaliseVec4(unitv);
-}
-*/
