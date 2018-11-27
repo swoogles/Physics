@@ -9,7 +9,7 @@ private:
 public:
 	Box(VecStruct pos, float sideLength, sgVec3 color);
 
-	double getScale();
+	double getScale() override;
 
     virtual float getWidth();
 };

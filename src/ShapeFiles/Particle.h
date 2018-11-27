@@ -49,12 +49,12 @@ class Particle: public MyShape {
             sgVec3 color
     );
 
-    double getScale();
+    double getScale() override;
 
     meter_t getRadius();
     void setRadius(meter_t radius);
 
-    double getMomentOfInertia();
+    double getMomentOfInertia() override;
 
     static meter_t calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density);
 
