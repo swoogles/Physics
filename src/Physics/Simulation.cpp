@@ -34,8 +34,7 @@ Simulation::Simulation(Simulation &&originalSimulation, ParticleList newObjects)
     physicalObjects.addList(std::move(newObjects));
 }
 
-void Simulation::refreshQuadrant()
-{
+void Simulation::refreshQuadrant() {
     VecStruct pos(0, 0, 0, true);
 
     float side = 10e7; //Formation Value . ACK!!!! How miserably hard-coded!!
@@ -89,24 +88,24 @@ void Simulation::updateMinsAndMaxes() {
     }
 }
 
-void Simulation::update(float dt)
-{
+void Simulation::update(float dt) {
     calcForcesAll(dt);
-  physicalObjects.update(dt);
+    physicalObjects.update(dt);
     updateTimeElapsed(dt);
 
-  // TODO This causes another full iteration of all shapes. If it's going to happen, it should be done during one of the earlier iterations.
-  updateMinsAndMaxes();
-  // This is the first "n" part in "n log(n)"
-  refreshQuadrant();
+    // TODO This causes another full iteration of all shapes. If it's going to happen, it should be done during one of the earlier iterations.
+    updateMinsAndMaxes();
+    // This is the first "n" part in "n log(n)"
+    refreshQuadrant();
 }
 
 void Simulation::removePhysicalObjects(ParticleList shapesToRemove) {
     physicalObjects.remove(shapesToRemove);
 }
 
-void Simulation::addPhysicalObjectToList(
-        physicalObject_t newShape) { physicalObjects.addShapeToList(std::move(newShape)); }
+void Simulation::addPhysicalObjectToList(physicalObject_t newShape) {
+    physicalObjects.addShapeToList(std::move(newShape));
+}
 
 void Simulation::updateTimeElapsed(float dt) { timeElapsed += dt; }
 
@@ -114,14 +113,13 @@ double Simulation::getTimeElapsed() { return timeElapsed; }
 
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
-VecStruct calcForceGravNew(Particle &object1, MyShape &object2, float dt)
-{
+VecStruct calcForceGravNew(Particle &object1, MyShape &object2, float dt) {
     VecStruct sepVec(object1.getVectorToObject(object2));
 
-    float rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
+    double rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
 
-    float G = 6.67384e-11;
-    float forceMagnitude = (G * object1.getMass() * object2.getMass()).value() / rSquared;
+    double G = 6.67384e-11;
+    double forceMagnitude = (G * object1.getMass() * object2.getMass()).value() / rSquared;
 
     return sepVec
             .unit()
@@ -133,15 +131,15 @@ void elasticCollision(Particle &object1, Particle &object2, float dt) {
     VecStruct sepVecUnit = object1.getVectorToObject(object2).unit();
     VecStruct n(sepVecUnit);
 
-    float c = n.scalarProduct4(object1.getVelocity().minus(object2.getVelocity()));
+    double c = n.scalarProduct4(object1.getVelocity().minus(object2.getVelocity()));
 
     auto combinedMass = (object2.getMass() + object1.getMass()).value();
-    float multiplierA = -2 * ( object2.getMass().value() * c ) / combinedMass;
+    double multiplierA = -2 * ( object2.getMass().value() * c ) / combinedMass;
     VecStruct aVec = n.scaledBy(multiplierA);
 
     object1.adjustVelocity(aVec);
 
-    float multiplierB = 2 * ( object1.getMass().value() * c ) / combinedMass;
+    double multiplierB = 2 * ( object1.getMass().value() * c ) / combinedMass;
     VecStruct bVec = n.scaledBy(multiplierB);
 
     object2.adjustVelocity(bVec);
@@ -157,8 +155,7 @@ void elasticCollision(Particle &object1, Particle &object2, float dt) {
 // structural changes that I can make so that it will be more legible and
 // more suitable for later parallelization
 // TODO This should return the deleted list, so that it can coexist with the Octree version
-void Simulation::calcForcesAll_LessNaive(float dt)
-{
+void Simulation::calcForcesAll_LessNaive(float dt) {
     particleVector physicalObjects = this->physicalObjects.getShapes();
     ParticleList deleteList;
 
@@ -203,8 +200,10 @@ void Simulation::calcForcesAll_LessNaive(float dt)
 
 
 
-PairCollection Simulation::calculateForceOnExternalNode(const physicalObject_t &curObject, Quadrant &curQuadrant,
-                                                        float dt) {
+PairCollection Simulation::calculateForceOnExternalNode(
+        const physicalObject_t &curObject,
+        Quadrant &curQuadrant,
+        float dt) {
     //1. a.
     PairCollection deleteList;
     physicalObject_t shapeInQuadrant = curQuadrant.getShapeInQuadrant();
@@ -234,15 +233,17 @@ PairCollection Simulation::calculateForceOnExternalNode(const physicalObject_t &
 
 
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
-PairCollection Simulation::calcForceOnObject_Octree(physicalObject_t curObject, Quadrant &curQuadrant, float dt,
-                                                    int recursionLevel)
-{
+PairCollection Simulation::calcForceOnObject_Octree(
+        physicalObject_t curObject,
+        Quadrant &curQuadrant,
+        float dt,
+        int recursionLevel) {
     if ( curQuadrant.isExternal() ) {
         return calculateForceOnExternalNode(curObject, curQuadrant, dt);
     }
     else {
         PairCollection deleteList;
-        float distance = curObject->distanceTo(curQuadrant);
+        double distance = curObject->distanceTo(curQuadrant);
         //2.a
         if ( curQuadrant.getWidth() / distance < octreeTheta ) {
             VecStruct gravVec = calcForceGravNew( *curObject, curQuadrant, dt);
