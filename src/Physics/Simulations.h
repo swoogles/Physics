@@ -62,17 +62,6 @@ typedef unique_ptr<Simulation> SimulationPointer_t;
 class Simulations
 {
   private:
-    /*! \relates Circle
-     * \brief SplitRadius!
-     *
-     * Given a volume and number of pieces for it to be split into, this function calculates the radius needed for the volume of the individual pieces to add up
-     * to the original volume.
-     * \param volume Total volume to be split
-     * \param numPieces Number of desired pieces
-     *
-     * \return Radius for the smaller sub-pieces
-     */
-    static float getSplitBodyRadius(float volume, int numPieces );
 
     /*! \relates MyShape
      *  \brief Gets a random starting position vector based on the second parameter

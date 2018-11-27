@@ -419,14 +419,6 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
     return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, properties.forceCalculationMethod, properties.octreeTheta);
 }
 
-float Simulations::getSplitBodyRadius(float volume, int numPieces ) {
-  float pieceVol = volume/numPieces;
-  float pieceRadius = pieceVol/(M_PI * 4.0/3.0);
-  pieceRadius = pow(pieceRadius, 1.0/3.0);
-
-  return pieceRadius;
-}
-
 void Simulations::randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target) {
   int randMult;
   float largestDistance = 0;
