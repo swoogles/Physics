@@ -58,9 +58,6 @@ class Particle: public MyShape {
 
     double getMomentOfInertia();
 
-    ShapeType getType();
-
-
     static meter_t calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density);
 
     static vector<VecStruct> pointsEvenlyDistributedOnSphere(int numPoints, float radius);

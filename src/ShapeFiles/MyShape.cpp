@@ -11,7 +11,9 @@ double MyShape::distanceTo(MyShape &object2) {
     return this->getVectorToObject(object2).length();
 }
 
-MyShape::MyShape() = default;
+MyShape::MyShape(ShapeType shapeType)
+		:shapeType(shapeType) {
+};
 
 double MyShape::getScale(){}
 
@@ -73,7 +75,9 @@ void MyShape::calcColor() {
 	color.vec[1] = greenAmount;
 }
 
-ShapeType MyShape::getType() { }
+ShapeType MyShape::getType() {
+	return this->shapeType;
+}
 
 VecStruct MyShape::getWeightedPosition() {
 //    return VecStruct();

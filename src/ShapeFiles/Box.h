@@ -13,8 +13,6 @@ public:
 	double getScale();
 
     virtual float getWidth();
-
-	ShapeType getType();
 };
 
 #endif

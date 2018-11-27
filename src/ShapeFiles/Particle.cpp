@@ -27,10 +27,6 @@ void Particle::setRadius(meter_t radius) {
 	this->radius = radius;
 }
 
-ShapeType Particle::getType() {
-	return ShapeType::circle;
-}
-
 double Particle::getMomentOfInertia() {
 	return (2 * mass.value() * (radius.value() * radius.value()))/ 5;
 }
@@ -41,7 +37,7 @@ Particle::Particle(
         float radius,
         sgVec4 momentum,
         sgVec3 color
-) {
+):MyShape(ShapeType::circle) {
 
 	sgCopyVec4(this->pos.vec, pos);
 	this->mass = kilogram_t(mass);
@@ -58,7 +54,7 @@ Particle::Particle(
         sgVec4 momentum,
         kilograms_per_cubic_meter_t density,
         sgVec3 color
-) {
+):MyShape(ShapeType::circle) {
 	sgCopyVec4(this->pos.vec, pos);
 	this->mass = mass;
     this->radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));

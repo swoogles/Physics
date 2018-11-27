@@ -30,11 +30,12 @@ using std::shared_ptr;
  */
 class MyShape : public Moveable {
 private:
+    const ShapeType shapeType;
 
   public:
     /*! \brief Sets default values of members common to all shapes
     */
-    MyShape();
+    MyShape(ShapeType shapeType);
 
     virtual double getScale();
 
@@ -84,7 +85,7 @@ private:
      *  \n 2: Box
      *  \n Rest to be determined
      */
-    virtual ShapeType getType();
+    ShapeType getType();
 
     /*!
       * Simple method for getting distance between 2 objects
