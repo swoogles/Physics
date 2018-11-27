@@ -1,13 +1,13 @@
 #include "Moveable.h"
 
-Moveable::Moveable()
+Moveable::Moveable(VecStruct momentum)
            :pos{0.0,0.0,0.0,true}
            ,orientationQuat{0, 0, 0, 1.0} // Identity Quaternion
            ,orientationMat{{1, 0, 0, 0},
                            {0, 1, 0, 0},
                            {0, 0, 1, 0},
                            {0, 0, 0, 1}}
-          ,momentum{0, 0, 0, false}
+          ,momentum(momentum)
           ,angMomentum{0, 0, 0, false}
           ,angVelocity{0, 0, 0, false}
           ,mass(1)

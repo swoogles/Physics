@@ -20,29 +20,28 @@ Particle::Particle(
         sgVec4 pos,
         double mass,
         float radius,
-        sgVec4 momentum,
+        VecStruct momentum,
         sgVec3 color
-):MyShape(ShapeType::circle) {
+):MyShape(ShapeType::circle, momentum) // FIX VECSTRUCT!!
+  {
 	sgCopyVec4(this->pos.vec, pos);
 	this->mass = kilogram_t(mass);
 	this->radius = meter_t(radius);
-	sgCopyVec4(this->momentum.vec, momentum);
 //	ρ=(3m)/(4πr^2)
 	this->density = kilograms_per_cubic_meter_t((3*mass) / (4 * M_PI * (radius * radius)));
 	sgCopyVec3(this->color.vec, color);
 }
 
 Particle::Particle(
-        sgVec4 pos,
-        kilogram_t mass,
-        sgVec4 momentum,
-        kilograms_per_cubic_meter_t density,
-        sgVec3 color
-):MyShape(ShapeType::circle) {
+		sgVec4 pos,
+		kilogram_t mass,
+		VecStruct momentum,
+		kilograms_per_cubic_meter_t density,
+		sgVec3 color
+): MyShape(ShapeType::circle, momentum) {
 	sgCopyVec4(this->pos.vec, pos);
 	this->mass = mass;
     this->radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));
-	sgCopyVec4(this->momentum.vec, momentum);
 	this->density = density;
 	sgCopyVec3(this->color.vec, color);
 }

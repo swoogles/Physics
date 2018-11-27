@@ -26,7 +26,7 @@ unique_ptr<Particle> TestUtils::improvedTestCircle() {
     auto density = kilograms_per_cubic_meter_t(1);
 
     sgVec4 aPos = { 0, 0, 0, 1 };
-    sgVec4 startMom = { 0, 0, 0, 0 };
+    VecStruct startMom(0, 0, 0);
     sgVec3 color = { 255, 255, 0 };
 
     return std::make_unique<Particle>(
@@ -43,7 +43,7 @@ shared_ptr<Particle> TestUtils::circleAt(float x, float y, float z) {
     auto density = kilograms_per_cubic_meter_t(1);
 
     sgVec4 aPos = { x, y, z, 1 };
-    sgVec4 startMom = { 0, 0, 0, 0 };
+    VecStruct startMom(0, 0, 0);
     sgVec3 color = { 255, 255, 0 };
 
     return std::make_shared<Particle>(
@@ -61,7 +61,7 @@ shared_ptr<Particle> TestUtils::circleAt(float x, float y, float z) {
 
     // TODO VecStruct<Pos> can be temporarily be played by a PosVec (SpatialVec?) class
     sgVec4 aPos = { x, y, z, 1 };
-    sgVec4 startMom = { 0, 0, 0, 0 };
+    VecStruct startMom(0, 0, 0);
     sgVec3 color = { 255, 255, 0 };
 
     return Particle(

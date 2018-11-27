@@ -11,7 +11,8 @@ shared_ptr<Observer> Observer::init(WindowDimensions windowDimensions) {
 }
 
 Observer::Observer(WindowDimensions windowDimensions)
-          :id( curObserver++ )
+          :Moveable(VecStruct(0,0,0))
+          , id( curObserver++ )
           , autoScale( true )
 
 {

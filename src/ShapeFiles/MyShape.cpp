@@ -4,8 +4,9 @@ double MyShape::distanceTo(MyShape &object2) {
     return this->getVectorToObject(object2).length();
 }
 
-MyShape::MyShape(ShapeType shapeType)
-		:shapeType(shapeType) {
+MyShape::MyShape(ShapeType shapeType, VecStruct momentum)
+		:Moveable(momentum),
+		shapeType(shapeType) {
 };
 
 double MyShape::getScale(){}

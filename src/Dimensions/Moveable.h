@@ -58,7 +58,7 @@ protected:
 public:
 	/*! \brief Sets default values of members common to all shapes
 	 */
-	Moveable();
+	Moveable(VecStruct momentum);
 
 	//! Set position of object to <inX, inY, inZ>
 	void setPos(float inX, float inY, float inZ);

@@ -35,7 +35,7 @@ private:
   public:
     /*! \brief Sets default values of members common to all shapes
     */
-    MyShape(ShapeType shapeType);
+    MyShape(ShapeType shapeType, VecStruct momentum);
 
     virtual double getScale();
 

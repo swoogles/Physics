@@ -36,7 +36,7 @@ class Particle: public MyShape {
     Particle(
             sgVec4 pos,
             kilogram_t mass,
-            sgVec4 momentum,
+            VecStruct momentum,
             kilograms_per_cubic_meter_t density,
             sgVec3 color
     );
@@ -45,7 +45,7 @@ class Particle: public MyShape {
             sgVec4 pos,
             double mass,
             float radius,
-            sgVec4 momentum,
+            VecStruct momentum,
             sgVec3 color
     );
 

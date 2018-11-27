@@ -111,13 +111,13 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
             cuePos,
             cueMass.value(),
             ballRadius,
-            cueMomentum.vec,
+            cueMomentum,
             newColor
     );
 
     physicalObjects.addShapeToList( curShape );
 
-    sgVec4 ballMomentum = { 0, 0, 0, 0};
+    VecStruct ballMomentum(0, 0, 0, false);
     int cutOff = numRows*2;
     for (int i = 1; i < numRows+1; i++) {
         for (int j = i; j < cutOff; j+= 2) {
@@ -148,9 +148,8 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
 
     float ballRadius = .95;
 
-    sgVec4 cueVelocity = { 30, -75, 0 };
-    sgVec4 cueMomentum;
-    sgScaleVec4(cueMomentum, cueVelocity, cueMass);
+    VecStruct cueVelocity(30, -75, 0);
+    VecStruct cueMomentum = cueVelocity.scaledBy(cueMass);
 
     sgVec3 newColor = { 1, 0, 1 };
 
@@ -166,7 +165,7 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
     );
     physicalObjects.addShapeToList( shapeForInsertion );
 
-    sgVec4 ballMomentum = { 0, 0, 0, 0};
+    VecStruct ballMomentum(0, 0, 0);
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numRows; j++) {
             sgVec4 ballPos = { (float) j* 3, (float) i*3, 0, 1};
@@ -195,9 +194,8 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
 
     float ballRadius = .95;
 
-    sgVec4 cueVelocity = { 30, -75, 20 };
-    sgVec4 cueMomentum;
-    sgScaleVec4(cueMomentum, cueVelocity, cueMass);
+    VecStruct cueVelocity(30, -75, 0);
+    VecStruct cueMomentum = cueVelocity.scaledBy(cueMass);
 
     sgVec3 newColor = { 1, 1, 1 };
 
@@ -216,7 +214,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
     newColor[0] = 0;
     newColor[2] = 0;
 
-    sgVec4 ballMomentum = { 0, 0, 0, 0};
+    VecStruct ballMomentum(0, 0, 0);
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numRows; j++) {
             for (int z = 0; z < numRows; z++) {
@@ -245,8 +243,8 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
 
     int numPieces = 1;
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
-    kilogram_t pieceMass = (properties.mass)/numPieces;
-    sgVec4 startMomentum = { 0, 0, 0 };
+    kilogram_t pieceMass = properties.mass / numPieces;
+    VecStruct startMomentum(0, 0, 0);
     sgVec3 newColor = { 1, 0, 1 };
 
     sgVec4 startPlacement = { -1e7 , 0, 0, 1};
@@ -274,7 +272,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     int numPieces=2;
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = (kilogram_t(AstronomicalValues::MASS_SUN))/(numPieces);
-    sgVec4 startMomentum = { 0, 0, 0 };
+    VecStruct startMomentum(0, 0, 0);
 
     sgVec3 newColor = { 1, 1, 1 };
 
@@ -347,10 +345,11 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
             sgNegateVec4(startPlacement);
         }
 
+        VecStruct startMomentumStruct(startMomentum);
         const shared_ptr<Particle> curShape = make_shared<Particle>(
                 startPlacement,
                 pieceMass,
-                startMomentum,
+                startMomentumStruct,
                 objectDensity,
                 newColor
         );
@@ -373,7 +372,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
   ParticleList physicalObjects;
 
 	kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
-	kilogram_t pieceMass = (properties.mass)/(properties.numShapes);
+	kilogram_t pieceMass = properties.mass / properties.numShapes;
 	sgVec4 startPlacement, startMomentum;
 
 	srand ( time(NULL) );
@@ -396,13 +395,14 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 			sgNegateVec4(startPlacement);
 		}
 
-    // Apply general group momentum to individual pieces momentum
-    sgAddVec4( startMomentum, groupMomentum );
+        // Apply general group momentum to individual pieces momentum
+        sgAddVec4( startMomentum, groupMomentum );
+        VecStruct startMomentumStruct(startMomentum);
 
         curShape = make_shared<Particle>(
                 startPlacement,
                 pieceMass,
-                startMomentum,
+                startMomentumStruct,
                 objectDensity,
                 newColor
         );
