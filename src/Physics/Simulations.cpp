@@ -538,30 +538,17 @@ float randomFloat() {
  */
 void Simulations::randomPointInSphere(sgVec4 startPos, double maxDistance, sgVec4 target) {
     auto u = randomFloat();
-//    cout << "u: " << u << endl;
-//    auto v = rand();
     float v = randomFloat();
-//    cout << "v: " << v << endl;
     auto theta = u * 2.0 * M_PI;
-//    cout << "theta: " << theta << endl;
     auto phi = acos(2.0f * (float)v - 1.0f);
-//    cout << "phi: " << phi << endl;
     auto r = std::cbrt(randomFloat());
-//    cout << "r: " << r << endl;
     auto sinTheta = sin(theta);
-//    cout << "sinTheta: " << sinTheta << endl;
     auto cosTheta = cos(theta);
-//    cout << "cosTheta: " << cosTheta << endl;
     auto sinPhi = sin(phi);
-//    cout << "sinPhi: " << sinPhi << endl;
     auto cosPhi = cos(phi);
-//    cout << "cosPhi: " << cosPhi << endl;
     auto x = r * sinPhi * cosTheta;
-//    cout << "x: " << x << endl;
     auto y = r * sinPhi * sinTheta;
-//    cout << "y: " << y << endl;
     auto z = r * cosPhi;
-//    cout << "z: " << z << endl;
     startPos[0] = x;
     startPos[1] = y;
     startPos[2] = z;
