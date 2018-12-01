@@ -42,9 +42,9 @@ unique_ptr<MatrixStruct> Moveable::getOrientationMat() const {
 	return matrixStruct;
 }
 
-void Moveable::adjustAngle(const SGfloat dAngle, const sgVec3 rotAxis) {
+void Moveable::adjustAngle(SGfloat dAngle, const VecStruct rotAxis) {
 	sgQuat tempRotQuat;
-	sgAngleAxisToQuat(tempRotQuat, dAngle,  rotAxis);
+	sgAngleAxisToQuat(tempRotQuat, dAngle,  rotAxis.vec);
 	//sgRotQuat(orientationQuat, dAngle, rotAxis);
 
 	sgPostMultQuat(orientationQuat, tempRotQuat);
@@ -85,12 +85,12 @@ void Moveable::update(float dt) {
 			.scaledBy(dt);
 	this->pos = pos.plus(dPos);
 
-	sgVec3 rotVec;
-	rotVec[0] = 1; rotVec[1] = 0; rotVec[2] = 0;
+	VecStruct rotVec;
+	rotVec = VecStruct(1,  0, 0);
 	adjustAngle( (prevAngVelocity.x() + angVelocity.x()) * .5 *dt, rotVec);
-	rotVec[0] = 0; rotVec[1] = 1; rotVec[2] = 0;
+	rotVec = VecStruct(0,  1, 0);
 	adjustAngle( (prevAngVelocity.y() + angVelocity.y()) * .5 *dt, rotVec);
-	rotVec[0] = 0; rotVec[1] = 0; rotVec[2] = 1;
+	rotVec = VecStruct(0,  0, 1);
 	adjustAngle( (prevAngVelocity.z() + angVelocity.z()) * .5 *dt, rotVec);
 
 	this->prevMomentum = momentum;

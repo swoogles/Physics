@@ -75,7 +75,7 @@ public:
 	 *  \param dAngle Amount to be rotated
 	 *  \param rotAxis Axis to rotate around
 	 */
-	void adjustAngle(SGfloat dAngle, const sgVec3 rotAxis);
+	void adjustAngle(SGfloat dAngle, const VecStruct rotAxis);
 
 	unique_ptr<MatrixStruct> getOrientationMat() const;
 

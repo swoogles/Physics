@@ -5,7 +5,6 @@
 #include <GL/glut.h>
 
 #include <boost/numeric/ublas/vector_sparse.hpp>
-#include <plib/sg.h>
 #include "ShapeFiles/Particle.h"
 
 typedef typename std::vector<shapePointer_t> vectorT;
@@ -64,13 +63,13 @@ void openShapes(char * fileName, vectorT shapes);
  *
  *  No error checking is done currently; no guarantee made for what happens if format doesn't match
  */
-void vecFileRead(ifstream & curFile, sgVec4 retVec);
+VecStruct vecFileRead(ifstream &curFile);
 
 /*! \relates sgVec
  * \brief Prints first three numbers from outputVec on one line with a single space in between each
  *
  */
-void vecFilePrint(ofstream &, sgVec4 outputVec);
+void vecFilePrint(ofstream &, VecStruct outputVec);
 
 
 #endif /* FILEINTERACTION_H_ */

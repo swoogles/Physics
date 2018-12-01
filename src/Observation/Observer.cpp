@@ -63,13 +63,12 @@ Observer &Observer::getCurObserverRef() {
 }
 
 void Observer::update(float dt) {
-  sgVec3 rotVec;
-
-  rotVec[0] = 1; rotVec[1] = 0; rotVec[2] = 0;
+    VecStruct rotVec;
+    rotVec = VecStruct(1,  0, 0);
   adjustAngle(angVelocity.x(), rotVec);
-  rotVec[0] = 0; rotVec[1] = 1; rotVec[2] = 0;
+    rotVec = VecStruct(0,  1, 0);
   adjustAngle(angVelocity.y(), rotVec);
-  rotVec[0] = 0; rotVec[1] = 0; rotVec[2] = 1;
+    rotVec = VecStruct(0,  0, 1);
   adjustAngle(angVelocity.z(), rotVec);
 }
 
