@@ -152,7 +152,7 @@ TEST_CASE("normalize list of pairs", "[pairCollection]") {
             uniquePairs.mergePairs();
 
 //            REQUIRE(result.size() == 1);
-//            REQUIRE(result.getShapes()[0]->getMass() == d->getMass() * 2);
+//            REQUIRE(result.getShapes()[0]->getMass() == d->mass() * 2);
         }
     }
     */

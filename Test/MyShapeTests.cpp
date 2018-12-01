@@ -21,12 +21,12 @@ TEST_CASE( "confirm size of Particle", "[green]" ) {
 TEST_CASE( "merge Circles", "[green]" ) {
     particle_t a = TestUtils::improvedTestCircle();
     particle_t b = TestUtils::improvedTestCircle();
-    auto originalMass = a->getMass() + b->getMass();
+    auto originalMass = a->mass() + b->mass();
     cout << "Radius of a: " << a->getRadius() << endl;
     cout << "Radius of b: " << b->getRadius() << endl;
     a->mergeWith(*b);
     REQUIRE(a->getRadius() > b->getRadius());
-    REQUIRE(a->getMass() == originalMass);
+    REQUIRE(a->mass() == originalMass);
 }
 
 TEST_CASE("Equally distribute points on a sphere", "[todo]") {

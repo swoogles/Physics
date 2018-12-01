@@ -24,7 +24,7 @@ Quadrant::Quadrant(entity_t newShape, int level, PhysicalVector &pos, float widt
         ,weightedPosition(0,0,0)
 {
   // TODO Get this in a more idiomatic form
-  this->setMass(shapeInQuadrant->getMass());
+  this->setMass(shapeInQuadrant->mass());
 }
 
 QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
@@ -48,10 +48,10 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
 */
 
 void Quadrant::insert(entity_t insertedShape) {
-    if (!positionIsInQuadrantBoundaries(insertedShape->getPos())) { return; }
+    if (!positionIsInQuadrantBoundaries(insertedShape->position())) { return; }
 
-    this->adjustMass(insertedShape->getMass().value());
-    this->weightedPosition = this->weightedPosition.plus(insertedShape->getWeightedPosition());
+    this->adjustMass(insertedShape->mass().value());
+    this->weightedPosition = this->weightedPosition.plus(insertedShape->weightedPosition());
 
     this->subQuadrantThatContains(std::move(insertedShape));
     if ( isLeaf ) {
@@ -62,7 +62,7 @@ void Quadrant::insert(entity_t insertedShape) {
 }
 
 QuadrantPointer_t Quadrant::subQuadrantThatContains(entity_t newShape) {
-    auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->getPos());
+    auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->position());
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
@@ -88,7 +88,7 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(PhysicalVector p
 // Note/warning: This makes the assumption that newShape *belongs* in the subQuadrant that matches the coordinates.
 // Could be dangerous.
 QuadrantPointer_t Quadrant::makeSubQuadrant(entity_t newShape) {
-    auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->getPos());
+    auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->position());
     PhysicalVector offsets =
             dimensions
                     .scaledBy(.25)
@@ -108,7 +108,8 @@ bool Quadrant::positionIsInQuadrantBoundaries(PhysicalVector insertPos) {
 }
 
 void Quadrant::adjustMass(float dMass) {
-	mass += kilogram_t(dMass);
+    // TODO Should be a method implemented in a super class
+	_mass += kilogram_t(dMass);
 }
 
 vector<shared_ptr<Quadrant>> Quadrant::children() {
@@ -139,7 +140,7 @@ void Quadrant::assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t 
 }
 
 void Quadrant::applyToAllChildren(function<void (Quadrant)> functor) {
-    functor(*this);
+    functor(*this); // Location of this call determines traversal strategy.
 
     for ( int x = 0; x < 2; x++ ) {
         for ( int y = 0; y < 2; y++ ) {

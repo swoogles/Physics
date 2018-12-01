@@ -9,7 +9,7 @@ private:
 public:
 	Box(PhysicalVector pos, float sideLength, PhysicalVector color);
 
-	double getScale() override;
+	double scale() override;
 
     virtual float getWidth();
 };

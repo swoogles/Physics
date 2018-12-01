@@ -37,35 +37,35 @@ private:
     */
     MyShape(ShapeType shapeType, PhysicalVector momentum);
 
-    virtual double getScale();
+    virtual double scale();
 
     //! Alters momentum by <dMomentum>
     void adjustMomentum(PhysicalVector dMomentum);
 
     //! Returns momentum of object in retVec
-    PhysicalVector getMomentum();
+    PhysicalVector momentum();
 
     /*! \brief Calculates the moment of inertia for the object
      *
      *  Calculation varies for different types of object
      *  \return Moment of Inertia value
      */
-    virtual double getMomentOfInertia();
+    virtual double momentOfInertia();
 
     //! Sets angular momentum of object to <newAngMomentum>
-    void setAngMomentum(PhysicalVector newAngMomentum);
+    void setAngularMomentum(PhysicalVector newAngMomentum);
 
     //! Returns angular momentum of object in retVec
-    PhysicalVector getAngMomentum();
+    PhysicalVector angularMomentum();
 
     //! Sets mass of object to newMass
     void setMass(kilogram_t newMass);
 
     //! Returns mass of object
-    kilogram_t getMass();
+    kilogram_t mass();
 
     //! Returns density of object
-    kilograms_per_cubic_meter_t getDensity();
+    kilograms_per_cubic_meter_t density();
 
     PhysicalVector getColor() const;
 
@@ -92,7 +92,7 @@ private:
       */
     double distanceTo(MyShape &object2);
 
-    PhysicalVector getWeightedPosition();
+    PhysicalVector weightedPosition();
 
 };
 

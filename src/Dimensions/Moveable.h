@@ -35,7 +35,7 @@ protected:
 	sgQuat orientationQuat;
 	sgMat4 orientationMat;
 
-    PhysicalVector momentum; // TODO This gots'ta go.
+    PhysicalVector _momentum; // TODO This gots'ta go.
 	PhysicalVector prevMomentum;
 
 	PhysicalVector angMomentum;
@@ -43,17 +43,17 @@ protected:
 	PhysicalVector prevAngVelocity;
 
 
-	kilogram_t mass; // TODO This should go into MyShape
-	kilograms_per_cubic_meter_t density;
+	kilogram_t _mass; // TODO This should go into MyShape
+	kilograms_per_cubic_meter_t _density;
 
-	PhysicalVector color;
+	PhysicalVector _color;
 
 	/*! \brief Calculates the moment of inertia for the object
 	 *
 	 *  Calculation varies for different types of object
 	 *  \return Moment of Inertia value
 	 */
-	virtual double getMomentOfInertia();
+	virtual double momentOfInertia();
 
 public:
 	/*! \brief Sets default values of members common to all shapes
@@ -65,9 +65,9 @@ public:
 	//! Set position of object to <newPos>
 	void setPos(PhysicalVector newPos);
 
-	PhysicalVector getPos() ; // Reinstate const-ness
+	PhysicalVector position() ; // Reinstate const-ness
 
-	PhysicalVector getVectorToObject(Moveable &object2);
+	PhysicalVector vectorTo(Moveable &object2);
 
 	/*! \brief Rotate object around a specified axis
 	 *
@@ -83,12 +83,12 @@ public:
 	//! Alters momentum of object by <dVel> * mass
 	void adjustVelocity(PhysicalVector dVel);
 
-	PhysicalVector getVelocity();
+	PhysicalVector velocity();
 
 	//! Sets angular velocity of object to <newAngVelocity>
-	void setAngVelocity(PhysicalVector newAngVelocity);
+	void setAngularVelocity(PhysicalVector newAngVelocity);
 	//! Alters angular velocity of object by <dAngVelocity>
-	void adjustAngVelocity(PhysicalVector dangVelocity);
+	void adjustAngularVelocity(PhysicalVector dangVelocity);
 
 	//! Moves object based on current normal and angular momentum
 	void update(float);

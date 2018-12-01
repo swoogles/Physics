@@ -18,18 +18,18 @@ void saveShapes(char * fileName, vectorT shapes) {
 		myfile << curShape->getType() << endl;
 
 
-		PhysicalVector pos(curShape->getPos());
+		PhysicalVector pos(curShape->position());
 		vecFilePrint(myfile, pos);
 
-		myfile << curShape->getMass().value() << endl;
+		myfile << curShape->mass().value() << endl;
 
-		auto momentum = curShape->getMomentum();
+		auto momentum = curShape->momentum();
 		vecFilePrint(myfile, momentum);
 
-		PhysicalVector angularMomenum = curShape->getAngMomentum();
+		PhysicalVector angularMomenum = curShape->angularMomentum();
 		vecFilePrint(myfile, angularMomenum);
 
-		myfile << curShape->getDensity() << endl;
+		myfile << curShape->density() << endl;
 
 		auto color = curShape->getColor();
 		vecFilePrint(myfile, color);
@@ -91,7 +91,7 @@ void openShapes(char * fileName, vectorT shapes) {
 					typedDensity,
 					color
 					);
-			curShape->setAngMomentum(angularMomentum);
+            curShape->setAngularMomentum(angularMomentum);
 			shapes.push_back(curShape);
 		}
 	}

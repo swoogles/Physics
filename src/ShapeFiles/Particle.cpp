@@ -1,6 +1,6 @@
 #include "Particle.h"
 
-double Particle::getScale() {
+double Particle::scale() {
     return radius.value();
 }
 
@@ -12,8 +12,8 @@ void Particle::setRadius(meter_t radius) {
 	this->radius = radius;
 }
 
-double Particle::getMomentOfInertia() {
-	return (2 * mass.value() * (radius.value() * radius.value()))/ 5;
+double Particle::momentOfInertia() {
+	return (2 * _mass.value() * (radius.value() * radius.value()))/ 5;
 }
 
 Particle::Particle(
@@ -26,10 +26,10 @@ Particle::Particle(
 ,radius(meter_t(radius))
   {
     this->pos = pos;
-	this->mass = kilogram_t(mass);
+	this->_mass = kilogram_t(mass);
 //	ρ=(3m)/(4πr^2)
-	this->density = kilograms_per_cubic_meter_t((3*mass) / (4 * M_PI * (radius * radius)));
-	this->color = color;
+	this->_density = kilograms_per_cubic_meter_t((3*mass) / (4 * M_PI * (radius * radius)));
+	this->_color = color;
 }
 
 Particle::Particle(
@@ -41,10 +41,10 @@ Particle::Particle(
 ): MyShape(ShapeType::circle, momentum)
 {
 	this->pos = pos;
-	this->mass = mass;
+	this->_mass = mass;
     this->radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));
-	this->density = density;
-	this->color = color;
+	this->_density = density;
+	this->_color = color;
 }
 
 meter_t Particle::calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density) {
@@ -70,16 +70,16 @@ float calcRadius(float mass, int density ) {
 
 void Particle::mergeWith(Particle &otherShape)
 {
-	kilogram_t combinedMass = this->getMass() + otherShape.getMass();
-	kilograms_per_cubic_meter_t density = this->getDensity();
+	kilogram_t combinedMass = this->mass() + otherShape.mass();
+	kilograms_per_cubic_meter_t density = this->density();
 
 	meter_t newRadius = calcRadius(combinedMass, density);
 
 	PhysicalVector totalAngMom = calcMergedAngMomentum(otherShape);
 
 	PhysicalVector COM =
-			this->getWeightedPosition()
-					.plus(otherShape.getWeightedPosition())
+			this->weightedPosition()
+					.plus(otherShape.weightedPosition())
 					.scaledBy(1/(combinedMass.value()));
 
 	this->setMass(combinedMass);
@@ -90,9 +90,9 @@ void Particle::mergeWith(Particle &otherShape)
 	otherShape.setRadius(meter_t(0));
 	// TODO /Verify this stuff
 
-	this->adjustMomentum(otherShape.getMomentum());
+	this->adjustMomentum(otherShape.momentum());
 
-	this->setAngMomentum(totalAngMom);
+	this->setAngularMomentum(totalAngMom);
 
 	this->calcColor();
 
@@ -103,10 +103,10 @@ void Particle::mergeWith(Particle &otherShape)
 PhysicalVector Particle::calcMergedAngMomentum(Particle &otherShape)
 {
 	// TODO PhysicalVector is a little too vague here. *Everything* is a PhysicalVector??
-	PhysicalVector aPos(this->getPos());
-	PhysicalVector bPos(otherShape.getPos());
-	PhysicalVector aMomentum(this->getMomentum());
-	PhysicalVector bMomentum(otherShape.getMomentum());
+	PhysicalVector aPos(this->position());
+	PhysicalVector bPos(otherShape.position());
+	PhysicalVector aMomentum(this->momentum());
+	PhysicalVector bMomentum(otherShape.momentum());
 
 	vecPtr sepVec(PhysicalVector::vecFromAtoB(aPos, bPos));
 
@@ -124,13 +124,13 @@ PhysicalVector Particle::calcMergedAngMomentum(Particle &otherShape)
 	PhysicalVector totalAngMom = newAngularMomentumForA.plus(newAngularMomentumForB);
 
 	return totalAngMom
-			.plus(this->getAngMomentum())
-			.plus(otherShape.getAngMomentum());
+			.plus(this->angularMomentum())
+			.plus(otherShape.angularMomentum());
 }
 
 bool Particle::isTouching(Particle &otherShape)
 {
-	PhysicalVector sepVec(this->getVectorToObject(otherShape));
+	PhysicalVector sepVec(this->vectorTo(otherShape));
 	double minSep = (this->getRadius() + otherShape.getRadius()).value();
 
 	return (sepVec.length() < minSep);

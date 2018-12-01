@@ -5,10 +5,10 @@ Box::Box(PhysicalVector pos, float sideLength, PhysicalVector color
 ): MyShape(ShapeType::box, PhysicalVector()) {  // Empty momentum because Boxes are never moving in my cases.
 	this->pos = pos;
 	this->sideLength = sideLength;
-	this->color = color;
+	this->_color = color;
 }
 
-double Box::getScale() {
+double Box::scale() {
 	return sideLength;
 }
 

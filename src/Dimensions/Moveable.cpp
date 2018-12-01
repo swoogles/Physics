@@ -7,12 +7,12 @@ Moveable::Moveable(PhysicalVector momentum)
                            {0, 1, 0, 0},
                            {0, 0, 1, 0},
                            {0, 0, 0, 1}}
-          ,momentum(momentum)
+          ,_momentum(momentum)
           ,angMomentum{0, 0, 0, false}
           ,angVelocity{0, 0, 0, false}
-          ,mass(1)
-          ,density(1)
-          ,color{0.5,1.0,0.0}
+          ,_mass(1)
+          ,_density(1)
+          ,_color{0.5,1.0,0.0}
 {}
 
 void Moveable::setPos(float inX, float inY, float inZ) {
@@ -25,14 +25,14 @@ void Moveable::setPos(PhysicalVector newPos) {
     this->pos = newPos;
 }
 
-PhysicalVector Moveable::getPos() {
+PhysicalVector Moveable::position() {
     PhysicalVector retVec(pos);
 	return retVec;
 }
 
 
-PhysicalVector Moveable::getVectorToObject(Moveable &object2) {
-    return object2.getPos().minus(this->getPos());
+PhysicalVector Moveable::vectorTo(Moveable &object2) {
+    return object2.position().minus(this->position());
 }
 
 unique_ptr<MatrixStruct> Moveable::getOrientationMat() const {
@@ -52,34 +52,34 @@ void Moveable::adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis) {
 }
 
 void Moveable::adjustVelocity(PhysicalVector dVel) {
-	this->momentum = momentum.scaledBy(1/mass.value()).plus(dVel).scaledBy(mass.value());
+	this->_momentum = _momentum.scaledBy(1/_mass.value()).plus(dVel).scaledBy(_mass.value());
 }
 
-PhysicalVector Moveable::getVelocity() {
-	return momentum.scaledBy(1/mass.value());
+PhysicalVector Moveable::velocity() {
+	return _momentum.scaledBy(1/_mass.value());
 }
 
 // Angular Momentum and Velocity
-double Moveable::getMomentOfInertia() { return 1;}
+double Moveable::momentOfInertia() { return 1;}
 
-void Moveable::setAngVelocity(PhysicalVector newAngVelocity) {
+void Moveable::setAngularVelocity(PhysicalVector newAngVelocity) {
 	this->prevAngVelocity = angVelocity;
-	double I = getMomentOfInertia();
+	double I = momentOfInertia();
 	this->angVelocity = newAngVelocity;
 	this->angMomentum = angVelocity.scaledBy(I);
 }
 
-void Moveable::adjustAngVelocity(PhysicalVector dAngVelocity) {
-	double I = getMomentOfInertia();
+void Moveable::adjustAngularVelocity(PhysicalVector dAngVelocity) {
+	double I = momentOfInertia();
 	PhysicalVector dAngV(dAngVelocity);
 	this->angVelocity = angVelocity.plus(dAngV);
 	this->angMomentum = angVelocity.scaledBy(I);
 }
 
 void Moveable::update(float dt) {
-	PhysicalVector prevVelocity(prevMomentum.scaledBy(1/mass.value()));
+	PhysicalVector prevVelocity(prevMomentum.scaledBy(1/_mass.value()));
 	auto dPos =
-			this->getVelocity()
+            this->velocity()
 			.plus(prevVelocity)
 			.scaledBy(.5) //Get avg velocity
 			.scaledBy(dt);
@@ -93,7 +93,7 @@ void Moveable::update(float dt) {
 	rotVec = PhysicalVector(0,  0, 1);
 	adjustAngle( (prevAngVelocity.z() + angVelocity.z()) * .5 *dt, rotVec);
 
-	this->prevMomentum = momentum;
+	this->prevMomentum = _momentum;
 	this->prevAngVelocity = angVelocity;
 
 }

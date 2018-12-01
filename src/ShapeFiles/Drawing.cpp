@@ -4,14 +4,14 @@ void Drawing::draw(shapePointer_t myShape){
     glPushMatrix();
 
     //Translate
-    PhysicalVector pos (myShape->getPos());
+    PhysicalVector pos (myShape->position());
     glTranslatef(pos.x(), pos.y(), pos.z());
 
     //Rotate
     glMultMatrixf( (const GLfloat*) myShape->getOrientationMat().get());
 
     //Scale
-    float scale = myShape->getScale();
+    float scale = myShape->scale();
     glScalef(scale, scale, scale);
 
     glColor3fv(myShape->getColor().vec);
@@ -39,14 +39,14 @@ void Drawing::draw(MyShape &myShape) {
     glPushMatrix();
 
     //Translate
-    PhysicalVector pos (myShape.getPos());
+    PhysicalVector pos (myShape.position());
     glTranslatef(pos.x(), pos.y(), pos.z());
 
     //Rotate
     glMultMatrixf( (const GLfloat*) myShape.getOrientationMat().get());
 
     //Scale
-    float scale = myShape.getScale();
+    float scale = myShape.scale();
     glScalef(scale, scale, scale);
 
     glColor3fv(myShape.getColor().vec);

@@ -22,7 +22,7 @@ TEST_CASE("Get children", "[Quadrant]") {
     Quadrant quadrant(shape, 0, pos, width);
     SECTION("Basic properties") {
         REQUIRE(quadrant.children().empty());
-        REQUIRE(quadrant.getMass() == shape->getMass());
+        REQUIRE(quadrant.mass() == shape->mass());
         REQUIRE(quadrant.getShapeInQuadrant() == shape);
     }
 
@@ -52,56 +52,56 @@ TEST_CASE("Get children", "[Quadrant]") {
         SECTION("[0,0,0]") { // 1
             auto subShape =  TestUtils::circleAt(5, 5, 5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
-            auto subQuadrantPos = subQuadrant->getPos();
+            auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, offset, offset));
         }
 
         SECTION("[0,0,1]") { // 2
             auto subShape =  TestUtils::circleAt(5, 5, -5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
-            auto subQuadrantPos = subQuadrant->getPos();
+            auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, offset, -offset));
         }
 
         SECTION("[0,1,0]") { // 3
             auto subShape =  TestUtils::circleAt(5, -5, 5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
-            auto subQuadrantPos = subQuadrant->getPos();
+            auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, -offset, offset));
         }
 
         SECTION("[0,1,1]") { // 4
             auto subShape =  TestUtils::circleAt(5, -5, -5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
-            auto subQuadrantPos = subQuadrant->getPos();
+            auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, -offset, -offset));
         }
 
         SECTION("[1,0,0]") { // 5
             auto subShape =  TestUtils::circleAt(-5, 5, 5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
-            auto subQuadrantPos = subQuadrant->getPos();
+            auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, offset, offset));
         }
 
         SECTION("[1,0,1]") { // 6
             auto subShape =  TestUtils::circleAt(-5, 5, -5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
-            auto subQuadrantPos = subQuadrant->getPos();
+            auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, offset, -offset));
         }
 
         SECTION("[1,1,0]") { // 7
             auto subShape =  TestUtils::circleAt(-5, -5, 5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
-            auto subQuadrantPos = subQuadrant->getPos();
+            auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, -offset, offset));
         }
 
         SECTION("[1,1,1]") { // 8
             auto subShape =  TestUtils::circleAt(-5, -5, -5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
-            auto subQuadrantPos = subQuadrant->getPos();
+            auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, -offset, -offset));
         }
     }

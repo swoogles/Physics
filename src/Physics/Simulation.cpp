@@ -83,7 +83,7 @@ PhysicalVector Simulation::getConstGravFieldVal() {
 
 void Simulation::updateMinsAndMaxes() {
     for ( const auto & curShape : this->physicalObjects.getShapes() ) {
-        PhysicalVector curPos(curShape->getPos());
+        PhysicalVector curPos(curShape->position());
         updateXYMinsAndMaxes(curPos);
     }
 }
@@ -114,12 +114,12 @@ double Simulation::getTimeElapsed() { return timeElapsed; }
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
 PhysicalVector calcForceGravNew(Particle &object1, MyShape &object2, float dt) {
-    PhysicalVector sepVec(object1.getVectorToObject(object2));
+    PhysicalVector sepVec(object1.vectorTo(object2));
 
     double rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
 
     double G = 6.67384e-11;
-    double forceMagnitude = (G * object1.getMass() * object2.getMass()).value() / rSquared;
+    double forceMagnitude = (G * object1.mass() * object2.mass()).value() / rSquared;
 
     return sepVec
             .unit()
@@ -128,18 +128,18 @@ PhysicalVector calcForceGravNew(Particle &object1, MyShape &object2, float dt) {
 }
 
 void elasticCollision(Particle &object1, Particle &object2, float dt) {
-    PhysicalVector sepVecUnit = object1.getVectorToObject(object2).unit();
+    PhysicalVector sepVecUnit = object1.vectorTo(object2).unit();
     PhysicalVector n(sepVecUnit);
 
-    double c = n.scalarProduct4(object1.getVelocity().minus(object2.getVelocity()));
+    double c = n.scalarProduct4(object1.velocity().minus(object2.velocity()));
 
-    auto combinedMass = (object2.getMass() + object1.getMass()).value();
-    double multiplierA = -2 * ( object2.getMass().value() * c ) / combinedMass;
+    auto combinedMass = (object2.mass() + object1.mass()).value();
+    double multiplierA = -2 * (object2.mass().value() * c ) / combinedMass;
     PhysicalVector aVec = n.scaledBy(multiplierA);
 
     object1.adjustVelocity(aVec);
 
-    double multiplierB = 2 * ( object1.getMass().value() * c ) / combinedMass;
+    double multiplierB = 2 * (object1.mass().value() * c ) / combinedMass;
     PhysicalVector bVec = n.scaledBy(multiplierB);
 
     object2.adjustVelocity(bVec);
@@ -301,14 +301,14 @@ size_t Simulation::getSize() {
 kilogram_t Simulation::getMass() {
     kilogram_t mass = kilogram_t(0);
     for (const auto & shape : this->physicalObjects.getShapes()) {
-        mass += shape->getMass();
+        mass += shape->mass();
     }
     return mass;
 }
 
 ParticleList Simulation::crackPhysicalObject(Particle &shape) {
     int numberOfFragments = 2;
-    PhysicalVector initialMomentum(shape.getMomentum());
+    PhysicalVector initialMomentum(shape.momentum());
 
     return ParticleList();
 }

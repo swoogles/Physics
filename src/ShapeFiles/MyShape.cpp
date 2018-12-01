@@ -1,7 +1,7 @@
 #include "MyShape.h"
 
 double MyShape::distanceTo(MyShape &object2) {
-    return this->getVectorToObject(object2).length();
+    return this->vectorTo(object2).length();
 }
 
 MyShape::MyShape(ShapeType shapeType, PhysicalVector momentum)
@@ -9,71 +9,71 @@ MyShape::MyShape(ShapeType shapeType, PhysicalVector momentum)
 		shapeType(shapeType) {
 };
 
-double MyShape::getScale(){}
+double MyShape::scale(){}
 
 void MyShape::adjustMomentum(PhysicalVector dMomentum) {
-    this->momentum = momentum.plus(dMomentum);
+    this->_momentum = _momentum.plus(dMomentum);
 }
 
-PhysicalVector MyShape::getMomentum() {
-    PhysicalVector vecStruct(momentum);
+PhysicalVector MyShape::momentum() {
+    PhysicalVector vecStruct(_momentum);
     return vecStruct;
 }
 
-double MyShape::getMomentOfInertia() { return 1;}
+double MyShape::momentOfInertia() { return 1;}
 
-void MyShape::setAngMomentum(PhysicalVector newAngMomentum) {
+void MyShape::setAngularMomentum(PhysicalVector newAngMomentum) {
     this->prevAngVelocity = angVelocity;
 	this->prevAngVelocity = angVelocity;
-	double I = getMomentOfInertia();
+	double I = momentOfInertia();
 	this->angMomentum = newAngMomentum;
 	this->angVelocity = angMomentum.scaledBy(1.0f/I);
 }
 
-PhysicalVector MyShape::getAngMomentum() {
+PhysicalVector MyShape::angularMomentum() {
     PhysicalVector retVec(angMomentum.vec);
     return retVec;
 }
 
 void MyShape::setMass(kilogram_t newMass) {
-	mass = newMass;
+	_mass = newMass;
 }
 
-kilogram_t MyShape::getMass() {
-	return mass;
+kilogram_t MyShape::mass() {
+	return _mass;
 }
 
-kilograms_per_cubic_meter_t MyShape::getDensity() {
-	return density;
+kilograms_per_cubic_meter_t MyShape::density() {
+	return _density;
 }
 
 PhysicalVector MyShape::getColor() const {
-    PhysicalVector vecStruct(color.vec);
+    PhysicalVector vecStruct(_color.vec);
     return vecStruct;
 }
 
 void MyShape::calcColor() {
-  double totalMass = mass.value();
+  double totalMass = _mass.value();
 
-	double redAmount = 0.25f + mass.value() / (totalMass/3.0f);
+	double redAmount = 0.25f + _mass.value() / (totalMass/3.0f);
 	if (redAmount > 1.0)
 		redAmount = 1.0;
 
-	double greenAmount = mass.value() / (0.8f *totalMass);
+	double greenAmount = _mass.value() / (0.8f *totalMass);
 	if (greenAmount > 1.0) {
 		greenAmount = 1.0;
 	}
 
-	color.vec[0] = redAmount;
-	color.vec[1] = greenAmount;
+	_color.vec[0] = redAmount;
+	_color.vec[1] = greenAmount;
 }
 
 ShapeType MyShape::getType() {
 	return this->shapeType;
 }
 
-PhysicalVector MyShape::getWeightedPosition() {
+PhysicalVector MyShape::weightedPosition() {
 //    return PhysicalVector();
-    return this->getPos().scaledBy(this->getMass().value() );
+    return this->position().scaledBy(this->mass().value() );
 }
 

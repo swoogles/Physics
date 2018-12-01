@@ -63,7 +63,7 @@ TEST_CASE( "Construct a list with a single item", "[ShapeList][red]" ) {
     auto a = TestUtils::testCircle();
     ShapeList singleItemList(a);
     REQUIRE(singleItemList.size() == 1);
-    REQUIRE(singleItemList.getShapes()[0]->getMass() == kilogram_t(100));
+    REQUIRE(singleItemList.getShapes()[0]->mass() == kilogram_t(100));
     REQUIRE(singleItemList.contains(a));
 }
 
