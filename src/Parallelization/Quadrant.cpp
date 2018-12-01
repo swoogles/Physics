@@ -20,15 +20,11 @@ Quadrant::Quadrant(entity_t newShape, int level, VecStruct &pos, float width)
         ,shapeInQuadrant(std::move(newShape))
         ,level(level)
         ,dimensions(width, width, width)
-        ,borders(make_shared<Box>(pos, width, (sgVec3){ (float) (level*.10), (float) (1-level*.10), (float) (1-level*.10)} ) )
         ,quadOctree(extents[2][2][2])
         ,weightedPosition(0,0,0)
 {
   // TODO Get this in a more idiomatic form
   this->setMass(shapeInQuadrant->getMass());
-  // TODO Can this be a more direct move?
-
-  // TODO reinstate CoM calculations here
 }
 
 QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
@@ -156,10 +152,6 @@ void Quadrant::applyToAllChildren(function<void (Quadrant)> functor) {
         }
     }
 
-}
-
-shared_ptr<Box> Quadrant::getBorders() {
-    return borders;
 }
 
 

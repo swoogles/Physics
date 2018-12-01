@@ -26,7 +26,7 @@ void drawShapeInQuadrant(Quadrant quadrant) {
 };
 
 void drawingFuncFixed(Quadrant quadrant) {
-    Drawing::draw(quadrant.getBorders());
+    Drawing::draw(quadrant);
 }
 
 void GraphicalOperations::fullQuadrantDrawingFunction(Quadrant quadrant) {

@@ -44,9 +44,6 @@ class Quadrant : public Box
     VecStruct weightedPosition;
     VecStruct dimensions;
 
-    shared_ptr<Box> borders;
-//    shared_ptr<Particle> centerOfMassRepresentation;
-
     array_typeNew  quadOctree;
 
     QuadrantPointer_t subQuadrantThatContains(entity_t newShape);
@@ -78,7 +75,6 @@ class Quadrant : public Box
     QuadrantPointer_t makeSubQuadrant(entity_t newShape);
     void applyToAllChildren(function<void (Quadrant)> functor);
 
-    shared_ptr<Box> getBorders();
 };
 typedef shared_ptr<Quadrant> QuadrantPointer_t;
 #endif
