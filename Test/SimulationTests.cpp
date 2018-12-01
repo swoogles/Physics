@@ -46,7 +46,7 @@ TEST_CASE( "non-ptr Simulation is made", "[green]" ) {
 
 TEST_CASE("Detonate", "[simulation]") {
     auto a = TestUtils::circleAt(0, 0, 0);
-    VecStruct newMomentum(5, 0, 0);
+    PhysicalVector newMomentum(5, 0, 0);
     a->adjustMomentum(newMomentum);
     SECTION("All objects are moving within certain range of original momentum.") {
         REQUIRE(false);

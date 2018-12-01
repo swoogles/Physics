@@ -9,11 +9,11 @@ OctreeCoordinates::OctreeCoordinates(bool x, bool y, bool z)
 
 }
 
-VecStruct OctreeCoordinates::polarities() {
+PhysicalVector OctreeCoordinates::polarities() {
     int xPolarity = (coordinates[0]) ? -1 : 1;
     int yPolarity = (coordinates[1]) ? -1 : 1;
     int zPolarity = (coordinates[2]) ? -1 : 1;
-    return VecStruct(xPolarity, yPolarity, zPolarity);
+    return PhysicalVector(xPolarity, yPolarity, zPolarity);
 }
 
 vector<int> OctreeCoordinates::ints() {

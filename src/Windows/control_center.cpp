@@ -118,26 +118,26 @@ void control_center::pause_cb(puObject * caller) {
 }
 
 void control_center::rotRight(puObject *) {
-  VecStruct angVelocity(0,.5,0);
+  PhysicalVector angVelocity(0,.5,0);
   Observer::getCurObserverRef().adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotLeft(puObject *) {
-  VecStruct angVelocity(0,-.5,0);
+  PhysicalVector angVelocity(0,-.5,0);
   Observer::getCurObserverRef().adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotUp(puObject *) {
-  VecStruct angVelocity(+.5,0,0);
+  PhysicalVector angVelocity(+.5,0,0);
   Observer::getCurObserverRef().adjustAngVelocity(angVelocity);
 }
 void control_center::rotDown(puObject *) {
-  VecStruct angVelocity(-.5,0,0);
+  PhysicalVector angVelocity(-.5,0,0);
   Observer::getCurObserverRef().adjustAngVelocity(angVelocity);
 }
 
 void control_center::rotStop(puObject *) {
-  VecStruct angVelocity(0,0,0);
+  PhysicalVector angVelocity(0,0,0);
   Observer::getCurObserverRef().adjustAngVelocity(angVelocity);
 }
 

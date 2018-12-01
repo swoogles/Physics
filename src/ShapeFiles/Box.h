@@ -7,7 +7,7 @@ class Box: public MyShape {
 private:
 	float sideLength;
 public:
-	Box(VecStruct pos, float sideLength, VecStruct color);
+	Box(PhysicalVector pos, float sideLength, PhysicalVector color);
 
 	double getScale() override;
 

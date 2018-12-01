@@ -17,11 +17,11 @@ double Particle::getMomentOfInertia() {
 }
 
 Particle::Particle(
-        VecStruct pos,
+        PhysicalVector pos,
         double mass,
         float radius,
-        VecStruct momentum,
-        VecStruct color
+        PhysicalVector momentum,
+        PhysicalVector color
 ):MyShape(ShapeType::circle, momentum) // FIX VECSTRUCT!!
 ,radius(meter_t(radius))
   {
@@ -33,11 +33,11 @@ Particle::Particle(
 }
 
 Particle::Particle(
-        VecStruct pos,
+        PhysicalVector pos,
         kilogram_t mass,
-        VecStruct momentum,
+        PhysicalVector momentum,
         kilograms_per_cubic_meter_t density,
-        VecStruct color
+        PhysicalVector color
 ): MyShape(ShapeType::circle, momentum)
 {
 	this->pos = pos;
@@ -55,9 +55,9 @@ meter_t Particle::calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t densit
  * Consult method here:
  *   https://www.cmu.edu/biolphys/deserno/pdf/sphere_equi.pdf
  */
-vector<VecStruct> Particle::pointsEvenlyDistributedOnSphere(int numPoints, float radius) {
-	VecStruct invalidDefault(-1, -1, -1);
-    return vector<VecStruct>{invalidDefault};
+vector<PhysicalVector> Particle::pointsEvenlyDistributedOnSphere(int numPoints, float radius) {
+	PhysicalVector invalidDefault(-1, -1, -1);
+    return vector<PhysicalVector>{invalidDefault};
 }
 
 /*
@@ -75,9 +75,9 @@ void Particle::mergeWith(Particle &otherShape)
 
 	meter_t newRadius = calcRadius(combinedMass, density);
 
-	VecStruct totalAngMom = calcMergedAngMomentum(otherShape);
+	PhysicalVector totalAngMom = calcMergedAngMomentum(otherShape);
 
-	VecStruct COM =
+	PhysicalVector COM =
 			this->getWeightedPosition()
 					.plus(otherShape.getWeightedPosition())
 					.scaledBy(1/(combinedMass.value()));
@@ -100,28 +100,28 @@ void Particle::mergeWith(Particle &otherShape)
 }
 
 // TODO This should return totalAngMom, instead of mutating parameter.
-VecStruct Particle::calcMergedAngMomentum(Particle &otherShape)
+PhysicalVector Particle::calcMergedAngMomentum(Particle &otherShape)
 {
-	// TODO VecStruct is a little too vague here. *Everything* is a VecStruct??
-	VecStruct aPos(this->getPos());
-	VecStruct bPos(otherShape.getPos());
-	VecStruct aMomentum(this->getMomentum());
-	VecStruct bMomentum(otherShape.getMomentum());
+	// TODO PhysicalVector is a little too vague here. *Everything* is a PhysicalVector??
+	PhysicalVector aPos(this->getPos());
+	PhysicalVector bPos(otherShape.getPos());
+	PhysicalVector aMomentum(this->getMomentum());
+	PhysicalVector bMomentum(otherShape.getMomentum());
 
-	vecPtr sepVec(VecStruct::vecFromAtoB(aPos, bPos));
+	vecPtr sepVec(PhysicalVector::vecFromAtoB(aPos, bPos));
 
-	VecStruct hitPointOnA = sepVec->unit().scaledBy(this->getRadius().value());
+	PhysicalVector hitPointOnA = sepVec->unit().scaledBy(this->getRadius().value());
 
-	VecStruct hitPt = aPos.plus(hitPointOnA);
+	PhysicalVector hitPt = aPos.plus(hitPointOnA);
 
-	VecStruct rForA = aPos.minus(hitPt);
+	PhysicalVector rForA = aPos.minus(hitPt);
 
-	VecStruct newAngularMomentumForA = rForA.vectorProduct3(aMomentum);
+	PhysicalVector newAngularMomentumForA = rForA.vectorProduct3(aMomentum);
 
-	VecStruct rForB = bPos.minus(hitPt);
+	PhysicalVector rForB = bPos.minus(hitPt);
 
-	VecStruct newAngularMomentumForB = rForB.vectorProduct3(bMomentum);
-	VecStruct totalAngMom = newAngularMomentumForA.plus(newAngularMomentumForB);
+	PhysicalVector newAngularMomentumForB = rForB.vectorProduct3(bMomentum);
+	PhysicalVector totalAngMom = newAngularMomentumForA.plus(newAngularMomentumForB);
 
 	return totalAngMom
 			.plus(this->getAngMomentum())
@@ -130,7 +130,7 @@ VecStruct Particle::calcMergedAngMomentum(Particle &otherShape)
 
 bool Particle::isTouching(Particle &otherShape)
 {
-	VecStruct sepVec(this->getVectorToObject(otherShape));
+	PhysicalVector sepVec(this->getVectorToObject(otherShape));
 	double minSep = (this->getRadius() + otherShape.getRadius()).value();
 
 	return (sepVec.length() < minSep);

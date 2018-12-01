@@ -4,7 +4,7 @@
 #include <plib/sg.h>
 #include <memory>
 #include <iostream>
-#include "VecStruct.h"
+#include "PhysicalVector.h"
 #include "MatrixStruct.h"
 #include <../lib/units.h>
 
@@ -15,7 +15,7 @@ using namespace std;
 
 using std::unique_ptr;
 
-typedef std::unique_ptr<VecStruct> vecPtr;
+typedef std::unique_ptr<PhysicalVector> vecPtr;
 
 /*! \brief The class at the heart of all the physical calculations
  *
@@ -31,22 +31,22 @@ typedef std::unique_ptr<VecStruct> vecPtr;
 class Moveable {
 protected:
 
-	VecStruct pos; // TODO make this a VecStruct
+	PhysicalVector pos; // TODO make this a PhysicalVector
 	sgQuat orientationQuat;
 	sgMat4 orientationMat;
 
-    VecStruct momentum; // TODO This gots'ta go.
-	VecStruct prevMomentum;
+    PhysicalVector momentum; // TODO This gots'ta go.
+	PhysicalVector prevMomentum;
 
-	VecStruct angMomentum;
-	VecStruct angVelocity;
-	VecStruct prevAngVelocity;
+	PhysicalVector angMomentum;
+	PhysicalVector angVelocity;
+	PhysicalVector prevAngVelocity;
 
 
 	kilogram_t mass; // TODO This should go into MyShape
 	kilograms_per_cubic_meter_t density;
 
-	VecStruct color;
+	PhysicalVector color;
 
 	/*! \brief Calculates the moment of inertia for the object
 	 *
@@ -58,16 +58,16 @@ protected:
 public:
 	/*! \brief Sets default values of members common to all shapes
 	 */
-	Moveable(VecStruct momentum);
+	Moveable(PhysicalVector momentum);
 
 	//! Set position of object to <inX, inY, inZ>
 	void setPos(float inX, float inY, float inZ);
 	//! Set position of object to <newPos>
-	void setPos(VecStruct newPos);
+	void setPos(PhysicalVector newPos);
 
-	VecStruct getPos() ; // Reinstate const-ness
+	PhysicalVector getPos() ; // Reinstate const-ness
 
-	VecStruct getVectorToObject(Moveable &object2);
+	PhysicalVector getVectorToObject(Moveable &object2);
 
 	/*! \brief Rotate object around a specified axis
 	 *
@@ -75,20 +75,20 @@ public:
 	 *  \param dAngle Amount to be rotated
 	 *  \param rotAxis Axis to rotate around
 	 */
-	void adjustAngle(SGfloat dAngle, const VecStruct rotAxis);
+	void adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis);
 
 	unique_ptr<MatrixStruct> getOrientationMat() const;
 
 
 	//! Alters momentum of object by <dVel> * mass
-	void adjustVelocity(VecStruct dVel);
+	void adjustVelocity(PhysicalVector dVel);
 
-	VecStruct getVelocity();
+	PhysicalVector getVelocity();
 
 	//! Sets angular velocity of object to <newAngVelocity>
-	void setAngVelocity(VecStruct newAngVelocity);
+	void setAngVelocity(PhysicalVector newAngVelocity);
 	//! Alters angular velocity of object by <dAngVelocity>
-	void adjustAngVelocity(VecStruct dangVelocity);
+	void adjustAngVelocity(PhysicalVector dangVelocity);
 
 	//! Moves object based on current normal and angular momentum
 	void update(float);

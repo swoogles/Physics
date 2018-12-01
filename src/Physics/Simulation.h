@@ -27,7 +27,7 @@ private:
 	float minX, maxX, minY, maxY;
 
     bool constGravField;
-    VecStruct gravField;
+    PhysicalVector gravField;
     bool gravBetweenObjects;
 
     float octreeTheta;
@@ -41,12 +41,12 @@ private:
 
 	void updateMinsAndMaxes();
     void resetXYMinsAndMaxes();
-    void updateXYMinsAndMaxes(VecStruct curPos);
+    void updateXYMinsAndMaxes(PhysicalVector curPos);
 
 	void removePhysicalObjects( ParticleList shapesToRemove );
 
     //! Return gravity field vector in retGravField
-	VecStruct getConstGravFieldVal();
+	PhysicalVector getConstGravFieldVal();
 
 	void refreshQuadrant();
 

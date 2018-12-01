@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "../Dimensions/Moveable.h"
-#include "../Dimensions/VecStruct.h"
+#include "Dimensions/PhysicalVector.h"
 #include "ShapeType.h"
 
 #include <../lib/units.h>
@@ -35,15 +35,15 @@ private:
   public:
     /*! \brief Sets default values of members common to all shapes
     */
-    MyShape(ShapeType shapeType, VecStruct momentum);
+    MyShape(ShapeType shapeType, PhysicalVector momentum);
 
     virtual double getScale();
 
     //! Alters momentum by <dMomentum>
-    void adjustMomentum(VecStruct dMomentum);
+    void adjustMomentum(PhysicalVector dMomentum);
 
     //! Returns momentum of object in retVec
-    VecStruct getMomentum();
+    PhysicalVector getMomentum();
 
     /*! \brief Calculates the moment of inertia for the object
      *
@@ -53,10 +53,10 @@ private:
     virtual double getMomentOfInertia();
 
     //! Sets angular momentum of object to <newAngMomentum>
-    void setAngMomentum(VecStruct newAngMomentum);
+    void setAngMomentum(PhysicalVector newAngMomentum);
 
     //! Returns angular momentum of object in retVec
-    VecStruct getAngMomentum();
+    PhysicalVector getAngMomentum();
 
     //! Sets mass of object to newMass
     void setMass(kilogram_t newMass);
@@ -67,7 +67,7 @@ private:
     //! Returns density of object
     kilograms_per_cubic_meter_t getDensity();
 
-    VecStruct getColor() const;
+    PhysicalVector getColor() const;
 
     /*!
      * TODO This should at *least* go to the circle class, but I think it really belongs in the Physics package
@@ -92,7 +92,7 @@ private:
       */
     double distanceTo(MyShape &object2);
 
-    VecStruct getWeightedPosition();
+    PhysicalVector getWeightedPosition();
 
 };
 

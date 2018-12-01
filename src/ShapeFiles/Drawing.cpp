@@ -4,7 +4,7 @@ void Drawing::draw(shapePointer_t myShape){
     glPushMatrix();
 
     //Translate
-    VecStruct pos (myShape->getPos());
+    PhysicalVector pos (myShape->getPos());
     glTranslatef(pos.x(), pos.y(), pos.z());
 
     //Rotate
@@ -39,7 +39,7 @@ void Drawing::draw(MyShape &myShape) {
     glPushMatrix();
 
     //Translate
-    VecStruct pos (myShape.getPos());
+    PhysicalVector pos (myShape.getPos());
     glTranslatef(pos.x(), pos.y(), pos.z());
 
     //Rotate

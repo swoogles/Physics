@@ -41,8 +41,8 @@ class Quadrant : public Box
 
     entity_t shapeInQuadrant;
 
-    VecStruct weightedPosition;
-    VecStruct dimensions;
+    PhysicalVector weightedPosition;
+    PhysicalVector dimensions;
 
     array_typeNew  quadOctree;
 
@@ -51,13 +51,13 @@ class Quadrant : public Box
     //! Alters mass of object by dMass
     void adjustMass(float dMass);
 
-    bool positionIsInQuadrantBoundaries(VecStruct insertPos);
+    bool positionIsInQuadrantBoundaries(PhysicalVector insertPos);
 
     QuadrantPointer_t subQuadrantAt(OctreeCoordinates indices);
     void assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newSubQuadrant);
-    OctreeCoordinates coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant);
+    OctreeCoordinates coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant);
   public:
-    Quadrant(entity_t newShape, int level, VecStruct &pos, float width);
+    Quadrant(entity_t newShape, int level, PhysicalVector &pos, float width);
 
     void insert(entity_t newShape);
 

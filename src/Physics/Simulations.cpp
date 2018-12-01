@@ -45,14 +45,14 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     for (int i = 1; i < numRows+1; i++)
         numPieces+=i;
 
-    VecStruct cueVelocity(30, -75, 0);
-    VecStruct cueMomentum = cueVelocity.scaledBy(cueMass.value());
+    PhysicalVector cueVelocity(30, -75, 0);
+    PhysicalVector cueMomentum = cueVelocity.scaledBy(cueMass.value());
 
-    VecStruct newColor(1, 1, 1, false);
+    PhysicalVector newColor(1, 1, 1, false);
 
     shared_ptr<Particle> curShape;
 
-    VecStruct cuePos(numRows, numRows*3, 0, true);
+    PhysicalVector cuePos(numRows, numRows*3, 0, true);
     curShape = make_shared<Particle>(
             cuePos,
             cueMass.value(),
@@ -63,11 +63,11 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
 
     physicalObjects.addShapeToList( curShape );
 
-    VecStruct ballMomentum(0, 0, 0, false);
+    PhysicalVector ballMomentum(0, 0, 0, false);
     int cutOff = numRows*2;
     for (int i = 1; i < numRows+1; i++) {
         for (int j = i; j < cutOff; j+= 2) {
-            VecStruct ballPos( j* 1.7,  (i*2.5), 0, true);
+            PhysicalVector ballPos( j* 1.7,  (i*2.5), 0, true);
 
             curShape = make_shared<Particle>(
                     ballPos,
@@ -94,14 +94,14 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
 
     float ballRadius = .95;
 
-    VecStruct cueVelocity(30, -75, 0);
-    VecStruct cueMomentum = cueVelocity.scaledBy(cueMass);
+    PhysicalVector cueVelocity(30, -75, 0);
+    PhysicalVector cueMomentum = cueVelocity.scaledBy(cueMass);
 
-    VecStruct newColor(1, 0, 1, false);
+    PhysicalVector newColor(1, 0, 1, false);
 
     shared_ptr<Particle> shapeForInsertion;
 
-    VecStruct cuePos(numRows, numRows*3, 0, true);
+    PhysicalVector cuePos(numRows, numRows*3, 0, true);
     shapeForInsertion = make_shared<Particle>(
             cuePos,
             cueMass,
@@ -111,13 +111,13 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
     );
     physicalObjects.addShapeToList( shapeForInsertion );
 
-    VecStruct ballMomentum(0, 0, 0);
+    PhysicalVector ballMomentum(0, 0, 0);
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numRows; j++) {
-            VecStruct ballPos( j* 1.3,  (i*3), 0, true);
+            PhysicalVector ballPos( j* 1.3,  (i*3), 0, true);
 
             float greenValue = -( ( -.5 + (j/float(numRows)) ) * ( -.5 + (j/float(numRows)) ) )+ 1.0;
-            VecStruct ballColor(1, greenValue, 1, false);
+            PhysicalVector ballColor(1, greenValue, 1, false);
 
             shapeForInsertion = make_shared<Particle>(
                     ballPos,
@@ -142,14 +142,14 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
 
     float ballRadius = .95;
 
-    VecStruct cueVelocity(30, -75, 0);
-    VecStruct cueMomentum = cueVelocity.scaledBy(cueMass);
+    PhysicalVector cueVelocity(30, -75, 0);
+    PhysicalVector cueMomentum = cueVelocity.scaledBy(cueMass);
 
-    VecStruct newColor(1, 1, 1, false);
+    PhysicalVector newColor(1, 1, 1, false);
 
     shared_ptr<Particle> shapeForInsertion;
 
-    VecStruct cuePos (numRows, numRows*5, 0, true);
+    PhysicalVector cuePos (numRows, numRows*5, 0, true);
     shapeForInsertion = make_shared<Particle>(
             cuePos,
             cueMass,
@@ -159,14 +159,14 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
     );
     physicalObjects.addShapeToList( shapeForInsertion );
 
-    VecStruct ballMomentum(0, 0, 0);
+    PhysicalVector ballMomentum(0, 0, 0);
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numRows; j++) {
             for (int z = 0; z < numRows; z++) {
-                VecStruct ballPos( j* 4,  (i*4),  (z*4), true);
+                PhysicalVector ballPos( j* 4,  (i*4),  (z*4), true);
 
                 float greenValue = -( ( -.5 + (z/float(numRows)) ) * ( -.5 + (z/float(numRows)) ) )+ 1.0;
-                VecStruct ballColor(0, greenValue, 0, false);
+                PhysicalVector ballColor(0, greenValue, 0, false);
 
                 shapeForInsertion = make_shared<Particle>(
                         ballPos,
@@ -190,10 +190,10 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
     int numPieces = 1;
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = properties.mass / numPieces;
-    VecStruct startMomentum(0, 0, 0);
-    VecStruct newColor (1, 0, 1);
+    PhysicalVector startMomentum(0, 0, 0);
+    PhysicalVector newColor (1, 0, 1);
 
-    VecStruct startPlacement (-1e7f , 0, 0, true);
+    PhysicalVector startPlacement (-1e7f , 0, 0, true);
 
     shared_ptr<Particle> curShape = make_shared<Particle>(
             startPlacement,
@@ -218,15 +218,15 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     int numPieces=2;
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = (kilogram_t(AstronomicalValues::MASS_SUN))/(numPieces);
-    VecStruct startMomentum(0, 0, 0);
+    PhysicalVector startMomentum(0, 0, 0);
 
-    VecStruct newColor (1, 1, 1);
+    PhysicalVector newColor (1, 1, 1);
 
     shared_ptr<Particle> curShape;
     float d= 3e4;
 
     //#1
-    VecStruct object1Placement(+5/8.0f * d, +7/8.0f * d, 1, true);
+    PhysicalVector object1Placement(+5/8.0f * d, +7/8.0f * d, 1, true);
 
     physicalObjects.addShapeToList(
             make_shared<Particle>(
@@ -239,7 +239,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             );
 
     //#2
-    VecStruct object2Placement(-7/8.0f * d, +7/8.0f * d, 1, true);
+    PhysicalVector object2Placement(-7/8.0f * d, +7/8.0f * d, 1, true);
 
     physicalObjects.addShapeToList(
             make_shared<Particle>(
@@ -251,7 +251,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
-    VecStruct object3Placement(-1/8.0f * d, -5/8.0f * d, 1, true);
+    PhysicalVector object3Placement(-1/8.0f * d, -5/8.0f * d, 1, true);
 
     physicalObjects.addShapeToList(
             make_shared<Particle>(
@@ -273,14 +273,14 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 
     const kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     const kilogram_t pieceMass = (properties.mass*1000.0)/numPieces;
-    VecStruct target(1000, 0, 0, true);
+    PhysicalVector target(1000, 0, 0, true);
 
-    VecStruct newColor (1, 1, 1);
+    PhysicalVector newColor (1, 1, 1);
 
     srand ( time(NULL) );
 
-    VecStruct startMomentumVec;
-    VecStruct startPos;
+    PhysicalVector startMomentumVec;
+    PhysicalVector startPos;
     for (int i = 0; i < numPieces; i++) {
         if (i % 2 == 0) {
             startMomentumVec = randomSplitBodyMomentum(pieceMass);
@@ -301,7 +301,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 
         //Check if being placed on previously created object
         while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-            VecStruct newPosAttempt = randomPointInSphere(properties.sandboxWidth, target);
+            PhysicalVector newPosAttempt = randomPointInSphere(properties.sandboxWidth, target);
             curShape->setPos( newPosAttempt );
         }
         physicalObjects.addShapeToList( curShape );
@@ -311,8 +311,8 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 }
 
 SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties,
-                                                                    VecStruct target,
-                                                                    VecStruct groupMomentum)
+                                                                    PhysicalVector target,
+                                                                    PhysicalVector groupMomentum)
 {
   ParticleList physicalObjects;
 
@@ -321,11 +321,11 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 
 	srand ( time(NULL) );
 
-    VecStruct newColor (1, 1, 1);
+    PhysicalVector newColor (1, 1, 1);
 
     shared_ptr<Particle> curShape;
-    VecStruct startMomentumVec;
-    VecStruct startPos;
+    PhysicalVector startMomentumVec;
+    PhysicalVector startPos;
 	for (int i = 0; i < properties.numShapes; i++) {
 
 		if (i % 2 == 0) {
@@ -348,7 +348,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 
 		//Check if being placed on previously created object
 		while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-            VecStruct newPosAttempt = randomPointInSphere(properties.sandboxWidth, target);
+            PhysicalVector newPosAttempt = randomPointInSphere(properties.sandboxWidth, target);
 			curShape->setPos(newPosAttempt);
 		}
     physicalObjects.addShapeToList( curShape );
@@ -357,7 +357,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
     return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, properties.forceCalculationMethod, properties.octreeTheta);
 }
 
-VecStruct Simulations::randomSplitBodyPlacement(float pieceRadius, VecStruct target) {
+PhysicalVector Simulations::randomSplitBodyPlacement(float pieceRadius, PhysicalVector target) {
   int randMult;
   float largestDistance = 0;
 
@@ -373,10 +373,10 @@ VecStruct Simulations::randomSplitBodyPlacement(float pieceRadius, VecStruct tar
     }
   }
 
-  return VecStruct(values[0], values[1], values[2], false).plus(target);
+  return PhysicalVector(values[0], values[1], values[2], false).plus(target);
 }
 
-VecStruct Simulations::randomSplitBodyMomentum(kilogram_t pieceMass) {
+PhysicalVector Simulations::randomSplitBodyMomentum(kilogram_t pieceMass) {
   static int randMult;
 
   static bool switchB = false;
@@ -399,7 +399,7 @@ VecStruct Simulations::randomSplitBodyMomentum(kilogram_t pieceMass) {
 
 
     switchB = !switchB;
-    return VecStruct(values[0], values[1], values[2], false);
+    return PhysicalVector(values[0], values[1], values[2], false);
 }
 
 /*
@@ -444,7 +444,7 @@ float randomFloat() {
  * Algorithm explained and designed here:
  * https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
  */
-VecStruct Simulations::randomPointInSphere(double maxDistance, VecStruct target) {
+PhysicalVector Simulations::randomPointInSphere(double maxDistance, PhysicalVector target) {
     auto u = randomFloat();
     float v = randomFloat();
     auto theta = u * 2.0f * M_PI;
@@ -457,6 +457,6 @@ VecStruct Simulations::randomPointInSphere(double maxDistance, VecStruct target)
     auto x = r * sinPhi * cosTheta;
     auto y = r * sinPhi * sinTheta;
     auto z = r * cosPhi;
-    return VecStruct(x, y, z, true).scaledBy(maxDistance).plus(target);
+    return PhysicalVector(x, y, z, true).scaledBy(maxDistance).plus(target);
 }
 

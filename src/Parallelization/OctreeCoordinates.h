@@ -7,7 +7,7 @@
 
 
 #include <vector>
-#include <Dimensions/VecStruct.h>
+#include <Dimensions/PhysicalVector.h>
 
 using std::vector;
 
@@ -15,7 +15,7 @@ class OctreeCoordinates {
     vector<bool> coordinates;
 public:
     OctreeCoordinates(bool x, bool y, bool z);
-    VecStruct polarities();
+    PhysicalVector polarities();
     vector<int> ints();
 
 };

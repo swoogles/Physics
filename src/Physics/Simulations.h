@@ -68,7 +68,7 @@ class Simulations
      *  This function currently uses pieceRadius as the determining factor for the bounding box; this should be changed to an independent bounding variable
      *  \param pieceRadius Determines size of bounding box
      */
-    static VecStruct randomSplitBodyPlacement(float pieceRadius, VecStruct target);
+    static PhysicalVector randomSplitBodyPlacement(float pieceRadius, PhysicalVector target);
 
     /*! \relates MyShape
      *  \brief Gets a random starting momentum vector based on second parameter
@@ -77,7 +77,7 @@ class Simulations
      *
      *  \param pieceMass Determines magnitude of momentum
      */
-    static VecStruct randomSplitBodyMomentum(kilogram_t pieceMass);
+    static PhysicalVector randomSplitBodyMomentum(kilogram_t pieceMass);
 
     typedef unique_ptr<Simulation> SimulationPointer_t;
   public:
@@ -92,8 +92,8 @@ class Simulations
     static SimulationPointer_t
     bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
 
-    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, VecStruct target,
-                                                                  VecStruct groupMomentum);
+    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, PhysicalVector target,
+                                                                  PhysicalVector groupMomentum);
 
     static SimulationPointer_t billiards1(int, ForceCalculationMethod forceCalculationMethod);
 
@@ -104,7 +104,7 @@ class Simulations
     static SimulationPointer_t
     createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
 
-    static VecStruct randomPointInSphere(double maxDistance, VecStruct target);
+    static PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
 
 };
 

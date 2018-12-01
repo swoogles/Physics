@@ -29,24 +29,24 @@ class Particle: public MyShape {
      *
      *	\return The angular momentum to be assigned to the merged object
      */
-    VecStruct calcMergedAngMomentum(Particle &otherShape);
+    PhysicalVector calcMergedAngMomentum(Particle &otherShape);
 
   public:
 
     Particle(
-            VecStruct pos,
+            PhysicalVector pos,
             kilogram_t mass,
-            VecStruct momentum,
+            PhysicalVector momentum,
             kilograms_per_cubic_meter_t density,
-            VecStruct color
+            PhysicalVector color
     );
 
     Particle(
-            VecStruct pos,
+            PhysicalVector pos,
             double mass,
             float radius,
-            VecStruct momentum,
-            VecStruct color
+            PhysicalVector momentum,
+            PhysicalVector color
     );
 
     double getScale() override;
@@ -58,7 +58,7 @@ class Particle: public MyShape {
 
     static meter_t calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density);
 
-    static vector<VecStruct> pointsEvenlyDistributedOnSphere(int numPoints, float radius);
+    static vector<PhysicalVector> pointsEvenlyDistributedOnSphere(int numPoints, float radius);
 
     /*! \relates MyShape
      *  \brief Combines 2 distinct objects in an inelastic collision into the first object and eliminates the second

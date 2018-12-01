@@ -1,6 +1,6 @@
 #include "Quadrant.h"
 
-bool withinBoundaries(VecStruct & insertPos, VecStruct & minBoundaries, VecStruct & maxBoundaries) {
+bool withinBoundaries(PhysicalVector & insertPos, PhysicalVector & minBoundaries, PhysicalVector & maxBoundaries) {
   bool withinBoundaries = true;
   withinBoundaries &= (insertPos.x() > minBoundaries.x() && insertPos.x() < maxBoundaries.x());
   withinBoundaries &= (insertPos.y() > minBoundaries.y() && insertPos.y() < maxBoundaries.y());
@@ -13,8 +13,8 @@ entity_t Quadrant::getShapeInQuadrant() {
 }
 
 
-Quadrant::Quadrant(entity_t newShape, int level, VecStruct &pos, float width)
-        :Box(pos, width, VecStruct(level*.10f, 1-level*.10f, 1-level*.10f))
+Quadrant::Quadrant(entity_t newShape, int level, PhysicalVector &pos, float width)
+        :Box(pos, width, PhysicalVector(level*.10f, 1-level*.10f, 1-level*.10f))
         ,isLeaf(true)
         ,containsBody(true)
         ,shapeInQuadrant(std::move(newShape))
@@ -76,7 +76,7 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(entity_t newShape) {
 
 }
 
-OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(VecStruct pointInsideQuadrant) {
+OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant) {
     return OctreeCoordinates(
             pointInsideQuadrant.x() < pos.x(),
             pointInsideQuadrant.y() < pos.y(),
@@ -89,20 +89,20 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(VecStruct pointI
 // Could be dangerous.
 QuadrantPointer_t Quadrant::makeSubQuadrant(entity_t newShape) {
     auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->getPos());
-    VecStruct offsets =
+    PhysicalVector offsets =
             dimensions
                     .scaledBy(.25)
                     .withElementsMultipliedBy(targetIndices.polarities());
-    VecStruct newPos = pos.plus( offsets );
+    PhysicalVector newPos = pos.plus( offsets );
 
     return std::move(std::make_shared<Quadrant>( newShape, this->level + 1, newPos, this->getWidth() / 2.0 ) );
 }
 
-bool Quadrant::positionIsInQuadrantBoundaries(VecStruct insertPos) {
-  VecStruct newDimensions = dimensions.scaledBy(.5);
+bool Quadrant::positionIsInQuadrantBoundaries(PhysicalVector insertPos) {
+  PhysicalVector newDimensions = dimensions.scaledBy(.5);
 
-  VecStruct maxBoundariesVec = pos.plus(newDimensions);
-  VecStruct minBoundariesVec = pos.minus(newDimensions);
+  PhysicalVector maxBoundariesVec = pos.plus(newDimensions);
+  PhysicalVector minBoundariesVec = pos.minus(newDimensions);
 
   return withinBoundaries( insertPos, minBoundariesVec, maxBoundariesVec );
 }

@@ -11,7 +11,7 @@ shared_ptr<Observer> Observer::init(WindowDimensions windowDimensions) {
 }
 
 Observer::Observer(WindowDimensions windowDimensions)
-          :Moveable(VecStruct(0,0,0))
+          :Moveable(PhysicalVector(0,0,0))
           , id( curObserver++ )
           , autoScale( true )
 
@@ -63,12 +63,12 @@ Observer &Observer::getCurObserverRef() {
 }
 
 void Observer::update(float dt) {
-    VecStruct rotVec;
-    rotVec = VecStruct(1,  0, 0);
+    PhysicalVector rotVec;
+    rotVec = PhysicalVector(1,  0, 0);
   adjustAngle(angVelocity.x(), rotVec);
-    rotVec = VecStruct(0,  1, 0);
+    rotVec = PhysicalVector(0,  1, 0);
   adjustAngle(angVelocity.y(), rotVec);
-    rotVec = VecStruct(0,  0, 1);
+    rotVec = PhysicalVector(0,  0, 1);
   adjustAngle(angVelocity.z(), rotVec);
 }
 

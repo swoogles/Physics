@@ -18,7 +18,7 @@ void saveShapes(char * fileName, vectorT shapes) {
 		myfile << curShape->getType() << endl;
 
 
-		VecStruct pos(curShape->getPos());
+		PhysicalVector pos(curShape->getPos());
 		vecFilePrint(myfile, pos);
 
 		myfile << curShape->getMass().value() << endl;
@@ -26,7 +26,7 @@ void saveShapes(char * fileName, vectorT shapes) {
 		auto momentum = curShape->getMomentum();
 		vecFilePrint(myfile, momentum);
 
-		VecStruct angularMomenum = curShape->getAngMomentum();
+		PhysicalVector angularMomenum = curShape->getAngMomentum();
 		vecFilePrint(myfile, angularMomenum);
 
 		myfile << curShape->getDensity() << endl;
@@ -62,7 +62,7 @@ void openShapes(char * fileName, vectorT shapes) {
 		if (type == 1) {
 
 			//Set start position
-			VecStruct pos(vecFileRead(curFile));
+			PhysicalVector pos(vecFileRead(curFile));
 
 			//Set start mass
 			float mass;
@@ -70,10 +70,10 @@ void openShapes(char * fileName, vectorT shapes) {
 			kilogram_t typedMass = kilogram_t(mass);
 
 			//Set start momentum
-			VecStruct momentum(vecFileRead(curFile));
+			PhysicalVector momentum(vecFileRead(curFile));
 
 			//Set start angular momentum
-			VecStruct angularMomentum(vecFileRead(curFile));
+			PhysicalVector angularMomentum(vecFileRead(curFile));
 
 			//Set start density
 			float density;
@@ -81,7 +81,7 @@ void openShapes(char * fileName, vectorT shapes) {
 			kilograms_per_cubic_meter_t typedDensity = kilograms_per_cubic_meter_t(density);
 
 			//Set start color
-			VecStruct color; // TODO decide whether to serialize. Probably yes.
+			PhysicalVector color; // TODO decide whether to serialize. Probably yes.
 			vecFileRead(curFile);
 
 			shapePointer_t curShape = std::make_shared<Particle>(
@@ -98,14 +98,14 @@ void openShapes(char * fileName, vectorT shapes) {
 	glutPostRedisplay();
 }
 
-VecStruct vecFileRead(ifstream &curFile) {
+PhysicalVector vecFileRead(ifstream &curFile) {
 	float values[3];
 	for (int i = 0; i < 3; i++)
 		curFile >> values[i];
-	return VecStruct(values);
+	return PhysicalVector(values);
 }
 
-void vecFilePrint(ofstream &myfile, VecStruct outputVec) {
+void vecFilePrint(ofstream &myfile, PhysicalVector outputVec) {
 	myfile << outputVec.x() << " ";
 	myfile << outputVec.y() << " ";
 	myfile << outputVec.z() << endl;

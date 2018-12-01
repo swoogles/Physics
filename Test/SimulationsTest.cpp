@@ -11,11 +11,11 @@
 TEST_CASE( "Randomly distribute objects in a sphere", "[current]" ) {
     srand (static_cast <unsigned> (time(0)));
 
-    VecStruct startPos;
+    PhysicalVector startPos;
     double maxDistance = 10;
-    VecStruct target(0,0,0,false);
+    PhysicalVector target(0,0,0,false);
     Simulations::randomPointInSphere(maxDistance, target);
-    VecStruct res(startPos);
+    PhysicalVector res(startPos);
     cout << "res: " << res << endl;
 
 }

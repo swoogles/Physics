@@ -35,7 +35,7 @@ Simulation::Simulation(Simulation &&originalSimulation, ParticleList newObjects)
 }
 
 void Simulation::refreshQuadrant() {
-    VecStruct pos(0, 0, 0, true);
+    PhysicalVector pos(0, 0, 0, true);
 
     float side = 10e7; //Formation Value . ACK!!!! How miserably hard-coded!!
     quadrant = nullptr;
@@ -49,7 +49,7 @@ void Simulation::refreshQuadrant() {
     }
 }
 
-void Simulation::updateXYMinsAndMaxes(VecStruct curPos) {
+void Simulation::updateXYMinsAndMaxes(PhysicalVector curPos) {
     // TODO Use min/max functions instead of comparisons here.
     resetXYMinsAndMaxes();
     maxX = std::max(maxX, curPos.x());
@@ -77,13 +77,13 @@ void Simulation::resetXYMinsAndMaxes() {
 	maxY = FLT_MIN;
 }
 
-VecStruct Simulation::getConstGravFieldVal() {
+PhysicalVector Simulation::getConstGravFieldVal() {
     return gravField;
 }
 
 void Simulation::updateMinsAndMaxes() {
     for ( const auto & curShape : this->physicalObjects.getShapes() ) {
-        VecStruct curPos(curShape->getPos());
+        PhysicalVector curPos(curShape->getPos());
         updateXYMinsAndMaxes(curPos);
     }
 }
@@ -113,8 +113,8 @@ double Simulation::getTimeElapsed() { return timeElapsed; }
 
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
-VecStruct calcForceGravNew(Particle &object1, MyShape &object2, float dt) {
-    VecStruct sepVec(object1.getVectorToObject(object2));
+PhysicalVector calcForceGravNew(Particle &object1, MyShape &object2, float dt) {
+    PhysicalVector sepVec(object1.getVectorToObject(object2));
 
     double rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
 
@@ -128,19 +128,19 @@ VecStruct calcForceGravNew(Particle &object1, MyShape &object2, float dt) {
 }
 
 void elasticCollision(Particle &object1, Particle &object2, float dt) {
-    VecStruct sepVecUnit = object1.getVectorToObject(object2).unit();
-    VecStruct n(sepVecUnit);
+    PhysicalVector sepVecUnit = object1.getVectorToObject(object2).unit();
+    PhysicalVector n(sepVecUnit);
 
     double c = n.scalarProduct4(object1.getVelocity().minus(object2.getVelocity()));
 
     auto combinedMass = (object2.getMass() + object1.getMass()).value();
     double multiplierA = -2 * ( object2.getMass().value() * c ) / combinedMass;
-    VecStruct aVec = n.scaledBy(multiplierA);
+    PhysicalVector aVec = n.scaledBy(multiplierA);
 
     object1.adjustVelocity(aVec);
 
     double multiplierB = 2 * ( object1.getMass().value() * c ) / combinedMass;
-    VecStruct bVec = n.scaledBy(multiplierB);
+    PhysicalVector bVec = n.scaledBy(multiplierB);
 
     object2.adjustVelocity(bVec);
 
@@ -171,7 +171,7 @@ void Simulation::calcForcesAll_LessNaive(float dt) {
                 Particle & object2 = *physicalObjects.at(j);
 
                 if (this->gravBetweenObjects ) {
-                    VecStruct gravVec = calcForceGravNew(object1, object2, dt );
+                    PhysicalVector gravVec = calcForceGravNew(object1, object2, dt );
 
                     object1.adjustMomentum(gravVec);
                     object2.adjustMomentum(gravVec.scaledBy(-1).vec);
@@ -210,7 +210,7 @@ PairCollection Simulation::calculateForceOnExternalNode(
 
     //b.
     if ( curObject != shapeInQuadrant ) {
-        VecStruct gravVec = calcForceGravNew( *curObject, *shapeInQuadrant, dt);
+        PhysicalVector gravVec = calcForceGravNew( *curObject, *shapeInQuadrant, dt);
         curObject->adjustMomentum(gravVec);
         //c.
         if ( curObject->isTouching( *shapeInQuadrant ) ) {
@@ -246,7 +246,7 @@ PairCollection Simulation::calcForceOnObject_Octree(
         double distance = curObject->distanceTo(curQuadrant);
         //2.a
         if ( curQuadrant.getWidth() / distance < octreeTheta ) {
-            VecStruct gravVec = calcForceGravNew( *curObject, curQuadrant, dt);
+            PhysicalVector gravVec = calcForceGravNew( *curObject, curQuadrant, dt);
             //b.
             curObject->adjustMomentum(gravVec);
         } else { //3.
@@ -308,7 +308,7 @@ kilogram_t Simulation::getMass() {
 
 ParticleList Simulation::crackPhysicalObject(Particle &shape) {
     int numberOfFragments = 2;
-    VecStruct initialMomentum(shape.getMomentum());
+    PhysicalVector initialMomentum(shape.getMomentum());
 
     return ParticleList();
 }

@@ -15,7 +15,7 @@
 #include <functional>
 
 TEST_CASE("Get children", "[Quadrant]") {
-    VecStruct pos;
+    PhysicalVector pos;
     float width = 200;
     shared_ptr<Particle> shape = TestUtils::circleAt(5, 5, 5);
     

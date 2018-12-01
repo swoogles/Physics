@@ -2,56 +2,56 @@
 // Created by bfrasure on 15/09/18.
 //
 
-#include "VecStruct.h"
+#include "PhysicalVector.h"
 
-VecStruct::VecStruct()
+PhysicalVector::PhysicalVector()
 : vec()
 {}
 
-unique_ptr <VecStruct> VecStruct::vecFromAtoB(VecStruct &a, VecStruct &b) {
-    unique_ptr<VecStruct> sepVec = make_unique<VecStruct>();
+unique_ptr <PhysicalVector> PhysicalVector::vecFromAtoB(PhysicalVector &a, PhysicalVector &b) {
+    unique_ptr<PhysicalVector> sepVec = make_unique<PhysicalVector>();
     sgSubVec4( sepVec->vec, a.vec, b.vec );
     return sepVec;
 }
 
-VecStruct::VecStruct(sgVec4 coordinates) {
+PhysicalVector::PhysicalVector(sgVec4 coordinates) {
     sgCopyVec4(vec, coordinates);
 }
 
-VecStruct::VecStruct(float x, float y, float z)
+PhysicalVector::PhysicalVector(float x, float y, float z)
     :vec{x, y, z} {
 
 }
 
-VecStruct::VecStruct(float x, float y, float z, bool anchored)
+PhysicalVector::PhysicalVector(float x, float y, float z, bool anchored)
     :vec{x, y, z, anchored ? 1.0f : 0.0f} {
 }
 
 
-VecStruct VecStruct::scaledBy(double scalingFactor) {
+PhysicalVector PhysicalVector::scaledBy(double scalingFactor) {
     // TODO Make sure Vec3 behavior is appropriate here.
     sgVec4 newVec;
     sgScaleVec3 ( newVec, this->vec, scalingFactor );
-    VecStruct newVecStruct(newVec);
+    PhysicalVector newVecStruct(newVec);
     return newVecStruct;
 }
 
-VecStruct VecStruct::plus(const VecStruct & other) {
+PhysicalVector PhysicalVector::plus(const PhysicalVector & other) {
     sgVec4 newVec;
     sgAddVec4 ( newVec, this->vec, other.vec );
-    VecStruct newVecStruct(newVec);
+    PhysicalVector newVecStruct(newVec);
     return newVecStruct;
 }
 
-VecStruct VecStruct::minus(const VecStruct &other) {
+PhysicalVector PhysicalVector::minus(const PhysicalVector &other) {
     sgVec4 newVec;
     sgSubVec4 ( newVec, this->vec, other.vec );
-    VecStruct newVecStruct(newVec);
+    PhysicalVector newVecStruct(newVec);
     return newVecStruct;
 }
 
-VecStruct VecStruct::withElementsMultipliedBy(const VecStruct &other) {
-    VecStruct retVec(
+PhysicalVector PhysicalVector::withElementsMultipliedBy(const PhysicalVector &other) {
+    PhysicalVector retVec(
             this->vec[0] * other.vec[0],
             this->vec[1] * other.vec[1],
             this->vec[2] * other.vec[2]
@@ -59,32 +59,32 @@ VecStruct VecStruct::withElementsMultipliedBy(const VecStruct &other) {
     return retVec;
 }
 
-VecStruct VecStruct::unit() {
+PhysicalVector PhysicalVector::unit() {
     sgVec4 newVec;
     sgNormaliseVec4(newVec, vec);
     return newVec;
 }
 
-float VecStruct::scalarProduct4(const VecStruct & other) {
+float PhysicalVector::scalarProduct4(const PhysicalVector & other) {
     return sgScalarProductVec4(this->vec, other.vec);
 }
 
-VecStruct::VecStruct(const float *coordinates) {
+PhysicalVector::PhysicalVector(const float *coordinates) {
     sgCopyVec4(vec, coordinates);
 }
 
-VecStruct VecStruct::vectorProduct3(const VecStruct &other) {
-    VecStruct retVec;
+PhysicalVector PhysicalVector::vectorProduct3(const PhysicalVector &other) {
+    PhysicalVector retVec;
     sgVectorProductVec3(retVec.vec, this->vec, other.vec);
     return retVec;
 }
 
-float VecStruct::length() {
+float PhysicalVector::length() {
     SGfloat distanceSquared = sgLengthSquaredVec4(this->vec);
     return sqrt(distanceSquared);
 }
 
-string VecStruct::toString() {
+string PhysicalVector::toString() {
     string rep;
     // TODO Get float->string conversion. Bleh.
     return rep
@@ -98,22 +98,22 @@ string VecStruct::toString() {
             ;
 }
 
-bool VecStruct::hasValues(float xIn, float yIn, float zIn) {
+bool PhysicalVector::hasValues(float xIn, float yIn, float zIn) {
     return  x() == xIn && y() == yIn && z() == zIn;
 }
 
-std::list<VecStruct> VecStruct::cancellingVectors(int numberOfVectors) {
-    return std::list<VecStruct>();
+std::list<PhysicalVector> PhysicalVector::cancellingVectors(int numberOfVectors) {
+    return std::list<PhysicalVector>();
 }
 
-bool VecStruct::operator==(const VecStruct &other) const {
+bool PhysicalVector::operator==(const PhysicalVector &other) const {
     float epsilon = 0.0001;
     return fabs(this->x() -other.x()) < epsilon
            && fabs(this->y() -other.y()) < epsilon
            && fabs(this->z() -other.z()) < epsilon;
 }
 
-ostream &operator<<(ostream &os, const VecStruct &vec) {
+ostream &operator<<(ostream &os, const PhysicalVector &vec) {
     os << "{" << vec.x() << ", " << vec.y() << ", " << vec.z() << "}";
     return os;
 }

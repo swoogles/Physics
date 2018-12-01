@@ -63,13 +63,13 @@ void openShapes(char * fileName, vectorT shapes);
  *
  *  No error checking is done currently; no guarantee made for what happens if format doesn't match
  */
-VecStruct vecFileRead(ifstream &curFile);
+PhysicalVector vecFileRead(ifstream &curFile);
 
 /*! \relates sgVec
  * \brief Prints first three numbers from outputVec on one line with a single space in between each
  *
  */
-void vecFilePrint(ofstream &, VecStruct outputVec);
+void vecFilePrint(ofstream &, PhysicalVector outputVec);
 
 
 #endif /* FILEINTERACTION_H_ */

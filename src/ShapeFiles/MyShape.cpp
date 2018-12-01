@@ -4,25 +4,25 @@ double MyShape::distanceTo(MyShape &object2) {
     return this->getVectorToObject(object2).length();
 }
 
-MyShape::MyShape(ShapeType shapeType, VecStruct momentum)
+MyShape::MyShape(ShapeType shapeType, PhysicalVector momentum)
 		:Moveable(momentum),
 		shapeType(shapeType) {
 };
 
 double MyShape::getScale(){}
 
-void MyShape::adjustMomentum(VecStruct dMomentum) {
+void MyShape::adjustMomentum(PhysicalVector dMomentum) {
     this->momentum = momentum.plus(dMomentum);
 }
 
-VecStruct MyShape::getMomentum() {
-    VecStruct vecStruct(momentum);
+PhysicalVector MyShape::getMomentum() {
+    PhysicalVector vecStruct(momentum);
     return vecStruct;
 }
 
 double MyShape::getMomentOfInertia() { return 1;}
 
-void MyShape::setAngMomentum(VecStruct newAngMomentum) {
+void MyShape::setAngMomentum(PhysicalVector newAngMomentum) {
     this->prevAngVelocity = angVelocity;
 	this->prevAngVelocity = angVelocity;
 	double I = getMomentOfInertia();
@@ -30,8 +30,8 @@ void MyShape::setAngMomentum(VecStruct newAngMomentum) {
 	this->angVelocity = angMomentum.scaledBy(1.0f/I);
 }
 
-VecStruct MyShape::getAngMomentum() {
-    VecStruct retVec(angMomentum.vec);
+PhysicalVector MyShape::getAngMomentum() {
+    PhysicalVector retVec(angMomentum.vec);
     return retVec;
 }
 
@@ -47,8 +47,8 @@ kilograms_per_cubic_meter_t MyShape::getDensity() {
 	return density;
 }
 
-VecStruct MyShape::getColor() const {
-    VecStruct vecStruct(color.vec);
+PhysicalVector MyShape::getColor() const {
+    PhysicalVector vecStruct(color.vec);
     return vecStruct;
 }
 
@@ -72,8 +72,8 @@ ShapeType MyShape::getType() {
 	return this->shapeType;
 }
 
-VecStruct MyShape::getWeightedPosition() {
-//    return VecStruct();
+PhysicalVector MyShape::getWeightedPosition() {
+//    return PhysicalVector();
     return this->getPos().scaledBy(this->getMass().value() );
 }
 
