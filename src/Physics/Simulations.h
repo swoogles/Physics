@@ -1,7 +1,6 @@
 #ifndef SIMULATIONS_H_
 #define SIMULATIONS_H_
 
-#include <plib/sg.h>
 #include "ShapeFiles/Particle.h"
 #include "../ShapeFiles/ShapeList.h"
 #include "Simulation.h"
@@ -67,28 +66,18 @@ class Simulations
      *  \brief Gets a random starting position vector based on the second parameter
      *
      *  This function currently uses pieceRadius as the determining factor for the bounding box; this should be changed to an independent bounding variable
-     *  \param startPos Random starting position is returned here
      *  \param pieceRadius Determines size of bounding box
      */
-    static void randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target);
-
-    /*! \relates MyShape
-     *  \brief Gets a random starting position vector inside the volume vector
-     *
-     *  \param startPos Random starting position is returned here
-     *  \param volume Determines size of bounding box
-     */
-    static void randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 target );
+    static VecStruct randomSplitBodyPlacement(float pieceRadius, VecStruct target);
 
     /*! \relates MyShape
      *  \brief Gets a random starting momentum vector based on second parameter
      *
      *  This function currently uses pieceMass as the determining factor for momentum range; figure out a better basis
      *
-     *  \param startMom Random starting momentum is returned here
      *  \param pieceMass Determines magnitude of momentum
      */
-    static void randomSplitBodyMomentum(sgVec4 startMom, kilogram_t pieceMass);
+    static VecStruct randomSplitBodyMomentum(kilogram_t pieceMass);
 
     typedef unique_ptr<Simulation> SimulationPointer_t;
   public:
@@ -103,8 +92,8 @@ class Simulations
     static SimulationPointer_t
     bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
 
-    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, float *target,
-                                                                      float *groupMomentum);
+    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, VecStruct target,
+                                                                  VecStruct groupMomentum);
 
     static SimulationPointer_t billiards1(int, ForceCalculationMethod forceCalculationMethod);
 
@@ -115,7 +104,7 @@ class Simulations
     static SimulationPointer_t
     createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
 
-    static void randomPointInSphere(sgVec4 startPos, double maxDistance, sgVec4 target);
+    static VecStruct randomPointInSphere(double maxDistance, VecStruct target);
 
 };
 

@@ -22,19 +22,6 @@ Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulatio
         return Simulations::billiards1(15, forceCalculationMethod);
     } else if ( simNumber == '5' ) {
         return Simulations::billiards2_ReturnSimulation(15, forceCalculationMethod);
-    } else if ( simNumber == '6' ) {
-        sgVec4 groupMomentum;
-        groupMomentum[0]=0;
-        groupMomentum[1]=2800;
-        groupMomentum[2]=0;
-        groupMomentum[3]=1;
-        sgVec4 target = { -2000, 0, 0, 1 };
-        Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties, target, groupMomentum);
-
-        target[0]=-target[0];
-        groupMomentum[1]*=-1;
-
-        Simulations::bodyFormationGeneric_ArbitraryList(simulationProperties, target, groupMomentum);
     } else if ( simNumber == '7' ) {
         return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
     } else if ( simNumber == '8' ) {
@@ -45,44 +32,6 @@ Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulatio
 
 }
 
-
-/*
-void Simulations::simpleOrbit() {
-
-	sgVec4 startPos = { 0, 0, 0, 1 };
-  sgVec4 startMom = { 0, -2e-1, 0, 0 };
-
-	float sunVolume = (AstronomicalValues::MASS_SUN*MASS_VAR)/(AstronomicalValues::DENSITY_SUN*CONVERSION_CONST);
-	float sunRadius = getSplitBodyRadius(sunVolume, 1);
-
-
-  shared_ptr<Particle> curShape;
-
-	sgVec3 sunColor = { 255, 255, 0 };
-
-    curShape = make_shared<Particle>(
-            startPos,
-            AstronomicalValues::MASS_SUN,
-            startMom,
-            AstronomicalValues::DENSITY_SUN,
-            sunColor
-    );
-
-	startPos[0] = sunRadius * 214.94;
-
-	sgNegateVec4(startMom);
-
-    sgVec3 earthColor = { 165,42,42 };
-
-    curShape = make_shared<Particle>(
-            startPos,
-            MASS_EARTH,
-            startMom,
-            DENSITY_EARTH,
-            earthColor
-    );
-}
- */
 
 SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod forceCalculationMethod) {
     ParticleList physicalObjects;
@@ -244,7 +193,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
     VecStruct startMomentum(0, 0, 0);
     VecStruct newColor (1, 0, 1);
 
-    VecStruct startPlacement (-1e7 , 0, 0, true);
+    VecStruct startPlacement (-1e7f , 0, 0, true);
 
     shared_ptr<Particle> curShape = make_shared<Particle>(
             startPlacement,
@@ -277,7 +226,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     float d= 3e4;
 
     //#1
-    sgVec4 object1Placement = {  (float) +(5/8.0 * d), (float) +(7/8.0 * d), 1, 1};
+    VecStruct object1Placement(+5/8.0f * d, +7/8.0f * d, 1, true);
 
     physicalObjects.addShapeToList(
             make_shared<Particle>(
@@ -290,7 +239,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             );
 
     //#2
-    sgVec4 object2Placement = {  (float) -(7/8.0 * d), (float) +(7/8.0 * d), 1, 1};
+    VecStruct object2Placement(-7/8.0f * d, +7/8.0f * d, 1, true);
 
     physicalObjects.addShapeToList(
             make_shared<Particle>(
@@ -302,7 +251,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
-    sgVec4 object3Placement = {  (float) -(1/8.0 * d), (float) -(5/8.0 * d), 1, 1};
+    VecStruct object3Placement(-1/8.0f * d, -5/8.0f * d, 1, true);
 
     physicalObjects.addShapeToList(
             make_shared<Particle>(
@@ -324,38 +273,36 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 
     const kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     const kilogram_t pieceMass = (properties.mass*1000.0)/numPieces;
-    sgVec4 startPlacement, startMomentum;
-    sgVec4 target = { 1000, 0, 0, 1};
+    VecStruct target(1000, 0, 0, true);
 
     VecStruct newColor (1, 1, 1);
 
     srand ( time(NULL) );
 
+    VecStruct startMomentumVec;
+    VecStruct startPos;
     for (int i = 0; i < numPieces; i++) {
         if (i % 2 == 0) {
-            startMomentum[0]=0;startMomentum[1]=0;startMomentum[2]=0;
-            randomSplitBodyMomentum(startMomentum, pieceMass);
-            randomPointInSphere(startPlacement, properties.sandboxWidth, target);
+            startMomentumVec = randomSplitBodyMomentum(pieceMass);
+            startPos = randomPointInSphere(properties.sandboxWidth, target);
         }
         else {
-            sgNegateVec4(startMomentum);
-            sgNegateVec4(startPlacement);
+            startMomentumVec = startMomentumVec.scaledBy(-1);
+            startPos = startPos.scaledBy(-1);
         }
 
-        VecStruct startMomentumStruct(startMomentum);
         const shared_ptr<Particle> curShape = make_shared<Particle>(
-                startPlacement,
+                startPos,
                 pieceMass,
-                startMomentumStruct,
+                startMomentumVec,
                 objectDensity,
                 newColor
         );
 
         //Check if being placed on previously created object
         while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-            randomPointInSphere(startPlacement, properties.sandboxWidth, target);
-            VecStruct newPos(startPlacement);
-            curShape->setPos( newPos );
+            VecStruct newPosAttempt = randomPointInSphere(properties.sandboxWidth, target);
+            curShape->setPos( newPosAttempt );
         }
         physicalObjects.addShapeToList( curShape );
     }
@@ -363,39 +310,37 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
     return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, properties.forceCalculationMethod, properties.octreeTheta);
 }
 
-SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, float *target,
-                                                                    float *groupMomentum)
+SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties,
+                                                                    VecStruct target,
+                                                                    VecStruct groupMomentum)
 {
   ParticleList physicalObjects;
 
 	kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
 	kilogram_t pieceMass = properties.mass / properties.numShapes;
-	sgVec4 startPlacement, startMomentum;
 
 	srand ( time(NULL) );
 
     VecStruct newColor (1, 1, 1);
 
     shared_ptr<Particle> curShape;
+    VecStruct startMomentumVec;
+    VecStruct startPos;
 	for (int i = 0; i < properties.numShapes; i++) {
 
 		if (i % 2 == 0) {
-			randomSplitBodyMomentum(startMomentum, pieceMass);
-            randomPointInSphere(startPlacement, properties.sandboxWidth, target);
+            startMomentumVec = randomSplitBodyMomentum(pieceMass);
+            startPos = randomPointInSphere(properties.sandboxWidth, target);
 		}
 		else {
-			sgNegateVec4(startMomentum);
-			sgNegateVec4(startPlacement);
+            startMomentumVec = startMomentumVec.scaledBy(-1);
+            startPos = startPos.scaledBy(-1);
 		}
 
-        // Apply general group momentum to individual pieces momentum
-        sgAddVec4( startMomentum, groupMomentum );
-        VecStruct startMomentumStruct(startMomentum);
-
         curShape = make_shared<Particle>(
-                startPlacement,
+                startPos,
                 pieceMass,
-                startMomentumStruct,
+                startMomentumVec.plus(groupMomentum), // Apply general group momentum to individual pieces momentum
                 objectDensity,
                 newColor
         );
@@ -403,8 +348,8 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 
 		//Check if being placed on previously created object
 		while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-            randomPointInSphere(startPlacement, properties.sandboxWidth, target);
-			curShape->setPos(startPlacement[0], startPlacement[1], startPlacement[2]);
+            VecStruct newPosAttempt = randomPointInSphere(properties.sandboxWidth, target);
+			curShape->setPos(newPosAttempt);
 		}
     physicalObjects.addShapeToList( curShape );
 	}
@@ -412,79 +357,49 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
     return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, properties.forceCalculationMethod, properties.octreeTheta);
 }
 
-void Simulations::randomSplitBodyPlacement(sgVec4 startPos, float pieceRadius, sgVec4 target) {
+VecStruct Simulations::randomSplitBodyPlacement(float pieceRadius, VecStruct target) {
   int randMult;
   float largestDistance = 0;
 
-  for (int i = 0; i < 3; i++)
-  {
+  double values[] = {0, 0, 0};
+  for (double &value : values) {
     randMult = rand()%450;
     if (randMult % 2 == 0) {
       randMult *= -1;
     }
-    startPos[i] = randMult * pieceRadius;
-    if ( startPos[i] > largestDistance )
-    {
-      largestDistance = startPos[i];
+      value = randMult * pieceRadius;
+    if (value > largestDistance ) {
+      largestDistance = value;
     }
   }
 
-  startPos[3] = 1;
-
-  sgAddVec4( startPos, target );
+  return VecStruct(values[0], values[1], values[2], false).plus(target);
 }
 
-void Simulations::randomSplitBodyPlacementInZone(sgVec4 startPos, sgVec4 volume, sgVec4 target ) {
-  int randMult;
-  int dimensionInteger;
-
-  for (int i = 0; i < 3; i++)
-  {
-    dimensionInteger = (int) volume[i]/2;
-
-    randMult = rand()%(dimensionInteger/2);
-    if (randMult % 2 == 0) {
-      randMult *= -1;
-    }
-    startPos[i] = randMult;
-  }
-
-  sgAddVec4( startPos, target );
-}
-
-void Simulations::randomSplitBodyMomentum(sgVec4 startMom, kilogram_t pieceMass) {
+VecStruct Simulations::randomSplitBodyMomentum(kilogram_t pieceMass) {
   static int randMult;
 
   static bool switchB = false;
+  double values[] = {0, 0, 0};
 
-  if (switchB)
-  {
-    for (int i = 0; i < 3; i++) {
+  if (switchB) {
+    for (auto &value : values) {
 
-      if (switchB)
-      {
+      if (switchB) {
         // Set the range of momenta, and have them be half positive/half negative
         randMult = rand()%100;
         if (randMult % 2 == 0)
           randMult *= -1;
-
-
-      }
-      else {
+      } else {
         randMult *= -1;
       }
-      startMom[i] = randMult * pieceMass.value() * 0.001000; // Good mix
+        value = randMult * pieceMass.value() * 0.001000; // Good mix
     }
   }
 
 
-  if (switchB) {
-    switchB = false;
-  }
-  else {
-    switchB = true;
-  }
-  startMom[3] = 0;
+    switchB = !switchB;
+    return VecStruct(values[0], values[1], values[2], false);
 }
 
 /*
@@ -529,10 +444,10 @@ float randomFloat() {
  * Algorithm explained and designed here:
  * https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
  */
-void Simulations::randomPointInSphere(sgVec4 startPos, double maxDistance, sgVec4 target) {
+VecStruct Simulations::randomPointInSphere(double maxDistance, VecStruct target) {
     auto u = randomFloat();
     float v = randomFloat();
-    auto theta = u * 2.0 * M_PI;
+    auto theta = u * 2.0f * M_PI;
     auto phi = acos(2.0f * (float)v - 1.0f);
     auto r = std::cbrt(randomFloat());
     auto sinTheta = sin(theta);
@@ -542,14 +457,6 @@ void Simulations::randomPointInSphere(sgVec4 startPos, double maxDistance, sgVec
     auto x = r * sinPhi * cosTheta;
     auto y = r * sinPhi * sinTheta;
     auto z = r * cosPhi;
-    startPos[0] = x;
-    startPos[1] = y;
-    startPos[2] = z;
-
-    startPos[3] = 1;
-    sgScaleVec3(startPos, maxDistance);
-
-    sgAddVec4( startPos, target );
-
+    return VecStruct(x, y, z, true).scaledBy(maxDistance).plus(target);
 }
 
