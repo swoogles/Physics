@@ -17,33 +17,34 @@ double Particle::getMomentOfInertia() {
 }
 
 Particle::Particle(
-        sgVec4 pos,
+        VecStruct pos,
         double mass,
         float radius,
         VecStruct momentum,
-        sgVec3 color
+        VecStruct color
 ):MyShape(ShapeType::circle, momentum) // FIX VECSTRUCT!!
+,radius(meter_t(radius))
   {
-	sgCopyVec4(this->pos.vec, pos);
+    this->pos = pos;
 	this->mass = kilogram_t(mass);
-	this->radius = meter_t(radius);
 //	ρ=(3m)/(4πr^2)
 	this->density = kilograms_per_cubic_meter_t((3*mass) / (4 * M_PI * (radius * radius)));
-	sgCopyVec3(this->color.vec, color);
+	this->color = color;
 }
 
 Particle::Particle(
-		sgVec4 pos,
-		kilogram_t mass,
-		VecStruct momentum,
-		kilograms_per_cubic_meter_t density,
-		sgVec3 color
-): MyShape(ShapeType::circle, momentum) {
-	sgCopyVec4(this->pos.vec, pos);
+        VecStruct pos,
+        kilogram_t mass,
+        VecStruct momentum,
+        kilograms_per_cubic_meter_t density,
+        VecStruct color
+): MyShape(ShapeType::circle, momentum)
+{
+	this->pos = pos;
 	this->mass = mass;
     this->radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));
 	this->density = density;
-	sgCopyVec3(this->color.vec, color);
+	this->color = color;
 }
 
 meter_t Particle::calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density) {

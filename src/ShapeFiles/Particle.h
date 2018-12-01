@@ -34,19 +34,19 @@ class Particle: public MyShape {
   public:
 
     Particle(
-            sgVec4 pos,
+            VecStruct pos,
             kilogram_t mass,
             VecStruct momentum,
             kilograms_per_cubic_meter_t density,
-            sgVec3 color
+            VecStruct color
     );
 
     Particle(
-            sgVec4 pos,
+            VecStruct pos,
             double mass,
             float radius,
             VecStruct momentum,
-            sgVec3 color
+            VecStruct color
     );
 
     double getScale() override;

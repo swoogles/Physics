@@ -99,14 +99,11 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     VecStruct cueVelocity(30, -75, 0);
     VecStruct cueMomentum = cueVelocity.scaledBy(cueMass.value());
 
-    sgVec3 newColor;
-    newColor[0] = 1;
-    newColor[1] = 1;
-    newColor[2] = 1;
+    VecStruct newColor(1, 1, 1, false);
 
     shared_ptr<Particle> curShape;
 
-    sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
+    VecStruct cuePos(numRows, numRows*3, 0, true);
     curShape = make_shared<Particle>(
             cuePos,
             cueMass.value(),
@@ -121,7 +118,7 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     int cutOff = numRows*2;
     for (int i = 1; i < numRows+1; i++) {
         for (int j = i; j < cutOff; j+= 2) {
-            sgVec4 ballPos = { (float) (j* 1.7), (float) (i*2.5), 0, 1};
+            VecStruct ballPos( j* 1.7,  (i*2.5), 0, true);
 
             curShape = make_shared<Particle>(
                     ballPos,
@@ -151,11 +148,11 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
     VecStruct cueVelocity(30, -75, 0);
     VecStruct cueMomentum = cueVelocity.scaledBy(cueMass);
 
-    sgVec3 newColor = { 1, 0, 1 };
+    VecStruct newColor(1, 0, 1, false);
 
     shared_ptr<Particle> shapeForInsertion;
 
-    sgVec4 cuePos = { (float) numRows, (float) numRows*3, 0, 1};
+    VecStruct cuePos(numRows, numRows*3, 0, true);
     shapeForInsertion = make_shared<Particle>(
             cuePos,
             cueMass,
@@ -168,15 +165,17 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
     VecStruct ballMomentum(0, 0, 0);
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numRows; j++) {
-            sgVec4 ballPos = { (float) j* 3, (float) i*3, 0, 1};
-            newColor[1] = -( ( -.5 + (j/float(numRows)) ) * ( -.5 + (j/float(numRows)) ) )+ 1.0;
+            VecStruct ballPos( j* 1.3,  (i*3), 0, true);
+
+            float greenValue = -( ( -.5 + (j/float(numRows)) ) * ( -.5 + (j/float(numRows)) ) )+ 1.0;
+            VecStruct ballColor(1, greenValue, 1, false);
 
             shapeForInsertion = make_shared<Particle>(
                     ballPos,
                     ballMass,
                     ballRadius,
                     ballMomentum,
-                    newColor
+                    ballColor
             );
 
             physicalObjects.addShapeToList( shapeForInsertion );
@@ -197,11 +196,11 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
     VecStruct cueVelocity(30, -75, 0);
     VecStruct cueMomentum = cueVelocity.scaledBy(cueMass);
 
-    sgVec3 newColor = { 1, 1, 1 };
+    VecStruct newColor(1, 1, 1, false);
 
     shared_ptr<Particle> shapeForInsertion;
 
-    sgVec4 cuePos = { (float) numRows, (float) numRows*5, 0, 1};
+    VecStruct cuePos (numRows, numRows*5, 0, true);
     shapeForInsertion = make_shared<Particle>(
             cuePos,
             cueMass,
@@ -211,23 +210,21 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
     );
     physicalObjects.addShapeToList( shapeForInsertion );
 
-    newColor[0] = 0;
-    newColor[2] = 0;
-
     VecStruct ballMomentum(0, 0, 0);
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numRows; j++) {
             for (int z = 0; z < numRows; z++) {
-                sgVec4 ballPos = { (float) (j* 4), (float) (i*4), (float) (z*4), 1};
-                newColor[1] = -( ( -.5 + (z/float(numRows)) ) * ( -.5 + (z/float(numRows)) ) )+ 1.0;
+                VecStruct ballPos( j* 4,  (i*4),  (z*4), true);
 
+                float greenValue = -( ( -.5 + (z/float(numRows)) ) * ( -.5 + (z/float(numRows)) ) )+ 1.0;
+                VecStruct ballColor(0, greenValue, 0, false);
 
                 shapeForInsertion = make_shared<Particle>(
                         ballPos,
                         ballMass,
                         ballRadius,
                         ballMomentum,
-                        newColor
+                        ballColor
                 );
 
                 physicalObjects.addShapeToList( shapeForInsertion );
@@ -245,9 +242,9 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = properties.mass / numPieces;
     VecStruct startMomentum(0, 0, 0);
-    sgVec3 newColor = { 1, 0, 1 };
+    VecStruct newColor (1, 0, 1);
 
-    sgVec4 startPlacement = { -1e7 , 0, 0, 1};
+    VecStruct startPlacement (-1e7 , 0, 0, true);
 
     shared_ptr<Particle> curShape = make_shared<Particle>(
             startPlacement,
@@ -274,7 +271,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     kilogram_t pieceMass = (kilogram_t(AstronomicalValues::MASS_SUN))/(numPieces);
     VecStruct startMomentum(0, 0, 0);
 
-    sgVec3 newColor = { 1, 1, 1 };
+    VecStruct newColor (1, 1, 1);
 
     shared_ptr<Particle> curShape;
     float d= 3e4;
@@ -330,7 +327,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
     sgVec4 startPlacement, startMomentum;
     sgVec4 target = { 1000, 0, 0, 1};
 
-    sgVec3 newColor = { 1, 1, 1 };
+    VecStruct newColor (1, 1, 1);
 
     srand ( time(NULL) );
 
@@ -377,11 +374,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 
 	srand ( time(NULL) );
 
-    sgVec3 newColor;
-    newColor[0] = 1;
-    newColor[1] = 1;
-    newColor[2] = 1;
-
+    VecStruct newColor (1, 1, 1);
 
     shared_ptr<Particle> curShape;
 	for (int i = 0; i < properties.numShapes; i++) {
