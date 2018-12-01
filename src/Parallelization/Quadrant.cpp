@@ -14,7 +14,8 @@ entity_t Quadrant::getShapeInQuadrant() {
 
 
 Quadrant::Quadrant(entity_t newShape, int level, VecStruct &pos, float width)
-        :isLeaf(true)
+        :Box(pos, width, VecStruct(level*.10f, 1-level*.10f, 1-level*.10f))
+        ,isLeaf(true)
         ,containsBody(true)
         ,shapeInQuadrant(std::move(newShape))
         ,level(level)
@@ -26,7 +27,6 @@ Quadrant::Quadrant(entity_t newShape, int level, VecStruct &pos, float width)
   // TODO Get this in a more idiomatic form
   this->setMass(shapeInQuadrant->getMass());
   // TODO Can this be a more direct move?
-  this->setPos( pos );
 
   // TODO reinstate CoM calculations here
 }
