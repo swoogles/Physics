@@ -37,7 +37,7 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     ParticleList physicalObjects;
 
     int numPieces = 0;
-    kilogram_t cueMass = kilogram_t(100.0);
+    auto cueMass = kilogram_t(100.0);
 
     float ballMass = 0.156;
     float ballRadius = .95;
@@ -67,7 +67,7 @@ SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod 
     int cutOff = numRows*2;
     for (int i = 1; i < numRows+1; i++) {
         for (int j = i; j < cutOff; j+= 2) {
-            PhysicalVector ballPos( j* 1.7,  (i*2.5), 0, true);
+            PhysicalVector ballPos( j* 1.7f,  (i*2.5f), 0, true);
 
             curShape = make_shared<Particle>(
                     ballPos,
@@ -114,9 +114,9 @@ SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceC
     PhysicalVector ballMomentum(0, 0, 0);
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numRows; j++) {
-            PhysicalVector ballPos( j* 1.3,  (i*3), 0, true);
+            PhysicalVector ballPos( j* 1.3f,  (i*3), 0, true);
 
-            float greenValue = -( ( -.5 + (j/float(numRows)) ) * ( -.5 + (j/float(numRows)) ) )+ 1.0;
+            float greenValue = -( ( -.5f + (j/float(numRows)) ) * ( -.5f + (j/float(numRows)) ) )+ 1.0f;
             PhysicalVector ballColor(1, greenValue, 1, false);
 
             shapeForInsertion = make_shared<Particle>(
@@ -165,7 +165,7 @@ SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalc
             for (int z = 0; z < numRows; z++) {
                 PhysicalVector ballPos( j* 4,  (i*4),  (z*4), true);
 
-                float greenValue = -( ( -.5 + (z/float(numRows)) ) * ( -.5 + (z/float(numRows)) ) )+ 1.0;
+                float greenValue = -( ( -.5f + (z/float(numRows)) ) * ( -.5f + (z/float(numRows)) ) )+ 1.0f;
                 PhysicalVector ballColor(0, greenValue, 0, false);
 
                 shapeForInsertion = make_shared<Particle>(
@@ -277,7 +277,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
 
     PhysicalVector newColor (1, 1, 1);
 
-    srand ( time(NULL) );
+    srand (static_cast<unsigned int>(time(nullptr)));
 
     PhysicalVector startMomentumVec;
     PhysicalVector startPos;
@@ -319,7 +319,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 	kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
 	kilogram_t pieceMass = properties.mass / properties.numShapes;
 
-	srand ( time(NULL) );
+	srand (static_cast<unsigned int>(time(nullptr)));
 
     PhysicalVector newColor (1, 1, 1);
 
@@ -359,7 +359,7 @@ SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandb
 
 PhysicalVector Simulations::randomSplitBodyPlacement(float pieceRadius, PhysicalVector target) {
   int randMult;
-  float largestDistance = 0;
+  double largestDistance = 0;
 
   double values[] = {0, 0, 0};
   for (double &value : values) {
@@ -447,8 +447,8 @@ float randomFloat() {
 PhysicalVector Simulations::randomPointInSphere(double maxDistance, PhysicalVector target) {
     auto u = randomFloat();
     float v = randomFloat();
-    auto theta = u * 2.0f * M_PI;
-    auto phi = acos(2.0f * (float)v - 1.0f);
+    auto theta = u * 2.0f * float(M_PI);
+    auto phi = acos(2.0f * v - 1.0f);
     auto r = std::cbrt(randomFloat());
     auto sinTheta = sin(theta);
     auto cosTheta = cos(theta);
