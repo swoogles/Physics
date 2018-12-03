@@ -20,10 +20,8 @@ void Moveable::setPos(PhysicalVector newPos) {
 }
 
 PhysicalVector Moveable::position() {
-    PhysicalVector retVec(pos);
-	return retVec;
+	return pos;
 }
-
 
 PhysicalVector Moveable::vectorTo(Moveable &object2) {
     return object2.position().minus(this->position());
@@ -46,7 +44,11 @@ void Moveable::adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis) {
 }
 
 void Moveable::adjustVelocity(PhysicalVector dVel) {
-	this->_momentum = _momentum.scaledBy(1/_mass.value()).plus(dVel).scaledBy(_mass.value());
+	this->_momentum =
+			_momentum
+			.scaledBy(1/_mass.value())
+			.plus(dVel)
+			.scaledBy(_mass.value());
 }
 
 PhysicalVector Moveable::velocity() {

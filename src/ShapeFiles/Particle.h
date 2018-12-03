@@ -11,7 +11,7 @@ using namespace units::length;
 class Particle: public MyShape {
   private:
 //    float radius;
-    meter_t radius;
+    meter_t _radius;
 
     /*! \relates MyShape
      *  \brief Determines the final angular momentum after 2 objects collide in a completely inelastic collision
@@ -51,7 +51,7 @@ class Particle: public MyShape {
 
     double scale() override;
 
-    meter_t getRadius();
+    meter_t radius();
     void setRadius(meter_t radius);
 
     double momentOfInertia() override;

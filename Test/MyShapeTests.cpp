@@ -22,10 +22,10 @@ TEST_CASE( "merge Circles", "[green]" ) {
     particle_t a = TestUtils::improvedTestCircle();
     particle_t b = TestUtils::improvedTestCircle();
     auto originalMass = a->mass() + b->mass();
-    cout << "Radius of a: " << a->getRadius() << endl;
-    cout << "Radius of b: " << b->getRadius() << endl;
+    cout << "Radius of a: " << a->radius() << endl;
+    cout << "Radius of b: " << b->radius() << endl;
     a->mergeWith(*b);
-    REQUIRE(a->getRadius() > b->getRadius());
+    REQUIRE(a->radius() > b->radius());
     REQUIRE(a->mass() == originalMass);
 }
 
