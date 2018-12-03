@@ -53,6 +53,7 @@ protected:
 
 	virtual double momentOfInertia();
 public:
+	Moveable(ShapeType shapeType, PhysicalVector momentum);
 	Moveable(PhysicalVector momentum);
 
 	void setPos(PhysicalVector newPos);
@@ -69,31 +70,17 @@ public:
 	void update(float);
 	PhysicalVector weightedPosition();
 
-/*!
-  * Simple method for getting distance between 2 objects
-  */
 	double distanceTo(Moveable &object2);
 
-	/*! \brief Sets default values of members common to all shapes
-		*/
-	Moveable(ShapeType shapeType, PhysicalVector momentum);
-
 	virtual double scale();
-
 	void adjustMomentum(PhysicalVector dMomentum);
-
 	PhysicalVector momentum();
-
 	void setAngularMomentum(PhysicalVector newAngMomentum);
-
 	PhysicalVector angularMomentum();
 
 	void setMass(kilogram_t newMass);
-
 	kilogram_t mass();
-
 	kilograms_per_cubic_meter_t density();
-
 	PhysicalVector getColor() const;
 
 	/*!
