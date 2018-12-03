@@ -39,52 +39,21 @@ private:
 
     virtual double scale();
 
-    //! Alters momentum by <dMomentum>
     void adjustMomentum(PhysicalVector dMomentum);
-
-    //! Returns momentum of object in retVec
     PhysicalVector momentum();
-
-    /*! \brief Calculates the moment of inertia for the object
-     *
-     *  Calculation varies for different types of object
-     *  \return Moment of Inertia value
-     */
     virtual double momentOfInertia();
-
-    //! Sets angular momentum of object to <newAngMomentum>
     void setAngularMomentum(PhysicalVector newAngMomentum);
-
-    //! Returns angular momentum of object in retVec
     PhysicalVector angularMomentum();
-
-    //! Sets mass of object to newMass
     void setMass(kilogram_t newMass);
-
-    //! Returns mass of object
     kilogram_t mass();
-
-    //! Returns density of object
     kilograms_per_cubic_meter_t density();
-
     PhysicalVector getColor() const;
 
     /*!
      * TODO This should at *least* go to the circle class, but I think it really belongs in the Physics package
-     *
      * \brief Calculates color of object based on how a star of that mass/density would burn
-     *
-     *  Right now this function only handles stars near the size of the Sun
      */
     void calcColor();
-
-    /*! \brief Returns an integer indicating the type of shape
-     *
-     *  Possible values:
-     *  \n 1: Circle
-     *  \n 2: Box
-     *  \n Rest to be determined
-     */
     ShapeType getType();
 
     /*!

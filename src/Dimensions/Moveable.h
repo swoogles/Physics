@@ -35,7 +35,7 @@ protected:
 	sgQuat orientationQuat;
 	sgMat4 orientationMat;
 
-    PhysicalVector _momentum; // TODO This gots'ta go.
+    PhysicalVector _momentum; // TODO This should go into MyShape
 	PhysicalVector prevMomentum;
 
 	PhysicalVector angMomentum;
@@ -48,49 +48,24 @@ protected:
 
 	PhysicalVector _color;
 
-	/*! \brief Calculates the moment of inertia for the object
-	 *
-	 *  Calculation varies for different types of object
-	 *  \return Moment of Inertia value
-	 */
 	virtual double momentOfInertia();
-
 public:
-	/*! \brief Sets default values of members common to all shapes
-	 */
 	Moveable(PhysicalVector momentum);
 
-	//! Set position of object to <inX, inY, inZ>
 	void setPos(float inX, float inY, float inZ);
-	//! Set position of object to <newPos>
 	void setPos(PhysicalVector newPos);
 
 	PhysicalVector position() ; // Reinstate const-ness
-
 	PhysicalVector vectorTo(Moveable &object2);
 
-	/*! \brief Rotate object around a specified axis
-	 *
-	 *  Parameters are turned into a quaternion then applied to orientationQuat using sgPostMultQuat()
-	 *  \param dAngle Amount to be rotated
-	 *  \param rotAxis Axis to rotate around
-	 */
+	 // Parameters are turned into a quaternion then applied to orientation
 	void adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis);
-
 	unique_ptr<MatrixStruct> getOrientationMat() const;
-
-
-	//! Alters momentum of object by <dVel> * mass
 	void adjustVelocity(PhysicalVector dVel);
 
 	PhysicalVector velocity();
-
-	//! Sets angular velocity of object to <newAngVelocity>
 	void setAngularVelocity(PhysicalVector newAngVelocity);
-	//! Alters angular velocity of object by <dAngVelocity>
 	void adjustAngularVelocity(PhysicalVector dangVelocity);
-
-	//! Moves object based on current normal and angular momentum
 	void update(float);
 };
 #endif
