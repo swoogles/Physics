@@ -22,9 +22,9 @@ public:
  *  both objects have their elastic bools on.
  *
  */
-void elasticCollision(MyShape &object1, MyShape &object2, float dt);
+void elasticCollision(Moveable &object1, Moveable &object2, float dt);
 
-PhysicalVector calcForceGravNew(Particle &object1, MyShape &object2, float dt) ;
+PhysicalVector calcForceGravNew(Particle &object1, Moveable &object2, float dt) ;
 
 /*! \brief Will eventually calculate drag force on a single object
  */

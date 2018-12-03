@@ -3,7 +3,7 @@
 
 #include <plib/sg.h>
 
-#include "../ShapeFiles/MyShape.h"
+#include "../Dimensions/Moveable.h"
 #include "../ShapeFiles/Box.h"
 #include "ShapeFiles/Particle.h"
 #include "../ShapeFiles/ShapeList.h"

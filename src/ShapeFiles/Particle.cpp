@@ -22,7 +22,7 @@ Particle::Particle(
         float radius,
         PhysicalVector momentum,
         PhysicalVector color
-):MyShape(ShapeType::circle, momentum) // FIX VECSTRUCT!!
+):Moveable(ShapeType::circle, momentum) // FIX VECSTRUCT!!
 ,_radius(meter_t(radius))
   {
     this->pos = pos;
@@ -38,7 +38,7 @@ Particle::Particle(
         PhysicalVector momentum,
         kilograms_per_cubic_meter_t density,
         PhysicalVector color
-): MyShape(ShapeType::circle, momentum)
+): Moveable(ShapeType::circle, momentum)
 {
 	this->pos = pos;
 	this->_mass = mass;

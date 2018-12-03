@@ -1,14 +1,14 @@
 #ifndef CIRCLE_H_
 #define CIRCLE_H_
 
-#include "MyShape.h"
+#include "../Dimensions/Moveable.h"
 
 #include <../lib/units.h>
 
 using namespace units::mass;
 using namespace units::length;
 
-class Particle: public MyShape {
+class Particle: public Moveable {
   private:
 //    float radius;
     meter_t _radius;

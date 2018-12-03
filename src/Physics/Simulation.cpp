@@ -113,7 +113,7 @@ double Simulation::getTimeElapsed() { return timeElapsed; }
 
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
-PhysicalVector calcForceGravNew(Particle &object1, MyShape &object2, float dt) {
+PhysicalVector calcForceGravNew(Particle &object1, Moveable &object2, float dt) {
     PhysicalVector sepVec(object1.vectorTo(object2));
 
     double rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);

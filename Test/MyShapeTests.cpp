@@ -8,9 +8,8 @@
 #include "../src/ShapeFiles/PairCollection.h"
 #include "ShapeFiles/Particle.h"
 #include "TestUtils.h"
+#include "Moveable.h"
 #include <plib/sg.h>
-
-#include <memory>
 
 TEST_CASE( "confirm size of Particle", "[green]" ) {
     auto a = TestUtils::testCircle();

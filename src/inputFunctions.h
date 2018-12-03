@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <GL/glut.h>
-#include "ShapeFiles/MyShape.h"
+#include "Dimensions/Moveable.h"
 #include "Observation/Observer.h"
 #include "Physics/WorldSettings.h"
 #include "Windows/control_center.h"

@@ -1,9 +1,9 @@
 #ifndef BOX_H_
 #define BOX_H_
 
-#include "MyShape.h"
+#include "../Dimensions/Moveable.h"
 
-class Box: public MyShape {
+class Box: public Moveable {
 private:
 	float sideLength;
 public:

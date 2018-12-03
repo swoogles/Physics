@@ -4,7 +4,7 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 
-#include "MyShape.h"
+#include "../Dimensions/Moveable.h"
 
 class Drawing {
 public:
@@ -20,7 +20,7 @@ public:
      *  \n -Pop matrix from the stack
      */
     static void draw(shapePointer_t myShape);
-    static void draw(MyShape & myShape);
+    static void draw(Moveable &myShape);
     static void drawShapes(const vectorT &shapes);
 
 };

@@ -11,8 +11,7 @@
 #include "../src/Physics/Simulation.h"
 #include "../src/Physics/Simulations.h"
 #include "../src/Physics/Interactions.h"
-
-#include <../lib/units.h>
+#include "Moveable.h"
 
 using namespace units::mass;
 
@@ -26,7 +25,7 @@ TEST_CASE( "Remove ref", "[ShapeList]" ) {
 
 TEST_CASE( "contains ptr", "[ShapeList]" ) {
     auto a = TestUtils::testCircle();
-    shared_ptr<MyShape> ptr = a;
+    shared_ptr<Moveable> ptr = a;
     ShapeList shapes(a);
     REQUIRE(shapes.contains(ptr));
 }
@@ -34,7 +33,7 @@ TEST_CASE( "contains ptr", "[ShapeList]" ) {
 TEST_CASE( "Remove shared_ptr", "[ShapeList]" ) {
     auto a = TestUtils::testCircle();
     ShapeList shapes({a, TestUtils::testCircle()});
-    shared_ptr<MyShape> ptr = a;
+    shared_ptr<Moveable> ptr = a;
     REQUIRE(shapes.size() == 2);
     shapes.removeShapeFromList(ptr);
     cout << "in between destruction" << endl;

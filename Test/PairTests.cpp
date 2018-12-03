@@ -4,9 +4,8 @@
 #include "../src/ShapeFiles/PairCollection.h"
 #include "ShapeFiles/Particle.h"
 #include "TestUtils.h"
+#include "Moveable.h"
 #include <plib/sg.h>
-
-#include <memory>
 
 // a function consuming a unique_ptr can take it by value or by rvalue reference
 std::unique_ptr<Particle> pass_through(std::unique_ptr<Particle> p)

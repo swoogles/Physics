@@ -86,7 +86,7 @@ int ShapeList::remove(ShapeList &shapesToRemove) {
 
 }
 
-int ShapeList::removeShapeFromList(shared_ptr<MyShape> shapeToRemove) {
+int ShapeList::removeShapeFromList(shared_ptr<Moveable> shapeToRemove) {
     size_t newSize =  shapes.size() - 1;
 
     auto newIterator = std::remove_if(shapes.begin(), shapes.end(), [shapeToRemove](auto shape) {
@@ -100,7 +100,7 @@ int ShapeList::removeShapeFromList(shared_ptr<MyShape> shapeToRemove) {
     return 0;
 }
 
-bool ShapeList::contains(shared_ptr<MyShape> searchShape) const {
+bool ShapeList::contains(shared_ptr<Moveable> searchShape) const {
     return std::any_of(shapes.begin(), shapes.end(), [searchShape](shapePointer_t curShape) {
         return searchShape == curShape;
     });

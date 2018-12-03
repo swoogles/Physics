@@ -1,7 +1,7 @@
 #ifndef SHAPE_LIST_H
 #define SHAPE_LIST_H
 
-#include "MyShape.h"
+#include "Dimensions/Moveable.h"
 #include <list>
 #include <algorithm>
 
@@ -22,13 +22,13 @@ class ShapeList {
     size_t addShapeToList(shapePointer_t insertShape);
     size_t addList(ShapeList addList);
 
-    int removeShapeFromList(shared_ptr<MyShape> shapeToRemove);
+    int removeShapeFromList(shared_ptr<Moveable> shapeToRemove);
     int remove(ShapeList & shapesToRemove);
     size_t clearShapes();
     vectorT getShapes();
     void update(const float dt);
     inline size_t size() { return shapes.size(); };
 
-    bool contains(shared_ptr<MyShape> searchShape) const;
+    bool contains(shared_ptr<Moveable> searchShape) const;
 };
 #endif

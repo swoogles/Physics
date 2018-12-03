@@ -9,10 +9,10 @@
 #include "ShapeFiles/Particle.h"
 #include "../src/Parallelization/Quadrant.h"
 #include "TestUtils.h"
+#include "Moveable.h"
 #include <plib/sg.h>
 
 #include <memory>
-#include <functional>
 
 TEST_CASE("Get children", "[Quadrant]") {
     PhysicalVector pos;

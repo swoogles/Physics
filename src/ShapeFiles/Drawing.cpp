@@ -35,7 +35,7 @@ void Drawing::drawShapes(const vectorT & shapes) {
     }
 }
 
-void Drawing::draw(MyShape &myShape) {
+void Drawing::draw(Moveable &myShape) {
     glPushMatrix();
 
     //Translate

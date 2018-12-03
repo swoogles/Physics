@@ -1,7 +1,6 @@
 #ifndef PHYSICS_TOUCHINGPAIR_H
 #define PHYSICS_TOUCHINGPAIR_H
 
-#include "MyShape.h"
 #include "Particle.h"
 
 /*
