@@ -30,8 +30,7 @@ typedef std::unique_ptr<PhysicalVector> vecPtr;
  */
 class Moveable {
 protected:
-
-	PhysicalVector pos; // TODO make this a PhysicalVector
+	PhysicalVector pos;
 	sgQuat orientationQuat;
 	sgMat4 orientationMat;
 
@@ -52,7 +51,6 @@ protected:
 public:
 	Moveable(PhysicalVector momentum);
 
-	void setPos(float inX, float inY, float inZ);
 	void setPos(PhysicalVector newPos);
 
 	PhysicalVector position() ; // Reinstate const-ness
@@ -64,8 +62,6 @@ public:
 	void adjustVelocity(PhysicalVector dVel);
 
 	PhysicalVector velocity();
-	void setAngularVelocity(PhysicalVector newAngVelocity);
-	void adjustAngularVelocity(PhysicalVector dangVelocity);
 	void update(float);
 };
 #endif

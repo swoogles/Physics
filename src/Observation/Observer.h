@@ -16,8 +16,9 @@
  *  demonstrate different aspects of relativity.
  *
  */
-class Observer:public Moveable {
+class Observer {
 private:
+	PhysicalVector pos;
 	Moveable * target;
 	float * perspectiveMat;
 
@@ -31,6 +32,10 @@ private:
 
 	//! Stores all created Observers
 	static std::vector<shared_ptr<Observer>> observers;
+
+    PhysicalVector angVelocity;
+	sgQuat orientationQuat;
+	sgMat4 orientationMat;
 public:
 	static shared_ptr<Observer> init(WindowDimensions windowDimensions);
 
@@ -62,5 +67,10 @@ public:
 
   //! Similar as MyShape::update(float), except only uses angular velocity right now
   void update(float);
+
+	void adjustAngularVelocity(PhysicalVector dangVelocity);
+	double momentOfInertia();
+	void adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis);
+	void setPos(float inX, float inY, float inZ);
 };
 #endif /* OBSERVER_H_ */

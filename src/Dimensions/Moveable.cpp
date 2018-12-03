@@ -15,12 +15,6 @@ Moveable::Moveable(PhysicalVector momentum)
           ,_color{0.5,1.0,0.0}
 {}
 
-void Moveable::setPos(float inX, float inY, float inZ) {
-	pos.vec[0] = inX;
-	pos.vec[1] = inY;
-	pos.vec[2] = inZ;
-}
-
 void Moveable::setPos(PhysicalVector newPos) {
     this->pos = newPos;
 }
@@ -61,20 +55,6 @@ PhysicalVector Moveable::velocity() {
 
 // Angular Momentum and Velocity
 double Moveable::momentOfInertia() { return 1;}
-
-void Moveable::setAngularVelocity(PhysicalVector newAngVelocity) {
-	this->prevAngVelocity = angVelocity;
-	double I = momentOfInertia();
-	this->angVelocity = newAngVelocity;
-	this->angMomentum = angVelocity.scaledBy(I);
-}
-
-void Moveable::adjustAngularVelocity(PhysicalVector dAngVelocity) {
-	double I = momentOfInertia();
-	PhysicalVector dAngV(dAngVelocity);
-	this->angVelocity = angVelocity.plus(dAngV);
-	this->angMomentum = angVelocity.scaledBy(I);
-}
 
 void Moveable::update(float dt) {
 	PhysicalVector prevVelocity(prevMomentum.scaledBy(1/_mass.value()));

@@ -11,7 +11,7 @@ shared_ptr<Observer> Observer::init(WindowDimensions windowDimensions) {
 }
 
 Observer::Observer(WindowDimensions windowDimensions)
-          :Moveable(PhysicalVector(0,0,0))
+          :pos(PhysicalVector(0,0,0))
           , id( curObserver++ )
           , autoScale( true )
 
@@ -137,5 +137,28 @@ void Observer::BuildPerspProjMat(float *m, float aspect, float znear, float zfar
   m[13] = 0;
   m[14] = qn;
   m[15] = 0;
+}
+
+double Observer::momentOfInertia() { return 1;}
+
+void Observer::adjustAngularVelocity(PhysicalVector dAngVelocity) {
+    double I = momentOfInertia();
+    PhysicalVector dAngV(dAngVelocity);
+    this->angVelocity = angVelocity.plus(dAngV);
+}
+
+void Observer::adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis) {
+    sgQuat tempRotQuat;
+    sgAngleAxisToQuat(tempRotQuat, dAngle,  rotAxis.vec);
+    //sgRotQuat(orientationQuat, dAngle, rotAxis);
+
+    sgPostMultQuat(orientationQuat, tempRotQuat);
+    sgQuatToMatrix(orientationMat, orientationQuat);
+}
+
+void Observer::setPos(float inX, float inY, float inZ) {
+    pos.vec[0] = inX;
+    pos.vec[1] = inY;
+    pos.vec[2] = inZ;
 }
 
