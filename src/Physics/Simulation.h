@@ -1,5 +1,3 @@
-#include <utility>
-
 #ifndef SIMULATION_H_
 #define SIMULATION_H_
 
@@ -7,16 +5,13 @@
 #include "../Parallelization/Quadrant.h"
 #include "ForceCalculationMethod.h"
 #include "CollisionType.h"
-#include <stdexcept>
 #include <ShapeFiles/ParticleList.h>
 #include "../MaximumValues.h"
+#include <Physics/Interactions.h>
 #include "lib/units.h"
 
-using namespace units::energy;
-using namespace units::force;
 
 typedef particle_t physicalObject_t;
-//using namespace units::in;
 
 class Simulation {
 private:
@@ -35,6 +30,8 @@ private:
 
     ForceCalculationMethod forceCalcMethod;
     CollisionType collisionType;
+
+    Interactions interactions;
 
 	void updateTimeElapsed(float dt);
 

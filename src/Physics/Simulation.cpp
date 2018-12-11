@@ -1,6 +1,4 @@
 #include "Simulation.h"
-#include "Interactions.h"
-
 
 Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
                        ForceCalculationMethod forceCalculationMethod, float octreeTheta)
@@ -113,43 +111,6 @@ double Simulation::getTimeElapsed() { return timeElapsed; }
 
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
-PhysicalVector calcForceGravNew(Particle &object1, Moveable &object2, float dt) {
-    PhysicalVector sepVec(object1.vectorTo(object2));
-
-    double rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
-
-    double G = 6.67384e-11;
-    double forceMagnitude = (G * object1.mass() * object2.mass()).value() / rSquared;
-
-    return sepVec
-            .unit()
-            .scaledBy(forceMagnitude)
-            .scaledBy(dt);
-}
-
-void elasticCollision(Particle &object1, Particle &object2, float dt) {
-    PhysicalVector sepVecUnit = object1.vectorTo(object2).unit();
-    PhysicalVector n(sepVecUnit);
-
-    double c = n.scalarProduct4(object1.velocity().minus(object2.velocity()));
-
-    auto combinedMass = (object2.mass() + object1.mass()).value();
-    double multiplierA = -2 * (object2.mass().value() * c ) / combinedMass;
-    PhysicalVector aVec = n.scaledBy(multiplierA);
-
-    object1.adjustVelocity(aVec);
-
-    double multiplierB = 2 * (object1.mass().value() * c ) / combinedMass;
-    PhysicalVector bVec = n.scaledBy(multiplierB);
-
-    object2.adjustVelocity(bVec);
-
-    // TODO Figure out how necessary these lines are.
-    while ( object1.isTouching(object2) ) {
-        object1.update(dt/30);
-        object2.update(dt/30);
-    }
-}
 
 // I'm working on this method because I think there are some basic
 // structural changes that I can make so that it will be more legible and
@@ -171,7 +132,7 @@ void Simulation::calcForcesAll_LessNaive(float dt) {
                 Particle & object2 = *physicalObjects.at(j);
 
                 if (this->gravBetweenObjects ) {
-                    PhysicalVector gravVec = calcForceGravNew(object1, object2, dt );
+                    PhysicalVector gravVec = this->interactions.calcForceGravNew(object1, object2, dt );
 
                     object1.adjustMomentum(gravVec);
                     object2.adjustMomentum(gravVec.scaledBy(-1).vec);
@@ -179,7 +140,7 @@ void Simulation::calcForcesAll_LessNaive(float dt) {
 
                 if (object1.isTouching(object2)) {
                     if (this->collisionType == CollisionType::ELASTIC) {
-                        elasticCollision( object1, object2, dt );
+                        this->interactions.elasticCollision( object1, object2, dt );
                     }
                     else if (this->collisionType == CollisionType::INELASTIC){
                         object1.mergeWith( object2 );
@@ -198,8 +159,6 @@ void Simulation::calcForcesAll_LessNaive(float dt) {
 
 }
 
-
-
 PairCollection Simulation::calculateForceOnExternalNode(
         const physicalObject_t &curObject,
         Quadrant &curQuadrant,
@@ -210,7 +169,7 @@ PairCollection Simulation::calculateForceOnExternalNode(
 
     //b.
     if ( curObject != shapeInQuadrant ) {
-        PhysicalVector gravVec = calcForceGravNew( *curObject, *shapeInQuadrant, dt);
+        PhysicalVector gravVec = this->interactions.calcForceGravNew( *curObject, *shapeInQuadrant, dt);
         curObject->adjustMomentum(gravVec);
         //c.
         if ( curObject->isTouching( *shapeInQuadrant ) ) {
@@ -246,7 +205,7 @@ PairCollection Simulation::calcForceOnObject_Octree(
         double distance = curObject->distanceTo(curQuadrant);
         //2.a
         if ( curQuadrant.getWidth() / distance < octreeTheta ) {
-            PhysicalVector gravVec = calcForceGravNew( *curObject, curQuadrant, dt);
+            PhysicalVector gravVec = this->interactions.calcForceGravNew( *curObject, curQuadrant, dt);
             //b.
             curObject->adjustMomentum(gravVec);
         } else { //3.
@@ -299,14 +258,10 @@ size_t Simulation::getSize() {
 
 // TODO Update this very soon
 kilogram_t Simulation::getMass() {
-    kilogram_t mass = kilogram_t(0);
+    auto mass = kilogram_t(0);
     for (const auto & shape : this->physicalObjects.getShapes()) {
         mass += shape->mass();
     }
     return mass;
 }
 
-ParticleList Interactions::crackPhysicalObject(Particle &shape, joule_t kineticEnergy, int numberOfPieces) {
-//    float energyPerFragment =
-    return ParticleList();
-}
