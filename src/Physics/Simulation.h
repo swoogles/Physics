@@ -20,10 +20,6 @@ private:
 
 	float minX, maxX, minY, maxY;
 
-    bool constGravField;
-    PhysicalVector gravField;
-    bool gravBetweenObjects;
-
     float octreeTheta;
 
     QuadrantPointer_t quadrant;
@@ -41,10 +37,7 @@ private:
 
 	void removePhysicalObjects( ParticleList shapesToRemove );
 
-    //! Return gravity field vector in retGravField
-	PhysicalVector getConstGravFieldVal();
-
-	void refreshQuadrant();
+    void refreshQuadrant();
 
 	PairCollection calculateForceOnExternalNode(const physicalObject_t &curObject, Quadrant &curQuadrant, float dt);
 	PairCollection calcForceOnObject_Octree(physicalObject_t curObject, Quadrant &curQuadrant, float dt,
@@ -54,11 +47,10 @@ private:
 	void calcForcesAll(float dt);
 
 public:
-    Simulation(ParticleList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
-                   ForceCalculationMethod forceCalculationMethod, float octreeTheta);
-	Simulation(Simulation && originalSimulation, ParticleList newObjects);
+    Simulation(ParticleList physicalObjects, CollisionType collisionType,
+				   ForceCalculationMethod forceCalculationMethod, float octreeTheta);
 
-    void addPhysicalObjectToList(physicalObject_t newShape);
+	void addPhysicalObjectToList(physicalObject_t newShape);
 
     double getTimeElapsed();
 

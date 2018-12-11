@@ -1,6 +1,6 @@
 #include "Simulation.h"
 
-Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
+Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType,
                        ForceCalculationMethod forceCalculationMethod, float octreeTheta)
         :physicalObjects(std::move(physicalObjects))
         ,timeElapsed(0)
@@ -8,28 +8,12 @@ Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType
         ,maxX(FLT_MIN)
         ,minY(FLT_MAX)
         ,maxY(FLT_MIN)
-        ,constGravField(false)
-        ,gravBetweenObjects(gravityBetweenObjects)
         ,forceCalcMethod(forceCalculationMethod)
         ,collisionType(collisionType)
         ,octreeTheta(octreeTheta)
 {
     this->updateMinsAndMaxes();
     this->refreshQuadrant();
-}
-
-Simulation::Simulation(Simulation &&originalSimulation, ParticleList newObjects)
-        :physicalObjects(std::move(originalSimulation.physicalObjects))
-        ,timeElapsed(originalSimulation.timeElapsed)
-        ,minX(FLT_MAX)
-        ,maxX(FLT_MIN)
-        ,minY(FLT_MAX)
-        ,maxY(FLT_MIN)
-        ,constGravField(originalSimulation.constGravField)
-        ,gravBetweenObjects(originalSimulation.gravBetweenObjects)
-        ,forceCalcMethod(originalSimulation.forceCalcMethod)
-{
-    physicalObjects.addList(std::move(newObjects));
 }
 
 void Simulation::refreshQuadrant() {
@@ -73,10 +57,6 @@ void Simulation::resetXYMinsAndMaxes() {
 
 	minY = FLT_MAX;
 	maxY = FLT_MIN;
-}
-
-PhysicalVector Simulation::getConstGravFieldVal() {
-    return gravField;
 }
 
 void Simulation::updateMinsAndMaxes() {
@@ -124,19 +104,13 @@ void Simulation::calcForcesAll_LessNaive(float dt) {
         for (size_t i = 0; i < physicalObjects.size()-1; i++) {
             Particle & object1 = *physicalObjects.at(i);
 
-            if (constGravField) {
-                object1.adjustMomentum(this->getConstGravFieldVal().scaledBy(1 / dt));
-            }
-
             for (size_t j = i + 1; j < physicalObjects.size(); j++) {
                 Particle & object2 = *physicalObjects.at(j);
 
-                if (this->gravBetweenObjects ) {
-                    PhysicalVector gravVec = this->interactions.calcForceGravNew(object1, object2, dt );
+                PhysicalVector gravVec = this->interactions.calcForceGravNew(object1, object2, dt );
 
-                    object1.adjustMomentum(gravVec);
-                    object2.adjustMomentum(gravVec.scaledBy(-1).vec);
-                }
+                object1.adjustMomentum(gravVec);
+                object2.adjustMomentum(gravVec.scaledBy(-1).vec);
 
                 if (object1.isTouching(object2)) {
                     if (this->collisionType == CollisionType::ELASTIC) {
@@ -149,10 +123,6 @@ void Simulation::calcForcesAll_LessNaive(float dt) {
                 }
             }
         }
-
-        // Add unary forces to last object
-        auto object1 = physicalObjects.at(physicalObjects.size()-1);
-        object1->adjustMomentum(this->getConstGravFieldVal().scaledBy(1 / dt));
 
         this->removePhysicalObjects(deleteList);
     }

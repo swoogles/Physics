@@ -47,9 +47,6 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
     );
 
     ParticleList disruptingObject(curShape);
-//    Simulation & sim = *curSimulation;
-    // TODO actually use this, once I can prevent the initial sharedPtr from killing it when this function exits
-//    Simulation disruptedSimulation(std::move(sim), disruptingObject);
     curSimulation->addPhysicalObjectToList( curShape );
     return curSimulation;
 }
@@ -106,7 +103,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, forceCalculationMethod, 0.5);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, forceCalculationMethod, 0.5);
 }
 
 SimulationPointer_t
@@ -150,7 +147,7 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
         physicalObjects.addShapeToList( curShape );
     }
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, properties.forceCalculationMethod, properties.octreeTheta);
+    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, properties.forceCalculationMethod, properties.octreeTheta);
 }
 
 PhysicalVector Simulations::randomSplitBodyPlacement(float pieceRadius, PhysicalVector target) {
