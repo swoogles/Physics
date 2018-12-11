@@ -3,7 +3,7 @@
  *      Author: Bill Frasure
  */
 
-#include "GraphicalOperations.h"
+#include "graphics/GraphicalOperations.h"
 
 //GUI stuff
 #include "Windows/control_center.h"

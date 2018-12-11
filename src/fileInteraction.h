@@ -2,7 +2,6 @@
 #define FILEINTERACTION_H_
 
 #include <fstream>
-#include <GL/glut.h>
 
 #include <boost/numeric/ublas/vector_sparse.hpp>
 #include "ShapeFiles/Particle.h"

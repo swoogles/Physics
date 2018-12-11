@@ -5,7 +5,6 @@ using namespace std;
 main_window_UI::main_window_UI() {
 	/*
 	main_menu = new puMenuBar();
-	//glutGet(GLUT_WINDOW_HEIGHT);
 
 	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
 	puCallback file_submenu_cb [] = { exit_cb,  NULL,      save_cb, open_cb, NULL};

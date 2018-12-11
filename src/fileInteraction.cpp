@@ -95,7 +95,6 @@ void openShapes(char * fileName, vectorT shapes) {
 			shapes.push_back(curShape);
 		}
 	}
-	glutPostRedisplay();
 }
 
 PhysicalVector vecFileRead(ifstream &curFile) {

@@ -4,7 +4,7 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 
-#include "../Dimensions/Moveable.h"
+#include "Dimensions/Moveable.h"
 
 class Drawing {
 public:

@@ -28,7 +28,6 @@ void InputFunctions::myMouse(int button, int state, int x, int y) {
 
     }
     puMouse ( button, state, x, y ) ;
-    glutPostRedisplay ();
 }
 
 void InputFunctions::myKey(unsigned char key, int x, int y) {

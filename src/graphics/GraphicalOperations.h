@@ -9,7 +9,7 @@
 #include <GL/glu.h>
 
 #include "Observation/Observer.h"
-#include "ShapeFiles/Drawing.h"
+#include "Drawing.h"
 #include "Windows/control_center.h"
 
 #include <plib/pu.h>
