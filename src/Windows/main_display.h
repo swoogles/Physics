@@ -4,7 +4,7 @@
 #include <plib/pu.h>
 #include <plib/puAux.h>
 
-#include "../Physics/WorldSettings.h"
+#include "graphics/WorldSettings.h"
 
 /*! \brief UI class that handles everything in the main window
  *

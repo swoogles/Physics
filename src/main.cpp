@@ -14,7 +14,7 @@
 
 //Physics
 #include "Physics/Simulations.h"
-#include "Physics/WorldSettings.h"
+#include "graphics/WorldSettings.h"
 #include "Physics/PhysicsSandboxProperties.h"
 
 // GLOBALS

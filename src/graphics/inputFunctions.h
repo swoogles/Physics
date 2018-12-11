@@ -12,7 +12,7 @@
 #include <GL/glut.h>
 #include "Dimensions/Moveable.h"
 #include "Observation/Observer.h"
-#include "Physics/WorldSettings.h"
+#include "WorldSettings.h"
 #include "Windows/control_center.h"
 
 #include <plib/pu.h>
