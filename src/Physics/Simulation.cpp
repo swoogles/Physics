@@ -306,13 +306,6 @@ kilogram_t Simulation::getMass() {
     return mass;
 }
 
-ParticleList Simulation::crackPhysicalObject(Particle &shape) {
-    int numberOfFragments = 2;
-    PhysicalVector initialMomentum(shape.momentum());
-
-    return ParticleList();
-}
-
 ParticleList Interactions::crackPhysicalObject(Particle &shape, joule_t kineticEnergy, int numberOfPieces) {
 //    float energyPerFragment =
     return ParticleList();

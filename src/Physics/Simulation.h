@@ -56,9 +56,7 @@ private:
 	void calcForcesAll_LessNaive(float dt);
 	void calcForcesAll(float dt);
 
-	ParticleList crackPhysicalObject(Particle &shape);
-
-  public:
+public:
     Simulation(ParticleList physicalObjects, CollisionType collisionType, bool gravityBetweenObjects,
                    ForceCalculationMethod forceCalculationMethod, float octreeTheta);
 	Simulation(Simulation && originalSimulation, ParticleList newObjects);
