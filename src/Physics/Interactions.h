@@ -4,7 +4,6 @@
 #include <plib/sg.h>
 
 #include "../Parallelization/Quadrant.h"
-#include "../ShapeFiles/ShapeList.h"
 #include "../ShapeFiles/PairCollection.h"
 #include <ShapeFiles/ParticleList.h>
 #include "Simulations.h"

@@ -2,7 +2,6 @@
 #define SIMULATIONS_H_
 
 #include "ShapeFiles/Particle.h"
-#include "../ShapeFiles/ShapeList.h"
 #include "Simulation.h"
 #include "CollisionType.h"
 #include "ForceCalculationMethod.h"

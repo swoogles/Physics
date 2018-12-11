@@ -4,7 +4,6 @@
 #define SIMULATION_H_
 
 #include <boost/ref.hpp>
-#include "../ShapeFiles/ShapeList.h"
 #include "../Parallelization/Quadrant.h"
 #include "ForceCalculationMethod.h"
 #include "CollisionType.h"

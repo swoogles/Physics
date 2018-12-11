@@ -6,7 +6,6 @@
 #include "../Dimensions/Moveable.h"
 #include "../ShapeFiles/Box.h"
 #include "ShapeFiles/Particle.h"
-#include "../ShapeFiles/ShapeList.h"
 #include "../ShapeFiles/PairCollection.h"
 #include "OctreeCoordinates.h"
 

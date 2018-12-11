@@ -2,7 +2,6 @@
 #define PHYSICS_PAIRCOLLECTION_H
 
 #include "TouchingPair.h"
-#include "ShapeList.h"
 #include <ShapeFiles/ParticleList.h>
 
 #include <algorithm>

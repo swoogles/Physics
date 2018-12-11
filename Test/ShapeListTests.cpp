@@ -15,39 +15,37 @@
 
 using namespace units::mass;
 
-TEST_CASE( "Remove ref", "[ShapeList]" ) {
-    ShapeList shapes(vectorT { TestUtils::testCircle(), TestUtils::testCircle()});
+TEST_CASE( "Remove ref", "[ParticleList]" ) {
+    ParticleList shapes(particleVector { TestUtils::testCircle(), TestUtils::testCircle()});
     REQUIRE(shapes.size() == 2);
     shapes.removeShapeFromList(shapes.getShapes()[0]);
     cout << "in between destruction" << endl;
     REQUIRE(shapes.size() == 1);
 }
 
-TEST_CASE( "contains ptr", "[ShapeList]" ) {
+TEST_CASE( "contains ptr", "[ParticleList]" ) {
     auto a = TestUtils::testCircle();
-    shared_ptr<Moveable> ptr = a;
-    ShapeList shapes(a);
-    REQUIRE(shapes.contains(ptr));
+    ParticleList shapes(a);
+    REQUIRE(shapes.contains(a));
 }
 
-TEST_CASE( "Remove shared_ptr", "[ShapeList]" ) {
+TEST_CASE( "Remove shared_ptr", "[ParticleList]" ) {
     auto a = TestUtils::testCircle();
-    ShapeList shapes({a, TestUtils::testCircle()});
-    shared_ptr<Moveable> ptr = a;
+    ParticleList shapes({a, TestUtils::testCircle()});
     REQUIRE(shapes.size() == 2);
-    shapes.removeShapeFromList(ptr);
+    shapes.removeShapeFromList(a);
     cout << "in between destruction" << endl;
     REQUIRE(shapes.size() == 1);
 }
 
-TEST_CASE( "Remove a ShapeList from ShapeList", "[ShapeList]" ) {
+TEST_CASE( "Remove a ParticleList from ParticleList", "[ParticleList]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     auto c = TestUtils::testCircle();
     auto d = TestUtils::testCircle();
-    ShapeList permanentShapes({a, b});
-    ShapeList doomedShapes({c, d});
-    ShapeList allShapes({a, b, c, d});
+    ParticleList permanentShapes({a, b});
+    ParticleList doomedShapes({c, d});
+    ParticleList allShapes({a, b, c, d});
     REQUIRE(allShapes.size() == 4);
     allShapes.remove(doomedShapes);
     REQUIRE(allShapes.size() == 2);
@@ -58,31 +56,31 @@ TEST_CASE( "Remove a ShapeList from ShapeList", "[ShapeList]" ) {
 }
 
 
-TEST_CASE( "Construct a list with a single item", "[ShapeList][red]" ) {
+TEST_CASE( "Construct a list with a single item", "[ParticleList][red]" ) {
     auto a = TestUtils::testCircle();
-    ShapeList singleItemList(a);
+    ParticleList singleItemList(a);
     REQUIRE(singleItemList.size() == 1);
     REQUIRE(singleItemList.getShapes()[0]->mass() == kilogram_t(100));
     REQUIRE(singleItemList.contains(a));
 }
 
-TEST_CASE( "hasConflicts with an existing item", "[ShapeList][green]" ) {
+TEST_CASE( "hasConflicts with an existing item", "[ParticleList][green]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     ParticleList singleItemList(a);
     REQUIRE(singleItemList.hasConflictsWith(*b));
 }
 
-TEST_CASE( "Adding a ShapeList to ShapeList", "[ShapeList][green]" ) {
+TEST_CASE( "Adding a ParticleList to ParticleList", "[ShapeList][green]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
     auto c = TestUtils::testCircle();
     auto d = TestUtils::testCircle();
-    ShapeList aList(a);
-    ShapeList bList(b);
-    ShapeList cList(c);
-    ShapeList dList(d);
-    ShapeList resultList;
+    ParticleList aList(a);
+    ParticleList bList(b);
+    ParticleList cList(c);
+    ParticleList dList(d);
+    ParticleList resultList;
     resultList.addList(aList);
     resultList.addList(bList);
     resultList.addList(cList);
