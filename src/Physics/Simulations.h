@@ -94,12 +94,6 @@ class Simulations
     static SimulationPointer_t bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, PhysicalVector target,
                                                                   PhysicalVector groupMomentum);
 
-    static SimulationPointer_t billiards1(int, ForceCalculationMethod forceCalculationMethod);
-
-    static SimulationPointer_t billiards2_ReturnSimulation(int, ForceCalculationMethod forceCalculationMethod);
-
-    static SimulationPointer_t billiards3_ArbitraryList(int, ForceCalculationMethod forceCalculationMethod);
-
     static SimulationPointer_t
     createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
 

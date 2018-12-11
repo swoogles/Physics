@@ -19,169 +19,16 @@ Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulatio
         return Simulations::disruption_ArbitraryList(simulationProperties);
     } else if ( simNumber == '3' ) {
     } else if ( simNumber == '4' ) {
-        return Simulations::billiards1(15, forceCalculationMethod);
     } else if ( simNumber == '5' ) {
-        return Simulations::billiards2_ReturnSimulation(15, forceCalculationMethod);
     } else if ( simNumber == '7' ) {
         return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
     } else if ( simNumber == '8' ) {
-        return Simulations::billiards3_ArbitraryList(5, forceCalculationMethod);
     } else {
         exit(1);
     }
 
 }
 
-
-SimulationPointer_t Simulations::billiards1(int numRows, ForceCalculationMethod forceCalculationMethod) {
-    ParticleList physicalObjects;
-
-    int numPieces = 0;
-    auto cueMass = kilogram_t(100.0);
-
-    float ballMass = 0.156;
-    float ballRadius = .95;
-
-    for (int i = 1; i < numRows+1; i++)
-        numPieces+=i;
-
-    PhysicalVector cueVelocity(30, -75, 0);
-    PhysicalVector cueMomentum = cueVelocity.scaledBy(cueMass.value());
-
-    PhysicalVector newColor(1, 1, 1, false);
-
-    shared_ptr<Particle> curShape;
-
-    PhysicalVector cuePos(numRows, numRows*3, 0, true);
-    curShape = make_shared<Particle>(
-            cuePos,
-            cueMass.value(),
-            ballRadius,
-            cueMomentum,
-            newColor
-    );
-
-    physicalObjects.addShapeToList( curShape );
-
-    PhysicalVector ballMomentum(0, 0, 0, false);
-    int cutOff = numRows*2;
-    for (int i = 1; i < numRows+1; i++) {
-        for (int j = i; j < cutOff; j+= 2) {
-            PhysicalVector ballPos( j* 1.7f,  (i*2.5f), 0, true);
-
-            curShape = make_shared<Particle>(
-                    ballPos,
-                    ballMass,
-                    ballRadius,
-                    ballMomentum,
-                    newColor
-            );
-            physicalObjects.addShapeToList( curShape );
-        }
-        cutOff--;
-    }
-
-    // TODO Fix places where a default 0 got passed to Simulation dt
-    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, false, forceCalculationMethod, 0.5);
-}
-
-SimulationPointer_t Simulations::billiards2_ReturnSimulation(int numRows, ForceCalculationMethod forceCalculationMethod)
-{
-    ParticleList physicalObjects;
-
-    float cueMass = 100.0;
-    float ballMass = 0.156;
-
-    float ballRadius = .95;
-
-    PhysicalVector cueVelocity(30, -75, 0);
-    PhysicalVector cueMomentum = cueVelocity.scaledBy(cueMass);
-
-    PhysicalVector newColor(1, 0, 1, false);
-
-    shared_ptr<Particle> shapeForInsertion;
-
-    PhysicalVector cuePos(numRows, numRows*3, 0, true);
-    shapeForInsertion = make_shared<Particle>(
-            cuePos,
-            cueMass,
-            ballRadius,
-            cueMomentum,
-            newColor
-    );
-    physicalObjects.addShapeToList( shapeForInsertion );
-
-    PhysicalVector ballMomentum(0, 0, 0);
-    for (int i = 0; i < numRows; i++) {
-        for (int j = 0; j < numRows; j++) {
-            PhysicalVector ballPos( j* 1.3f,  (i*3), 0, true);
-
-            float greenValue = -( ( -.5f + (j/float(numRows)) ) * ( -.5f + (j/float(numRows)) ) )+ 1.0f;
-            PhysicalVector ballColor(1, greenValue, 1, false);
-
-            shapeForInsertion = make_shared<Particle>(
-                    ballPos,
-                    ballMass,
-                    ballRadius,
-                    ballMomentum,
-                    ballColor
-            );
-
-            physicalObjects.addShapeToList( shapeForInsertion );
-        }
-    }
-    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, false, forceCalculationMethod, 0.5);
-}
-
-
-SimulationPointer_t Simulations::billiards3_ArbitraryList(int numRows, ForceCalculationMethod forceCalculationMethod) {
-    ParticleList physicalObjects;
-
-    float cueMass = 100.0;
-    float ballMass = 0.156;
-
-    float ballRadius = .95;
-
-    PhysicalVector cueVelocity(30, -75, 0);
-    PhysicalVector cueMomentum = cueVelocity.scaledBy(cueMass);
-
-    PhysicalVector newColor(1, 1, 1, false);
-
-    shared_ptr<Particle> shapeForInsertion;
-
-    PhysicalVector cuePos (numRows, numRows*5, 0, true);
-    shapeForInsertion = make_shared<Particle>(
-            cuePos,
-            cueMass,
-            ballRadius,
-            cueMomentum,
-            newColor
-    );
-    physicalObjects.addShapeToList( shapeForInsertion );
-
-    PhysicalVector ballMomentum(0, 0, 0);
-    for (int i = 0; i < numRows; i++) {
-        for (int j = 0; j < numRows; j++) {
-            for (int z = 0; z < numRows; z++) {
-                PhysicalVector ballPos( j* 4,  (i*4),  (z*4), true);
-
-                float greenValue = -( ( -.5f + (z/float(numRows)) ) * ( -.5f + (z/float(numRows)) ) )+ 1.0f;
-                PhysicalVector ballColor(0, greenValue, 0, false);
-
-                shapeForInsertion = make_shared<Particle>(
-                        ballPos,
-                        ballMass,
-                        ballRadius,
-                        ballMomentum,
-                        ballColor
-                );
-
-                physicalObjects.addShapeToList( shapeForInsertion );
-            }
-        }
-    }
-    return make_unique<Simulation>(physicalObjects, CollisionType::ELASTIC, false, forceCalculationMethod, 0.5);
-}
 
 SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperties properties)
 {
@@ -306,53 +153,6 @@ Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties
         }
         physicalObjects.addShapeToList( curShape );
     }
-
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, properties.forceCalculationMethod, properties.octreeTheta);
-}
-
-SimulationPointer_t Simulations::bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties,
-                                                                    PhysicalVector target,
-                                                                    PhysicalVector groupMomentum)
-{
-  ParticleList physicalObjects;
-
-	kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
-	kilogram_t pieceMass = properties.mass / properties.numShapes;
-
-	srand (static_cast<unsigned int>(time(nullptr)));
-
-    PhysicalVector newColor (1, 1, 1);
-
-    shared_ptr<Particle> curShape;
-    PhysicalVector startMomentumVec;
-    PhysicalVector startPos;
-	for (int i = 0; i < properties.numShapes; i++) {
-
-		if (i % 2 == 0) {
-            startMomentumVec = randomSplitBodyMomentum(pieceMass);
-            startPos = randomPointInSphere(properties.sandboxWidth, target);
-		}
-		else {
-            startMomentumVec = startMomentumVec.scaledBy(-1);
-            startPos = startPos.scaledBy(-1);
-		}
-
-        curShape = make_shared<Particle>(
-                startPos,
-                pieceMass,
-                startMomentumVec.plus(groupMomentum), // Apply general group momentum to individual pieces momentum
-                objectDensity,
-                newColor
-        );
-
-
-		//Check if being placed on previously created object
-		while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-            PhysicalVector newPosAttempt = randomPointInSphere(properties.sandboxWidth, target);
-			curShape->setPos(newPosAttempt);
-		}
-    physicalObjects.addShapeToList( curShape );
-	}
 
     return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, true, properties.forceCalculationMethod, properties.octreeTheta);
 }
