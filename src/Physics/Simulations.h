@@ -8,57 +8,9 @@
 #include "AstronomicalValues.h"
 #include "PhysicsSandboxProperties.h"
 
-#define MASS_VAR 1e21
-//#define MASS_SUN 1989100000
-
-//#define MASS_LARGEST_STAR
-#define MASS_JUPITER 1898600
-#define MASS_SATURN 568460
-#define MASS_URANUS 86832
-#define MASS_NEPTUNE 102430
-#define MASS_EARTH 5973.6
-#define MASS_VENUS 4868.5
-#define MASS_MARS 641.84
-#define MASS_MERCURY 330
-
-//Volume = MASS/(DENSITY*CONVERSION_CONST)
-#define CONVERSION_CONST 1e12
-
-#define DENSITY_JUPITER 1.33
-#define DENSITY_SATURN 0.70
-#define DENSITY_URANUS 1.30
-#define DENSITY_NEPTUNE 1.76
-#define DENSITY_EARTH 5.515
-#define DENSITY_VENUS 5.24
-#define DENSITY_MARS 3.94
-#define DENSITY_MERCURY 5.43
-
-#define VOLUME_VAR 1e9
-
-
-/*
-enum bodies {
-	SUN,
-	JUPITER,
-	SATURN,
-	URANUS,
-	NEPTUNE,
-	EARTH,
-	VENUS,
-	MARS,
-	MERCURY,
-	LAST_BODY
-};
-
-int NUM_BODIES = LAST_BODY+1;
-
-};
-*/
-
 typedef unique_ptr<Simulation> SimulationPointer_t;
 
-class Simulations
-{
+class Simulations {
   private:
 
     /*! \relates MyShape
@@ -80,26 +32,20 @@ class Simulations
 
     typedef unique_ptr<Simulation> SimulationPointer_t;
   public:
-    // TODO put this in a more appropriate "Physical Constants" location
-    static void simpleOrbit();
-
-    static SimulationPointer_t
-    disruption_ArbitraryList(PhysicsSandboxProperties properties);
+    static SimulationPointer_t disruption_ArbitraryList(PhysicsSandboxProperties properties);
 
     static SimulationPointer_t QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
 
-    static SimulationPointer_t
-    bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
+    static SimulationPointer_t bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
 
-    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(PhysicsSandboxProperties properties, PhysicalVector target,
-                                                                  PhysicalVector groupMomentum);
+    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(
+            PhysicsSandboxProperties properties,
+            PhysicalVector target,
+            PhysicalVector groupMomentum);
 
-    static SimulationPointer_t
-    createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
+    static SimulationPointer_t createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
 
     static PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
-
 };
 
-
-#endif /* SIMULATIONS_H_ */
+#endif

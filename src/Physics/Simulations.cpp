@@ -18,11 +18,7 @@ Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulatio
     } else if ( simNumber == '2' ) {
         return Simulations::disruption_ArbitraryList(simulationProperties);
     } else if ( simNumber == '3' ) {
-    } else if ( simNumber == '4' ) {
-    } else if ( simNumber == '5' ) {
-    } else if ( simNumber == '7' ) {
         return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
-    } else if ( simNumber == '8' ) {
     } else {
         exit(1);
     }
