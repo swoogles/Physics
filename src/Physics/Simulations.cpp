@@ -170,28 +170,17 @@ PhysicalVector Simulations::randomSplitBodyPlacement(float pieceRadius, Physical
 }
 
 PhysicalVector Simulations::randomSplitBodyMomentum(kilogram_t pieceMass) {
-  static int randMult;
+    static int randMult;
 
-  static bool switchB = false;
-  double values[] = {0, 0, 0};
+    double values[] = {0, 0, 0};
 
-  if (switchB) {
     for (auto &value : values) {
-
-      if (switchB) {
         // Set the range of momenta, and have them be half positive/half negative
         randMult = rand()%100;
         if (randMult % 2 == 0)
-          randMult *= -1;
-      } else {
-        randMult *= -1;
-      }
-        value = randMult * pieceMass.value() * 0.001000; // Good mix
+            randMult *= -1;
+        value = randMult * pieceMass.value() * 0.000003;
     }
-  }
-
-
-    switchB = !switchB;
     return PhysicalVector(values[0], values[1], values[2], false);
 }
 
