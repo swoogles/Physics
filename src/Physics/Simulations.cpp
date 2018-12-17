@@ -7,11 +7,8 @@
 
 #include "Simulations.h"
 
-SimulationPointer_t
-Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties)
-{
+SimulationPointer_t Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties) {
     ForceCalculationMethod forceCalculationMethod = simulationProperties.forceCalculationMethod;
-    //******CURRENT SIMULATION*****
     if ( simNumber == '0' ) {
     } else if ( simNumber == '1' ) {
         return Simulations::bodyFormation_ArbitraryList(simulationProperties.numShapes, simulationProperties);
@@ -26,8 +23,7 @@ Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulatio
 }
 
 
-SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperties properties)
-{
+SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperties properties) {
     SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, properties);
 
     int numPieces = 1;
@@ -51,11 +47,10 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
     return curSimulation;
 }
 
-SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod)
-{
+SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod) {
     ParticleList physicalObjects;
 
-    int numPieces=2;
+    int numPieces=3;
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = (kilogram_t(AstronomicalValues::MASS_SUN))/(numPieces);
     PhysicalVector startMomentum(0, 0, 0);
@@ -106,9 +101,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, forceCalculationMethod, 0.5);
 }
 
-SimulationPointer_t
-Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties)
-{
+SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties) {
     ParticleList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
     const kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
@@ -183,40 +176,6 @@ PhysicalVector Simulations::randomSplitBodyMomentum(kilogram_t pieceMass) {
     }
     return PhysicalVector(values[0], values[1], values[2], false);
 }
-
-/*
-function getPoint() {
-    var x = Math.random() - 0.5;
-    var y = Math.random() - 0.5;
-    var z = Math.random() - 0.5;
-
-    var mag = Math.sqrt(x*x + y*y + z*z);
-    x /= mag; y /= mag; z /= mag;
-
-    var d = Math.random();
-    return {x: x*d, y: y*d, z: z*d};
-}
- */
-
-
-
-/*
-function getPoint() {
-    var u = Math.random();
-    var v = Math.random();
-    var theta = u * 2.0 * Math.PI;
-    var phi = Math.acos(2.0 * v - 1.0);
-    var r = Math.cbrt(Math.random());
-    var sinTheta = Math.sin(theta);
-    var cosTheta = Math.cos(theta);
-    var sinPhi = Math.sin(phi);
-    var cosPhi = Math.cos(phi);
-    var x = r * sinPhi * cosTheta;
-    var y = r * sinPhi * sinTheta;
-    var z = r * cosPhi;
-    return {x: x, y: y, z: z};
-}
- */
 
 float randomFloat() {
     return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
