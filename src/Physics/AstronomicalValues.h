@@ -12,7 +12,7 @@ using namespace units::density;
 
 class AstronomicalValues {
 public:
-    const static float MASS_SUN;
+    const static kilogram_t MASS_SUN;
 
     const static kilograms_per_cubic_meter_t DENSITY_SUN;
 

@@ -52,7 +52,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
 
     int numPieces=3;
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
-    kilogram_t pieceMass = (kilogram_t(AstronomicalValues::MASS_SUN))/(numPieces);
+    kilogram_t pieceMass = AstronomicalValues::MASS_SUN/numPieces;
     PhysicalVector startMomentum(0, 0, 0);
 
     PhysicalVector newColor (1, 1, 1);
