@@ -4,6 +4,7 @@
  */
 
 #include "graphics/GraphicalOperations.h"
+#include "graphics/Recorder.h"
 
 //GUI stuff
 #include "Windows/control_center.h"
@@ -24,11 +25,18 @@ SimulationPtr_t globalSimulation;
 control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
+shared_ptr<Recorder> globalRecorder;
+
 void idle() {
   auto dt = globalControlCenter.getDt();
   if (! globalControlCenter.isPaused() ) {
     globalSimulation->update(dt);
     globalMainDisplay.update(dt.value());
+
+    if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame()  ) {
+      globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+      globalRecorder->incCurFrame();
+    }
   }
 
   // Should just directly call Observer::getCurObserverInstance()
@@ -53,6 +61,18 @@ int main(int argcp, char **argv) {
                   720,
                   1280
           );
+
+    globalRecorder = make_shared<Recorder>();
+    globalRecorder->init();
+    globalRecorder->setRecording(true);
+
+    string outFileName = "outFrame";
+    string extension = "jpg";
+    globalRecorder->setOutFileName( outFileName );
+    globalRecorder->setPath("output");
+    globalRecorder->setExtension( extension );
+    globalRecorder->setSkipFrames(1);
+
 
   auto observer = Observer::init(windowDimensions);
   observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());

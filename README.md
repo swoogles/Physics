@@ -32,3 +32,13 @@ Future improvements and additions
 - Output straight to video file and skip intermediate image stage
 - Parallelize calculation code.
 - Get rid of sgVec's and use a more popular and mature vector library, most likely Boost.
+
+Installation requirements:
+sudo apt install libjpeg-dev
+  -Correction:
+  sudo apt install libjpeg8-dev
+
+  // Some combination of these??
+sudo apt-get install libgraphicsmagick++1-dev
+sudo apt-get install libgraphicsmagick1-dev
+

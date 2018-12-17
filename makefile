@@ -22,7 +22,10 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 OPENGL_LIBS := -lGL -lGLU -lglut
 PLIB_LIBS := -lplibpuaux -lplibpu -lplibsg -lplibul -lplibfnt
 BOOST_LIBS := -lboost_system -lboost_timer -lboost_chrono -lboost_thread
-LIBS :=  $(OPENGL_LIBS) $(PLIB_LIBS) $(BOOST_LIBS) -ljpeg  -lrt -fopenmp -Wc++0x-compat
+# IMAGE_LIBS := -lMagick++ -lMagickCore
+# IM_CXXFLAGS=$(Magick++-config --cxxflags)
+# IM_LDFLAGS=$(Magick++config --ldflags)
+LIBS :=  $(OPENGL_LIBS) $(PLIB_LIBS) $(BOOST_LIBS) -ljpeg  -lrt -fopenmp -Wc++0x-compat 
 
 COMPILE_ONLY_OPTION := -c
 STANDARD_OPTIONS := -std=c++17
