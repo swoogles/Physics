@@ -12,6 +12,7 @@
 
 using namespace units::mass;
 using namespace units::density;
+using namespace units::time;
 
 using namespace std;
 
@@ -67,7 +68,7 @@ public:
 	void adjustVelocity(PhysicalVector dVel);
 
 	PhysicalVector velocity();
-	void update(float);
+	void update(hour_t);
 	PhysicalVector weightedPosition();
 
 	double distanceTo(Moveable &object2);

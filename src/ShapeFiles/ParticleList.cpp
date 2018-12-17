@@ -72,7 +72,7 @@ particleVector ParticleList::getShapes() {
   return shapes;
 }
 
-void ParticleList::update(const float dt) {
+void ParticleList::update(hour_t dt) {
   for (const auto & curShape : shapes ) {
       if (curShape == nullptr) {
           fprintf(stderr, "Error: Null Shape in ParticleList::update\n");

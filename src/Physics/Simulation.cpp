@@ -66,7 +66,7 @@ void Simulation::updateMinsAndMaxes() {
     }
 }
 
-void Simulation::update(float dt) {
+void Simulation::update(hour_t dt) {
     calcForcesAll(dt);
     physicalObjects.update(dt);
     updateTimeElapsed(dt);
@@ -85,9 +85,9 @@ void Simulation::addPhysicalObjectToList(physicalObject_t newShape) {
     physicalObjects.addShapeToList(std::move(newShape));
 }
 
-void Simulation::updateTimeElapsed(float dt) { timeElapsed += dt; }
+void Simulation::updateTimeElapsed(hour_t dt) { timeElapsed += dt; }
 
-double Simulation::getTimeElapsed() { return timeElapsed; }
+hour_t Simulation::getTimeElapsed() { return timeElapsed; }
 
 QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 
@@ -96,7 +96,7 @@ QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
 // structural changes that I can make so that it will be more legible and
 // more suitable for later parallelization
 // TODO This should return the deleted list, so that it can coexist with the Octree version
-void Simulation::calcForcesAll_LessNaive(float dt) {
+void Simulation::calcForcesAll_LessNaive(hour_t dt) {
     particleVector physicalObjects = this->physicalObjects.getShapes();
     ParticleList deleteList;
 
@@ -132,7 +132,7 @@ void Simulation::calcForcesAll_LessNaive(float dt) {
 PairCollection Simulation::calculateForceOnExternalNode(
         const physicalObject_t &curObject,
         Quadrant &curQuadrant,
-        float dt) {
+        hour_t dt) {
     //1. a.
     PairCollection deleteList;
     physicalObject_t shapeInQuadrant = curQuadrant.getShapeInQuadrant();
@@ -165,7 +165,7 @@ PairCollection Simulation::calculateForceOnExternalNode(
 PairCollection Simulation::calcForceOnObject_Octree(
         physicalObject_t curObject,
         Quadrant &curQuadrant,
-        float dt,
+        hour_t dt,
         int recursionLevel) {
     if ( curQuadrant.isExternal() ) {
         return calculateForceOnExternalNode(curObject, curQuadrant, dt);
@@ -204,10 +204,10 @@ PairCollection Simulation::calcForceOnObject_Octree(
 
 }
 
-void Simulation::calcForcesAll(float dt) {
+void Simulation::calcForcesAll(hour_t dt) {
     switch(this->forceCalcMethod) {
         case ForceCalculationMethod::NAIVE:
-            calcForcesAll_LessNaive(0);
+            calcForcesAll_LessNaive(dt);
             break;
         case ForceCalculationMethod ::OCTREE:
             PairCollection deleteList;

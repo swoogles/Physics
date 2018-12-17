@@ -62,7 +62,7 @@ Observer &Observer::getCurObserverRef() {
     return *observers.at(curObserver);
 }
 
-void Observer::update(float dt) {
+void Observer::update() {
     PhysicalVector rotVec;
     rotVec = PhysicalVector(1,  0, 0);
   adjustAngle(angVelocity.x(), rotVec);

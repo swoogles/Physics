@@ -58,22 +58,22 @@ PhysicalVector Moveable::velocity() {
 
 double Moveable::momentOfInertia() { return 1;}
 
-void Moveable::update(float dt) {
+void Moveable::update(hour_t dt) {
 	PhysicalVector prevVelocity(prevMomentum.scaledBy(1/_mass.value()));
 	auto dPos =
             this->velocity()
 			.plus(prevVelocity)
 			.scaledBy(.5) //Get avg velocity
-			.scaledBy(dt);
+			.scaledBy(dt.value());
 	this->pos = pos.plus(dPos);
 
 	PhysicalVector rotVec;
 	rotVec = PhysicalVector(1,  0, 0);
-	adjustAngle( (prevAngVelocity.x() + angVelocity.x()) * .5 *dt, rotVec);
+	adjustAngle( (prevAngVelocity.x() + angVelocity.x()) * .5 *dt.value(), rotVec);
 	rotVec = PhysicalVector(0,  1, 0);
-	adjustAngle( (prevAngVelocity.y() + angVelocity.y()) * .5 *dt, rotVec);
+	adjustAngle( (prevAngVelocity.y() + angVelocity.y()) * .5 *dt.value(), rotVec);
 	rotVec = PhysicalVector(0,  0, 1);
-	adjustAngle( (prevAngVelocity.z() + angVelocity.z()) * .5 *dt, rotVec);
+	adjustAngle( (prevAngVelocity.z() + angVelocity.z()) * .5 *dt.value(), rotVec);
 
 	this->prevMomentum = _momentum;
 	this->prevAngVelocity = angVelocity;

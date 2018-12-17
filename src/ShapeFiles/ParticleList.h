@@ -4,6 +4,8 @@
 #include "Particle.h"
 #include <list>
 #include <algorithm>
+#include <../lib/units.h>
+using namespace units::time;
 
 using std::size_t;
 
@@ -28,7 +30,7 @@ class ParticleList {
     int remove(ParticleList & shapesToRemove);
     size_t clearShapes();
     particleVector getShapes();
-    void update(const float dt);
+    void update(hour_t dt);
     inline size_t size() { return shapes.size(); };
 
     bool contains(item_t searchShape) const;

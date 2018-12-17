@@ -10,11 +10,11 @@
 using namespace std;
 
 bool control_center::paused = false;
-float control_center::dt;
+hour_t control_center::dt;
 bool control_center::renderOctree = false;
 
 // TODO Is there any better candidate for breaking things apart than this functino?
-void control_center::init(float dt, int windowWidth) {
+void control_center::init(hour_t dt, int windowWidth) {
   control_center::dt = dt;
   showingRunTime = false;
 
@@ -145,7 +145,7 @@ bool control_center::isPaused() {
   return control_center::paused;
 }
 
-float control_center::getDt() {
+hour_t control_center::getDt() {
   return control_center::dt;
 }
 

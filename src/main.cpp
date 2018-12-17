@@ -17,6 +17,7 @@
 #include "graphics/WorldSettings.h"
 #include "Physics/PhysicsSandboxProperties.h"
 
+
 // GLOBALS
 SimulationPtr_t globalSimulation;
 
@@ -27,12 +28,12 @@ void idle() {
   auto dt = globalControlCenter.getDt();
   if (! globalControlCenter.isPaused() ) {
     globalSimulation->update(dt);
-    globalMainDisplay.update(dt);
+    globalMainDisplay.update(dt.value());
   }
 
   // Should just directly call Observer::getCurObserverInstance()
   auto observer = Observer::getCurObserver();
-  observer->update(dt);
+  observer->update();
 
   if (WorldSettings::isAutoScaling()) {
     observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
@@ -70,7 +71,7 @@ int main(int argcp, char **argv) {
 
   InputFunctions::init(observer);
 
-  globalControlCenter.init(properties.dt, windowDimensions.width);
+  globalControlCenter.init(hour_t(properties.dt), windowDimensions.width);
 
   graphicalOperations.postSimulationGlInit();
 

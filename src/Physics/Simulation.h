@@ -10,13 +10,14 @@
 #include <Physics/Interactions.h>
 #include "lib/units.h"
 
+using namespace units::time;
 
 typedef particle_t physicalObject_t;
 
 class Simulation {
 private:
 	ParticleList physicalObjects;
-	double timeElapsed;
+	hour_t timeElapsed;
 
 	float minX, maxX, minY, maxY;
 
@@ -29,7 +30,7 @@ private:
 
     Interactions interactions;
 
-	void updateTimeElapsed(float dt);
+	void updateTimeElapsed(hour_t dt);
 
 	void updateMinsAndMaxes();
     void resetXYMinsAndMaxes();
@@ -39,12 +40,12 @@ private:
 
     void refreshQuadrant();
 
-	PairCollection calculateForceOnExternalNode(const physicalObject_t &curObject, Quadrant &curQuadrant, float dt);
-	PairCollection calcForceOnObject_Octree(physicalObject_t curObject, Quadrant &curQuadrant, float dt,
+	PairCollection calculateForceOnExternalNode(const physicalObject_t &curObject, Quadrant &curQuadrant, hour_t dt);
+	PairCollection calcForceOnObject_Octree(physicalObject_t curObject, Quadrant &curQuadrant, hour_t dt,
 											int recursionLevel);
 
-	void calcForcesAll_LessNaive(float dt);
-	void calcForcesAll(float dt);
+	void calcForcesAll_LessNaive(hour_t dt);
+	void calcForcesAll(hour_t dt);
 
 public:
     Simulation(ParticleList physicalObjects, CollisionType collisionType,
@@ -52,10 +53,10 @@ public:
 
 	void addPhysicalObjectToList(physicalObject_t newShape);
 
-    double getTimeElapsed();
+    hour_t getTimeElapsed();
 
     // TODO Take dt as a parameter here.
-	void update(float dt);
+	void update(hour_t dt);
 
     MaximumValues getXYMinsAndMaxes();
 

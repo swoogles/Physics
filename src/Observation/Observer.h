@@ -66,7 +66,7 @@ public:
 	void calcMinPullback(MaximumValues maximumValues);
 
   //! Similar as MyShape::update(float), except only uses angular velocity right now
-  void update(float);
+  void update();
 
 	void adjustAngularVelocity(PhysicalVector dangVelocity);
 	double momentOfInertia();

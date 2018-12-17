@@ -10,7 +10,7 @@ ParticleList Interactions::crackPhysicalObject(Particle &shape, joule_t kineticE
     return ParticleList();
 }
 
-PhysicalVector Interactions::calcForceGravNew(Particle &object1, Moveable &object2, float dt) {
+PhysicalVector Interactions::calcForceGravNew(Particle &object1, Moveable &object2, hour_t dt) {
     PhysicalVector sepVec(object1.vectorTo(object2));
 
     double rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);
@@ -21,10 +21,10 @@ PhysicalVector Interactions::calcForceGravNew(Particle &object1, Moveable &objec
     return sepVec
             .unit()
             .scaledBy(forceMagnitude)
-            .scaledBy(dt);
+            .scaledBy(dt.value());
 }
 
-void Interactions::elasticCollision(Particle &object1, Particle &object2, float dt) {
+void Interactions::elasticCollision(Particle &object1, Particle &object2, hour_t dt) {
     PhysicalVector sepVecUnit = object1.vectorTo(object2).unit();
     PhysicalVector n(sepVecUnit);
 

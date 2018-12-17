@@ -6,6 +6,9 @@
 
 #include "../Observation/Observer.h"
 
+#include <../lib/units.h>
+using namespace units::time;
+
 /*! \brief Main UI for making objects and controlling simulation
  *
  *  This class provides the ability to:
@@ -15,7 +18,7 @@
 class control_center {
 private:
 	static bool paused;
-	static float dt;
+	static hour_t dt;
 	static bool renderOctree ;
 
 	puGroup * runtime_group;
@@ -36,7 +39,7 @@ private:
 	bool showingRunTime;
 
 public:
-	void init(float dt, int windowWidth);
+	void init(hour_t dt, int windowWidth);
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
 
@@ -65,7 +68,7 @@ public:
 	static void flipAutoScaling(puObject * caller);
 
 	bool isPaused();
-	float getDt();
+	hour_t getDt();
 	bool shouldRenderOctree();
 };
 
