@@ -26,13 +26,12 @@ SimulationPointer_t Simulations::createSimulation(char simNumber, PhysicsSandbox
 SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperties properties) {
     SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, properties);
 
-    int numPieces = 1;
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
-    kilogram_t pieceMass = properties.mass / numPieces;
-    PhysicalVector startMomentum(0, 0, 0);
+    kilogram_t pieceMass = properties.mass * 150;
+    PhysicalVector startMomentum(-61000, 0, 0);
     PhysicalVector newColor (1, 0, 1);
 
-    PhysicalVector startPlacement (-1e7f , 0, 0, true);
+    PhysicalVector startPlacement (4e5f , 1e5, 0, true);
 
     shared_ptr<Particle> curShape = make_shared<Particle>(
             startPlacement,
