@@ -6,8 +6,7 @@
 
 #include "../Observation/Observer.h"
 
-#include <../lib/units.h>
-using namespace units::time;
+#include <Physics/UnitDefinitions.h>
 
 /*! \brief Main UI for making objects and controlling simulation
  *
@@ -18,7 +17,7 @@ using namespace units::time;
 class control_center {
 private:
 	static bool paused;
-	static hour_t dt;
+	static duration dt;
 	static bool renderOctree ;
 
 	puGroup * runtime_group;
@@ -39,7 +38,7 @@ private:
 	bool showingRunTime;
 
 public:
-	void init(hour_t dt, int windowWidth);
+	void init(duration dt, int windowWidth);
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
 
@@ -68,7 +67,7 @@ public:
 	static void flipAutoScaling(puObject * caller);
 
 	bool isPaused();
-	hour_t getDt();
+	duration getDt();
 	bool shouldRenderOctree();
 };
 

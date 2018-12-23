@@ -6,15 +6,16 @@
 #define PHYSICS_ASTRONOMICALVALUES_H
 
 #include <../lib/units.h>
+#include <Physics/UnitDefinitions.h>
 
 using namespace units::mass;
 using namespace units::density;
 
 class AstronomicalValues {
 public:
-    const static kilogram_t MASS_SUN;
+    const static mass MASS_SUN;
 
-    const static kilograms_per_cubic_meter_t DENSITY_SUN;
+    const static density DENSITY_SUN;
 
 };
 

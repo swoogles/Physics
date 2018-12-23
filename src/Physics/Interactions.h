@@ -9,6 +9,8 @@
 
 #include "lib/units.h"
 
+#include <Physics/UnitDefinitions.h>
+
 using namespace units::time;
 using namespace units::energy;
 
@@ -17,8 +19,8 @@ using std::size_t;
 class Interactions {
 public:
     ParticleList crackPhysicalObject(Particle &shape, joule_t kineticEnergy, int numberOfPieces);
-    PhysicalVector calcForceGravNew(Particle &object1, Moveable &object2, hour_t dt) ;
-    void elasticCollision(Particle &object1, Particle &object2, hour_t dt);
+    PhysicalVector calcForceGravNew(Particle &object1, Moveable &object2, duration dt) ;
+    void elasticCollision(Particle &object1, Particle &object2, duration dt);
 };
 
 
