@@ -1,22 +1,11 @@
 #include "Recorder.h"
 
 Recorder::Recorder()
-          :skipFrames(1),
-          curFrame(0),
-          curImage(1) // Pretty sure this is all that matters, and curFrame is being ignored completely.
+          :curImage(1)
 {
     this->extension = "jpg";
     this->path = "output";
     this->outFileName = "outFrame";
-}
-
-
-void Recorder::incCurFrame() {
-	curFrame++;
-}
-
-bool Recorder::shouldCaptureThisFrame() {
-	return (curFrame % skipFrames == 0);
 }
 
 bool Recorder::captureThisFrame(unsigned int width, unsigned int height) {
@@ -42,11 +31,10 @@ bool Recorder::captureThisFrame(unsigned int width, unsigned int height) {
 
   string outFileString = path + "/" + outFileName + paddingZeros + numString + "." + this->extension;
 
-	this->incCurFrame();
 	return screenshot(width, height, outFileString, 100);
 }
 
-bool screenshot(unsigned int width, unsigned int height, string path, int quality)
+bool Recorder::screenshot(unsigned int width, unsigned int height, string path, int quality)
 {
    bool ret=false;
 
@@ -115,25 +103,4 @@ bool screenshot(unsigned int width, unsigned int height, string path, int qualit
       free(flip);
 
    return ret;
-}
-
-void intToAsc(int iCurPic, char * sCurPic)
-{
-   int i = 0;
-   int tempNum = 0;
-
-   while(iCurPic != 0)
-   {
-      tempNum *= 10;
-      tempNum += iCurPic % 10;
-      iCurPic /= 10;
-      i++;
-   }
-
-   for (int j = 0; j < i; j++)
-   {
-      sCurPic[j] = (tempNum % 10) + 48;
-      tempNum /= 10;
-   }
-   sCurPic[i] = '\0';
 }

@@ -33,7 +33,7 @@ void idle() {
     globalSimulation->update(dt);
     globalMainDisplay.update(dt.value());
 
-    if ( globalRecorder->shouldCaptureThisFrame()  ) {
+    if ( globalRecorder ) {
       globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
     }
   }
@@ -61,7 +61,15 @@ int main(int argcp, char **argv) {
                   1280
           );
 
+  char recording = argv[1][0];
+  if ( recording == 'r') {
     globalRecorder = make_shared<Recorder>();
+  } else if (recording == 'x') {
+
+  } else {
+    cout << "Bad recording value! Must be 'x' or 'r'" << endl;
+    exit(1);
+  }
 
   auto observer = Observer::init(windowDimensions);
   observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
