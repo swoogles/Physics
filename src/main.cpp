@@ -33,9 +33,8 @@ void idle() {
     globalSimulation->update(dt);
     globalMainDisplay.update(dt.value());
 
-    if ( globalRecorder->getRecording() && globalRecorder->shouldCaptureThisFrame()  ) {
+    if ( globalRecorder->shouldCaptureThisFrame()  ) {
       globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-      globalRecorder->incCurFrame();
     }
   }
 
@@ -63,16 +62,6 @@ int main(int argcp, char **argv) {
           );
 
     globalRecorder = make_shared<Recorder>();
-    globalRecorder->init();
-    globalRecorder->setRecording(true);
-
-    string outFileName = "outFrame";
-    string extension = "jpg";
-    globalRecorder->setOutFileName( outFileName );
-    globalRecorder->setPath("output");
-    globalRecorder->setExtension( extension );
-    globalRecorder->setSkipFrames(1);
-
 
   auto observer = Observer::init(windowDimensions);
   observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());

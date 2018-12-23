@@ -53,37 +53,11 @@ private:
 	bool recording;
 
 public:
-  //! Constructor
   Recorder();
-	//! Sets up default values for completely static class
-	void init();
 
-	/*! \brief Set the path where frames will be saved.
-	 */
-	void setPath(string path);
-
-	/*! \brief Set the file base name for frames to be saved.
-	 */
-  void setOutFileName(string outFileName);
-
-	/*! \brief Set the extension that frames will use.
-	 */
-  void setExtension(string extension);
-
-	//! Returns the current frame number
-	int getCurFrame();
-	//! Set the current frame number to newFrameNum (Useful when loading new simulation)
-	void setCurFrame(int newFrameNum);
 	//! Increment current frame count (Called everytime display() is called)
 	void incCurFrame();
 
-	//! Return number of discarded frames between saved frames
-	int getSkipFrames();
-	//! Set the number of discarded frames between saved frames
-	void setSkipFrames(int );
-
-  //! Determine if display frames are being output as images.
-  bool getRecording();
   //! Decide if display frames should be output as images.
   void setRecording(bool recording);
 

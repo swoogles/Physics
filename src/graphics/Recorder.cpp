@@ -1,62 +1,18 @@
-/*
- * Recording.cpp
- *
- *  Created on: Jul 28, 2011
- *      Author: brasure
- */
-
 #include "Recorder.h"
 
 Recorder::Recorder()
           :skipFrames(1),
           curFrame(0),
-          curImage(1)
+          curImage(1) // Pretty sure this is all that matters, and curFrame is being ignored completely.
 {
-  extension = "jpg";
+    this->extension = "jpg";
+    this->path = "output";
+    this->outFileName = "outFrame";
 }
 
-
-void Recorder::init() {
-}
-
-void Recorder::setPath(string path) {
-  this->path = path;
-}
-
-void Recorder::setOutFileName(string outFileName) {
-	this->outFileName = outFileName;
-}
-
-void Recorder::setExtension(string extension) {
-	this->extension = extension;
-}
-
-int Recorder::getCurFrame() {
-	return curFrame;
-}
-
-void Recorder::setCurFrame(int newFrameNum) {
-	curFrame = newFrameNum;
-}
 
 void Recorder::incCurFrame() {
 	curFrame++;
-}
-
-void Recorder::setSkipFrames(int inSkipFrames) {
-	skipFrames = inSkipFrames;
-}
-
-int Recorder::getSkipFrames() {
-	return skipFrames;
-}
-
-bool Recorder::getRecording() {
-	return recording;
-}
-
-void Recorder::setRecording(bool inRecording) {
-	recording = inRecording;
 }
 
 bool Recorder::shouldCaptureThisFrame() {
@@ -76,9 +32,6 @@ bool Recorder::captureThisFrame(unsigned int width, unsigned int height) {
   convert << curImage;      // insert the textual representation of 'Number' in the characters in the stream
   string numString = convert.str(); // set 'Result' to the contents of the stream
 
-  // Single line method
-  // string String = static_cast<ostringstream*>( &(ostringstream() << curImage) )->str();
-
 	curImage++;
 
   string paddingZeros;
@@ -87,8 +40,9 @@ bool Recorder::captureThisFrame(unsigned int width, unsigned int height) {
 		leadingZeros--;
 	}
 
-  string outFileString = path + "/" + outFileName + paddingZeros + numString + "." + extension;
+  string outFileString = path + "/" + outFileName + paddingZeros + numString + "." + this->extension;
 
+	this->incCurFrame();
 	return screenshot(width, height, outFileString, 100);
 }
 

@@ -24,7 +24,7 @@ SimulationPointer_t Simulations::createSimulation(char simNumber, PhysicsSandbox
 
 
 SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperties properties) {
-    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(1000, properties);
+    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(properties.numShapes, properties);
 
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = properties.mass * 150;
@@ -40,9 +40,17 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
             objectDensity,
             newColor
     );
-
-    ParticleList disruptingObject(curShape);
     curSimulation->addPhysicalObjectToList( curShape );
+
+    shared_ptr<Particle> opposingBody = make_shared<Particle>(
+            startPlacement.scaledBy(-1),
+            pieceMass,
+            startMomentum.scaledBy(-1),
+            objectDensity,
+            newColor
+    );
+    curSimulation->addPhysicalObjectToList( opposingBody );
+
     return curSimulation;
 }
 
