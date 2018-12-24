@@ -14,4 +14,8 @@ typedef hour_t duration;
 typedef kilogram_t mass;
 typedef kilograms_per_cubic_meter_t density;
 
+class UnitDefinition {
+
+};
+
 #endif //PHYSICS_UNITDEFINITIONS_H

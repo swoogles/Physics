@@ -10,8 +10,6 @@
 #include "lib/units.h"
 
 #include <Physics/UnitDefinitions.h>
-
-using namespace units::time;
 using namespace units::energy;
 
 using std::size_t;
