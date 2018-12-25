@@ -1,7 +1,7 @@
 #include "Observer.h"
 
 std::vector<shared_ptr<Observer>> Observer::observers(0);
-int Observer::curObserver;
+unsigned int Observer::curObserver;
 
 shared_ptr<Observer> Observer::init(WindowDimensions windowDimensions) {
     auto initialObserver = make_shared<Observer>(windowDimensions);
@@ -39,11 +39,11 @@ void Observer::applyView() {
 }
 
 void Observer::zoomIn() {
-	pos.vec[2] *= .95;
+	pos.vec[2] *= .99;
 }
 
 void Observer::zoomOut() {
-	pos.vec[2] *= 1.05;
+	pos.vec[2] *= 1.01;
 }
 
 void Observer::setAutoScaling(bool shouldScale) {
@@ -65,35 +65,29 @@ Observer &Observer::getCurObserverRef() {
 void Observer::update() {
     PhysicalVector rotVec;
     rotVec = PhysicalVector(1,  0, 0);
-  adjustAngle(angVelocity.x(), rotVec);
+    adjustAngle(angVelocity.x(), rotVec);
     rotVec = PhysicalVector(0,  1, 0);
-  adjustAngle(angVelocity.y(), rotVec);
+    adjustAngle(angVelocity.y(), rotVec);
     rotVec = PhysicalVector(0,  0, 1);
-  adjustAngle(angVelocity.z(), rotVec);
+    adjustAngle(angVelocity.z(), rotVec);
 }
 
 void Observer::calcMinPullback(MaximumValues maximumValues) {
-    float absMaxX;
-    float absMaxY;
-    float pullBack;
 
-    if (abs(maximumValues.minX) > maximumValues.maxX) {
-        absMaxX = abs(maximumValues.minX);
-    } else {
-        absMaxX = maximumValues.maxX;
-    }
+    const float absMaxX =
+        (abs(maximumValues.minX) > maximumValues.maxX)
+            ? abs(maximumValues.minX)
+            : maximumValues.maxX;
 
-    if (abs(maximumValues.minY) > maximumValues.maxY) {
-        absMaxY = abs(maximumValues.minY);
-    } else {
-        absMaxY = maximumValues.maxY;
-    }
+    const float absMaxY =
+        (abs(maximumValues.minY) > maximumValues.maxY)
+            ? abs(maximumValues.minY)
+            : maximumValues.maxY;
 
-    if (absMaxY > absMaxX) {
-        pullBack = absMaxY / tan(this->fov * M_PI / 360);
-    } else {
-        pullBack = absMaxX / tan(this->fov * M_PI / 360);
-    }
+    const double pullBack =
+        (absMaxY > absMaxX)
+            ? absMaxY / tan(this->fov * M_PI / 360)
+            : absMaxX / tan(this->fov * M_PI / 360);
 
     setPos(0,0,-pullBack*2);
 
@@ -139,10 +133,7 @@ void Observer::BuildPerspProjMat(float *m, float aspect, float znear, float zfar
   m[15] = 0;
 }
 
-double Observer::momentOfInertia() { return 1;}
-
 void Observer::adjustAngularVelocity(PhysicalVector dAngVelocity) {
-    double I = momentOfInertia();
     PhysicalVector dAngV(dAngVelocity);
     this->angVelocity = angVelocity.plus(dAngV);
 }
@@ -150,7 +141,6 @@ void Observer::adjustAngularVelocity(PhysicalVector dAngVelocity) {
 void Observer::adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis) {
     sgQuat tempRotQuat;
     sgAngleAxisToQuat(tempRotQuat, dAngle,  rotAxis.vec);
-    //sgRotQuat(orientationQuat, dAngle, rotAxis);
 
     sgPostMultQuat(orientationQuat, tempRotQuat);
     sgQuatToMatrix(orientationMat, orientationQuat);

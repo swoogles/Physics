@@ -24,7 +24,7 @@ private:
 
 	int id;
 	bool autoScale;
-	static int curObserver;
+	static unsigned int curObserver;
 
 	float fov;
 
@@ -69,7 +69,6 @@ public:
   void update();
 
 	void adjustAngularVelocity(PhysicalVector dangVelocity);
-	double momentOfInertia();
 	void adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis);
 	void setPos(float inX, float inY, float inZ);
 };
