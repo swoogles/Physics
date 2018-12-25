@@ -28,10 +28,11 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
 
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = properties.mass * 150;
-    PhysicalVector startMomentum(-61000, 0, 0);
+    PhysicalVector startMomentum(0, 35000, 0);
     PhysicalVector newColor (1, 0, 1);
 
-    PhysicalVector startPlacement (4e5f , 1e5, 0, true);
+    PhysicalVector startPlacement (3e5f , 0, 0, true);
+    ParticleList newParticles;
 
     shared_ptr<Particle> curShape = make_shared<Particle>(
             startPlacement,
@@ -40,7 +41,7 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
             objectDensity,
             newColor
     );
-    curSimulation->addPhysicalObjectToList( curShape );
+    newParticles.addShapeToList(curShape);
 
     shared_ptr<Particle> opposingBody = make_shared<Particle>(
             startPlacement.scaledBy(-1),
@@ -49,9 +50,8 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
             objectDensity,
             newColor
     );
-    curSimulation->addPhysicalObjectToList( opposingBody );
-
-    return curSimulation;
+    newParticles.addShapeToList(opposingBody);
+    return make_unique<Simulation>(*curSimulation, newParticles);
 }
 
 SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod) {

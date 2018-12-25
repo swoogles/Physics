@@ -51,7 +51,8 @@ public:
     Simulation(ParticleList physicalObjects, CollisionType collisionType,
 				   ForceCalculationMethod forceCalculationMethod, float octreeTheta);
 
-	void addPhysicalObjectToList(physicalObject_t newShape);
+	Simulation(Simulation & originalSimulation, ParticleList newParticles);
+
 
     hour_t getTimeElapsed();
 

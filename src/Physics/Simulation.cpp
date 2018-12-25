@@ -16,6 +16,24 @@ Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType
     this->refreshQuadrant();
 }
 
+Simulation::Simulation(Simulation &originalSimulation, ParticleList newParticles)
+    : timeElapsed(originalSimulation.timeElapsed)
+            ,minX(FLT_MAX)
+            ,maxX(FLT_MIN)
+            ,minY(FLT_MAX)
+            ,maxY(FLT_MIN)
+            ,forceCalcMethod(originalSimulation.forceCalcMethod)
+            ,collisionType(originalSimulation.collisionType)
+            ,octreeTheta(originalSimulation.octreeTheta)
+{
+    originalSimulation.physicalObjects.addList(std::move(newParticles));
+    this->physicalObjects = originalSimulation.physicalObjects;
+    this->updateMinsAndMaxes();
+    this->refreshQuadrant();
+
+}
+
+
 void Simulation::refreshQuadrant() {
     PhysicalVector pos(0, 0, 0, true);
 
@@ -79,10 +97,6 @@ void Simulation::update(hour_t dt) {
 
 void Simulation::removePhysicalObjects(ParticleList shapesToRemove) {
     physicalObjects.remove(shapesToRemove);
-}
-
-void Simulation::addPhysicalObjectToList(physicalObject_t newShape) {
-    physicalObjects.addShapeToList(std::move(newShape));
 }
 
 void Simulation::updateTimeElapsed(hour_t dt) { timeElapsed += dt; }

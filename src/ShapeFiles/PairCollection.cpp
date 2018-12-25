@@ -119,12 +119,6 @@ size_t PairCollection::size() const {
     return pairs.size();
 }
 
-ParticleList  PairCollection::survivors() {
-    particleVector survivors(pairs.size());
-    std::transform (pairs.begin(), pairs.end(), survivors.begin(), [](TouchingPair pair) { return pair.getA();});
-    ParticleList retSurvivors(survivors);
-    return retSurvivors;
-}
 ParticleList PairCollection::doomed() {
     particleVector doomed(pairs.size());
     std::transform (pairs.begin(), pairs.end(), doomed.begin(), [](TouchingPair pair) { return pair.getB();});

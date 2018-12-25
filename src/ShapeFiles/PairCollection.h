@@ -20,7 +20,6 @@ public:
     void insertIfUnique(const TouchingPair & newPair);
     void insertUniqueElements(PairCollection newPairs);
     size_t size() const;
-    ParticleList survivors();
     ParticleList doomed();
     void mergePairs();
 //    bool any_of( std::function< bool(const TouchingPair &)>& const lambda );
