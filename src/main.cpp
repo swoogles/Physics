@@ -68,48 +68,48 @@ void idle() {
 }
 
 int main(int argcp, char **argv) {
-  char simulation = argv[2][0];
-  PhysicsSandboxProperties properties("simulation.properties");
-  globalSimulation = Simulations::createSimulation(simulation, properties);
+    char simulation = argv[2][0];
+    PhysicsSandboxProperties properties("simulation.properties");
+    globalSimulation = Simulations::createSimulation(simulation, properties);
 
-  auto windowDimensions =
-          WindowDimensions(
-                  100,
-                  50,
-                  720,
-                  1280
-          );
+    auto windowDimensions =
+            WindowDimensions(
+                    100,
+                    50,
+                    720,
+                    1280
+            );
 
-  char recording = argv[1][0];
-  if ( recording == 'r') {
-    globalRecorder = make_shared<Recorder>();
-  } else if (recording == 'x') {
+    char recording = argv[1][0];
+    if ( recording == 'r') {
+        globalRecorder = make_shared<Recorder>();
+    } else if (recording == 'x') {
+        globalRecorder = nullptr;
+    } else {
+        cout << "Bad recording value! Must be 'x' or 'r'" << endl;
+        exit(1);
+    }
 
-  } else {
-    cout << "Bad recording value! Must be 'x' or 'r'" << endl;
-    exit(1);
-  }
+    auto observer = Observer::init(windowDimensions);
+    observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
 
-  auto observer = Observer::init(windowDimensions);
-  observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
+    GraphicalOperations graphicalOperations;
+    graphicalOperations.mainGlut(
+            idle,
+            globalSimulation,
+            globalControlCenter,
+            observer,
+            windowDimensions
+    );
 
-  GraphicalOperations graphicalOperations;
-  graphicalOperations.mainGlut(
-          idle,
-          globalSimulation,
-          globalControlCenter,
-          observer,
-          windowDimensions
-  );
+    //Creates main menu bar
+    globalMainDisplay.init(windowDimensions.width);
 
-  //Creates main menu bar
-  globalMainDisplay.init(windowDimensions.width);
+    InputFunctions::init(observer);
 
-  InputFunctions::init(observer);
+    globalControlCenter.init(hour_t(properties.dt), windowDimensions.width);
 
-  globalControlCenter.init(hour_t(properties.dt), windowDimensions.width);
+    graphicalOperations.postSimulationGlInit();
 
-  graphicalOperations.postSimulationGlInit();
-
-  return 0;
+    return 0;
 }
