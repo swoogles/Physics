@@ -101,7 +101,6 @@ TEST_CASE("add collections", "[green]") {
         source.insertIfUnique(ac);
 
         destination.insertUniqueElements(source);
-        REQUIRE(destination.survivors().contains(a));
         REQUIRE(destination.doomed().contains(b));
         // This needs to be denied in the current implementation to avoid faulty re-merges
         REQUIRE_FALSE(destination.doomed().contains(c));

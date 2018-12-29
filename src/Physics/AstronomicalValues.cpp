@@ -4,7 +4,7 @@
 
 #include "AstronomicalValues.h"
 
-const mass AstronomicalValues::MASS_SUN = kilogram_t(598910000);
+const Mass AstronomicalValues::MASS_SUN = kilogram_t(598910000);
 
 const density AstronomicalValues::DENSITY_SUN = kilograms_per_cubic_meter_t(1.409); // WRONG VALUE!!
 // Original value:

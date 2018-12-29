@@ -14,8 +14,12 @@ typedef hour_t duration;
 typedef kilogram_t mass;
 typedef kilograms_per_cubic_meter_t density;
 
-class UnitDefinition {
+namespace sandbox {
+    using Mass = kilogram_t;
 
-};
+    class UnitDefinition {
+
+    }; // sandbox
+}
 
 #endif //PHYSICS_UNITDEFINITIONS_H

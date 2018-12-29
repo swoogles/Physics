@@ -60,10 +60,8 @@ void idle() {
   std::chrono::duration<double> elapsed_seconds = end-start;
           std::chrono::seconds sec(3);
   if ( elapsed_seconds > sec) {
-    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     std::time_t now_c = std::chrono::system_clock::to_time_t(start);
     auto formattedStartTime = std::put_time(std::localtime(&now_c), "%F %T");
-//    string timeString(formattedStartTime._M_fmt, strlen(formattedStartTime._M_fmt));
 
     std::ostringstream stream;
     stream << formattedStartTime;

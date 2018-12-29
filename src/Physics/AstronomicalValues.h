@@ -8,12 +8,13 @@
 #include <../lib/units.h>
 #include <Physics/UnitDefinitions.h>
 
+using namespace sandbox;
 using namespace units::mass;
 using namespace units::density;
 
 class AstronomicalValues {
 public:
-    const static mass MASS_SUN;
+    const static Mass MASS_SUN;
 
     const static density DENSITY_SUN;
 
