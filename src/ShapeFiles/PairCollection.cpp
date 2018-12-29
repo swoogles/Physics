@@ -90,18 +90,13 @@ void PairCollection::insertIfUnique(const TouchingPair & newPair) {
                         auto dResult = dCheck(newPair, pair);
                         if (aResult.has_value()) {
                             result = aResult;
-                            cout << "Optional A present!" << endl;
                         } else if (bResult.has_value()) {
                             result = bResult;
-                            cout << "Optional B present!" << endl;
                         } else if (cResult.has_value()) {
                             result = cResult;
-                            cout << "Optional C present!" << endl;
                         } else if (dResult.has_value()) {
                             result = dResult;
-                            cout << "Optional D present!" << endl;
-                        } else {
-                            cout << "Nothing special about this collision. Just add it." << endl;
+                        } else { // Nothing special about this collision
                         }
                     }
                 });

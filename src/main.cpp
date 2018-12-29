@@ -54,31 +54,24 @@ void idle() {
     observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
   }
 
-  // Some computation here
   time_point end = std::chrono::system_clock::now();
 
   std::chrono::duration<double> elapsed_seconds = end-start;
-          std::chrono::seconds sec(3);
+  std::chrono::seconds sec(30);
   if ( elapsed_seconds > sec) {
     std::time_t now_c = std::chrono::system_clock::to_time_t(start);
-    auto formattedStartTime = std::put_time(std::localtime(&now_c), "%F %T");
-
     std::ostringstream stream;
-    stream << formattedStartTime;
-    std::string timeString =  stream.str();
+    stream << std::put_time(std::localtime(&now_c), "%F %T");
 
     string ffmpegCommandAndOptions = "ffmpeg  -i ./output/outFrame%05d.jpg -framerate 1 -c:v libx264 -crf 18 -pix_fmt yuv420p \"";
     string outDirectory = "./WorthyVideos/";
     string outVideoFormat = ".mp4\"";
-    string fullCommand = ffmpegCommandAndOptions + outDirectory + timeString + outVideoFormat;
-      cout << "Done calculating, creating video..." <<  timeString << endl;
+    string fullCommand = ffmpegCommandAndOptions + outDirectory + stream.str() + outVideoFormat;
     redi::ipstream in(fullCommand);
-    std::string str;
-    while (in >> str) {
-      std::cout << str << std::endl;
-    }
-      redi::ipstream cleanup("rm -f ./output/*");
-      exit(1);
+    std::string ffmpegOutput;
+    while (in >> ffmpegOutput) { /* Do nothing */ }
+    redi::ipstream cleanup("rm -f ./output/*");
+    exit(0);
 
   }
 
