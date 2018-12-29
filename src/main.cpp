@@ -58,7 +58,7 @@ void idle() {
   time_point end = std::chrono::system_clock::now();
 
   std::chrono::duration<double> elapsed_seconds = end-start;
-          std::chrono::seconds sec(300);
+          std::chrono::seconds sec(3);
   if ( elapsed_seconds > sec) {
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     std::time_t now_c = std::chrono::system_clock::to_time_t(start);
@@ -79,6 +79,7 @@ void idle() {
     while (in >> str) {
       std::cout << str << std::endl;
     }
+      redi::ipstream cleanup("rm -f ./output/*");
       exit(1);
 
   }
