@@ -60,22 +60,11 @@ void idle() {
   std::chrono::seconds sec(30);
   if ( elapsed_seconds > sec) {
     std::time_t now_c = std::chrono::system_clock::to_time_t(start);
-    std::ostringstream stream;
-    stream << std::put_time(std::localtime(&now_c), "%F %T");
-
-    string ffmpegCommandAndOptions = "ffmpeg  -i ./output/outFrame%05d.jpg -framerate 1 -c:v libx264 -crf 18 -pix_fmt yuv420p \"";
-    string outDirectory = "./WorthyVideos/";
-    string outVideoFormat = ".mp4\"";
-    string fullCommand = ffmpegCommandAndOptions + outDirectory + stream.str() + outVideoFormat;
-    redi::ipstream in(fullCommand);
-    std::string ffmpegOutput;
-    while (in >> ffmpegOutput) { /* Do nothing */ }
-    redi::ipstream cleanup("rm -f ./output/*");
+    if ( globalRecorder ) {
+      globalRecorder->createVideo(now_c);
+    }
     exit(0);
-
   }
-
-
 }
 
 int main(int argcp, char **argv) {

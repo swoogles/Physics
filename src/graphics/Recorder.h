@@ -6,8 +6,13 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <lib/pstream.h>
+#include <chrono>
+#include <iomanip>
 
 #include "jpeglib.h"
+
+using std::chrono::time_point;
 
 using namespace std;
 
@@ -42,6 +47,7 @@ public:
 	 *  Pieces together the correct filename for output image, then calls screenshot()
 	 */
 	bool captureThisFrame(unsigned int, unsigned int);
+	void createVideo(std::time_t timestamp);
 };
 
 #endif
