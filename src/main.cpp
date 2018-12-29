@@ -18,6 +18,12 @@
 #include "graphics/WorldSettings.h"
 #include "Physics/PhysicsSandboxProperties.h"
 
+#include <lib/pstream.h>
+
+#include <chrono>
+#include <iomanip>
+
+using std::chrono::time_point;
 
 // GLOBALS
 SimulationPtr_t globalSimulation;
@@ -26,6 +32,8 @@ control_center globalControlCenter;
 main_window_UI globalMainDisplay;
 
 shared_ptr<Recorder> globalRecorder;
+
+time_point start = std::chrono::system_clock::now();
 
 void idle() {
   auto dt = globalControlCenter.getDt();
@@ -45,6 +53,36 @@ void idle() {
   if (WorldSettings::isAutoScaling()) {
     observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
   }
+
+  // Some computation here
+  time_point end = std::chrono::system_clock::now();
+
+  std::chrono::duration<double> elapsed_seconds = end-start;
+          std::chrono::seconds sec(300);
+  if ( elapsed_seconds > sec) {
+    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+    std::time_t now_c = std::chrono::system_clock::to_time_t(start);
+    auto formattedStartTime = std::put_time(std::localtime(&now_c), "%F %T");
+//    string timeString(formattedStartTime._M_fmt, strlen(formattedStartTime._M_fmt));
+
+    std::ostringstream stream;
+    stream << formattedStartTime;
+    std::string timeString =  stream.str();
+
+    string ffmpegCommandAndOptions = "ffmpeg  -i ./output/outFrame%05d.jpg -framerate 1 -c:v libx264 -crf 18 -pix_fmt yuv420p \"";
+    string outDirectory = "./WorthyVideos/";
+    string outVideoFormat = ".mp4\"";
+    string fullCommand = ffmpegCommandAndOptions + outDirectory + timeString + outVideoFormat;
+      cout << "Done calculating, creating video..." <<  timeString << endl;
+    redi::ipstream in(fullCommand);
+    std::string str;
+    while (in >> str) {
+      std::cout << str << std::endl;
+    }
+      exit(1);
+
+  }
+
 
 }
 
