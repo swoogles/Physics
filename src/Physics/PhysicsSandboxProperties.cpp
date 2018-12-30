@@ -26,7 +26,8 @@ numShapes(parseStringAsInt(properties.at("numShapes"))),
 dt(Serializer::parseStringAsFloat(properties.at("dt"))),
 octreeTheta(Serializer::parseStringAsFloat(properties.at("octree_theta"))),
 sandboxWidth(Serializer::parseStringAsFloat(properties.at("sandbox_width"))),
-mass(kilogram_t(Serializer::parseStringAsFloat(properties.at("mass"))))
+mass(kilogram_t(Serializer::parseStringAsFloat(properties.at("mass")))),
+maximumRunTime(Serializer::parseStringAsLong(properties.at("maximum_runtime"))*60)
 {
 
 }

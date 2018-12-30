@@ -6,6 +6,7 @@
 
 #include "../Conversions/Serializer.h"
 #include <../lib/units.h>
+#include <chrono>
 
 using namespace units::mass;
 
@@ -22,6 +23,7 @@ public:
     const float octreeTheta;
     const float sandboxWidth;
     const kilogram_t mass;
+    const std::chrono::seconds  maximumRunTime;
 
     PhysicsSandboxProperties(string fileName);
 

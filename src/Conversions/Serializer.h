@@ -16,6 +16,7 @@ class Serializer {
 public:
     // Move elsewhere
     static float parseStringAsFloat(std::string value);
+    static long parseStringAsLong(std::string value);
 };
 
 

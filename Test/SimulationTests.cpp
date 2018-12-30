@@ -7,7 +7,7 @@
 
 TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[green]" ) {
     SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest(NAIVE);
-    simulation->update(0);
+    simulation->update(hour_t(1));
     REQUIRE(simulation->getSize() == 3);
 }
 
