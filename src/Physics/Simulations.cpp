@@ -16,6 +16,8 @@ SimulationPointer_t Simulations::createSimulation(char simNumber, PhysicsSandbox
         return Simulations::disruption_ArbitraryList(simulationProperties);
     } else if ( simNumber == '3' ) {
         return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
+    } else if ( simNumber == '4') {
+        return multipleOrbiters(simulationProperties);
     } else {
         exit(1);
     }
@@ -51,6 +53,58 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
             newColor
     );
     newParticles.addShapeToList(opposingBody);
+    return make_unique<Simulation>(*curSimulation, newParticles);
+}
+
+
+SimulationPointer_t Simulations::multipleOrbiters(PhysicsSandboxProperties properties){
+    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(properties.numShapes, properties);
+
+    kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
+    kilogram_t pieceMass = properties.mass * 150;
+    PhysicalVector startMomentum(0, 45000, 0);
+    PhysicalVector newColor (1, 0, 1);
+
+    PhysicalVector startPlacement (2.1e5f , 0, 0, true);
+    ParticleList newParticles;
+
+    shared_ptr<Particle> curShape = make_shared<Particle>(
+            startPlacement,
+            pieceMass,
+            startMomentum.scaledBy(1.2),
+            objectDensity,
+            newColor
+    );
+    newParticles.addShapeToList(curShape);
+
+    shared_ptr<Particle> curShapeOpposite = make_shared<Particle>(
+            startPlacement.scaledBy(-1),
+            pieceMass,
+            startMomentum.scaledBy(-1.2),
+            objectDensity,
+            newColor
+    );
+    newParticles.addShapeToList(curShapeOpposite);
+
+    PhysicalVector startPlacement2 (1.3e5f , -2.0e5f, 0, true);
+    shared_ptr<Particle> opposingBody = make_shared<Particle>(
+            startPlacement2,
+            pieceMass,
+            startMomentum,
+            objectDensity,
+            newColor
+    );
+    newParticles.addShapeToList(opposingBody);
+
+    shared_ptr<Particle> opposingBodyOpposite = make_shared<Particle>(
+            startPlacement2.scaledBy(-1),
+            pieceMass,
+            startMomentum.scaledBy(-1),
+            objectDensity,
+            newColor
+    );
+    newParticles.addShapeToList(opposingBodyOpposite);
+
     return make_unique<Simulation>(*curSimulation, newParticles);
 }
 

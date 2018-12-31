@@ -34,6 +34,8 @@ class Simulations {
   public:
     static SimulationPointer_t disruption_ArbitraryList(PhysicsSandboxProperties properties);
 
+    static SimulationPointer_t multipleOrbiters(PhysicsSandboxProperties properties);
+
     static SimulationPointer_t QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
 
     static SimulationPointer_t bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
