@@ -1,10 +1,5 @@
-//
-// Created by bfrasure on 11/9/18.
-//
-
 #ifndef PHYSICS_OCTREECOORDINATES_H
 #define PHYSICS_OCTREECOORDINATES_H
-
 
 #include <vector>
 #include <Dimensions/PhysicalVector.h>
@@ -22,4 +17,4 @@ private:
 };
 
 
-#endif //PHYSICS_OCTREECOORDINATES_H
+#endif

@@ -38,9 +38,9 @@ public:
 
     inline float getWidth() const { return dimensions.vec[0]; }
 
-    inline bool isExternal() { return isLeaf; }
+    inline bool isExternal() const { return isLeaf; }
 
-    entity_t getShapeInQuadrant();
+    entity_t getShapeInQuadrant() const ;
 
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 

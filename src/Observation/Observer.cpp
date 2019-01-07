@@ -48,7 +48,7 @@ void Observer::setAutoScaling(bool shouldScale) {
 	autoScale = shouldScale;
 }
 
-bool Observer::isAutoScaling() {
+bool Observer::isAutoScaling() const {
 	return autoScale;
 }
 

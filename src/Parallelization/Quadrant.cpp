@@ -8,7 +8,7 @@ bool withinBoundaries(PhysicalVector & insertPos, PhysicalVector & minBoundaries
   return withinBoundaries;
 }
 
-entity_t Quadrant::getShapeInQuadrant() {
+entity_t Quadrant::getShapeInQuadrant() const {
   return shapeInQuadrant;
 }
 
