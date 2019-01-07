@@ -12,11 +12,12 @@
 using std::vector;
 
 class OctreeCoordinates {
-    vector<bool> coordinates;
 public:
     OctreeCoordinates(bool x, bool y, bool z);
     PhysicalVector polarities();
     vector<int> ints();
+private:
+    vector<bool> coordinates;
 
 };
 

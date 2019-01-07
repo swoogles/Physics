@@ -30,8 +30,27 @@ typedef shared_ptr<Particle> entity_t;
 
 class Quadrant : public Box
 {
-  private:
+public:
     typedef shared_ptr<Quadrant> QuadrantPointer_t;
+    Quadrant(entity_t newShape, int level, PhysicalVector &pos, float width);
+
+    void insert(entity_t newShape);
+
+    inline float getWidth() { return dimensions.vec[0]; }
+
+    inline bool isExternal() { return isLeaf; }
+
+    entity_t getShapeInQuadrant();
+
+    QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
+
+    vector<shared_ptr<Quadrant>> children();
+    unique_ptr<vector<shared_ptr<Quadrant>>> children(unique_ptr<vector<shared_ptr<Quadrant>>> inVector);
+
+    QuadrantPointer_t makeSubQuadrant(entity_t newShape);
+    void applyToAllChildren(function<void (Quadrant)> functor);
+
+  private:
     typedef multi_array< QuadrantPointer_t, 3> array_typeNew;
 
     bool isLeaf;
@@ -55,25 +74,6 @@ class Quadrant : public Box
     QuadrantPointer_t subQuadrantAt(OctreeCoordinates indices);
     void assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newSubQuadrant);
     OctreeCoordinates coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant);
-  public:
-    Quadrant(entity_t newShape, int level, PhysicalVector &pos, float width);
-
-    void insert(entity_t newShape);
-
-    inline float getWidth() { return dimensions.vec[0]; }
-
-    inline bool isExternal() { return isLeaf; }
-
-    entity_t getShapeInQuadrant();
-
-    QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
-
-    vector<shared_ptr<Quadrant>> children();
-    unique_ptr<vector<shared_ptr<Quadrant>>> children(unique_ptr<vector<shared_ptr<Quadrant>>> inVector);
-
-    QuadrantPointer_t makeSubQuadrant(entity_t newShape);
-    void applyToAllChildren(function<void (Quadrant)> functor);
-
 };
 typedef shared_ptr<Quadrant> QuadrantPointer_t;
 #endif

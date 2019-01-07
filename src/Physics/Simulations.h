@@ -11,6 +11,24 @@
 typedef unique_ptr<Simulation> SimulationPointer_t;
 
 class Simulations {
+public:
+    typedef unique_ptr<Simulation> SimulationPointer_t;
+    static SimulationPointer_t disruption_ArbitraryList(PhysicsSandboxProperties properties);
+
+    static SimulationPointer_t multipleOrbiters(PhysicsSandboxProperties properties);
+
+    static SimulationPointer_t QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
+
+    static SimulationPointer_t bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
+
+    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(
+            PhysicsSandboxProperties properties,
+            PhysicalVector target,
+            PhysicalVector groupMomentum);
+
+    static SimulationPointer_t createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
+
+    static PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
   private:
 
     /*! \relates MyShape
@@ -30,24 +48,6 @@ class Simulations {
      */
     static PhysicalVector randomSplitBodyMomentum(kilogram_t pieceMass);
 
-    typedef unique_ptr<Simulation> SimulationPointer_t;
-  public:
-    static SimulationPointer_t disruption_ArbitraryList(PhysicsSandboxProperties properties);
-
-    static SimulationPointer_t multipleOrbiters(PhysicsSandboxProperties properties);
-
-    static SimulationPointer_t QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
-
-    static SimulationPointer_t bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
-
-    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(
-            PhysicsSandboxProperties properties,
-            PhysicalVector target,
-            PhysicalVector groupMomentum);
-
-    static SimulationPointer_t createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
-
-    static PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
 };
 
 #endif

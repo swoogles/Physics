@@ -9,30 +9,7 @@ using namespace units::mass;
 using namespace units::length;
 
 class Particle: public Moveable {
-  private:
-//    float radius;
-    meter_t _radius;
-
-    /*! \relates MyShape
-     *  \brief Determines the final angular momentum after 2 objects collide in a completely inelastic collision
-     *
-     *  The final angular momentum is determined with the following formula:
-     *  \n v1i = the initial velocity of object 1
-     *  \n v2i = the initial velocity of object 2
-     *	\n m1 = the mass of object 1
-     *	\n m2 = the mass of object 2
-     *	\n e = the coefficient of restitution (e = 1 for elastic collision)
-     *	\n n = normal unit vector drawn from object 1 to object 2
-     *	\n c = n . (v1i - v2i)
-     *	\n v1f = v1i - ((m2c)/(m1 + m2))(1 + e)n
-     *	\n v2f = v2i + ((m1c)/(m1 + m2))(1 + e)n
-     *
-     *	\return The angular momentum to be assigned to the merged object
-     */
-    PhysicalVector calcMergedAngMomentum(Particle &otherShape);
-
-  public:
-
+public:
     Particle(
             PhysicalVector pos,
             kilogram_t mass,
@@ -74,6 +51,27 @@ class Particle: public Moveable {
     void mergeWith(Particle &otherShape);
 
     bool isTouching(Particle &otherShape);
+  private:
+    meter_t _radius;
+
+    /*! \relates MyShape
+     *  \brief Determines the final angular momentum after 2 objects collide in a completely inelastic collision
+     *
+     *  The final angular momentum is determined with the following formula:
+     *  \n v1i = the initial velocity of object 1
+     *  \n v2i = the initial velocity of object 2
+     *	\n m1 = the mass of object 1
+     *	\n m2 = the mass of object 2
+     *	\n e = the coefficient of restitution (e = 1 for elastic collision)
+     *	\n n = normal unit vector drawn from object 1 to object 2
+     *	\n c = n . (v1i - v2i)
+     *	\n v1f = v1i - ((m2c)/(m1 + m2))(1 + e)n
+     *	\n v2f = v2i + ((m1c)/(m1 + m2))(1 + e)n
+     *
+     *	\return The angular momentum to be assigned to the merged object
+     */
+    PhysicalVector calcMergedAngMomentum(Particle &otherShape);
+
 };
 
 typedef shared_ptr<Particle> particle_t;

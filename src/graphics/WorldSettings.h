@@ -19,15 +19,14 @@
  *  occur, and forces that will be in play.
  */
 class WorldSettings {
-private:
-	static bool autoScaling;
-
 public:
-
 	//! Turn AutoScaling on or off
 	static void setAutoScaling(bool);
 	//! Returns true if simulation is currently AutoScaling
 	static bool isAutoScaling();
+
+private:
+	static bool autoScaling;
 
 };
 

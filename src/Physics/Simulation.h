@@ -15,6 +15,24 @@ using namespace units::time;
 typedef particle_t physicalObject_t;
 
 class Simulation {
+public:
+    Simulation(ParticleList physicalObjects, CollisionType collisionType,
+               ForceCalculationMethod forceCalculationMethod, float octreeTheta);
+
+    Simulation(Simulation & originalSimulation, ParticleList newParticles);
+
+
+    hour_t getTimeElapsed();
+
+    // TODO Take dt as a parameter here.
+    void update(hour_t dt);
+
+    MaximumValues getXYMinsAndMaxes();
+
+    size_t getSize();
+    kilogram_t getMass();
+
+    QuadrantPointer_t getQuadrant();
 private:
 	ParticleList physicalObjects;
 	hour_t timeElapsed;
@@ -47,24 +65,6 @@ private:
 	void calcForcesAll_LessNaive(hour_t dt);
 	void calcForcesAll(hour_t dt);
 
-public:
-    Simulation(ParticleList physicalObjects, CollisionType collisionType,
-				   ForceCalculationMethod forceCalculationMethod, float octreeTheta);
-
-	Simulation(Simulation & originalSimulation, ParticleList newParticles);
-
-
-    hour_t getTimeElapsed();
-
-    // TODO Take dt as a parameter here.
-	void update(hour_t dt);
-
-    MaximumValues getXYMinsAndMaxes();
-
-	size_t getSize();
-	kilogram_t getMass();
-
-	QuadrantPointer_t getQuadrant();
 } ;
 typedef shared_ptr<Simulation> SimulationPtr_t;
 #endif

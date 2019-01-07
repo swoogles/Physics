@@ -9,15 +9,16 @@ using namespace std;
 
 class BillProperties
 {
-    map<string, string> properties;
-    const string fileName;
-
-    void readProperties();
   public:
     explicit BillProperties(string fileName);
 
     bool static isValidProperty( string line );
     string at( const char target[] ) const;
+private:
+    map<string, string> properties;
+    const string fileName;
+
+    void readProperties();
 };
 #endif /* BILL_PROPERTIES_H_ */
 

@@ -10,6 +10,7 @@
 
 using namespace units::mass;
 
+// TODO Figure out why I can't swap private/public here
 class PhysicsSandboxProperties  {
 private:
     ForceCalculationMethod parseForceCalculationProperty(std::string value);

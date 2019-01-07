@@ -14,11 +14,7 @@ typedef particle_t item_t;
 typedef typename std::vector<item_t> particleVector;
 
 class ParticleList {
-  private:
-    particleVector shapes;
-    void ensureNoNullEntries(string caller);
-
-  public:
+public:
     ParticleList();
     ParticleList(item_t initialShape);
     ParticleList(particleVector shapesIn);
@@ -34,5 +30,9 @@ class ParticleList {
     inline size_t size() { return shapes.size(); };
 
     bool contains(item_t searchShape) const;
+  private:
+    particleVector shapes;
+    void ensureNoNullEntries(string caller);
+
 };
 #endif

@@ -23,6 +23,15 @@ using namespace std;
  *  \n Currently always records at highest quality, might add in option for lowering quality when desired
  */
 class Recorder {
+public:
+	Recorder();
+
+	/*! \brief Call whenever you want to save current frame
+	 *
+	 *  Pieces together the correct filename for output image, then calls screenshot()
+	 */
+	bool captureThisFrame(unsigned int, unsigned int);
+	void createVideo(std::time_t timestamp);
 private:
 	string path;
 	string outFileName;
@@ -39,15 +48,6 @@ private:
      *  \n -Compresses image
      */
     bool screenshot(unsigned int width, unsigned int height, const string path, int quality);
-public:
-  Recorder();
-
-	/*! \brief Call whenever you want to save current frame
-	 *
-	 *  Pieces together the correct filename for output image, then calls screenshot()
-	 */
-	bool captureThisFrame(unsigned int, unsigned int);
-	void createVideo(std::time_t timestamp);
 };
 
 #endif

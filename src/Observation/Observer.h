@@ -17,25 +17,6 @@
  *
  */
 class Observer {
-private:
-	PhysicalVector pos;
-	Moveable * target;
-	float * perspectiveMat;
-
-	int id;
-	bool autoScale;
-	static unsigned int curObserver;
-
-	float fov;
-
-	void BuildPerspProjMat(float *m, float aspect, float znear, float zfar);
-
-	//! Stores all created Observers
-	static std::vector<shared_ptr<Observer>> observers;
-
-    PhysicalVector angVelocity;
-	sgQuat orientationQuat;
-	sgMat4 orientationMat;
 public:
 	static shared_ptr<Observer> init(WindowDimensions windowDimensions);
 
@@ -65,11 +46,30 @@ public:
 
 	void calcMinPullback(MaximumValues maximumValues);
 
-  //! Similar as MyShape::update(float), except only uses angular velocity right now
-  void update();
+	//! Similar as MyShape::update(float), except only uses angular velocity right now
+	void update();
 
 	void adjustAngularVelocity(PhysicalVector dangVelocity);
 	void adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis);
 	void setPos(float inX, float inY, float inZ);
+private:
+	PhysicalVector pos;
+	Moveable * target;
+	float * perspectiveMat;
+
+	int id;
+	bool autoScale;
+	static unsigned int curObserver;
+
+	float fov;
+
+	void BuildPerspProjMat(float *m, float aspect, float znear, float zfar);
+
+	//! Stores all created Observers
+	static std::vector<shared_ptr<Observer>> observers;
+
+    PhysicalVector angVelocity;
+	sgQuat orientationQuat;
+	sgMat4 orientationMat;
 };
 #endif /* OBSERVER_H_ */

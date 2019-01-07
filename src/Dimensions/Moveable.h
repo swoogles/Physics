@@ -32,27 +32,6 @@ typedef std::unique_ptr<PhysicalVector> vecPtr;
  *  \n -Color TODO this should move out of here.
  */
 class Moveable {
-private:
-	const ShapeType shapeType;
-protected:
-	PhysicalVector pos;
-	sgQuat orientationQuat;
-	sgMat4 orientationMat;
-
-	PhysicalVector _momentum; // TODO This should go into MyShape
-	PhysicalVector prevMomentum;
-
-	PhysicalVector angMomentum;
-	PhysicalVector angVelocity;
-	PhysicalVector prevAngVelocity;
-
-
-	kilogram_t _mass; // TODO This should go into MyShape
-	kilograms_per_cubic_meter_t _density;
-
-	PhysicalVector _color;
-
-	virtual double momentOfInertia();
 public:
 	Moveable(ShapeType shapeType, PhysicalVector momentum);
 	Moveable(PhysicalVector momentum);
@@ -91,6 +70,27 @@ public:
 	void calcColor();
 
 	ShapeType getType();
+protected:
+	PhysicalVector pos;
+	sgQuat orientationQuat;
+	sgMat4 orientationMat;
+
+	PhysicalVector _momentum; // TODO This should go into MyShape
+	PhysicalVector prevMomentum;
+
+	PhysicalVector angMomentum;
+	PhysicalVector angVelocity;
+	PhysicalVector prevAngVelocity;
+
+
+	kilogram_t _mass; // TODO This should go into MyShape
+	kilograms_per_cubic_meter_t _density;
+
+	PhysicalVector _color;
+
+	virtual double momentOfInertia();
+private:
+	const ShapeType shapeType;
 };
 typedef shared_ptr<Moveable> shapePointer_t;
 typedef typename std::vector<shapePointer_t> vectorT;

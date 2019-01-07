@@ -4,14 +4,14 @@
 #include "../Dimensions/Moveable.h"
 
 class Box: public Moveable {
-private:
-	float sideLength;
 public:
 	Box(PhysicalVector pos, float sideLength, PhysicalVector color);
 
 	double scale() override;
 
-    virtual float getWidth();
+	virtual float getWidth();
+private:
+	float sideLength;
 };
 
 #endif

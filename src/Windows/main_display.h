@@ -16,26 +16,6 @@
  *  \n -Average/total {momentum, velocities, mass, etc}
  */
 class main_window_UI {
-private:
-	puMenuBar * main_menu;
-	puaFileSelector * open_selector;
-	puaFileSelector * save_selector;
-
-	puDialogBox * dialog_box;
-	puText * dialog_box_message;
-	puOneShot * dialog_box_ok_button;
-
-	puGroup * astronomicalTimeGroup;
-	puText * milleniaElapsed_label;
-	puInput * milleniaElapsed_value;
-	puText * yearsElapsed_label;
-	puInput * yearsElapsed_value;
-	puText * daysElapsed_label;
-	puInput * daysElapsed_value;
-	puText * hoursElapsed_label;
-	puInput * hoursElapsed_value;
-
-
 public:
 	//! Unnecessary constructor for entirely static class
 	main_window_UI();
@@ -78,5 +58,25 @@ public:
 	 *  Ultimately should query user whether or not they want to save the initial/current shape list
 	 */
 	static void exit_cb(puObject *);
+private:
+	puMenuBar * main_menu;
+	puaFileSelector * open_selector;
+	puaFileSelector * save_selector;
+
+	puDialogBox * dialog_box;
+	puText * dialog_box_message;
+	puOneShot * dialog_box_ok_button;
+
+	puGroup * astronomicalTimeGroup;
+	puText * milleniaElapsed_label;
+	puInput * milleniaElapsed_value;
+	puText * yearsElapsed_label;
+	puInput * yearsElapsed_value;
+	puText * daysElapsed_label;
+	puInput * daysElapsed_value;
+	puText * hoursElapsed_label;
+	puInput * hoursElapsed_value;
+
+
 };
 #endif /* MAIN_DISPLAY_H_ */

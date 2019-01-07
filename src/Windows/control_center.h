@@ -15,28 +15,6 @@
  *   \n -Rotate the camera around a point
  */
 class control_center {
-private:
-	static bool paused;
-	static duration dt;
-	static bool renderOctree ;
-
-	puGroup * runtime_group;
-
-		puOneShot * inc_dt_button;
-		puOneShot * dec_dt_button;
-		puButton * pause_dt_button;
-
-		puArrowButton * inc_rotSide_button;
-		puArrowButton * dec_rotSide_button;
-		puButton * pause_rotSide_button;
-		puArrowButton * rotUp_button;
-		puArrowButton * rotDown_button;
-
-		puButton * autoScale_button;
-		puButton * renderOctree_button;
-
-	bool showingRunTime;
-
 public:
 	void init(duration dt, int windowWidth);
   inline bool isShowingRunTime() { return showingRunTime ; };
@@ -69,6 +47,28 @@ public:
 	bool isPaused();
 	duration getDt();
 	bool shouldRenderOctree();
+private:
+	static bool paused;
+	static duration dt;
+	static bool renderOctree ;
+
+	puGroup * runtime_group;
+
+	puOneShot * inc_dt_button;
+	puOneShot * dec_dt_button;
+	puButton * pause_dt_button;
+
+	puArrowButton * inc_rotSide_button;
+	puArrowButton * dec_rotSide_button;
+	puButton * pause_rotSide_button;
+	puArrowButton * rotUp_button;
+	puArrowButton * rotDown_button;
+
+	puButton * autoScale_button;
+	puButton * renderOctree_button;
+
+	bool showingRunTime;
+
 };
 
 #endif /* CONTROL_CENTER_H_ */
