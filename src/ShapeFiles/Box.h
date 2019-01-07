@@ -7,11 +7,11 @@ class Box: public Moveable {
 public:
 	Box(PhysicalVector pos, float sideLength, PhysicalVector color);
 
-	double scale() override;
+	double scale() const override;
 
-	virtual float getWidth();
+	float getWidth() const;
 private:
-	float sideLength;
+	const float sideLength;
 };
 
 #endif

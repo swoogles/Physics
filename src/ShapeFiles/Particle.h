@@ -26,13 +26,14 @@ public:
             PhysicalVector color
     );
 
-    double scale() override;
+    double scale() const override;
 
-    meter_t radius();
+    meter_t radius() const;
     void setRadius(meter_t radius);
 
-    double momentOfInertia() override;
+    double momentOfInertia() const override;
 
+    // TODO The next 2 functions might be better placed in a Sphere/Geometry class.
     static meter_t calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density);
 
     static vector<PhysicalVector> pointsEvenlyDistributedOnSphere(int numPoints, float radius);
@@ -50,7 +51,7 @@ public:
      */
     void mergeWith(Particle &otherShape);
 
-    bool isTouching(Particle &otherShape);
+    bool isTouching(Particle &otherShape) const;
   private:
     meter_t _radius;
 
@@ -70,7 +71,7 @@ public:
      *
      *	\return The angular momentum to be assigned to the merged object
      */
-    PhysicalVector calcMergedAngMomentum(Particle &otherShape);
+    PhysicalVector calcMergedAngMomentum(Particle &otherShape) const;
 
 };
 

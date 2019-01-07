@@ -28,7 +28,7 @@ public:
     inline float y() const {return vec[1];}
     inline float z() const {return vec[2];}
 
-    PhysicalVector scaledBy(double scalingFactor);
+    PhysicalVector scaledBy(double scalingFactor) const;
     PhysicalVector withElementsMultipliedBy(const PhysicalVector &other);
     PhysicalVector plus(const PhysicalVector & other);
     PhysicalVector minus(const PhysicalVector & other);

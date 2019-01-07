@@ -38,29 +38,29 @@ public:
 
 	void setPos(PhysicalVector newPos);
 
-	PhysicalVector position() ; // Reinstate const-ness
-	PhysicalVector vectorTo(Moveable &object2);
+	PhysicalVector position() const; // Reinstate const-ness
+	PhysicalVector vectorTo(Moveable &object2) const;
 
 	// Parameters are turned into a quaternion then applied to orientation
 	void adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis);
 	unique_ptr<MatrixStruct> getOrientationMat() const;
 	void adjustVelocity(PhysicalVector dVel);
 
-	PhysicalVector velocity();
+	PhysicalVector velocity() const;
 	void update(hour_t);
-	PhysicalVector weightedPosition();
+	PhysicalVector weightedPosition() const;
 
-	double distanceTo(Moveable &object2);
+	double distanceTo(Moveable &object2) const;
 
-	virtual double scale();
+	virtual double scale() const;
 	void adjustMomentum(PhysicalVector dMomentum);
-	PhysicalVector momentum();
+	PhysicalVector momentum() const;
 	void setAngularMomentum(PhysicalVector newAngMomentum);
-	PhysicalVector angularMomentum();
+	PhysicalVector angularMomentum() const;
 
 	void setMass(kilogram_t newMass);
-	kilogram_t mass();
-	kilograms_per_cubic_meter_t density();
+	kilogram_t mass() const;
+	kilograms_per_cubic_meter_t density() const;
 	PhysicalVector getColor() const;
 
 	/*!
@@ -69,7 +69,7 @@ public:
 		 */
 	void calcColor();
 
-	ShapeType getType();
+	ShapeType getType() const;
 protected:
 	PhysicalVector pos;
 	sgQuat orientationQuat;
@@ -88,7 +88,7 @@ protected:
 
 	PhysicalVector _color;
 
-	virtual double momentOfInertia();
+	virtual double momentOfInertia() const;
 private:
 	const ShapeType shapeType;
 };

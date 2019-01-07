@@ -28,7 +28,7 @@ PhysicalVector::PhysicalVector(float x, float y, float z, bool anchored)
 }
 
 
-PhysicalVector PhysicalVector::scaledBy(double scalingFactor) {
+PhysicalVector PhysicalVector::scaledBy(double scalingFactor) const {
     // TODO Make sure Vec3 behavior is appropriate here.
     sgVec4 newVec;
     sgScaleVec3 ( newVec, this->vec, scalingFactor );

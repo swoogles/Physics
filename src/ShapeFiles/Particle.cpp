@@ -1,10 +1,10 @@
 #include "Particle.h"
 
-double Particle::scale() {
+double Particle::scale() const {
     return _radius.value();
 }
 
-meter_t Particle::radius() {
+meter_t Particle::radius() const {
 	return _radius;
 }
 
@@ -12,7 +12,7 @@ void Particle::setRadius(meter_t radius) {
 	this->_radius = radius;
 }
 
-double Particle::momentOfInertia() {
+double Particle::momentOfInertia() const {
 	return ((2 * _mass * (_radius * _radius))/ 5).value();
 }
 
@@ -85,7 +85,7 @@ void Particle::mergeWith(Particle &otherShape) {
 	this->setPos(COM);
 }
 
-PhysicalVector Particle::calcMergedAngMomentum(Particle &otherShape) {
+PhysicalVector Particle::calcMergedAngMomentum(Particle &otherShape) const {
 	// TODO PhysicalVector is a little too vague here. *Everything* is a PhysicalVector??
 	PhysicalVector aPos(this->position());
 	PhysicalVector bPos(otherShape.position());
@@ -111,7 +111,7 @@ PhysicalVector Particle::calcMergedAngMomentum(Particle &otherShape) {
 			.plus(otherShape.angularMomentum());
 }
 
-bool Particle::isTouching(Particle &otherShape) {
+bool Particle::isTouching(Particle &otherShape) const {
 	PhysicalVector sepVec(this->vectorTo(otherShape));
 	double minSep = (this->radius() + otherShape.radius()).value();
 

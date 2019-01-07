@@ -20,11 +20,11 @@ void Moveable::setPos(PhysicalVector newPos) {
     this->pos = newPos;
 }
 
-PhysicalVector Moveable::position() {
+PhysicalVector Moveable::position() const {
 	return pos;
 }
 
-PhysicalVector Moveable::vectorTo(Moveable &object2) {
+PhysicalVector Moveable::vectorTo(Moveable &object2) const {
     return object2.position().minus(this->position());
 }
 
@@ -52,11 +52,11 @@ void Moveable::adjustVelocity(PhysicalVector dVel) {
 			.scaledBy(_mass.value());
 }
 
-PhysicalVector Moveable::velocity() {
+PhysicalVector Moveable::velocity() const {
 	return _momentum.scaledBy(1/_mass.value());
 }
 
-double Moveable::momentOfInertia() { return 1;}
+double Moveable::momentOfInertia() const { return 1;}
 
 void Moveable::update(hour_t dt) {
 	PhysicalVector prevVelocity(prevMomentum.scaledBy(1/_mass.value()));
@@ -80,24 +80,24 @@ void Moveable::update(hour_t dt) {
 
 }
 
-PhysicalVector Moveable::weightedPosition() {
+PhysicalVector Moveable::weightedPosition() const {
 	return this->position().scaledBy(this->_mass.value() );
 }
 
-double Moveable::distanceTo(Moveable &object2) {
+double Moveable::distanceTo(Moveable &object2) const {
     return this->vectorTo(object2).length();
 }Moveable::Moveable(ShapeType shapeType, PhysicalVector momentum)
 		: _momentum(momentum)
 		, shapeType(shapeType) {
 }
 
-double Moveable::scale(){}
+double Moveable::scale() const {}
 
 void Moveable::adjustMomentum(PhysicalVector dMomentum) {
     this->_momentum = _momentum.plus(dMomentum);
 }
 
-PhysicalVector Moveable::momentum() {
+PhysicalVector Moveable::momentum() const {
     PhysicalVector vecStruct(_momentum);
     return vecStruct;
 }
@@ -110,7 +110,7 @@ void Moveable::setAngularMomentum(PhysicalVector newAngMomentum) {
 	this->angVelocity = angMomentum.scaledBy(1.0f/I);
 }
 
-PhysicalVector Moveable::angularMomentum() {
+PhysicalVector Moveable::angularMomentum() const {
     PhysicalVector retVec(angMomentum.vec);
     return retVec;
 }
@@ -119,11 +119,11 @@ void Moveable::setMass(kilogram_t newMass) {
 	_mass = newMass;
 }
 
-kilogram_t Moveable::mass() {
+kilogram_t Moveable::mass() const {
 	return _mass;
 }
 
-kilograms_per_cubic_meter_t Moveable::density() {
+kilograms_per_cubic_meter_t Moveable::density() const {
 	return _density;
 }
 
@@ -148,6 +148,6 @@ void Moveable::calcColor() {
 	_color.vec[1] = greenAmount;
 }
 
-ShapeType Moveable::getType() {
+ShapeType Moveable::getType() const {
 	return this->shapeType;
 }
