@@ -14,7 +14,7 @@
  *   \n -Speedup, slowdown, or pause the simulation
  *   \n -Rotate the camera around a point
  */
-class control_center {
+class ControlCenter {
 public:
 	void init(duration dt, int windowWidth);
   inline bool isShowingRunTime() { return showingRunTime ; };

@@ -7,8 +7,8 @@
 #include "graphics/Recorder.h"
 
 //GUI stuff
-#include "Windows/control_center.h"
-#include "Windows/main_display.h"
+#include "Windows/ControlCenter.h"
+#include "Windows/CenterStage.h"
 
 //Observers
 #include "Observation/Observer.h"
@@ -27,8 +27,8 @@ using std::chrono::time_point;
 // GLOBALS
 SimulationPtr_t globalSimulation;
 
-control_center globalControlCenter;
-main_window_UI globalMainDisplay;
+ControlCenter globalControlCenter;
+CenterStage globalMainDisplay;
 
 shared_ptr<Recorder> globalRecorder;
 

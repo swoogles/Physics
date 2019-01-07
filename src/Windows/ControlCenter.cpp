@@ -1,21 +1,21 @@
 /*
- * control_center.cpp
+ * ControlCenter.cpp
  *
  *  Created on: Jul 17, 2011
  *      Author: brasure
  */
 
-#include "control_center.h"
+#include "ControlCenter.h"
 
 using namespace std;
 
-bool control_center::paused = false;
-duration control_center::dt;
-bool control_center::renderOctree = false;
+bool ControlCenter::paused = false;
+duration ControlCenter::dt;
+bool ControlCenter::renderOctree = false;
 
 // TODO Is there any better candidate for breaking things apart than this functino?
-void control_center::init(duration dt, int windowWidth) {
-  control_center::dt = dt;
+void ControlCenter::init(duration dt, int windowWidth) {
+  ControlCenter::dt = dt;
   showingRunTime = false;
 
   int curHeight = 200;
@@ -96,62 +96,62 @@ void control_center::init(duration dt, int windowWidth) {
   runtime_group->close();
 }
 
-void control_center::flipAutoScaling(puObject * caller) {
+void ControlCenter::flipAutoScaling(puObject * caller) {
   Observer::getCurObserverRef().toggleAutoScaling();
 }
 
-void control_center::alterDT(puObject * caller) {
+void ControlCenter::alterDT(puObject * caller) {
   if (strcmp(caller->getLegend(), "Slower") == 0) {
-    control_center::dt /= 2;
+    ControlCenter::dt /= 2;
   }
 
   if (strcmp(caller->getLegend(), "Faster") == 0) {
-    control_center::dt *= 2;
+    ControlCenter::dt *= 2;
   }
 
 }
 
-void control_center::pause_cb(puObject * caller) {
+void ControlCenter::pause_cb(puObject * caller) {
   paused = !paused;
 }
 
-void control_center::rotRight(puObject *) {
+void ControlCenter::rotRight(puObject *) {
   PhysicalVector angVelocity(0,.5,0);
     Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
 }
 
-void control_center::rotLeft(puObject *) {
+void ControlCenter::rotLeft(puObject *) {
   PhysicalVector angVelocity(0,-.5,0);
     Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
 }
 
-void control_center::rotUp(puObject *) {
+void ControlCenter::rotUp(puObject *) {
   PhysicalVector angVelocity(+.5,0,0);
     Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
 }
-void control_center::rotDown(puObject *) {
+void ControlCenter::rotDown(puObject *) {
   PhysicalVector angVelocity(-.5,0,0);
     Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
 }
 
-void control_center::rotStop(puObject *) {
+void ControlCenter::rotStop(puObject *) {
   PhysicalVector angVelocity(0,0,0);
     Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
 }
 
-bool control_center::isPaused() {
-  return control_center::paused;
+bool ControlCenter::isPaused() {
+  return ControlCenter::paused;
 }
 
-duration control_center::getDt() {
-  return control_center::dt;
+duration ControlCenter::getDt() {
+  return ControlCenter::dt;
 }
 
-void control_center::toggleOctreeRendering(puObject *) {
+void ControlCenter::toggleOctreeRendering(puObject *) {
     renderOctree = !renderOctree;
 }
 
-bool control_center::shouldRenderOctree() {
+bool ControlCenter::shouldRenderOctree() {
     return renderOctree;
 }
 

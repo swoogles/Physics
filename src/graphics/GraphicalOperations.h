@@ -10,7 +10,7 @@
 
 #include "Observation/Observer.h"
 #include "Drawing.h"
-#include "Windows/control_center.h"
+#include "Windows/ControlCenter.h"
 
 #include <plib/pu.h>
 #include <plib/puAux.h>
@@ -27,14 +27,14 @@ class GraphicalOperations {
 public:
     GraphicalOperations();
 
-    int mainGlut(void (*callback)(void), SimulationPtr_t simulation, control_center controlCenter,
+    int mainGlut(void (*callback)(void), SimulationPtr_t simulation, ControlCenter controlCenter,
                      shared_ptr<Observer> observer, WindowDimensions dimensions);
     void postSimulationGlInit();
 
 private:
     static shared_ptr<Observer> observer;
     static SimulationPtr_t staticSimulation;
-    static control_center staticControlCenter;
+    static ControlCenter staticControlCenter;
 
     static void display();
 

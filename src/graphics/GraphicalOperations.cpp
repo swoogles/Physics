@@ -5,7 +5,7 @@
 #include "GraphicalOperations.h"
 
 SimulationPtr_t GraphicalOperations::staticSimulation;
-control_center GraphicalOperations::staticControlCenter;
+ControlCenter GraphicalOperations::staticControlCenter;
 shared_ptr<Observer> GraphicalOperations::observer;
 
 int GraphicalOperations::control_center_num;
@@ -65,7 +65,7 @@ GraphicalOperations::GraphicalOperations() {
 int GraphicalOperations::mainGlut(
         void (*callback)(void),
         SimulationPtr_t simulation,
-        control_center controlCenter,
+        ControlCenter controlCenter,
         shared_ptr<Observer> observer,
         WindowDimensions dimensions
 ) {

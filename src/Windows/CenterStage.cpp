@@ -1,10 +1,10 @@
-#include "main_display.h"
+#include "CenterStage.h"
 
 using namespace std;
 
-shared_ptr<Recorder> main_window_UI::recorder;
+shared_ptr<Recorder> CenterStage::recorder;
 
-main_window_UI::main_window_UI() {
+CenterStage::CenterStage() {
 	/*
 	main_menu = new puMenuBar();
 
@@ -23,8 +23,8 @@ main_window_UI::main_window_UI() {
 }
 
 // TODO more good cleanup candidates in this file
-void main_window_UI::init(int windowWidth, shared_ptr<Recorder> recorder) {
-	main_window_UI::recorder = recorder;
+void CenterStage::init(int windowWidth, shared_ptr<Recorder> recorder) {
+	CenterStage::recorder = recorder;
 	main_menu = new puMenuBar();
 
 	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
@@ -74,7 +74,7 @@ void main_window_UI::init(int windowWidth, shared_ptr<Recorder> recorder) {
 
 }
 
-void main_window_UI::update(double timeElapsed) {
+void CenterStage::update(double timeElapsed) {
 	double intPart;
 	double fracPart;
 	float curDiv;
@@ -114,14 +114,14 @@ void main_window_UI::update(double timeElapsed) {
 
 }
 
-void main_window_UI::open_cb(puObject * caller) {
+void CenterStage::open_cb(puObject * caller) {
 	// open_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
 	// open_selector->setCallback( openFile_cb );
 	// open_selector->setInitialValue("lastRun.phys");
 
 }
 
-void main_window_UI::openFile_cb(puObject * caller) {
+void CenterStage::openFile_cb(puObject * caller) {
 	// char fileName[150];
 	// open_selector->getValue (fileName);
 
@@ -137,14 +137,14 @@ void main_window_UI::openFile_cb(puObject * caller) {
 
 }
 
-void main_window_UI::save_cb(puObject * caller) {
+void CenterStage::save_cb(puObject * caller) {
 	// save_selector = new puaFileSelector(0,0, 320, 270, 2, "/media/Media Hog/ProjectOutput/ftPhysics/", "Choose File to Open");
 	// save_selector->setCallback( saveFile_cb );
 	// save_selector->setInitialValue("lastRun.phys");
 
 }
 
-void main_window_UI::saveFile_cb(puObject * caller) {
+void CenterStage::saveFile_cb(puObject * caller) {
 	// char fileName[150];
 	// save_selector->getValue(fileName);
 
@@ -156,14 +156,14 @@ void main_window_UI::saveFile_cb(puObject * caller) {
 	// saveShapes(fileName);
 }
 
-void main_window_UI::exit_cb(puObject * caller) {
-    if ( main_window_UI::recorder ) {
-        main_window_UI::recorder->createVideo();
+void CenterStage::exit_cb(puObject * caller) {
+    if ( CenterStage::recorder ) {
+        CenterStage::recorder->createVideo();
     }
 	exit(1);
 }
 
-// void main_window_UI::mk_dialog(char * dialogText) {
+// void CenterStage::mk_dialog(char * dialogText) {
 // 	dialog_box = new puDialogBox(150, 50);
 // 	{
 // 		new puFrame( 0, 0, 400, 100);
@@ -183,7 +183,7 @@ void main_window_UI::exit_cb(puObject * caller) {
 // 	dialog_box->reveal();
 // }
 // 
-// void main_window_UI::close_dialog_cb(puObject * caller) {
+// void CenterStage::close_dialog_cb(puObject * caller) {
 // 	puDeleteObject (dialog_box);
 // 	dialog_box = NULL;
 // }

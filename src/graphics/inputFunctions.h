@@ -12,7 +12,7 @@
 #include <GL/glut.h>
 #include "Dimensions/Moveable.h"
 #include "Observation/Observer.h"
-#include "Windows/control_center.h"
+#include "Windows/ControlCenter.h"
 
 #include <plib/pu.h>
 #include <plib/puAux.h>

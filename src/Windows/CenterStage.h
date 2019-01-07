@@ -17,10 +17,10 @@ using std::shared_ptr;
  *  \n -COM position
  *  \n -Average/total {momentum, velocities, mass, etc}
  */
-class main_window_UI {
+class CenterStage {
 public:
 	//! Unnecessary constructor for entirely static class
-	main_window_UI();
+	CenterStage();
 
     /*! \brief Initializes values for the Main Window interface
        *
