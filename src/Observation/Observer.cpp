@@ -11,12 +11,10 @@ shared_ptr<Observer> Observer::init(WindowDimensions windowDimensions) {
 }
 
 Observer::Observer(WindowDimensions windowDimensions)
-          :pos(PhysicalVector(0,0,0))
+          : pos(PhysicalVector(0,0,0))
           , id( curObserver++ )
           , autoScale( true )
-
-{
-    this->fov = 45.0f;
+          , fov(45.0f) {
 	sgMakeIdentQuat(orientationQuat);
 	sgQuatToMatrix(orientationMat, orientationQuat);
 

@@ -36,21 +36,21 @@ PhysicalVector PhysicalVector::scaledBy(double scalingFactor) const {
     return newVecStruct;
 }
 
-PhysicalVector PhysicalVector::plus(const PhysicalVector & other) {
+PhysicalVector PhysicalVector::plus(const PhysicalVector & other) const {
     sgVec4 newVec;
     sgAddVec4 ( newVec, this->vec, other.vec );
     PhysicalVector newVecStruct(newVec);
     return newVecStruct;
 }
 
-PhysicalVector PhysicalVector::minus(const PhysicalVector &other) {
+PhysicalVector PhysicalVector::minus(const PhysicalVector &other) const {
     sgVec4 newVec;
     sgSubVec4 ( newVec, this->vec, other.vec );
     PhysicalVector newVecStruct(newVec);
     return newVecStruct;
 }
 
-PhysicalVector PhysicalVector::withElementsMultipliedBy(const PhysicalVector &other) {
+PhysicalVector PhysicalVector::withElementsMultipliedBy(const PhysicalVector &other) const {
     PhysicalVector retVec(
             this->vec[0] * other.vec[0],
             this->vec[1] * other.vec[1],
@@ -59,13 +59,13 @@ PhysicalVector PhysicalVector::withElementsMultipliedBy(const PhysicalVector &ot
     return retVec;
 }
 
-PhysicalVector PhysicalVector::unit() {
+PhysicalVector PhysicalVector::unit() const {
     sgVec4 newVec;
     sgNormaliseVec4(newVec, vec);
     return newVec;
 }
 
-float PhysicalVector::scalarProduct4(const PhysicalVector & other) {
+float PhysicalVector::scalarProduct4(const PhysicalVector & other) const {
     return sgScalarProductVec4(this->vec, other.vec);
 }
 
@@ -73,18 +73,18 @@ PhysicalVector::PhysicalVector(const float *coordinates) {
     sgCopyVec4(vec, coordinates);
 }
 
-PhysicalVector PhysicalVector::vectorProduct3(const PhysicalVector &other) {
+PhysicalVector PhysicalVector::vectorProduct3(const PhysicalVector &other) const {
     PhysicalVector retVec;
     sgVectorProductVec3(retVec.vec, this->vec, other.vec);
     return retVec;
 }
 
-float PhysicalVector::length() {
+float PhysicalVector::length() const {
     SGfloat distanceSquared = sgLengthSquaredVec4(this->vec);
     return sqrt(distanceSquared);
 }
 
-string PhysicalVector::toString() {
+string PhysicalVector::toString() const {
     string rep;
     // TODO Get float->string conversion. Bleh.
     return rep
@@ -98,7 +98,7 @@ string PhysicalVector::toString() {
             ;
 }
 
-bool PhysicalVector::hasValues(float xIn, float yIn, float zIn) {
+bool PhysicalVector::hasValues(float xIn, float yIn, float zIn) const {
     return  x() == xIn && y() == yIn && z() == zIn;
 }
 

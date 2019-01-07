@@ -36,7 +36,7 @@ public:
 
     void insert(entity_t newShape);
 
-    inline float getWidth() { return dimensions.vec[0]; }
+    inline float getWidth() const { return dimensions.vec[0]; }
 
     inline bool isExternal() { return isLeaf; }
 
@@ -47,7 +47,7 @@ public:
     vector<shared_ptr<Quadrant>> children();
     unique_ptr<vector<shared_ptr<Quadrant>>> children(unique_ptr<vector<shared_ptr<Quadrant>>> inVector);
 
-    QuadrantPointer_t makeSubQuadrant(entity_t newShape);
+    QuadrantPointer_t makeSubQuadrant(entity_t newShape) const;
     void applyToAllChildren(function<void (Quadrant)> functor);
 
   private:
@@ -55,12 +55,12 @@ public:
 
     bool isLeaf;
     bool containsBody;
-    int level;
+    const int level;
 
     entity_t shapeInQuadrant;
 
     PhysicalVector weightedPosition;
-    PhysicalVector dimensions;
+    const PhysicalVector dimensions;
 
     array_typeNew  quadOctree;
 
@@ -69,11 +69,11 @@ public:
     //! Alters mass of object by dMass
     void adjustMass(float dMass);
 
-    bool positionIsInQuadrantBoundaries(PhysicalVector insertPos);
+    bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
 
-    QuadrantPointer_t subQuadrantAt(OctreeCoordinates indices);
+    QuadrantPointer_t subQuadrantAt(OctreeCoordinates indices) const;
     void assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newSubQuadrant);
-    OctreeCoordinates coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant);
+    OctreeCoordinates coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant) const;
 };
 typedef shared_ptr<Quadrant> QuadrantPointer_t;
 #endif

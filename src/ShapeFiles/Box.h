@@ -9,7 +9,7 @@ public:
 
 	double scale() const override;
 
-	float getWidth() const;
+	virtual float getWidth() const;
 private:
 	const float sideLength;
 };

@@ -29,15 +29,15 @@ public:
     inline float z() const {return vec[2];}
 
     PhysicalVector scaledBy(double scalingFactor) const;
-    PhysicalVector withElementsMultipliedBy(const PhysicalVector &other);
-    PhysicalVector plus(const PhysicalVector & other);
-    PhysicalVector minus(const PhysicalVector & other);
-    PhysicalVector unit();
-    float scalarProduct4(const PhysicalVector & other);
-    PhysicalVector vectorProduct3(const PhysicalVector & other);
-    float length();
-    string toString();
-    bool hasValues(float xIn, float yIn, float zIn); // TODO Lookout! This is currently only used for testing!
+    PhysicalVector withElementsMultipliedBy(const PhysicalVector &other) const;
+    PhysicalVector plus(const PhysicalVector & other) const;
+    PhysicalVector minus(const PhysicalVector & other) const;
+    PhysicalVector unit() const;
+    float scalarProduct4(const PhysicalVector & other) const;
+    PhysicalVector vectorProduct3(const PhysicalVector & other) const;
+    float length() const;
+    string toString() const;
+    bool hasValues(float xIn, float yIn, float zIn) const; // TODO Lookout! This is currently only used for testing!
     std::list<PhysicalVector> cancellingVectors(int numberOfVectors);
     bool operator==(const PhysicalVector &other) const;
     friend ostream& operator<<(ostream& os, const PhysicalVector& vec);

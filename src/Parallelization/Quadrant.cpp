@@ -76,7 +76,7 @@ QuadrantPointer_t Quadrant::subQuadrantThatContains(entity_t newShape) {
 
 }
 
-OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant) {
+OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant) const {
     return OctreeCoordinates(
             pointInsideQuadrant.x() < pos.x(),
             pointInsideQuadrant.y() < pos.y(),
@@ -87,7 +87,7 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(PhysicalVector p
 
 // Note/warning: This makes the assumption that newShape *belongs* in the subQuadrant that matches the coordinates.
 // Could be dangerous.
-QuadrantPointer_t Quadrant::makeSubQuadrant(entity_t newShape) {
+QuadrantPointer_t Quadrant::makeSubQuadrant(entity_t newShape) const {
     auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->position());
     PhysicalVector offsets =
             dimensions
@@ -98,7 +98,7 @@ QuadrantPointer_t Quadrant::makeSubQuadrant(entity_t newShape) {
     return std::move(std::make_shared<Quadrant>( newShape, this->level + 1, newPos, this->getWidth() / 2.0 ) );
 }
 
-bool Quadrant::positionIsInQuadrantBoundaries(PhysicalVector insertPos) {
+bool Quadrant::positionIsInQuadrantBoundaries(PhysicalVector insertPos) const {
   PhysicalVector newDimensions = dimensions.scaledBy(.5);
 
   PhysicalVector maxBoundariesVec = pos.plus(newDimensions);
@@ -129,7 +129,7 @@ vector<shared_ptr<Quadrant>> Quadrant::children() {
   return std::move(liveChildren);
 }
 
-QuadrantPointer_t Quadrant::subQuadrantAt(OctreeCoordinates indices) {
+QuadrantPointer_t Quadrant::subQuadrantAt(OctreeCoordinates indices) const {
     auto ints = indices.ints();
     return quadOctree[ints[0]][ints[1]][ints[2]];
 }

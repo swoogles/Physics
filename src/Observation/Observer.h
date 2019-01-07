@@ -61,7 +61,7 @@ private:
 	bool autoScale;
 	static unsigned int curObserver;
 
-	float fov;
+	const float fov;
 
 	void BuildPerspProjMat(float *m, float aspect, float znear, float zfar);
 
