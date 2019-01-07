@@ -93,8 +93,7 @@ int main(int argcp, char **argv) {
     auto observer = Observer::init(windowDimensions);
     observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
 
-    GraphicalOperations graphicalOperations;
-    graphicalOperations.mainGlut(
+    GraphicalOperations graphicalOperations(
             idle,
             globalSimulation,
             globalControlCenter,

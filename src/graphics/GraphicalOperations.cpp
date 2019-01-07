@@ -59,16 +59,13 @@ void GraphicalOperations::display() {
 
 }
 
-GraphicalOperations::GraphicalOperations() {
-}
-
-int GraphicalOperations::mainGlut(
+GraphicalOperations::GraphicalOperations(
         void (*callback)(void),
         SimulationPtr_t simulation,
         ControlCenter controlCenter,
         shared_ptr<Observer> observer,
         WindowDimensions dimensions
-) {
+        ) {
     this->openGlInit();
     size_t mainWinPosX = 100;
     size_t mainWinPosY = 50;
@@ -106,8 +103,10 @@ int GraphicalOperations::mainGlut(
     control_center_num = glutCreateWindow("Control Center");
 
     puInit();
+}
 
-    return main_window;
+int GraphicalOperations::mainGlut(
+) {
 }
 
 void GraphicalOperations::configureControlWindow(
