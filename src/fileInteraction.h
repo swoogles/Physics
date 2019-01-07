@@ -2,8 +2,6 @@
 #define FILEINTERACTION_H_
 
 #include <fstream>
-
-#include <boost/numeric/ublas/vector_sparse.hpp>
 #include "ShapeFiles/Particle.h"
 
 typedef typename std::vector<shapePointer_t> vectorT;
