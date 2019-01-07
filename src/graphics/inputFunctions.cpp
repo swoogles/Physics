@@ -11,8 +11,8 @@ using namespace std;
 
 shared_ptr<Observer> InputFunctions::observer;
 
-void stopAutoScaling() {
-	WorldSettings::setAutoScaling(false);
+void InputFunctions::stopAutoScaling() {
+	InputFunctions::observer->setAutoScaling(false);
 }
 
 void InputFunctions::myMouse(int button, int state, int x, int y) {

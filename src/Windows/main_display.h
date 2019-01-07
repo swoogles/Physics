@@ -4,8 +4,7 @@
 #include <plib/pu.h>
 #include <plib/puAux.h>
 #include <graphics/Recorder.h>
-
-#include "graphics/WorldSettings.h"
+#include <memory>
 
 using std::shared_ptr;
 

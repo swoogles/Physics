@@ -15,7 +15,6 @@
 
 //Physics
 #include "Physics/Simulations.h"
-#include "graphics/WorldSettings.h"
 #include "Physics/PhysicsSandboxProperties.h"
 
 #include <lib/pstream.h>
@@ -52,7 +51,7 @@ void idle() {
   auto observer = Observer::getCurObserver();
   observer->update();
 
-  if (WorldSettings::isAutoScaling()) {
+  if (observer->isAutoScaling()) {
     observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
   }
 

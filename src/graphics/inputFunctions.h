@@ -12,7 +12,6 @@
 #include <GL/glut.h>
 #include "Dimensions/Moveable.h"
 #include "Observation/Observer.h"
-#include "WorldSettings.h"
 #include "Windows/control_center.h"
 
 #include <plib/pu.h>
@@ -30,6 +29,7 @@ public:
     static void myKey(unsigned char, int x, int y);
 private:
     static shared_ptr<Observer> observer;
+    static void stopAutoScaling();
 };
 
 #endif /* INPUTFUNCTIONS_H_ */
