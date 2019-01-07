@@ -59,12 +59,9 @@ void idle() {
   time_point end = std::chrono::system_clock::now();
 
   std::chrono::duration<double> elapsed_seconds = end-start;
-  cout << "Elapsed time: " << elapsed_seconds.count() << endl;
-  cout << "Goal time: " << (maximumRuntime).count() << endl;
   if ( elapsed_seconds > (maximumRuntime)) {
-    std::time_t now_c = std::chrono::system_clock::to_time_t(start);
     if ( globalRecorder ) {
-      globalRecorder->createVideo(now_c);
+        globalRecorder->createVideo();
     }
     exit(0);
   }
@@ -74,7 +71,6 @@ int main(int argcp, char **argv) {
     char simulation = argv[2][0];
     PhysicsSandboxProperties properties("simulation.properties");
     globalSimulation = Simulations::createSimulation(simulation, properties);
-    cout << "maximumRunTime: " << properties.maximumRunTime.count();
     maximumRuntime = properties.maximumRunTime;
 
     auto windowDimensions =
@@ -87,7 +83,7 @@ int main(int argcp, char **argv) {
 
     char recording = argv[1][0];
     if ( recording == 'r') {
-        globalRecorder = make_shared<Recorder>();
+        globalRecorder = make_shared<Recorder>(std::chrono::system_clock::to_time_t(start));
     } else if (recording == 'x') {
         globalRecorder = nullptr;
     } else {
@@ -108,7 +104,7 @@ int main(int argcp, char **argv) {
     );
 
     //Creates main menu bar
-    globalMainDisplay.init(windowDimensions.width);
+    globalMainDisplay.init(windowDimensions.width, globalRecorder);
 
     InputFunctions::init(observer);
 

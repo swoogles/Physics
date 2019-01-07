@@ -2,6 +2,8 @@
 
 using namespace std;
 
+shared_ptr<Recorder> main_window_UI::recorder;
+
 main_window_UI::main_window_UI() {
 	/*
 	main_menu = new puMenuBar();
@@ -21,7 +23,8 @@ main_window_UI::main_window_UI() {
 }
 
 // TODO more good cleanup candidates in this file
-void main_window_UI::init(int windowWidth) {
+void main_window_UI::init(int windowWidth, shared_ptr<Recorder> recorder) {
+	main_window_UI::recorder = recorder;
 	main_menu = new puMenuBar();
 
 	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
@@ -154,6 +157,9 @@ void main_window_UI::saveFile_cb(puObject * caller) {
 }
 
 void main_window_UI::exit_cb(puObject * caller) {
+    if ( main_window_UI::recorder ) {
+        main_window_UI::recorder->createVideo();
+    }
 	exit(1);
 }
 

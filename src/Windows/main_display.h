@@ -3,8 +3,11 @@
 
 #include <plib/pu.h>
 #include <plib/puAux.h>
+#include <graphics/Recorder.h>
 
 #include "graphics/WorldSettings.h"
+
+using std::shared_ptr;
 
 /*! \brief UI class that handles everything in the main window
  *
@@ -24,7 +27,7 @@ public:
        *
        *  Creates the Main Menu puMenuBar and populates it with open, save, etc. funcitnos
        */
-	void init(int windowWidth);
+    void init(int windowWidth, shared_ptr <Recorder> recorder);
 
 	/*! \brief Updates the time values
 	 *
@@ -59,6 +62,7 @@ public:
 	 */
 	static void exit_cb(puObject *);
 private:
+    static shared_ptr<Recorder> recorder;
 	puMenuBar * main_menu;
 	puaFileSelector * open_selector;
 	puaFileSelector * save_selector;

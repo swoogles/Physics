@@ -24,15 +24,16 @@ using namespace std;
  */
 class Recorder {
 public:
-	Recorder();
+	Recorder(std::time_t  start);
 
 	/*! \brief Call whenever you want to save current frame
 	 *
 	 *  Pieces together the correct filename for output image, then calls screenshot()
 	 */
 	bool captureThisFrame(unsigned int, unsigned int);
-	void createVideo(std::time_t timestamp);
+	void createVideo();
 private:
+	const std::time_t  start;
 	string path;
 	string outFileName;
 	string extension;
