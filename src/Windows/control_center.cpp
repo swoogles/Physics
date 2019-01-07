@@ -97,9 +97,7 @@ void control_center::init(duration dt, int windowWidth) {
 }
 
 void control_center::flipAutoScaling(puObject * caller) {
-  // TODO Get this actually working. Don't think it's doing anything right now.
-  bool isAutoScaling = Observer::getCurObserverRef().isAutoScaling();
-  Observer::getCurObserverRef().setAutoScaling(! isAutoScaling);
+  Observer::getCurObserverRef().toggleAutoScaling();
 }
 
 void control_center::alterDT(puObject * caller) {

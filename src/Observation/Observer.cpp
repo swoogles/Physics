@@ -48,8 +48,8 @@ void Observer::setAutoScaling(bool shouldScale) {
 	autoScale = shouldScale;
 }
 
-bool Observer::isAutoScaling() const {
-	return autoScale;
+void Observer::toggleAutoScaling() {
+    autoScale = !autoScale;
 }
 
 shared_ptr<Observer> Observer::getCurObserver() {
@@ -72,22 +72,24 @@ void Observer::update() {
 
 void Observer::calcMinPullback(MaximumValues maximumValues) {
 
-    const float absMaxX =
-        (abs(maximumValues.minX) > maximumValues.maxX)
-            ? abs(maximumValues.minX)
-            : maximumValues.maxX;
+    if (autoScale) {
+        const float absMaxX =
+                (abs(maximumValues.minX) > maximumValues.maxX)
+                ? abs(maximumValues.minX)
+                : maximumValues.maxX;
 
-    const float absMaxY =
-        (abs(maximumValues.minY) > maximumValues.maxY)
-            ? abs(maximumValues.minY)
-            : maximumValues.maxY;
+        const float absMaxY =
+                (abs(maximumValues.minY) > maximumValues.maxY)
+                ? abs(maximumValues.minY)
+                : maximumValues.maxY;
 
-    const double pullBack =
-        (absMaxY > absMaxX)
-            ? absMaxY / tan(this->fov * M_PI / 360)
-            : absMaxX / tan(this->fov * M_PI / 360);
+        const double pullBack =
+                (absMaxY > absMaxX)
+                ? absMaxY / tan(this->fov * M_PI / 360)
+                : absMaxX / tan(this->fov * M_PI / 360);
 
-    setPos(0,0,-pullBack*2);
+        setPos(0, 0, -pullBack * 2);
+    }
 
 }
 

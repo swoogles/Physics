@@ -51,9 +51,9 @@ void idle() {
   auto observer = Observer::getCurObserver();
   observer->update();
 
-  if (observer->isAutoScaling()) {
-    observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
-  }
+  // TODO This would be more valuable if it only tried to include the largest N items.
+  // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
+  observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
 
   time_point end = std::chrono::system_clock::now();
 
