@@ -37,8 +37,8 @@ time_point start = std::chrono::system_clock::now();
 std::chrono::seconds maximumRuntime(60);
 
 void idle() {
-  auto dt = globalControlCenter.getDt();
   if (! globalControlCenter.isPaused() ) {
+    auto dt = globalControlCenter.getDt();
     globalSimulation->update(dt);
     globalMainDisplay.update(dt.value());
 
