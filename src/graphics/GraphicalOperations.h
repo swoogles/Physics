@@ -28,7 +28,6 @@ public:
     GraphicalOperations(void (*callback)(void), SimulationPtr_t simulation, ControlCenter controlCenter,
                      shared_ptr<Observer> observer, WindowDimensions dimensions);
 
-    int mainGlut();
     void postSimulationGlInit();
 
 private:

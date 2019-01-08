@@ -105,10 +105,6 @@ GraphicalOperations::GraphicalOperations(
     puInit();
 }
 
-int GraphicalOperations::mainGlut(
-) {
-}
-
 void GraphicalOperations::configureControlWindow(
         int mainWinPosX,
         int mainWinPosY,
@@ -120,7 +116,6 @@ void GraphicalOperations::configureControlWindow(
     int controlWinPosY = mainWinPosY + mainWinHeight + 30;
     int controlWinWidth = mainWinWidth;
     int controlWinHeight = 200;
-
 
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(controlWinPosX,controlWinPosY);
