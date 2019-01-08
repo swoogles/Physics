@@ -41,12 +41,7 @@ private:
 
     void openGlInit();
 
-    void configureControlWindow(
-            int mainWinPosX,
-            int mainWinPosY,
-            int mainWinHeight,
-            int mainWinWidth
-    );
+    void configureControlWindow(WindowDimensions mainWindowDimensions);
 
 
     static int control_center_num;

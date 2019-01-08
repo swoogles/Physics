@@ -67,10 +67,6 @@ GraphicalOperations::GraphicalOperations(
         WindowDimensions dimensions
         ) {
     this->openGlInit();
-    size_t mainWinPosX = 100;
-    size_t mainWinPosY = 50;
-    size_t mainWinHeight = 720;
-    size_t mainWinWidth = 1280;
 
     char fakeParam[] = "fake";
     char *fakeargv[] = { fakeParam, NULL };
@@ -93,28 +89,17 @@ GraphicalOperations::GraphicalOperations(
     glutIdleFunc(callback);
     glutTimerFunc(1000, myTimer, FPS);
 
-    configureControlWindow(
-            mainWinPosX,
-            mainWinPosY,
-            mainWinHeight,
-            mainWinWidth
-    );
+    configureControlWindow(dimensions);
 
     control_center_num = glutCreateWindow("Control Center");
 
     puInit();
 }
 
-void GraphicalOperations::configureControlWindow(
-        int mainWinPosX,
-        int mainWinPosY,
-        int mainWinHeight,
-        int mainWinWidth
-
-) {
-    int controlWinPosX = mainWinPosX;
-    int controlWinPosY = mainWinPosY + mainWinHeight + 30;
-    int controlWinWidth = mainWinWidth;
+void GraphicalOperations::configureControlWindow(WindowDimensions mainWindowDimensions) {
+    int controlWinPosX = mainWindowDimensions.xPos;
+    int controlWinPosY = mainWindowDimensions.yPos + mainWindowDimensions.height + 30;
+    int controlWinWidth = mainWindowDimensions.width;
     int controlWinHeight = 200;
 
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
