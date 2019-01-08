@@ -67,7 +67,7 @@ public:
     QuadrantPointer_t subQuadrantThatContains(entity_t newShape);
 
     //! Alters mass of object by dMass
-    void adjustMass(float dMass);
+    void adjustMass(kilogram_t dMass);
 
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
 

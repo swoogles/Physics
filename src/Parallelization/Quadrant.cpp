@@ -50,7 +50,7 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
 void Quadrant::insert(entity_t insertedShape) {
     if (!positionIsInQuadrantBoundaries(insertedShape->position())) { return; }
 
-    this->adjustMass(insertedShape->mass().value());
+    this->adjustMass(insertedShape->mass());
     this->weightedPosition = this->weightedPosition.plus(insertedShape->weightedPosition());
 
     this->subQuadrantThatContains(std::move(insertedShape));
@@ -107,9 +107,8 @@ bool Quadrant::positionIsInQuadrantBoundaries(PhysicalVector insertPos) const {
   return withinBoundaries( insertPos, minBoundariesVec, maxBoundariesVec );
 }
 
-void Quadrant::adjustMass(float dMass) {
-    // TODO Should be a method implemented in a super class
-	_mass += kilogram_t(dMass);
+void Quadrant::adjustMass(kilogram_t dMass) {
+	_mass += dMass;
 }
 
 vector<shared_ptr<Quadrant>> Quadrant::children() {
