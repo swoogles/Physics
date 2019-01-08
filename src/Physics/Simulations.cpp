@@ -119,7 +119,7 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
     PhysicalVector newColor (1, 1, 1);
 
     shared_ptr<Particle> curShape;
-    float d= 3e4;
+    float d= 3e5;
 
     //#1
     PhysicalVector object1Placement(+5/8.0f * d, +7/8.0f * d, 1, true);
