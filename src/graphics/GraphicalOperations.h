@@ -28,24 +28,20 @@ public:
     GraphicalOperations(void (*callback)(void), SimulationPtr_t simulation, ControlCenter controlCenter,
                      shared_ptr<Observer> observer, WindowDimensions dimensions);
 
-    void postSimulationGlInit();
-
+    shared_ptr<Observer> localObserver;
+    SimulationPtr_t localSimulation;
+    ControlCenter localControlCenter;
+    void localDisplay();
+    void controlDisplay();
 private:
-    static shared_ptr<Observer> observer;
-    static SimulationPtr_t staticSimulation;
-    static ControlCenter staticControlCenter;
-
-    static void display();
-
-    static void fullQuadrantDrawingFunction(Quadrant quadrant);
+    static void fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant);
 
     void openGlInit();
 
     void configureControlWindow(WindowDimensions mainWindowDimensions);
 
 
-    static int control_center_num;
-    static void controlDisplay();
+    const int control_center_num;
 };
 
 

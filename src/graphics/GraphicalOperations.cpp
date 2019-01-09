@@ -4,12 +4,6 @@
 
 #include "GraphicalOperations.h"
 
-SimulationPtr_t GraphicalOperations::staticSimulation;
-ControlCenter GraphicalOperations::staticControlCenter;
-shared_ptr<Observer> GraphicalOperations::observer;
-
-int GraphicalOperations::control_center_num;
-
 #define FPS 1
 
 using std::size_t;
@@ -29,26 +23,26 @@ void drawingFuncFixed(Quadrant quadrant) {
     Drawing::draw(quadrant);
 }
 
-void GraphicalOperations::fullQuadrantDrawingFunction(Quadrant quadrant) {
-    if (staticControlCenter.shouldRenderOctree()) {
+void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant) {
+    if (controlCenter.shouldRenderOctree()) {
         drawingFuncFixed(quadrant);
     }
     drawShapeInQuadrant(quadrant);
 };
 
 
-void GraphicalOperations::display() {
+void GraphicalOperations::localDisplay() {
     glClearColor(0,0,0,0);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
 
-    GraphicalOperations::observer->applyView();
+    localObserver->applyView();
 
     glMatrixMode(GL_MODELVIEW);
 
-    staticSimulation->getQuadrant()->applyToAllChildren(fullQuadrantDrawingFunction);
+    localSimulation->getQuadrant()->applyToAllChildren([this](Quadrant quadrant) {GraphicalOperations::fullQuadrantDrawingFunction(this->localControlCenter, quadrant);});
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
@@ -65,7 +59,11 @@ GraphicalOperations::GraphicalOperations(
         ControlCenter controlCenter,
         shared_ptr<Observer> observer,
         WindowDimensions dimensions
-        ) {
+        ): localObserver(observer)
+        , localSimulation(simulation)
+        , localControlCenter(controlCenter)
+,control_center_num(glutCreateWindow("Control Center"))
+        {
     this->openGlInit();
 
     char fakeParam[] = "fake";
@@ -78,10 +76,6 @@ GraphicalOperations::GraphicalOperations(
     glutInitWindowSize(dimensions.width,dimensions.height);
     int main_window = glutCreateWindow("Center Stage");
     glutSetWindow(main_window);
-    GraphicalOperations::staticSimulation = simulation;
-    GraphicalOperations::staticControlCenter = controlCenter;
-    GraphicalOperations::observer = observer;
-    glutDisplayFunc(GraphicalOperations::display);
 
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);
@@ -91,7 +85,6 @@ GraphicalOperations::GraphicalOperations(
 
     configureControlWindow(dimensions);
 
-    control_center_num = glutCreateWindow("Control Center");
 
     puInit();
 }
@@ -125,10 +118,3 @@ void GraphicalOperations::controlDisplay() {
     glutPostRedisplay();
 }
 
-void GraphicalOperations::postSimulationGlInit() {
-    glutDisplayFunc(GraphicalOperations::controlDisplay);
-    glutMouseFunc(InputFunctions::myMouse);
-    glutKeyboardFunc(InputFunctions::myKey);
-
-    glutMainLoop();
-}

@@ -30,6 +30,7 @@ using std::chrono::time_point;
 SimulationPtr_t globalSimulation;
 
 unique_ptr<FullApplication> globalFullApplication;
+shared_ptr<GraphicalOperations> graphicalOperations;
 
 void idle() {
     globalFullApplication->update();
@@ -71,6 +72,18 @@ int main(int argcp, char **argv) {
 
     ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
 
+    graphicalOperations = make_shared<GraphicalOperations>(
+            idle,
+            globalSimulation,
+            localControlCenter,
+            observer,
+            windowDimensions
+            );
+    glutDisplayFunc([]() {
+        graphicalOperations->localDisplay();
+        graphicalOperations->controlDisplay();
+    });
+
     GraphicalOperations graphicalOperations(
 //            [](){globalFullApplication->update();},
 idle,
@@ -79,7 +92,10 @@ idle,
             observer,
             windowDimensions
     );
-    graphicalOperations.postSimulationGlInit();
+    glutMouseFunc(InputFunctions::myMouse);
+    glutKeyboardFunc(InputFunctions::myKey);
+
+    glutMainLoop();
 
 
     return 0;
