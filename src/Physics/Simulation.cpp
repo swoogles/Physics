@@ -59,7 +59,7 @@ void Simulation::updateXYMinsAndMaxes(PhysicalVector curPos) {
     minY = std::min(minY, curPos.y());
 }
 
-MaximumValues Simulation::getXYMinsAndMaxes() {
+MaximumValues Simulation::getXYMinsAndMaxes() const {
     return {
             this->minX,
             this->minY,
@@ -101,9 +101,9 @@ void Simulation::removePhysicalObjects(ParticleList shapesToRemove) {
 
 void Simulation::updateTimeElapsed(hour_t dt) { timeElapsed += dt; }
 
-hour_t Simulation::getTimeElapsed() { return timeElapsed; }
+hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 
-QuadrantPointer_t Simulation::getQuadrant() { return quadrant; }
+QuadrantPointer_t Simulation::getQuadrant() const { return quadrant; }
 
 
 // I'm working on this method because I think there are some basic
@@ -146,7 +146,7 @@ void Simulation::calcForcesAll_LessNaive(hour_t dt) {
 PairCollection Simulation::calculateForceOnExternalNode(
         const physicalObject_t &curObject,
         Quadrant &curQuadrant,
-        hour_t dt) {
+        hour_t dt) const {
     //1. a.
     PairCollection deleteList;
     physicalObject_t shapeInQuadrant = curQuadrant.getShapeInQuadrant();
@@ -180,7 +180,7 @@ PairCollection Simulation::calcForceOnObject_Octree(
         physicalObject_t curObject,
         Quadrant &curQuadrant,
         hour_t dt,
-        int recursionLevel) {
+        int recursionLevel) const {
     if ( curQuadrant.isExternal() ) {
         return calculateForceOnExternalNode(curObject, curQuadrant, dt);
     }
@@ -236,12 +236,12 @@ void Simulation::calcForcesAll(hour_t dt) {
     }
 }
 
-size_t Simulation::getSize() {
+size_t Simulation::getSize() const {
     return this->physicalObjects.getShapes().size();
 }
 
 // TODO Update this very soon
-kilogram_t Simulation::getMass() {
+kilogram_t Simulation::getMass() const {
     auto mass = kilogram_t(0);
     for (const auto & shape : this->physicalObjects.getShapes()) {
         mass += shape->mass();

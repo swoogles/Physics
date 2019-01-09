@@ -1,6 +1,6 @@
 #include "PhysicsSandboxProperties.h"
 
-ForceCalculationMethod PhysicsSandboxProperties::parseForceCalculationProperty(std::string value) {
+ForceCalculationMethod PhysicsSandboxProperties::parseForceCalculationProperty(std::string value) const {
   // Should these go somewhere else?
   const std::string FORCE_CALC_METHOD_OCTREE_STRING = "octree";
   const std::string FORCE_CALC_METHOD_NAIVE_STRING = "naive";
@@ -15,7 +15,7 @@ ForceCalculationMethod PhysicsSandboxProperties::parseForceCalculationProperty(s
   }
 }
 
-int PhysicsSandboxProperties::parseStringAsInt(std::string value) {
+int PhysicsSandboxProperties::parseStringAsInt(std::string value) const {
   return atoi(value.c_str());
 }
 

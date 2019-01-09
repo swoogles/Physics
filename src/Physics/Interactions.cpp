@@ -10,7 +10,7 @@ ParticleList Interactions::crackPhysicalObject(Particle &shape, joule_t kineticE
     return ParticleList();
 }
 
-PhysicalVector Interactions::calcForceGravNew(Particle &object1, Moveable &object2, duration dt) {
+PhysicalVector Interactions::calcForceGravNew(Particle &object1, Moveable &object2, duration dt) const {
     PhysicalVector sepVec(object1.vectorTo(object2));
 
     double rSquared = std::max(sgLengthSquaredVec4(sepVec.vec), .00001f);

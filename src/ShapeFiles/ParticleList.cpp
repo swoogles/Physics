@@ -68,7 +68,7 @@ size_t ParticleList::clearShapes() {
   return shapes.size();
 }
 
-particleVector ParticleList::getShapes() {
+particleVector ParticleList::getShapes() const{
   return shapes;
 }
 

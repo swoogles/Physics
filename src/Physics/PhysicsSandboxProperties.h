@@ -13,8 +13,8 @@ using namespace units::mass;
 // TODO Figure out why I can't swap private/public here
 class PhysicsSandboxProperties  {
 private:
-    ForceCalculationMethod parseForceCalculationProperty(std::string value);
-    int parseStringAsInt(std::string value);
+    ForceCalculationMethod parseForceCalculationProperty(std::string value) const;
+    int parseStringAsInt(std::string value) const;
     const BillProperties properties;
 public:
     // TODO privatize these

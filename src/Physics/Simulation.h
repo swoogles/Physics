@@ -22,17 +22,17 @@ public:
     Simulation(Simulation & originalSimulation, ParticleList newParticles);
 
 
-    hour_t getTimeElapsed();
+    hour_t getTimeElapsed() const;
 
     // TODO Take dt as a parameter here.
     void update(hour_t dt);
 
-    MaximumValues getXYMinsAndMaxes();
+    MaximumValues getXYMinsAndMaxes() const;
 
-    size_t getSize();
-    kilogram_t getMass();
+    size_t getSize() const;
+    kilogram_t getMass() const;
 
-    QuadrantPointer_t getQuadrant();
+    QuadrantPointer_t getQuadrant() const;
 private:
 	ParticleList physicalObjects;
 	hour_t timeElapsed;
@@ -58,9 +58,9 @@ private:
 
     void refreshQuadrant();
 
-	PairCollection calculateForceOnExternalNode(const physicalObject_t &curObject, Quadrant &curQuadrant, hour_t dt);
+	PairCollection calculateForceOnExternalNode(const physicalObject_t &curObject, Quadrant &curQuadrant, hour_t dt) const;
 	PairCollection calcForceOnObject_Octree(physicalObject_t curObject, Quadrant &curQuadrant, hour_t dt,
-											int recursionLevel);
+											int recursionLevel) const;
 
 	void calcForcesAll_LessNaive(hour_t dt);
 	void calcForcesAll(hour_t dt);

@@ -25,7 +25,7 @@ public:
     int removeShapeFromList(item_t shapeToRemove);
     int remove(ParticleList & shapesToRemove);
     size_t clearShapes();
-    particleVector getShapes();
+    particleVector getShapes() const;
     void update(hour_t dt);
     inline size_t size() { return shapes.size(); };
 
