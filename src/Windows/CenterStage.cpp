@@ -4,7 +4,7 @@ using namespace std;
 
 shared_ptr<Recorder> CenterStage::recorder;
 
-CenterStage::CenterStage() {
+CenterStage::CenterStage() noexcept{
 	/*
 	main_menu = new puMenuBar();
 

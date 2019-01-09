@@ -20,7 +20,7 @@ using std::shared_ptr;
 class CenterStage {
 public:
 	//! Unnecessary constructor for entirely static class
-	CenterStage();
+	CenterStage() noexcept;
 
     /*! \brief Initializes values for the Main Window interface
        *
