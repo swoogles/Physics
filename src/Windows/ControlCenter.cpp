@@ -139,11 +139,11 @@ void ControlCenter::rotStop(puObject *) {
     Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
 }
 
-bool ControlCenter::isPaused() {
+bool ControlCenter::isPaused() const {
   return ControlCenter::paused;
 }
 
-duration ControlCenter::getDt() {
+duration ControlCenter::getDt() const {
   return ControlCenter::dt;
 }
 

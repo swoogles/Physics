@@ -44,8 +44,8 @@ public:
 	//! Turn AutoScaling on or off
 	static void flipAutoScaling(puObject * caller);
 
-	bool isPaused();
-	duration getDt();
+	bool isPaused() const;
+	duration getDt() const;
 	bool shouldRenderOctree();
 private:
 	static bool paused;

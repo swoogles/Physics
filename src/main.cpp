@@ -17,6 +17,8 @@
 #include "Physics/Simulations.h"
 #include "Physics/PhysicsSandboxProperties.h"
 
+#include "FullApplication.h"
+
 #include <lib/pstream.h>
 
 #include <chrono>
@@ -34,43 +36,16 @@ shared_ptr<Recorder> globalRecorder;
 
 time_point start = std::chrono::system_clock::now();
 
-std::chrono::seconds maximumRuntime(60);
+unique_ptr<FullApplication> globalFullApplication;
 
 void idle() {
-  if (! globalControlCenter.isPaused() ) {
-    auto dt = globalControlCenter.getDt();
-    globalSimulation->update(dt);
-    globalMainDisplay.update(dt.value());
-
-    if ( globalRecorder ) {
-      globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-    }
-  }
-
-  // Should just directly call Observer::getCurObserverInstance()
-  auto observer = Observer::getCurObserver();
-  observer->update();
-
-  // TODO This would be more valuable if it only tried to include the largest N items.
-  // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
-  observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
-
-  time_point end = std::chrono::system_clock::now();
-
-  std::chrono::duration<double> elapsed_seconds = end-start;
-  if ( elapsed_seconds > (maximumRuntime)) {
-    if ( globalRecorder ) {
-        globalRecorder->createVideo();
-    }
-    exit(0);
-  }
+    globalFullApplication->update();
 }
 
 int main(int argcp, char **argv) {
     char simulation = argv[2][0];
     PhysicsSandboxProperties properties("simulation.properties");
     globalSimulation = Simulations::createSimulation(simulation, properties);
-    maximumRuntime = properties.maximumRunTime;
 
     auto windowDimensions =
             WindowDimensions(
@@ -92,13 +67,6 @@ int main(int argcp, char **argv) {
 
     auto observer = Observer::init(windowDimensions);
 
-    GraphicalOperations graphicalOperations(
-            idle,
-            globalSimulation,
-            globalControlCenter,
-            observer,
-            windowDimensions
-    );
 
     //Creates main menu bar
     globalMainDisplay.init(windowDimensions.width, globalRecorder);
@@ -107,7 +75,17 @@ int main(int argcp, char **argv) {
 
     globalControlCenter.init(hour_t(properties.dt), windowDimensions.width);
 
+
+    GraphicalOperations graphicalOperations(
+//            [](){globalFullApplication->update();},
+idle,
+            globalSimulation,
+            globalControlCenter,
+            observer,
+            windowDimensions
+    );
     graphicalOperations.postSimulationGlInit();
+
 
     return 0;
 }
