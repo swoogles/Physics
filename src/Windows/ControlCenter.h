@@ -16,6 +16,8 @@
  */
 class ControlCenter {
 public:
+	ControlCenter();
+	ControlCenter(duration dt, int windowWidth);
 	void init(duration dt, int windowWidth);
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
@@ -50,6 +52,7 @@ public:
 private:
 	static bool paused;
 	static duration dt;
+	duration localDt;
 	static bool renderOctree ;
 
 	puGroup * runtime_group;

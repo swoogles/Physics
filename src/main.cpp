@@ -29,13 +29,6 @@ using std::chrono::time_point;
 // GLOBALS
 SimulationPtr_t globalSimulation;
 
-ControlCenter globalControlCenter;
-CenterStage globalMainDisplay;
-
-shared_ptr<Recorder> globalRecorder;
-
-time_point start = std::chrono::system_clock::now();
-
 unique_ptr<FullApplication> globalFullApplication;
 
 void idle() {
@@ -55,11 +48,13 @@ int main(int argcp, char **argv) {
                     1280
             );
 
+    time_point start = std::chrono::system_clock::now();
+    shared_ptr<Recorder> localRecorder;
     char recording = argv[1][0];
     if ( recording == 'r') {
-        globalRecorder = make_shared<Recorder>(std::chrono::system_clock::to_time_t(start));
+        localRecorder = make_shared<Recorder>(std::chrono::system_clock::to_time_t(start));
     } else if (recording == 'x') {
-        globalRecorder = nullptr;
+        localRecorder = nullptr;
     } else {
         cout << "Bad recording value! Must be 'x' or 'r'" << endl;
         exit(1);
@@ -69,18 +64,18 @@ int main(int argcp, char **argv) {
 
 
     //Creates main menu bar
-    globalMainDisplay.init(windowDimensions.width, globalRecorder);
+
+    CenterStage mainDisplay(windowDimensions.width, localRecorder);
 
     InputFunctions::init(observer);
 
-    globalControlCenter.init(hour_t(properties.dt), windowDimensions.width);
-
+    ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
 
     GraphicalOperations graphicalOperations(
 //            [](){globalFullApplication->update();},
 idle,
             globalSimulation,
-            globalControlCenter,
+            localControlCenter,
             observer,
             windowDimensions
     );
