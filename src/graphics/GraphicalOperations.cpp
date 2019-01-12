@@ -32,6 +32,7 @@ void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCente
 
 
 void GraphicalOperations::localDisplay() {
+    glutSetWindow(mainDisplayNum);
     glClearColor(0,0,0,0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -76,6 +77,7 @@ GraphicalOperations::GraphicalOperations(
     glutInitWindowSize(dimensions.width,dimensions.height);
     int main_window = glutCreateWindow("Center Stage");
     glutSetWindow(main_window);
+    mainDisplayNum = main_window;
 
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);

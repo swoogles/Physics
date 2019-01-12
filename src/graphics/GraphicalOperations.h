@@ -42,6 +42,7 @@ private:
 
 
     int control_center_num;
+    int mainDisplayNum;
 };
 
 
