@@ -4,15 +4,14 @@
 
 #include "FullApplication.h"
 
-FullApplication::FullApplication(const SimulationPtr_t &globalSimulation,
-                                 const ControlCenter globalControlCenter,
-                                 CenterStage globalMainDisplay,
-                                 const shared_ptr<Recorder> globalRecorder,
+FullApplication::FullApplication(const SimulationPtr_t &globalSimulation, const ControlCenter globalControlCenter,
+                                 const CenterStage globalMainDisplay, const shared_ptr<Recorder> globalRecorder,
                                  const time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
-                                 const chrono::seconds maximumRuntime)
+                                 const chrono::seconds maximumRuntime, shared_ptr<GraphicalOperations> graphicalOperations)
         : globalSimulation(globalSimulation), globalControlCenter(globalControlCenter),
           globalMainDisplay(globalMainDisplay), globalRecorder(globalRecorder), start(start),
-          maximumRuntime(maximumRuntime) {}
+          maximumRuntime(maximumRuntime),
+          graphicalOperations(graphicalOperations){}
 
 void FullApplication::update() {
         if (! globalControlCenter.isPaused() ) {

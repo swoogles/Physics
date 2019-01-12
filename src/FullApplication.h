@@ -27,13 +27,10 @@
 
 class FullApplication {
 public:
-    FullApplication(
-            const SimulationPtr_t &globalSimulation,
-            const ControlCenter globalControlCenter,
-            const CenterStage globalMainDisplay,
-            const shared_ptr<Recorder> globalRecorder,
-            const time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
-            const chrono::seconds maximumRuntime);
+    FullApplication(const SimulationPtr_t &globalSimulation, const ControlCenter globalControlCenter,
+                        const CenterStage globalMainDisplay, const shared_ptr<Recorder> globalRecorder,
+                        const time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
+                        const chrono::seconds maximumRuntime, shared_ptr<GraphicalOperations> graphicalOperations);
 
     const SimulationPtr_t globalSimulation;
     const ControlCenter globalControlCenter;
@@ -41,6 +38,7 @@ public:
     const shared_ptr<Recorder> globalRecorder;
     const time_point<std::chrono::_V2::system_clock, std::chrono::duration<long int, std::ratio<1, 1000000000> >> start;
     const std::chrono::seconds maximumRuntime;
+    const shared_ptr<GraphicalOperations> graphicalOperations;
     void update();
 };
 

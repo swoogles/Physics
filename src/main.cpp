@@ -28,7 +28,6 @@ using std::chrono::time_point;
 
 // GLOBALS
 unique_ptr<FullApplication> globalFullApplication;
-shared_ptr<GraphicalOperations> graphicalOperations;
 
 void idle() {
     globalFullApplication->update();
@@ -72,7 +71,7 @@ int main(int argcp, char **argv) {
     ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
 
     cout << "4" << endl;
-    graphicalOperations = make_shared<GraphicalOperations>(
+    shared_ptr<GraphicalOperations> graphicalOperations = make_shared<GraphicalOperations>(
             idle,
             localSimulation,
             localControlCenter,
@@ -82,11 +81,6 @@ int main(int argcp, char **argv) {
     cout << "5" << endl;
     CenterStage mainDisplay(windowDimensions.width, localRecorder);
     localControlCenter.init(hour_t(properties.dt), windowDimensions.width);
-
-    glutDisplayFunc([]() {
-        graphicalOperations->localDisplay();
-        graphicalOperations->controlDisplay();
-    });
     cout << "6" << endl;
 
     glutMouseFunc(InputFunctions::myMouse);
@@ -97,8 +91,14 @@ int main(int argcp, char **argv) {
     mainDisplay,
     localRecorder,
     start,
-    properties.maximumRunTime
+    properties.maximumRunTime,
+    graphicalOperations
     );
+
+    glutDisplayFunc([]() {
+        globalFullApplication->graphicalOperations->localDisplay();
+        globalFullApplication->graphicalOperations->controlDisplay();
+    });
 
     cout << "7" << endl;
     glutMainLoop();
