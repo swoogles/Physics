@@ -18,4 +18,11 @@ void OpenGlSetup::initialize(WindowDimensions dimensions) {
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(dimensions.xPos,dimensions.yPos);
     glutInitWindowSize(dimensions.width,dimensions.height);
+
+    int main_window = glutCreateWindow("Center Stage");
+    glutSetWindow(main_window);
+    mainDisplayNum = main_window;
+
+    glutMouseFunc(InputFunctions::myMouse);
+    glutKeyboardFunc(InputFunctions::myKey);
 }

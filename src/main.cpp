@@ -71,8 +71,8 @@ int main(int argcp, char **argv) {
             localSimulation,
             localControlCenter,
             observer,
-            windowDimensions
-            );
+            windowDimensions,
+            openGlSetup.mainDisplayNum);
     CenterStage mainDisplay(windowDimensions.width, localRecorder);
     localControlCenter.init(hour_t(properties.dt), windowDimensions.width);
 

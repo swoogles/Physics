@@ -53,24 +53,14 @@ void GraphicalOperations::localDisplay() {
 
 }
 
-GraphicalOperations::GraphicalOperations(
-        void (*callback)(void),
-        SimulationPtr_t simulation,
-        ControlCenter controlCenter,
-        shared_ptr<Observer> observer,
-        WindowDimensions dimensions
-        ): localObserver(observer)
+GraphicalOperations::GraphicalOperations(void (*callback)(void), SimulationPtr_t simulation,
+                                         ControlCenter controlCenter, shared_ptr<Observer> observer,
+                                         WindowDimensions dimensions, int CenterStageWindow) : localObserver(observer)
         , localSimulation(simulation)
         , localControlCenter(controlCenter)
+        , mainDisplayNum(CenterStageWindow)
 
 {
-    int main_window = glutCreateWindow("Center Stage");
-    glutSetWindow(main_window);
-    mainDisplayNum = main_window;
-
-    glutMouseFunc(InputFunctions::myMouse);
-    glutKeyboardFunc(InputFunctions::myKey);
-
     glutIdleFunc(callback);
     glutTimerFunc(1000, myTimer, FPS);
 

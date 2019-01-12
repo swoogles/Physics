@@ -32,6 +32,8 @@ public:
             );
 
     void configureControlWindow(WindowDimensions mainWindowDimensions);
+
+    int mainDisplayNum;
 };
 
 
