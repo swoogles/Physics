@@ -72,12 +72,10 @@ int main(int argcp, char **argv) {
             localControlCenter,
             observer,
             windowDimensions,
-            openGlSetup.mainDisplayNum);
+            openGlSetup.mainDisplayNum,
+            openGlSetup.controlCenterNum);
     CenterStage mainDisplay(windowDimensions.width, localRecorder);
     localControlCenter.init(hour_t(properties.dt), windowDimensions.width);
-
-    glutMouseFunc(InputFunctions::myMouse);
-    glutKeyboardFunc(InputFunctions::myKey);
 
     globalFullApplication = make_unique<FullApplication>(localSimulation,
     localControlCenter,

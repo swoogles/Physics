@@ -25,4 +25,23 @@ void OpenGlSetup::initialize(WindowDimensions dimensions) {
 
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);
+
+    configureControlWindow(dimensions);
+    controlCenterNum = glutCreateWindow("Control Center");
+
+    glutMouseFunc(InputFunctions::myMouse);
+    glutKeyboardFunc(InputFunctions::myKey);
+
 }
+
+void OpenGlSetup::configureControlWindow(WindowDimensions mainWindowDimensions) {
+    int controlWinPosX = mainWindowDimensions.xPos;
+    int controlWinPosY = mainWindowDimensions.yPos + mainWindowDimensions.height + 30;
+    int controlWinWidth = mainWindowDimensions.width;
+    int controlWinHeight = 200;
+
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInitWindowPosition(controlWinPosX,controlWinPosY);
+    glutInitWindowSize(controlWinWidth,controlWinHeight);
+}
+

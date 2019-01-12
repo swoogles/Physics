@@ -27,7 +27,8 @@ class GraphicalOperations {
 public:
     GraphicalOperations(void (*callback)(void), SimulationPtr_t simulation,
                             ControlCenter controlCenter, shared_ptr<Observer> observer,
-                            WindowDimensions dimensions, int CenterStageWindow);
+                            WindowDimensions dimensions, int CenterStageWindow,
+                            int controlCenterWindow);
 
     shared_ptr<Observer> localObserver;
     SimulationPtr_t localSimulation;

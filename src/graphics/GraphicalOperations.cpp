@@ -10,7 +10,7 @@ using std::size_t;
 
 void myTimer(int v) {
     glutPostRedisplay();
-    glutTimerFunc(1000/FPS, myTimer, v);
+    glutTimerFunc(FPS, myTimer, v);
 }
 
 void drawShapeInQuadrant(Quadrant quadrant) {
@@ -18,13 +18,9 @@ void drawShapeInQuadrant(Quadrant quadrant) {
     if (shape != nullptr) Drawing::draw(shape);
 };
 
-void drawingFuncFixed(Quadrant quadrant) {
-    Drawing::draw(quadrant);
-}
-
 void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant) {
     if (controlCenter.shouldRenderOctree()) {
-        drawingFuncFixed(quadrant);
+        Drawing::draw(quadrant);
     }
     drawShapeInQuadrant(quadrant);
 };
@@ -55,30 +51,18 @@ void GraphicalOperations::localDisplay() {
 
 GraphicalOperations::GraphicalOperations(void (*callback)(void), SimulationPtr_t simulation,
                                          ControlCenter controlCenter, shared_ptr<Observer> observer,
-                                         WindowDimensions dimensions, int CenterStageWindow) : localObserver(observer)
+                                         WindowDimensions dimensions, int CenterStageWindow,
+                                         int controlCenterWindow) : localObserver(observer)
         , localSimulation(simulation)
         , localControlCenter(controlCenter)
         , mainDisplayNum(CenterStageWindow)
+        , control_center_num(controlCenterWindow)
 
 {
     glutIdleFunc(callback);
     glutTimerFunc(1000, myTimer, FPS);
 
-    configureControlWindow(dimensions);
-    control_center_num = glutCreateWindow("Control Center");
-
     puInit();
-}
-
-void GraphicalOperations::configureControlWindow(WindowDimensions mainWindowDimensions) {
-    int controlWinPosX = mainWindowDimensions.xPos;
-    int controlWinPosY = mainWindowDimensions.yPos + mainWindowDimensions.height + 30;
-    int controlWinWidth = mainWindowDimensions.width;
-    int controlWinHeight = 200;
-
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowPosition(controlWinPosX,controlWinPosY);
-    glutInitWindowSize(controlWinWidth,controlWinHeight);
 }
 
 void GraphicalOperations::controlDisplay() {
