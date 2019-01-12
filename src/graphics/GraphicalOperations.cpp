@@ -47,6 +47,7 @@ void GraphicalOperations::localDisplay() {
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
 
+    cout << "GraphicalOperations::localDisplay" << endl;
     puDisplay();
     glutSwapBuffers();
     glutPostRedisplay();
@@ -86,6 +87,7 @@ GraphicalOperations::GraphicalOperations(
     configureControlWindow(dimensions);
 
 
+    cout << "GraphicalOperations::GraphicalOperations" << endl;
     puInit();
 }
 
@@ -112,6 +114,7 @@ void GraphicalOperations::controlDisplay() {
     glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    cout << "GraphicalOperations::controlDisplay" << endl;
     puDisplay(control_center_num);
 
     glutSwapBuffers();

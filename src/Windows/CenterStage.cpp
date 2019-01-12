@@ -168,6 +168,7 @@ void CenterStage::exit_cb(puObject * caller) {
 
 CenterStage::CenterStage(int windowWidth, shared_ptr<Recorder> recorder) noexcept:
 localRecorder(recorder)  {
+	cout << "A" << endl;
 	main_menu = new puMenuBar();
 
 	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
@@ -176,6 +177,7 @@ localRecorder(recorder)  {
 	main_menu->add_submenu("File", file_submenu, file_submenu_cb);
 
 	main_menu->close();
+	cout << "B" << endl;
 
 	int curX = windowWidth;
 	int timeHeight = 5;
@@ -183,6 +185,7 @@ localRecorder(recorder)  {
 	int textWidth;
 	int valueWidth;
 	astronomicalTimeGroup = new puGroup(0,0);
+	cout << "C" << endl;
 
 	textWidth = 50;
 	valueWidth = 50;

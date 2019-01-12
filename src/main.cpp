@@ -27,8 +27,6 @@
 using std::chrono::time_point;
 
 // GLOBALS
-SimulationPtr_t globalSimulation;
-
 unique_ptr<FullApplication> globalFullApplication;
 shared_ptr<GraphicalOperations> graphicalOperations;
 
@@ -39,7 +37,7 @@ void idle() {
 int main(int argcp, char **argv) {
     char simulation = argv[2][0];
     PhysicsSandboxProperties properties("simulation.properties");
-    globalSimulation = Simulations::createSimulation(simulation, properties);
+    SimulationPtr_t localSimulation = Simulations::createSimulation(simulation, properties);
 
     auto windowDimensions =
             WindowDimensions(
@@ -66,35 +64,34 @@ int main(int argcp, char **argv) {
 
     //Creates main menu bar
 
+    cout << "1" << endl;
     CenterStage mainDisplay(windowDimensions.width, localRecorder);
 
+    cout << "2" << endl;
     InputFunctions::init(observer);
 
+    cout << "3" << endl;
     ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
 
+    cout << "4" << endl;
     graphicalOperations = make_shared<GraphicalOperations>(
             idle,
-            globalSimulation,
+            localSimulation,
             localControlCenter,
             observer,
             windowDimensions
             );
+    cout << "5" << endl;
     glutDisplayFunc([]() {
         graphicalOperations->localDisplay();
         graphicalOperations->controlDisplay();
     });
+    cout << "6" << endl;
 
-    GraphicalOperations graphicalOperations(
-//            [](){globalFullApplication->update();},
-idle,
-            globalSimulation,
-            localControlCenter,
-            observer,
-            windowDimensions
-    );
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);
 
+    cout << "7" << endl;
     glutMainLoop();
 
 
