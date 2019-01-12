@@ -41,7 +41,7 @@ private:
     void configureControlWindow(WindowDimensions mainWindowDimensions);
 
 
-    const int control_center_num;
+    int control_center_num;
 };
 
 

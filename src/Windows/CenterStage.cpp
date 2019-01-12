@@ -24,54 +24,6 @@ CenterStage::CenterStage() noexcept{
 
 // TODO more good cleanup candidates in this file
 void CenterStage::init(int windowWidth, shared_ptr<Recorder> recorder) {
-	CenterStage::recorder = recorder;
-	main_menu = new puMenuBar();
-
-	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
-	puCallback file_submenu_cb [] = { exit_cb,  NULL,      save_cb, open_cb, NULL};
-
-	main_menu->add_submenu("File", file_submenu, file_submenu_cb);
-
-	main_menu->close();
-
-	int curX = windowWidth;
-	int timeHeight = 5;
-
-	int textWidth;
-	int valueWidth;
-	astronomicalTimeGroup = new puGroup(0,0);
-
-	textWidth = 50;
-	valueWidth = 50;
-	curX -= textWidth+valueWidth;
-	hoursElapsed_label = new puText(curX, timeHeight);
-	hoursElapsed_label->setLabel("Hours:");
-	hoursElapsed_value = new puInput(curX+textWidth, timeHeight, curX+textWidth+valueWidth, timeHeight+20);
-	hoursElapsed_value->setValue("23");
-
-	curX -= textWidth+valueWidth;
-	daysElapsed_label = new puText(curX, timeHeight);
-	daysElapsed_label->setLabel("Days:");
-	daysElapsed_value = new puInput(curX+textWidth, timeHeight, curX+textWidth+valueWidth, timeHeight+20);
-	daysElapsed_value->setValue("324");
-
-
-	curX -= textWidth+valueWidth;
-	yearsElapsed_label = new puText(curX, timeHeight);
-	yearsElapsed_label->setLabel("Years:");
-	yearsElapsed_value = new puInput(curX+textWidth, timeHeight, curX+textWidth+valueWidth, timeHeight+20);
-	yearsElapsed_value->setValue("234");
-
-	curX -= textWidth+valueWidth;
-	milleniaElapsed_label = new puText(curX, timeHeight);
-	milleniaElapsed_label->setLabel("Millenia:");
-	milleniaElapsed_value = new puInput(curX+textWidth, timeHeight, curX+textWidth+valueWidth, timeHeight+20);
-	milleniaElapsed_value->setValue("553");
-
-
-	astronomicalTimeGroup->close();
-	astronomicalTimeGroup->setChildColour(PUCLASS_TEXT, PUCOL_LABEL, 1.0, 1.0, 1.0);
-
 }
 
 void CenterStage::update(double timeElapsed) {
@@ -168,7 +120,7 @@ void CenterStage::exit_cb(puObject * caller) {
 
 CenterStage::CenterStage(int windowWidth, shared_ptr<Recorder> recorder) noexcept:
 localRecorder(recorder)  {
-	cout << "A" << endl;
+	CenterStage::recorder = recorder; // try to eliminate and get exit_cb to use localRecorder
 	main_menu = new puMenuBar();
 
 	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
@@ -177,7 +129,6 @@ localRecorder(recorder)  {
 	main_menu->add_submenu("File", file_submenu, file_submenu_cb);
 
 	main_menu->close();
-	cout << "B" << endl;
 
 	int curX = windowWidth;
 	int timeHeight = 5;
@@ -185,7 +136,6 @@ localRecorder(recorder)  {
 	int textWidth;
 	int valueWidth;
 	astronomicalTimeGroup = new puGroup(0,0);
-	cout << "C" << endl;
 
 	textWidth = 50;
 	valueWidth = 50;
@@ -217,7 +167,6 @@ localRecorder(recorder)  {
 
 	astronomicalTimeGroup->close();
 	astronomicalTimeGroup->setChildColour(PUCLASS_TEXT, PUCOL_LABEL, 1.0, 1.0, 1.0);
-
 
 }
 

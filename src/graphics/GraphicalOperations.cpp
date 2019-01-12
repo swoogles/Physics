@@ -47,7 +47,6 @@ void GraphicalOperations::localDisplay() {
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
 
-    cout << "GraphicalOperations::localDisplay" << endl;
     puDisplay();
     glutSwapBuffers();
     glutPostRedisplay();
@@ -63,7 +62,7 @@ GraphicalOperations::GraphicalOperations(
         ): localObserver(observer)
         , localSimulation(simulation)
         , localControlCenter(controlCenter)
-,control_center_num(glutCreateWindow("Control Center"))
+
         {
     this->openGlInit();
 
@@ -71,6 +70,7 @@ GraphicalOperations::GraphicalOperations(
     char *fakeargv[] = { fakeParam, NULL };
     int fakeargc = 1;
     glutInit( &fakeargc, fakeargv );
+    control_center_num = glutCreateWindow("Control Center");
 
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(dimensions.xPos,dimensions.yPos);
@@ -86,8 +86,6 @@ GraphicalOperations::GraphicalOperations(
 
     configureControlWindow(dimensions);
 
-
-    cout << "GraphicalOperations::GraphicalOperations" << endl;
     puInit();
 }
 
@@ -114,7 +112,6 @@ void GraphicalOperations::controlDisplay() {
     glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    cout << "GraphicalOperations::controlDisplay" << endl;
     puDisplay(control_center_num);
 
     glutSwapBuffers();

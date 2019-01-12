@@ -64,13 +64,11 @@ int main(int argcp, char **argv) {
 
     //Creates main menu bar
 
-    cout << "1" << endl;
-    CenterStage mainDisplay(windowDimensions.width, localRecorder);
-
     cout << "2" << endl;
     InputFunctions::init(observer);
 
     cout << "3" << endl;
+    cout << "properties.dt" << hour_t(properties.dt) << endl;
     ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
 
     cout << "4" << endl;
@@ -82,6 +80,9 @@ int main(int argcp, char **argv) {
             windowDimensions
             );
     cout << "5" << endl;
+    CenterStage mainDisplay(windowDimensions.width, localRecorder);
+    localControlCenter.init(hour_t(properties.dt), windowDimensions.width);
+
     glutDisplayFunc([]() {
         graphicalOperations->localDisplay();
         graphicalOperations->controlDisplay();
@@ -90,6 +91,14 @@ int main(int argcp, char **argv) {
 
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);
+
+    globalFullApplication = make_unique<FullApplication>(localSimulation,
+    localControlCenter,
+    mainDisplay,
+    localRecorder,
+    start,
+    properties.maximumRunTime
+    );
 
     cout << "7" << endl;
     glutMainLoop();
