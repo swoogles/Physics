@@ -15,7 +15,7 @@ bool ControlCenter::renderOctree = false;
 
 // TODO Is there any better candidate for breaking things apart than this functino?
 void ControlCenter::init(duration dt, int windowWidth) {
-  ControlCenter::dt = dt;
+  this->dt = dt;
   showingRunTime = false;
 
   int curHeight = 200;
@@ -139,11 +139,11 @@ void ControlCenter::rotStop(puObject *) {
     Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
 }
 
-bool ControlCenter::isPaused() {
+bool ControlCenter::isPaused() const {
   return ControlCenter::paused;
 }
 
-duration ControlCenter::getDt() {
+duration ControlCenter::getDt() const {
   return ControlCenter::dt;
 }
 
@@ -153,5 +153,12 @@ void ControlCenter::toggleOctreeRendering(puObject *) {
 
 bool ControlCenter::shouldRenderOctree() {
     return renderOctree;
+}
+
+ControlCenter::ControlCenter(duration dt, int windowWidth): localDt(dt) {
+}
+
+ControlCenter::ControlCenter() {
+
 }
 

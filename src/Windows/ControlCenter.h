@@ -16,6 +16,8 @@
  */
 class ControlCenter {
 public:
+	ControlCenter();
+	ControlCenter(duration dt, int windowWidth);
 	void init(duration dt, int windowWidth);
   inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
@@ -44,12 +46,13 @@ public:
 	//! Turn AutoScaling on or off
 	static void flipAutoScaling(puObject * caller);
 
-	bool isPaused();
-	duration getDt();
+	bool isPaused() const;
+	duration getDt() const;
 	bool shouldRenderOctree();
 private:
 	static bool paused;
 	static duration dt;
+	duration localDt;
 	static bool renderOctree ;
 
 	puGroup * runtime_group;

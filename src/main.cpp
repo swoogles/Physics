@@ -17,6 +17,8 @@
 #include "Physics/Simulations.h"
 #include "Physics/PhysicsSandboxProperties.h"
 
+#include "FullApplication.h"
+
 #include <lib/pstream.h>
 
 #include <chrono>
@@ -25,52 +27,16 @@
 using std::chrono::time_point;
 
 // GLOBALS
-SimulationPtr_t globalSimulation;
-
-ControlCenter globalControlCenter;
-CenterStage globalMainDisplay;
-
-shared_ptr<Recorder> globalRecorder;
-
-time_point start = std::chrono::system_clock::now();
-
-std::chrono::seconds maximumRuntime(60);
+unique_ptr<FullApplication> globalFullApplication;
 
 void idle() {
-  if (! globalControlCenter.isPaused() ) {
-    auto dt = globalControlCenter.getDt();
-    globalSimulation->update(dt);
-    globalMainDisplay.update(dt.value());
-
-    if ( globalRecorder ) {
-      globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-    }
-  }
-
-  // Should just directly call Observer::getCurObserverInstance()
-  auto observer = Observer::getCurObserver();
-  observer->update();
-
-  // TODO This would be more valuable if it only tried to include the largest N items.
-  // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
-  observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
-
-  time_point end = std::chrono::system_clock::now();
-
-  std::chrono::duration<double> elapsed_seconds = end-start;
-  if ( elapsed_seconds > (maximumRuntime)) {
-    if ( globalRecorder ) {
-        globalRecorder->createVideo();
-    }
-    exit(0);
-  }
+    globalFullApplication->update();
 }
 
 int main(int argcp, char **argv) {
     char simulation = argv[2][0];
     PhysicsSandboxProperties properties("simulation.properties");
-    globalSimulation = Simulations::createSimulation(simulation, properties);
-    maximumRuntime = properties.maximumRunTime;
+    SimulationPtr_t localSimulation = Simulations::createSimulation(simulation, properties);
 
     auto windowDimensions =
             WindowDimensions(
@@ -80,11 +46,13 @@ int main(int argcp, char **argv) {
                     1280
             );
 
+    time_point start = std::chrono::system_clock::now();
+    shared_ptr<Recorder> localRecorder;
     char recording = argv[1][0];
     if ( recording == 'r') {
-        globalRecorder = make_shared<Recorder>(std::chrono::system_clock::to_time_t(start));
+        localRecorder = make_shared<Recorder>(std::chrono::system_clock::to_time_t(start));
     } else if (recording == 'x') {
-        globalRecorder = nullptr;
+        localRecorder = nullptr;
     } else {
         cout << "Bad recording value! Must be 'x' or 'r'" << endl;
         exit(1);
@@ -92,22 +60,49 @@ int main(int argcp, char **argv) {
 
     auto observer = Observer::init(windowDimensions);
 
-    GraphicalOperations graphicalOperations(
-            idle,
-            globalSimulation,
-            globalControlCenter,
-            observer,
-            windowDimensions
-    );
 
     //Creates main menu bar
-    globalMainDisplay.init(windowDimensions.width, globalRecorder);
 
+    cout << "2" << endl;
     InputFunctions::init(observer);
 
-    globalControlCenter.init(hour_t(properties.dt), windowDimensions.width);
+    cout << "3" << endl;
+    cout << "properties.dt" << hour_t(properties.dt) << endl;
+    ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
 
-    graphicalOperations.postSimulationGlInit();
+    cout << "4" << endl;
+    shared_ptr<GraphicalOperations> graphicalOperations = make_shared<GraphicalOperations>(
+            idle,
+            localSimulation,
+            localControlCenter,
+            observer,
+            windowDimensions
+            );
+    cout << "5" << endl;
+    CenterStage mainDisplay(windowDimensions.width, localRecorder);
+    localControlCenter.init(hour_t(properties.dt), windowDimensions.width);
+    cout << "6" << endl;
+
+    glutMouseFunc(InputFunctions::myMouse);
+    glutKeyboardFunc(InputFunctions::myKey);
+
+    globalFullApplication = make_unique<FullApplication>(localSimulation,
+    localControlCenter,
+    mainDisplay,
+    localRecorder,
+    start,
+    properties.maximumRunTime,
+    graphicalOperations
+    );
+
+    glutDisplayFunc([]() {
+        globalFullApplication->graphicalOperations->localDisplay();
+        globalFullApplication->graphicalOperations->controlDisplay();
+    });
+
+    cout << "7" << endl;
+    glutMainLoop();
+
 
     return 0;
 }

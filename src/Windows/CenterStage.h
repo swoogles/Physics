@@ -21,6 +21,7 @@ class CenterStage {
 public:
 	//! Unnecessary constructor for entirely static class
 	CenterStage() noexcept;
+	CenterStage(int windowWidth, shared_ptr<Recorder> recorder) noexcept;
 
     /*! \brief Initializes values for the Main Window interface
        *
@@ -62,6 +63,7 @@ public:
 	static void exit_cb(puObject *);
 private:
     static shared_ptr<Recorder> recorder;
+	shared_ptr<Recorder> localRecorder;
 	puMenuBar * main_menu;
 	puaFileSelector * open_selector;
 	puaFileSelector * save_selector;
