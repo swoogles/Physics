@@ -70,7 +70,6 @@ GraphicalOperations::GraphicalOperations(
     char *fakeargv[] = { fakeParam, NULL };
     int fakeargc = 1;
     glutInit( &fakeargc, fakeargv );
-    control_center_num = glutCreateWindow("Control Center");
 
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(dimensions.xPos,dimensions.yPos);
@@ -85,6 +84,7 @@ GraphicalOperations::GraphicalOperations(
     glutTimerFunc(1000, myTimer, FPS);
 
     configureControlWindow(dimensions);
+    control_center_num = glutCreateWindow("Control Center");
 
     puInit();
 }
