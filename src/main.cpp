@@ -4,6 +4,7 @@
  */
 
 #include "graphics/GraphicalOperations.h"
+#include "graphics/OpenGlSetup.h"
 #include "graphics/Recorder.h"
 
 //GUI stuff
@@ -63,6 +64,8 @@ int main(int argcp, char **argv) {
 
     ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
 
+    OpenGlSetup openGlSetup;
+    openGlSetup.initialize(windowDimensions);
     GraphicalOperations graphicalOperations(
             idle,
             localSimulation,

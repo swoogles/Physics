@@ -13,7 +13,6 @@ void myTimer(int v) {
     glutTimerFunc(1000/FPS, myTimer, v);
 }
 
-
 void drawShapeInQuadrant(Quadrant quadrant) {
     auto shape = quadrant.getShapeInQuadrant();
     if (shape != nullptr) Drawing::draw(shape);
@@ -64,17 +63,7 @@ GraphicalOperations::GraphicalOperations(
         , localSimulation(simulation)
         , localControlCenter(controlCenter)
 
-        {
-    this->openGlInit();
-
-    char fakeParam[] = "fake";
-    char *fakeargv[] = { fakeParam, NULL };
-    int fakeargc = 1;
-    glutInit( &fakeargc, fakeargv );
-
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowPosition(dimensions.xPos,dimensions.yPos);
-    glutInitWindowSize(dimensions.width,dimensions.height);
+{
     int main_window = glutCreateWindow("Center Stage");
     glutSetWindow(main_window);
     mainDisplayNum = main_window;
@@ -100,13 +89,6 @@ void GraphicalOperations::configureControlWindow(WindowDimensions mainWindowDime
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(controlWinPosX,controlWinPosY);
     glutInitWindowSize(controlWinWidth,controlWinHeight);
-}
-
-void GraphicalOperations::openGlInit() {
-    glViewport(-WW,WW,-WH,WH);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 }
 
 void GraphicalOperations::controlDisplay() {

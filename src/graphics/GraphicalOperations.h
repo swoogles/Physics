@@ -36,8 +36,6 @@ public:
 private:
     static void fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant);
 
-    void openGlInit();
-
     void configureControlWindow(WindowDimensions mainWindowDimensions);
 
 
