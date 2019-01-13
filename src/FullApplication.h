@@ -28,14 +28,14 @@
 class FullApplication {
 public:
     FullApplication(const SimulationPtr_t &simulation, ControlCenter controlCenter,
-                    CenterStage mainDisplay, shared_ptr<Recorder> recorder,
+                    CenterStage centerStage, shared_ptr<Recorder> recorder,
                     time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
                     chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations);
 
-    const SimulationPtr_t globalSimulation;
-    const ControlCenter globalControlCenter;
-    CenterStage globalMainDisplay;
-    const shared_ptr<Recorder> globalRecorder;
+    const SimulationPtr_t simulation;
+    const ControlCenter controlCenter;
+    CenterStage centerStage;
+    const shared_ptr<Recorder> recorder;
     const time_point<std::chrono::_V2::system_clock, std::chrono::duration<long int, std::ratio<1, 1000000000> >> start;
     const std::chrono::seconds maximumRuntime;
     // TODO reinstate const-ness

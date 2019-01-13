@@ -4,24 +4,24 @@
 
 #include "FullApplication.h"
 
-FullApplication::FullApplication(const SimulationPtr_t &simulation, const ControlCenter controlCenter,
-                                 const CenterStage mainDisplay, const shared_ptr<Recorder> recorder,
-                                 const time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
-                                 const chrono::seconds maximumRuntime, const GraphicalOperations graphicalOperations)
-        : globalSimulation(simulation), globalControlCenter(controlCenter),
-          globalMainDisplay(mainDisplay), globalRecorder(recorder), start(start),
+FullApplication::FullApplication(const SimulationPtr_t &simulation, ControlCenter controlCenter,
+                                 CenterStage mainDisplay, shared_ptr<Recorder> recorder,
+                                 time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
+                                 chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations)
+        : simulation(simulation), controlCenter(controlCenter),
+          centerStage(mainDisplay), recorder(recorder), start(start),
           maximumRuntime(maximumRuntime),
           graphicalOperations(graphicalOperations){}
 
 void FullApplication::update() {
-        if (! globalControlCenter.isPaused() ) {
-            auto dt = globalControlCenter.getDt();
-            globalSimulation->update(dt);
-            globalMainDisplay.update(dt.value());
+        if (! controlCenter.isPaused() ) {
+            auto dt = controlCenter.getDt();
+            simulation->update(dt);
+            centerStage.update(dt.value());
 
-            if ( globalRecorder ) {
+            if ( recorder ) {
                 auto dimensions = graphicalOperations.currentDimensions();
-                globalRecorder->captureThisFrame(dimensions.width, dimensions.height);
+                recorder->captureThisFrame(dimensions.width, dimensions.height);
             }
         }
 
@@ -31,14 +31,14 @@ void FullApplication::update() {
 
         // TODO This would be more valuable if it only tried to include the largest N items.
         // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
-        observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
+        observer->calcMinPullback(simulation->getXYMinsAndMaxes());
 
         time_point end = std::chrono::system_clock::now();
 
         std::chrono::duration<double> elapsed_seconds = end-start;
         if ( elapsed_seconds > (maximumRuntime)) {
-            if ( globalRecorder ) {
-                globalRecorder->createVideo();
+            if ( recorder ) {
+                recorder->createVideo();
             }
             exit(0);
         }
