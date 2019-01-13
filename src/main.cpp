@@ -20,17 +20,12 @@
 
 #include "FullApplication.h"
 
-
 #include <chrono>
 #include <iomanip>
 
 using std::chrono::time_point;
 
 unique_ptr<FullApplication> globalFullApplication;
-
-void idle() {
-    globalFullApplication->update();
-}
 
 int main(int argcp, char **argv) {
     char simulation = argv[2][0];
@@ -62,7 +57,10 @@ int main(int argcp, char **argv) {
     InputFunctions::init(observer);
 
     OpenGlSetup openGlSetup{};
-    openGlSetup.initialize(windowDimensions, idle);
+    openGlSetup.initialize(
+        windowDimensions,
+        []() { globalFullApplication->update(); }
+    );
 
     ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
 
