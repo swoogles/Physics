@@ -1,17 +1,12 @@
+#include <utility>
+
 //
 // Created by bfrasure on 11/17/18.
 //
 
 #include "GraphicalOperations.h"
 
-#define FPS 1
-
 using std::size_t;
-
-void myTimer(int v) {
-    glutPostRedisplay();
-    glutTimerFunc(FPS, myTimer, v);
-}
 
 void drawShapeInQuadrant(Quadrant quadrant) {
     auto shape = quadrant.getShapeInQuadrant();
@@ -49,21 +44,14 @@ void GraphicalOperations::localDisplay() {
 
 }
 
-GraphicalOperations::GraphicalOperations(void (*callback)(void), SimulationPtr_t simulation,
-                                         ControlCenter controlCenter, shared_ptr<Observer> observer,
-                                         WindowDimensions dimensions, int CenterStageWindow,
-                                         int controlCenterWindow) : localObserver(observer)
+GraphicalOperations::GraphicalOperations(SimulationPtr_t simulation, ControlCenter controlCenter,
+                                         shared_ptr<Observer> observer, int CenterStageWindow,
+                                         int controlCenterWindow) : localObserver(std::move(observer))
         , localSimulation(simulation)
         , localControlCenter(controlCenter)
         , mainDisplayNum(CenterStageWindow)
         , control_center_num(controlCenterWindow)
-
-{
-    glutIdleFunc(callback);
-    glutTimerFunc(1000, myTimer, FPS);
-
-    puInit();
-}
+{ }
 
 void GraphicalOperations::controlDisplay() {
     glutSetWindow(control_center_num);
@@ -74,5 +62,10 @@ void GraphicalOperations::controlDisplay() {
 
     glutSwapBuffers();
     glutPostRedisplay();
+}
+
+void GraphicalOperations::fullDisplay() {
+    localDisplay();
+    controlDisplay();
 }
 

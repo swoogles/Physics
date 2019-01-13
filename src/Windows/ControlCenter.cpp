@@ -15,6 +15,68 @@ bool ControlCenter::renderOctree = false;
 
 // TODO Is there any better candidate for breaking things apart than this functino?
 void ControlCenter::init(duration dt, int windowWidth) {
+}
+
+void ControlCenter::flipAutoScaling(puObject * caller) {
+  Observer::getCurObserverRef().toggleAutoScaling();
+}
+
+void ControlCenter::alterDT(puObject * caller) {
+  if (strcmp(caller->getLegend(), "Slower") == 0) {
+    ControlCenter::dt /= 2;
+  }
+
+  if (strcmp(caller->getLegend(), "Faster") == 0) {
+    ControlCenter::dt *= 2;
+  }
+
+}
+
+void ControlCenter::pause_cb(puObject * caller) {
+  paused = !paused;
+}
+
+void ControlCenter::rotRight(puObject *) {
+  PhysicalVector angVelocity(0,.5,0);
+    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+}
+
+void ControlCenter::rotLeft(puObject *) {
+  PhysicalVector angVelocity(0,-.5,0);
+    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+}
+
+void ControlCenter::rotUp(puObject *) {
+  PhysicalVector angVelocity(+.5,0,0);
+    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+}
+void ControlCenter::rotDown(puObject *) {
+  PhysicalVector angVelocity(-.5,0,0);
+    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+}
+
+void ControlCenter::rotStop(puObject *) {
+  PhysicalVector angVelocity(0,0,0);
+    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+}
+
+bool ControlCenter::isPaused() const {
+  return ControlCenter::paused;
+}
+
+duration ControlCenter::getDt() const {
+  return ControlCenter::dt;
+}
+
+void ControlCenter::toggleOctreeRendering(puObject *) {
+    renderOctree = !renderOctree;
+}
+
+bool ControlCenter::shouldRenderOctree() {
+    return renderOctree;
+}
+
+ControlCenter::ControlCenter(duration dt, int windowWidth): localDt(dt) {
   this->dt = dt;
   showingRunTime = false;
 
@@ -94,68 +156,6 @@ void ControlCenter::init(duration dt, int windowWidth) {
   renderOctree_button->clrValue();
 
   runtime_group->close();
-}
-
-void ControlCenter::flipAutoScaling(puObject * caller) {
-  Observer::getCurObserverRef().toggleAutoScaling();
-}
-
-void ControlCenter::alterDT(puObject * caller) {
-  if (strcmp(caller->getLegend(), "Slower") == 0) {
-    ControlCenter::dt /= 2;
-  }
-
-  if (strcmp(caller->getLegend(), "Faster") == 0) {
-    ControlCenter::dt *= 2;
-  }
-
-}
-
-void ControlCenter::pause_cb(puObject * caller) {
-  paused = !paused;
-}
-
-void ControlCenter::rotRight(puObject *) {
-  PhysicalVector angVelocity(0,.5,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
-}
-
-void ControlCenter::rotLeft(puObject *) {
-  PhysicalVector angVelocity(0,-.5,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
-}
-
-void ControlCenter::rotUp(puObject *) {
-  PhysicalVector angVelocity(+.5,0,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
-}
-void ControlCenter::rotDown(puObject *) {
-  PhysicalVector angVelocity(-.5,0,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
-}
-
-void ControlCenter::rotStop(puObject *) {
-  PhysicalVector angVelocity(0,0,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
-}
-
-bool ControlCenter::isPaused() const {
-  return ControlCenter::paused;
-}
-
-duration ControlCenter::getDt() const {
-  return ControlCenter::dt;
-}
-
-void ControlCenter::toggleOctreeRendering(puObject *) {
-    renderOctree = !renderOctree;
-}
-
-bool ControlCenter::shouldRenderOctree() {
-    return renderOctree;
-}
-
-ControlCenter::ControlCenter(duration dt, int windowWidth): localDt(dt) {
 }
 
 ControlCenter::ControlCenter() {

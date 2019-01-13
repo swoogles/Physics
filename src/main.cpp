@@ -20,7 +20,6 @@
 
 #include "FullApplication.h"
 
-#include <lib/pstream.h>
 
 #include <chrono>
 #include <iomanip>
@@ -62,37 +61,34 @@ int main(int argcp, char **argv) {
 
     InputFunctions::init(observer);
 
+    OpenGlSetup openGlSetup{};
+    openGlSetup.initialize(windowDimensions, idle);
+
     ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
 
-    OpenGlSetup openGlSetup;
-    openGlSetup.initialize(windowDimensions);
+    CenterStage mainDisplay(windowDimensions.width, localRecorder);
+
     GraphicalOperations graphicalOperations(
-            idle,
             localSimulation,
             localControlCenter,
             observer,
-            windowDimensions,
             openGlSetup.mainDisplayNum,
             openGlSetup.controlCenterNum);
-    CenterStage mainDisplay(windowDimensions.width, localRecorder);
-    localControlCenter.init(hour_t(properties.dt), windowDimensions.width);
 
     globalFullApplication = make_unique<FullApplication>(localSimulation,
-    localControlCenter,
-    mainDisplay,
-    localRecorder,
-    start,
-    properties.maximumRunTime,
-    graphicalOperations
+                                                         localControlCenter,
+                                                         mainDisplay,
+                                                         localRecorder,
+                                                         start,
+                                                         properties.maximumRunTime,
+                                                         graphicalOperations
     );
 
     glutDisplayFunc([]() {
-        globalFullApplication->graphicalOperations.localDisplay();
-        globalFullApplication->graphicalOperations.controlDisplay();
+        globalFullApplication->graphicalOperations.fullDisplay();
     });
 
     glutMainLoop();
-
 
     return 0;
 }

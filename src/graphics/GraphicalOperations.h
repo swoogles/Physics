@@ -25,9 +25,8 @@
 
 class GraphicalOperations {
 public:
-    GraphicalOperations(void (*callback)(void), SimulationPtr_t simulation,
-                            ControlCenter controlCenter, shared_ptr<Observer> observer,
-                            WindowDimensions dimensions, int CenterStageWindow,
+    GraphicalOperations(SimulationPtr_t simulation, ControlCenter controlCenter,
+                            shared_ptr<Observer> observer, int CenterStageWindow,
                             int controlCenterWindow);
 
     shared_ptr<Observer> localObserver;
@@ -35,6 +34,7 @@ public:
     ControlCenter localControlCenter;
     void localDisplay();
     void controlDisplay();
+    void fullDisplay();
 private:
     static void fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant);
 

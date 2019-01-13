@@ -25,11 +25,11 @@
 #define WW 5
 #define WH 5
 
+#define FPS 1
+
 class OpenGlSetup {
 public:
-    void initialize(
-            WindowDimensions dimensions
-            );
+    void initialize(WindowDimensions dimensions, void (*idleFunction)(void));
 
     void configureControlWindow(WindowDimensions mainWindowDimensions);
 

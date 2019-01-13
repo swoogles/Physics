@@ -4,7 +4,13 @@
 
 #include "OpenGlSetup.h"
 
-void OpenGlSetup::initialize(WindowDimensions dimensions) {
+void myTimer(int v) {
+    glutPostRedisplay();
+    glutTimerFunc(FPS, myTimer, v);
+}
+
+
+void OpenGlSetup::initialize(WindowDimensions dimensions, void (*idleFunction)(void)) {
     glViewport(-WW,WW,-WH,WH);
 
     glMatrixMode(GL_MODELVIEW);
@@ -32,6 +38,10 @@ void OpenGlSetup::initialize(WindowDimensions dimensions) {
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);
 
+    glutIdleFunc(idleFunction);
+    glutTimerFunc(1000, myTimer, FPS);
+
+    puInit();
 }
 
 void OpenGlSetup::configureControlWindow(WindowDimensions mainWindowDimensions) {
