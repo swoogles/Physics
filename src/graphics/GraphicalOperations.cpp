@@ -73,3 +73,12 @@ void GraphicalOperations::fullDisplay() {
     controlDisplay();
 }
 
+WindowDimensions GraphicalOperations::currentDimensions() {
+    return WindowDimensions(
+            glutGet(GLUT_WINDOW_X),
+            glutGet(GLUT_WINDOW_Y),
+            glutGet(GLUT_WINDOW_HEIGHT),
+            glutGet(GLUT_WINDOW_WIDTH)
+            );
+}
+

@@ -35,6 +35,7 @@ public:
     void localDisplay();
     void controlDisplay();
     void fullDisplay();
+    WindowDimensions currentDimensions();
 private:
     static void fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant);
 

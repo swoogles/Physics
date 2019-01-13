@@ -27,10 +27,10 @@
 
 class FullApplication {
 public:
-    FullApplication(const SimulationPtr_t &simulation, const ControlCenter controlCenter,
-                    const CenterStage mainDisplay, const shared_ptr<Recorder> recorder,
-                    const time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
-                    const chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations);
+    FullApplication(const SimulationPtr_t &simulation, ControlCenter controlCenter,
+                    CenterStage mainDisplay, shared_ptr<Recorder> recorder,
+                    time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
+                    chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations);
 
     const SimulationPtr_t globalSimulation;
     const ControlCenter globalControlCenter;

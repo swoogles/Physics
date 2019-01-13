@@ -7,7 +7,7 @@
 FullApplication::FullApplication(const SimulationPtr_t &simulation, const ControlCenter controlCenter,
                                  const CenterStage mainDisplay, const shared_ptr<Recorder> recorder,
                                  const time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
-                                 const chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations)
+                                 const chrono::seconds maximumRuntime, const GraphicalOperations graphicalOperations)
         : globalSimulation(simulation), globalControlCenter(controlCenter),
           globalMainDisplay(mainDisplay), globalRecorder(recorder), start(start),
           maximumRuntime(maximumRuntime),
@@ -20,7 +20,8 @@ void FullApplication::update() {
             globalMainDisplay.update(dt.value());
 
             if ( globalRecorder ) {
-                globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+                auto dimensions = graphicalOperations.currentDimensions();
+                globalRecorder->captureThisFrame(dimensions.width, dimensions.height);
             }
         }
 
