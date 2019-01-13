@@ -52,14 +52,11 @@ int main(int argcp, char **argv) {
         exit(1);
     }
 
-    auto observer = Observer::init(windowDimensions);
-
-    InputFunctions::init(observer);
-
+    auto idleFunction = []() { globalFullApplication->update(); };
     OpenGlSetup openGlSetup{};
     openGlSetup.initialize(
         windowDimensions,
-        []() { globalFullApplication->update(); }
+        idleFunction
     );
 
     ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
@@ -69,9 +66,9 @@ int main(int argcp, char **argv) {
     GraphicalOperations graphicalOperations(
             localSimulation,
             localControlCenter,
-            observer,
             openGlSetup.mainDisplayNum,
-            openGlSetup.controlCenterNum);
+            openGlSetup.controlCenterNum,
+            windowDimensions);
 
     globalFullApplication = make_unique<FullApplication>(localSimulation,
                                                          localControlCenter,

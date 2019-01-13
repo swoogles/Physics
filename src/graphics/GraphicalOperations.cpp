@@ -45,13 +45,17 @@ void GraphicalOperations::localDisplay() {
 }
 
 GraphicalOperations::GraphicalOperations(SimulationPtr_t simulation, ControlCenter controlCenter,
-                                         shared_ptr<Observer> observer, int CenterStageWindow,
-                                         int controlCenterWindow) : localObserver(std::move(observer))
-        , localSimulation(simulation)
+                                         int CenterStageWindow, int controlCenterWindow,
+                                         WindowDimensions windowDimensions)
+        : localSimulation(simulation)
         , localControlCenter(controlCenter)
         , mainDisplayNum(CenterStageWindow)
         , control_center_num(controlCenterWindow)
-{ }
+{
+    auto observer = Observer::init(windowDimensions);
+    InputFunctions::init(observer);
+    localObserver = observer;
+}
 
 void GraphicalOperations::controlDisplay() {
     glutSetWindow(control_center_num);
