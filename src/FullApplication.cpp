@@ -4,11 +4,11 @@
 
 #include "FullApplication.h"
 
-FullApplication::FullApplication(const SimulationPtr_t &simulation, ControlCenter controlCenter,
-                                 CenterStage mainDisplay, shared_ptr<Recorder> recorder,
+FullApplication::FullApplication(const SimulationPtr_t &simulation, CenterStage mainDisplay,
+                                 shared_ptr<Recorder> recorder,
                                  time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
                                  chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations)
-        : simulation(simulation), controlCenter(controlCenter),
+        : simulation(simulation), controlCenter(graphicalOperations.localControlCenter),
           centerStage(mainDisplay), recorder(recorder), start(start),
           maximumRuntime(maximumRuntime),
           graphicalOperations(graphicalOperations){}

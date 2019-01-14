@@ -11,9 +11,6 @@
 #include "Windows/ControlCenter.h"
 #include "Windows/CenterStage.h"
 
-//Observers
-#include "Observation/Observer.h"
-
 //Physics
 #include "Physics/Simulations.h"
 #include "Physics/PhysicsSandboxProperties.h"
@@ -71,7 +68,6 @@ int main(int argcp, char **argv) {
             windowDimensions);
 
     globalFullApplication = make_unique<FullApplication>(localSimulation,
-                                                         localControlCenter,
                                                          mainDisplay,
                                                          localRecorder,
                                                          start,
