@@ -58,7 +58,7 @@ int main(int argcp, char **argv) {
 
     ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
 
-    CenterStage mainDisplay(windowDimensions.width, localRecorder);
+    CenterStage centerStage(windowDimensions.width, localRecorder);
 
     GraphicalOperations graphicalOperations(
             localSimulation,
@@ -68,7 +68,7 @@ int main(int argcp, char **argv) {
             windowDimensions);
 
     globalFullApplication = make_unique<FullApplication>(localSimulation,
-                                                         mainDisplay,
+                                                         centerStage,
                                                          localRecorder,
                                                          start,
                                                          properties.maximumRunTime,
