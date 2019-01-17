@@ -24,6 +24,19 @@ using std::chrono::time_point;
 
 unique_ptr<FullApplication> globalFullApplication;
 
+shared_ptr<Recorder> parseRecordingParameters(char **argv, std::time_t  start) {
+    char recording = argv[1][0];
+    if ( recording == 'r') {
+        return make_shared<Recorder>(start);
+    } else if (recording == 'x') {
+        return nullptr;
+    } else {
+        cout << "Bad recording value! Must be 'x' or 'r'" << endl;
+        exit(1);
+    }
+
+}
+
 int main(int argcp, char **argv) {
     char simulationParameter = argv[2][0];
     PhysicsSandboxProperties properties("simulation.properties");
@@ -38,16 +51,7 @@ int main(int argcp, char **argv) {
             );
 
     time_point start = std::chrono::system_clock::now();
-    shared_ptr<Recorder> recorder;
-    char recording = argv[1][0];
-    if ( recording == 'r') {
-        recorder = make_shared<Recorder>(std::chrono::system_clock::to_time_t(start));
-    } else if (recording == 'x') {
-        recorder = nullptr;
-    } else {
-        cout << "Bad recording value! Must be 'x' or 'r'" << endl;
-        exit(1);
-    }
+    shared_ptr<Recorder> recorder = parseRecordingParameters(argv, std::chrono::system_clock::to_time_t(start));
 
     auto idleFunction = []() { globalFullApplication->update(); };
     OpenGlSetup openGlSetup{};
