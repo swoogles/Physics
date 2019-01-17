@@ -25,9 +25,9 @@ using std::chrono::time_point;
 unique_ptr<FullApplication> globalFullApplication;
 
 int main(int argcp, char **argv) {
-    char simulation = argv[2][0];
+    char simulationParameter = argv[2][0];
     PhysicsSandboxProperties properties("simulation.properties");
-    SimulationPtr_t localSimulation = Simulations::createSimulation(simulation, properties);
+    SimulationPtr_t simulation = Simulations::createSimulation(simulationParameter, properties);
 
     auto windowDimensions =
             WindowDimensions(
@@ -38,12 +38,12 @@ int main(int argcp, char **argv) {
             );
 
     time_point start = std::chrono::system_clock::now();
-    shared_ptr<Recorder> localRecorder;
+    shared_ptr<Recorder> recorder;
     char recording = argv[1][0];
     if ( recording == 'r') {
-        localRecorder = make_shared<Recorder>(std::chrono::system_clock::to_time_t(start));
+        recorder = make_shared<Recorder>(std::chrono::system_clock::to_time_t(start));
     } else if (recording == 'x') {
-        localRecorder = nullptr;
+        recorder = nullptr;
     } else {
         cout << "Bad recording value! Must be 'x' or 'r'" << endl;
         exit(1);
@@ -56,20 +56,20 @@ int main(int argcp, char **argv) {
         idleFunction
     );
 
-    ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
+    ControlCenter controlCenter(hour_t(properties.dt), windowDimensions.width);
 
-    CenterStage centerStage(windowDimensions.width, localRecorder);
+    CenterStage centerStage(windowDimensions.width, recorder);
 
     GraphicalOperations graphicalOperations(
-            localSimulation,
-            localControlCenter,
+            simulation,
+            controlCenter,
             openGlSetup.mainDisplayNum,
             openGlSetup.controlCenterNum,
             windowDimensions);
 
-    globalFullApplication = make_unique<FullApplication>(localSimulation,
+    globalFullApplication = make_unique<FullApplication>(simulation,
                                                          centerStage,
-                                                         localRecorder,
+                                                         recorder,
                                                          start,
                                                          properties.maximumRunTime,
                                                          graphicalOperations
