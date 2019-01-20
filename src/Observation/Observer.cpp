@@ -4,7 +4,7 @@ std::vector<shared_ptr<Observer>> Observer::observers(0);
 unsigned int Observer::curObserver;
 
 shared_ptr<Observer> Observer::init(WindowDimensions windowDimensions) {
-    auto initialObserver = make_shared<Observer>(windowDimensions);
+    shared_ptr<Observer> initialObserver = make_shared<Observer>(windowDimensions);
     observers.push_back(initialObserver);
     curObserver = observers.size() - 1;
     return initialObserver;
@@ -50,10 +50,6 @@ void Observer::setAutoScaling(bool shouldScale) {
 
 void Observer::toggleAutoScaling() {
     autoScale = !autoScale;
-}
-
-shared_ptr<Observer> Observer::getCurObserver() {
-    return observers.at(curObserver);
 }
 
 Observer &Observer::getCurObserverRef() {

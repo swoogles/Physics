@@ -4,14 +4,11 @@
  */
 
 #include "graphics/GraphicalOperations.h"
-#include "graphics/Recorder.h"
+#include "graphics/OpenGlSetup.h"
 
 //GUI stuff
 #include "Windows/ControlCenter.h"
 #include "Windows/CenterStage.h"
-
-//Observers
-#include "Observation/Observer.h"
 
 //Physics
 #include "Physics/Simulations.h"
@@ -19,24 +16,29 @@
 
 #include "FullApplication.h"
 
-#include <lib/pstream.h>
-
 #include <chrono>
 #include <iomanip>
 
 using std::chrono::time_point;
 
-// GLOBALS
 unique_ptr<FullApplication> globalFullApplication;
 
-void idle() {
-    globalFullApplication->update();
+bool parseRecordingParameters(char **argv, std::time_t  start) {
+    char recording = argv[1][0];
+    if ( recording == 'r') {
+        return true;
+    } else if (recording == 'x') {
+        return false;
+    } else {
+        cout << "Bad recording value! Must be 'x' or 'r'" << endl;
+        exit(1);
+    }
 }
 
 int main(int argcp, char **argv) {
-    char simulation = argv[2][0];
+    char simulationParameter = argv[2][0];
     PhysicsSandboxProperties properties("simulation.properties");
-    SimulationPtr_t localSimulation = Simulations::createSimulation(simulation, properties);
+    Simulation simulation = Simulations::createSimulation(simulationParameter, properties);
 
     auto windowDimensions =
             WindowDimensions(
@@ -47,62 +49,40 @@ int main(int argcp, char **argv) {
             );
 
     time_point start = std::chrono::system_clock::now();
-    shared_ptr<Recorder> localRecorder;
-    char recording = argv[1][0];
-    if ( recording == 'r') {
-        localRecorder = make_shared<Recorder>(std::chrono::system_clock::to_time_t(start));
-    } else if (recording == 'x') {
-        localRecorder = nullptr;
-    } else {
-        cout << "Bad recording value! Must be 'x' or 'r'" << endl;
-        exit(1);
-    }
+    bool shouldRecord = parseRecordingParameters(argv, std::chrono::system_clock::to_time_t(start));
 
-    auto observer = Observer::init(windowDimensions);
+    auto idleFunction = []() { globalFullApplication->update(); };
+    OpenGlSetup openGlSetup{};
+    openGlSetup.initialize(
+        windowDimensions,
+        idleFunction
+    );
 
+    ControlCenter controlCenter(hour_t(properties.dt), windowDimensions.width);
 
-    //Creates main menu bar
+    auto outputTime = std::chrono::system_clock::to_time_t(start);
+    CenterStage centerStage(windowDimensions.width, outputTime);
 
-    cout << "2" << endl;
-    InputFunctions::init(observer);
+    GraphicalOperations graphicalOperations(
+            simulation,
+            controlCenter,
+            openGlSetup.mainDisplayNum,
+            openGlSetup.controlCenterNum,
+            windowDimensions);
 
-    cout << "3" << endl;
-    cout << "properties.dt" << hour_t(properties.dt) << endl;
-    ControlCenter localControlCenter(hour_t(properties.dt), windowDimensions.width);
-
-    cout << "4" << endl;
-    shared_ptr<GraphicalOperations> graphicalOperations = make_shared<GraphicalOperations>(
-            idle,
-            localSimulation,
-            localControlCenter,
-            observer,
-            windowDimensions
-            );
-    cout << "5" << endl;
-    CenterStage mainDisplay(windowDimensions.width, localRecorder);
-    localControlCenter.init(hour_t(properties.dt), windowDimensions.width);
-    cout << "6" << endl;
-
-    glutMouseFunc(InputFunctions::myMouse);
-    glutKeyboardFunc(InputFunctions::myKey);
-
-    globalFullApplication = make_unique<FullApplication>(localSimulation,
-    localControlCenter,
-    mainDisplay,
-    localRecorder,
-    start,
-    properties.maximumRunTime,
-    graphicalOperations
+    globalFullApplication = make_unique<FullApplication>(simulation,
+                                                         centerStage,
+                                                         shouldRecord,
+                                                         start,
+                                                         properties.maximumRunTime,
+                                                         graphicalOperations
     );
 
     glutDisplayFunc([]() {
-        globalFullApplication->graphicalOperations->localDisplay();
-        globalFullApplication->graphicalOperations->controlDisplay();
+        globalFullApplication->graphicalOperations.fullDisplay();
     });
 
-    cout << "7" << endl;
     glutMainLoop();
-
 
     return 0;
 }

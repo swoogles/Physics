@@ -25,18 +25,19 @@
 
 class GraphicalOperations {
 public:
-    GraphicalOperations(void (*callback)(void), SimulationPtr_t simulation, ControlCenter controlCenter,
-                     shared_ptr<Observer> observer, WindowDimensions dimensions);
+    GraphicalOperations(Simulation & simulation, ControlCenter controlCenter,
+                        int CenterStageWindow, int controlCenterWindow,
+                        WindowDimensions windowDimensions);
 
     shared_ptr<Observer> localObserver;
-    SimulationPtr_t localSimulation;
+    Simulation & localSimulation;
     ControlCenter localControlCenter;
     void localDisplay();
     void controlDisplay();
+    void fullDisplay();
+    WindowDimensions currentDimensions();
 private:
     static void fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant);
-
-    void openGlInit();
 
     void configureControlWindow(WindowDimensions mainWindowDimensions);
 

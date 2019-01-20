@@ -24,21 +24,24 @@
 #include <chrono>
 #include <iomanip>
 
+using std::chrono::time_point;
 
 class FullApplication {
 public:
-    FullApplication(const SimulationPtr_t &globalSimulation, const ControlCenter globalControlCenter,
-                        const CenterStage globalMainDisplay, const shared_ptr<Recorder> globalRecorder,
-                        const time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
-                        const chrono::seconds maximumRuntime, shared_ptr<GraphicalOperations> graphicalOperations);
+    FullApplication(Simulation &simulation, CenterStage centerStage,
+                    bool shouldRecord,
+                    time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
+                    chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations);
 
-    const SimulationPtr_t globalSimulation;
-    const ControlCenter globalControlCenter;
-    CenterStage globalMainDisplay;
-    const shared_ptr<Recorder> globalRecorder;
+    Simulation simulation;
+    const ControlCenter controlCenter;
+    CenterStage centerStage;
+    Recorder recorder;
+    const bool recording;
     const time_point<std::chrono::_V2::system_clock, std::chrono::duration<long int, std::ratio<1, 1000000000> >> start;
     const std::chrono::seconds maximumRuntime;
-    const shared_ptr<GraphicalOperations> graphicalOperations;
+    // TODO reinstate const-ness
+    GraphicalOperations graphicalOperations;
     void update();
 };
 

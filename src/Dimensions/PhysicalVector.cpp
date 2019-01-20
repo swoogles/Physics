@@ -62,7 +62,7 @@ PhysicalVector PhysicalVector::withElementsMultipliedBy(const PhysicalVector &ot
 PhysicalVector PhysicalVector::unit() const {
     sgVec4 newVec;
     sgNormaliseVec4(newVec, vec);
-    return newVec;
+    return PhysicalVector(newVec);
 }
 
 float PhysicalVector::scalarProduct4(const PhysicalVector & other) const {

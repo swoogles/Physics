@@ -4,42 +4,44 @@
 
 #include "FullApplication.h"
 
-FullApplication::FullApplication(const SimulationPtr_t &globalSimulation, const ControlCenter globalControlCenter,
-                                 const CenterStage globalMainDisplay, const shared_ptr<Recorder> globalRecorder,
-                                 const time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
-                                 const chrono::seconds maximumRuntime, shared_ptr<GraphicalOperations> graphicalOperations)
-        : globalSimulation(globalSimulation), globalControlCenter(globalControlCenter),
-          globalMainDisplay(globalMainDisplay), globalRecorder(globalRecorder), start(start),
+FullApplication::FullApplication(Simulation &simulation, CenterStage mainDisplay,
+                                 bool shouldRecord,
+                                 time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
+                                 chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations)
+        : simulation(simulation), controlCenter(graphicalOperations.localControlCenter),
+          centerStage(mainDisplay), recorder(Recorder()), recording(shouldRecord), start(start),
           maximumRuntime(maximumRuntime),
           graphicalOperations(graphicalOperations){}
 
 void FullApplication::update() {
-        if (! globalControlCenter.isPaused() ) {
-            auto dt = globalControlCenter.getDt();
-            globalSimulation->update(dt);
-            globalMainDisplay.update(dt.value());
+        if (! controlCenter.isPaused() ) {
+            auto dt = controlCenter.getDt();
+            simulation.update(dt);
+            centerStage.update(dt.value());
 
-            if ( globalRecorder ) {
-                globalRecorder->captureThisFrame(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+            if ( recording ) {
+                auto dimensions = graphicalOperations.currentDimensions();
+                recorder.captureThisFrame(dimensions.width, dimensions.height);
             }
         }
 
         // Should just directly call Observer::getCurObserverInstance()
-        auto observer = Observer::getCurObserver();
+        auto observer = graphicalOperations.localObserver;
         observer->update();
 
         // TODO This would be more valuable if it only tried to include the largest N items.
         // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
-        observer->calcMinPullback(globalSimulation->getXYMinsAndMaxes());
+        observer->calcMinPullback(simulation.getXYMinsAndMaxes());
 
         time_point end = std::chrono::system_clock::now();
 
         std::chrono::duration<double> elapsed_seconds = end-start;
         if ( elapsed_seconds > (maximumRuntime)) {
-            if ( globalRecorder ) {
-                globalRecorder->createVideo();
+            if ( recording ) {
+                FfmpegClient client;
+                client.createVideo(std::chrono::system_clock::to_time_t(start));
+                exit(0);
             }
-            exit(0);
         }
     }
 

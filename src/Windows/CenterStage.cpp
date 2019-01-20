@@ -2,7 +2,7 @@
 
 using namespace std;
 
-shared_ptr<Recorder> CenterStage::recorder;
+time_t CenterStage::start = 0;
 
 CenterStage::CenterStage() noexcept{
 	/*
@@ -20,10 +20,6 @@ CenterStage::CenterStage() noexcept{
 	//open_selector->hide();
 
 	*/
-}
-
-// TODO more good cleanup candidates in this file
-void CenterStage::init(int windowWidth, shared_ptr<Recorder> recorder) {
 }
 
 void CenterStage::update(double timeElapsed) {
@@ -109,22 +105,16 @@ void CenterStage::saveFile_cb(puObject * caller) {
 }
 
 void CenterStage::exit_cb(puObject * caller) {
-    if ( CenterStage::recorder ) {
-        CenterStage::recorder->createVideo();
-    }
 	exit(1);
 }
 
-
-//shared_ptr<Recorder> CenterStage::recorder
-
-CenterStage::CenterStage(int windowWidth, shared_ptr<Recorder> recorder) noexcept:
-localRecorder(recorder)  {
-	CenterStage::recorder = recorder; // try to eliminate and get exit_cb to use localRecorder
+CenterStage::CenterStage(int windowWidth, time_t &start) noexcept
+		{
+	CenterStage::start = start;
 	main_menu = new puMenuBar();
 
-	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , NULL};
-	puCallback file_submenu_cb [] = { exit_cb,  NULL,      save_cb, open_cb, NULL};
+	char      *file_submenu    [] = { "Exit" , "--------", "Save", "Open" , "Create Video & Exit", NULL};
+	puCallback file_submenu_cb [] = { exit_cb,  NULL,      save_cb, open_cb, createVideoAndExit,  NULL};
 
 	main_menu->add_submenu("File", file_submenu, file_submenu_cb);
 
@@ -168,6 +158,12 @@ localRecorder(recorder)  {
 	astronomicalTimeGroup->close();
 	astronomicalTimeGroup->setChildColour(PUCLASS_TEXT, PUCOL_LABEL, 1.0, 1.0, 1.0);
 
+}
+
+void CenterStage::createVideoAndExit(puObject *) {
+	FfmpegClient client;
+	client.createVideo(CenterStage::start);
+	exit(0);
 }
 
 // void CenterStage::mk_dialog(char * dialogText) {

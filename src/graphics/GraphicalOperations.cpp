@@ -1,31 +1,21 @@
+#include <utility>
+
 //
 // Created by bfrasure on 11/17/18.
 //
 
 #include "GraphicalOperations.h"
 
-#define FPS 1
-
 using std::size_t;
-
-void myTimer(int v) {
-    glutPostRedisplay();
-    glutTimerFunc(1000/FPS, myTimer, v);
-}
-
 
 void drawShapeInQuadrant(Quadrant quadrant) {
     auto shape = quadrant.getShapeInQuadrant();
     if (shape != nullptr) Drawing::draw(shape);
 };
 
-void drawingFuncFixed(Quadrant quadrant) {
-    Drawing::draw(quadrant);
-}
-
 void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant) {
     if (controlCenter.shouldRenderOctree()) {
-        drawingFuncFixed(quadrant);
+        Drawing::draw(quadrant);
     }
     drawShapeInQuadrant(quadrant);
 };
@@ -43,7 +33,7 @@ void GraphicalOperations::localDisplay() {
 
     glMatrixMode(GL_MODELVIEW);
 
-    localSimulation->getQuadrant()->applyToAllChildren([this](Quadrant quadrant) {GraphicalOperations::fullQuadrantDrawingFunction(this->localControlCenter, quadrant);});
+    localSimulation.getQuadrant()->applyToAllChildren([this](Quadrant quadrant) {GraphicalOperations::fullQuadrantDrawingFunction(this->localControlCenter, quadrant);});
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
@@ -54,59 +44,17 @@ void GraphicalOperations::localDisplay() {
 
 }
 
-GraphicalOperations::GraphicalOperations(
-        void (*callback)(void),
-        SimulationPtr_t simulation,
-        ControlCenter controlCenter,
-        shared_ptr<Observer> observer,
-        WindowDimensions dimensions
-        ): localObserver(observer)
-        , localSimulation(simulation)
+GraphicalOperations::GraphicalOperations(Simulation & simulation, ControlCenter controlCenter,
+                                         int CenterStageWindow, int controlCenterWindow,
+                                         WindowDimensions windowDimensions)
+        : localSimulation(simulation)
         , localControlCenter(controlCenter)
-
-        {
-    this->openGlInit();
-
-    char fakeParam[] = "fake";
-    char *fakeargv[] = { fakeParam, NULL };
-    int fakeargc = 1;
-    glutInit( &fakeargc, fakeargv );
-
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowPosition(dimensions.xPos,dimensions.yPos);
-    glutInitWindowSize(dimensions.width,dimensions.height);
-    int main_window = glutCreateWindow("Center Stage");
-    glutSetWindow(main_window);
-    mainDisplayNum = main_window;
-
-    glutMouseFunc(InputFunctions::myMouse);
-    glutKeyboardFunc(InputFunctions::myKey);
-
-    glutIdleFunc(callback);
-    glutTimerFunc(1000, myTimer, FPS);
-
-    configureControlWindow(dimensions);
-    control_center_num = glutCreateWindow("Control Center");
-
-    puInit();
-}
-
-void GraphicalOperations::configureControlWindow(WindowDimensions mainWindowDimensions) {
-    int controlWinPosX = mainWindowDimensions.xPos;
-    int controlWinPosY = mainWindowDimensions.yPos + mainWindowDimensions.height + 30;
-    int controlWinWidth = mainWindowDimensions.width;
-    int controlWinHeight = 200;
-
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowPosition(controlWinPosX,controlWinPosY);
-    glutInitWindowSize(controlWinWidth,controlWinHeight);
-}
-
-void GraphicalOperations::openGlInit() {
-    glViewport(-WW,WW,-WH,WH);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+        , mainDisplayNum(CenterStageWindow)
+        , control_center_num(controlCenterWindow)
+{
+    auto observer = Observer::init(windowDimensions);
+    InputFunctions::init(observer);
+    localObserver = observer;
 }
 
 void GraphicalOperations::controlDisplay() {
@@ -118,5 +66,19 @@ void GraphicalOperations::controlDisplay() {
 
     glutSwapBuffers();
     glutPostRedisplay();
+}
+
+void GraphicalOperations::fullDisplay() {
+    localDisplay();
+    controlDisplay();
+}
+
+WindowDimensions GraphicalOperations::currentDimensions() {
+    return WindowDimensions(
+            glutGet(GLUT_WINDOW_X),
+            glutGet(GLUT_WINDOW_Y),
+            glutGet(GLUT_WINDOW_HEIGHT),
+            glutGet(GLUT_WINDOW_WIDTH)
+            );
 }
 
