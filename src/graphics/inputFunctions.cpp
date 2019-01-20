@@ -10,6 +10,7 @@
 using namespace std;
 
 shared_ptr<Observer> InputFunctions::observer;
+queue<MouseAction> InputFunctions::mouseActions;
 
 void InputFunctions::stopAutoScaling() {
 	InputFunctions::observer->setAutoScaling(false);
@@ -18,16 +19,19 @@ void InputFunctions::stopAutoScaling() {
 void InputFunctions::myMouse(int button, int state, int x, int y) {
     if (state == GLUT_UP) {
         if (button == GLUT_WHEEL_UP) {
+            mouseActions.push(MouseAction::SCROLL_UP);
             InputFunctions::observer->zoomIn();
             stopAutoScaling();
         }
         if (button == GLUT_WHEEL_DOWN) {
+            mouseActions.push(MouseAction::SCROLL_DOWN);
             InputFunctions::observer->zoomOut();
             stopAutoScaling();
         }
 
     }
     puMouse ( button, state, x, y ) ;
+    cout << "Number of Mouse Actions:" <<  (InputFunctions::mouseActions.size()) << endl;
 }
 
 void InputFunctions::myKey(unsigned char key, int x, int y) {

@@ -14,6 +14,10 @@
 #include "Observation/Observer.h"
 #include "Windows/ControlCenter.h"
 
+#include "MouseAction.h"
+
+#include <queue>
+
 #include <plib/pu.h>
 #include <plib/puAux.h>
 
@@ -21,6 +25,8 @@
 # define GLUT_WHEEL_UP 3
 # define GLUT_WHEEL_DOWN 4
 #endif
+
+using std::queue;
 
 class InputFunctions {
 public:
@@ -31,6 +37,7 @@ public:
 private:
     static shared_ptr<Observer> observer;
     static void stopAutoScaling();
+    static queue<MouseAction> mouseActions;
 };
 
 #endif /* INPUTFUNCTIONS_H_ */

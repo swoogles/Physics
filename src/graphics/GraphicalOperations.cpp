@@ -33,7 +33,15 @@ void GraphicalOperations::localDisplay() {
 
     glMatrixMode(GL_MODELVIEW);
 
-    localSimulation.getQuadrant()->applyToAllChildren([this](Quadrant quadrant) {GraphicalOperations::fullQuadrantDrawingFunction(this->localControlCenter, quadrant);});
+    // TODO You know this is bad. Keep looking at it.
+    localSimulation
+        .getQuadrant()->applyToAllChildren(
+                [this](Quadrant quadrant) {
+                    GraphicalOperations::fullQuadrantDrawingFunction(
+                        this->localControlCenter,
+                        quadrant
+                    );
+                });
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
