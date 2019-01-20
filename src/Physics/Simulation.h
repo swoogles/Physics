@@ -1,7 +1,6 @@
 #ifndef SIMULATION_H_
 #define SIMULATION_H_
 
-#include <boost/ref.hpp>
 #include "../Parallelization/Quadrant.h"
 #include "ForceCalculationMethod.h"
 #include "CollisionType.h"
@@ -66,5 +65,5 @@ private:
 	void calcForcesAll(hour_t dt);
 
 } ;
-typedef shared_ptr<Simulation> SimulationPtr_t;
+
 #endif
