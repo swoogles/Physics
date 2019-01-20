@@ -29,14 +29,14 @@ using std::chrono::time_point;
 class FullApplication {
 public:
     FullApplication(Simulation &simulation, CenterStage centerStage,
-                    shared_ptr<Recorder> recorder,
+                    bool shouldRecord,
                     time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
                     chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations);
 
     Simulation simulation;
     const ControlCenter controlCenter;
     CenterStage centerStage;
-    const shared_ptr<Recorder> recorder;
+    Recorder recorder;
     const bool recording;
     const time_point<std::chrono::_V2::system_clock, std::chrono::duration<long int, std::ratio<1, 1000000000> >> start;
     const std::chrono::seconds maximumRuntime;

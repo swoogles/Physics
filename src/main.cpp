@@ -5,7 +5,6 @@
 
 #include "graphics/GraphicalOperations.h"
 #include "graphics/OpenGlSetup.h"
-#include "graphics/Recorder.h"
 
 //GUI stuff
 #include "Windows/ControlCenter.h"
@@ -24,12 +23,12 @@ using std::chrono::time_point;
 
 unique_ptr<FullApplication> globalFullApplication;
 
-shared_ptr<Recorder> parseRecordingParameters(char **argv, std::time_t  start) {
+bool parseRecordingParameters(char **argv, std::time_t  start) {
     char recording = argv[1][0];
     if ( recording == 'r') {
-        return make_shared<Recorder>();
+        return true;
     } else if (recording == 'x') {
-        return nullptr;
+        return false;
     } else {
         cout << "Bad recording value! Must be 'x' or 'r'" << endl;
         exit(1);
@@ -50,7 +49,7 @@ int main(int argcp, char **argv) {
             );
 
     time_point start = std::chrono::system_clock::now();
-    shared_ptr<Recorder> recorder = parseRecordingParameters(argv, std::chrono::system_clock::to_time_t(start));
+    bool shouldRecord = parseRecordingParameters(argv, std::chrono::system_clock::to_time_t(start));
 
     auto idleFunction = []() { globalFullApplication->update(); };
     OpenGlSetup openGlSetup{};
@@ -73,7 +72,7 @@ int main(int argcp, char **argv) {
 
     globalFullApplication = make_unique<FullApplication>(simulation,
                                                          centerStage,
-                                                         recorder,
+                                                         shouldRecord,
                                                          start,
                                                          properties.maximumRunTime,
                                                          graphicalOperations
