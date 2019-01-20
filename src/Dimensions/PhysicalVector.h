@@ -20,7 +20,7 @@ public:
     PhysicalVector();
     explicit PhysicalVector(sgVec4 coordinates);
     explicit PhysicalVector(const sgVec4 coordinates);
-    
+
     PhysicalVector(float x, float y, float z);
     PhysicalVector(float x, float y, float z, bool anchored);
     static unique_ptr <PhysicalVector> vecFromAtoB(PhysicalVector &a, PhysicalVector &b);

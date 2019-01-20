@@ -12,6 +12,7 @@ Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType
         ,collisionType(collisionType)
         ,octreeTheta(octreeTheta)
 {
+    cout << "Constructing" << endl;
     this->updateMinsAndMaxes();
     this->refreshQuadrant();
 }
@@ -124,7 +125,7 @@ void Simulation::calcForcesAll_LessNaive(hour_t dt) {
                 PhysicalVector gravVec = this->interactions.calcForceGravNew(object1, object2, dt );
 
                 object1.adjustMomentum(gravVec);
-                object2.adjustMomentum(gravVec.scaledBy(-1).vec);
+                object2.adjustMomentum(gravVec.scaledBy(-1));
 
                 if (object1.isTouching(object2)) {
                     if (this->collisionType == CollisionType::ELASTIC) {
