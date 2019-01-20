@@ -41,7 +41,6 @@ public:
 	//! Returns true if Observer is currently set to autoscale with simulation
 	void toggleAutoScaling();
 
-	static shared_ptr<Observer> getCurObserver();
 	static Observer & getCurObserverRef();
 
 	void calcMinPullback(MaximumValues maximumValues);

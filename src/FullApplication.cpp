@@ -26,7 +26,7 @@ void FullApplication::update() {
         }
 
         // Should just directly call Observer::getCurObserverInstance()
-        auto observer = Observer::getCurObserver();
+        auto observer = graphicalOperations.localObserver;
         observer->update();
 
         // TODO This would be more valuable if it only tried to include the largest N items.
