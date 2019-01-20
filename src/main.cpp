@@ -70,7 +70,7 @@ int main(int argcp, char **argv) {
             openGlSetup.controlCenterNum,
             windowDimensions);
 
-    globalFullApplication = make_unique<FullApplication>(simulation,
+    globalFullApplication = make_unique<FullApplication>(*simulation,
                                                          centerStage,
                                                          recorder,
                                                          start,
