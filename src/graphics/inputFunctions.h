@@ -27,6 +27,7 @@ public:
     static void init(shared_ptr<Observer> observer);
     static void myMouse(int button, int state, int x, int y);
     static void myKey(unsigned char, int x, int y);
+    //  TODO create user input fields that can be queried by FullApplication
 private:
     static shared_ptr<Observer> observer;
     static void stopAutoScaling();
