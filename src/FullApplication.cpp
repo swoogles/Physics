@@ -25,6 +25,20 @@ void FullApplication::update() {
                 recorder.captureThisFrame(dimensions.width, dimensions.height);
             }
         }
+        auto mouseAction = InputFunctions::currentMouseAction();
+        if (mouseAction.has_value()) {
+            cout << "MouseAction value: " << mouseAction.value() << endl;
+            auto observer = Observer::getCurObserverRef();
+            switch(mouseAction.value()) {
+                case MouseAction::SCROLL_UP:
+                    observer.zoomIn();
+                    break;
+                case MouseAction::SCROLL_DOWN:
+                    observer.zoomOut();
+                    break;
+            }
+            observer.setAutoScaling(false);
+        }
 
         // Should just directly call Observer::getCurObserverInstance()
         auto observer = graphicalOperations.localObserver;

@@ -144,7 +144,7 @@ ControlCenter::ControlCenter(duration dt, int windowWidth): localDt(dt) {
   autoScale_button = new puButton(curX, curHeight, curX+16, curHeight+16, PUBUTTON_RADIO);
   autoScale_button->setLabelPlace( PUPLACE_CENTERED_RIGHT );
   autoScale_button->setLabel("Autoscale");
-  autoScale_button->setValue(1);
+  autoScale_button->setValue(0);
   autoScale_button->setCallback(flipAutoScaling);
 
   curHeight -= elementHeight;

@@ -61,7 +61,6 @@ GraphicalOperations::GraphicalOperations(Simulation & simulation, ControlCenter 
         , control_center_num(controlCenterWindow)
 {
     auto observer = Observer::init(windowDimensions);
-    InputFunctions::init(observer);
     localObserver = observer;
 }
 

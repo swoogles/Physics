@@ -1,22 +1,13 @@
-/*
- * inputFunctions.h
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #ifndef INPUTFUNCTIONS_H_
 #define INPUTFUNCTIONS_H_
 
 #include <iostream>
 #include <GL/glut.h>
-#include "Dimensions/Moveable.h"
-#include "Observation/Observer.h"
-#include "Windows/ControlCenter.h"
 
 #include "MouseAction.h"
 
 #include <queue>
+#include <optional>
 
 #include <plib/pu.h>
 #include <plib/puAux.h>
@@ -27,16 +18,15 @@
 #endif
 
 using std::queue;
+using std::optional;
 
 class InputFunctions {
 public:
-    static void init(shared_ptr<Observer> observer);
     static void myMouse(int button, int state, int x, int y);
     static void myKey(unsigned char, int x, int y);
     //  TODO create user input fields that can be queried by FullApplication
+    static optional<MouseAction> currentMouseAction();
 private:
-    static shared_ptr<Observer> observer;
-    static void stopAutoScaling();
     static queue<MouseAction> mouseActions;
 };
 
