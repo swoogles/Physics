@@ -14,6 +14,7 @@ FullApplication::FullApplication(Simulation &simulation, CenterStage mainDisplay
           graphicalOperations(graphicalOperations){}
 
 void FullApplication::update() {
+    // TODO ah! I should look at scrolling status of ControlCenter here, and *then* take action on Observer.
         if (! controlCenter.isPaused() ) {
             auto dt = controlCenter.getDt();
             simulation.update(dt);
