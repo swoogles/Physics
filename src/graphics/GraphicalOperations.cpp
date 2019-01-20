@@ -33,7 +33,7 @@ void GraphicalOperations::localDisplay() {
 
     glMatrixMode(GL_MODELVIEW);
 
-    localSimulation->getQuadrant()->applyToAllChildren([this](Quadrant quadrant) {GraphicalOperations::fullQuadrantDrawingFunction(this->localControlCenter, quadrant);});
+    localSimulation.getQuadrant()->applyToAllChildren([this](Quadrant quadrant) {GraphicalOperations::fullQuadrantDrawingFunction(this->localControlCenter, quadrant);});
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
@@ -44,7 +44,7 @@ void GraphicalOperations::localDisplay() {
 
 }
 
-GraphicalOperations::GraphicalOperations(SimulationPtr_t simulation, ControlCenter controlCenter,
+GraphicalOperations::GraphicalOperations(Simulation & simulation, ControlCenter controlCenter,
                                          int CenterStageWindow, int controlCenterWindow,
                                          WindowDimensions windowDimensions)
         : localSimulation(simulation)

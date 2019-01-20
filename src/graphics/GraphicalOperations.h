@@ -25,12 +25,12 @@
 
 class GraphicalOperations {
 public:
-    GraphicalOperations(SimulationPtr_t simulation, ControlCenter controlCenter,
-                            int CenterStageWindow, int controlCenterWindow,
-                            WindowDimensions windowDimensions);
+    GraphicalOperations(Simulation & simulation, ControlCenter controlCenter,
+                        int CenterStageWindow, int controlCenterWindow,
+                        WindowDimensions windowDimensions);
 
     shared_ptr<Observer> localObserver;
-    SimulationPtr_t localSimulation;
+    Simulation & localSimulation;
     ControlCenter localControlCenter;
     void localDisplay();
     void controlDisplay();

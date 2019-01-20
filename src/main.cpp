@@ -34,7 +34,6 @@ shared_ptr<Recorder> parseRecordingParameters(char **argv, std::time_t  start) {
         cout << "Bad recording value! Must be 'x' or 'r'" << endl;
         exit(1);
     }
-
 }
 
 int main(int argcp, char **argv) {
@@ -65,7 +64,7 @@ int main(int argcp, char **argv) {
     CenterStage centerStage(windowDimensions.width, recorder);
 
     GraphicalOperations graphicalOperations(
-            simulation,
+            *simulation,
             controlCenter,
             openGlSetup.mainDisplayNum,
             openGlSetup.controlCenterNum,
