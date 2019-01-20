@@ -24,6 +24,7 @@
 #include <chrono>
 #include <iomanip>
 
+using std::chrono::time_point;
 
 class FullApplication {
 public:
@@ -36,6 +37,7 @@ public:
     const ControlCenter controlCenter;
     CenterStage centerStage;
     const shared_ptr<Recorder> recorder;
+    const bool recording;
     const time_point<std::chrono::_V2::system_clock, std::chrono::duration<long int, std::ratio<1, 1000000000> >> start;
     const std::chrono::seconds maximumRuntime;
     // TODO reinstate const-ness

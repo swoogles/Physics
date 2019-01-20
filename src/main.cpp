@@ -27,7 +27,7 @@ unique_ptr<FullApplication> globalFullApplication;
 shared_ptr<Recorder> parseRecordingParameters(char **argv, std::time_t  start) {
     char recording = argv[1][0];
     if ( recording == 'r') {
-        return make_shared<Recorder>(start);
+        return make_shared<Recorder>();
     } else if (recording == 'x') {
         return nullptr;
     } else {
@@ -61,7 +61,8 @@ int main(int argcp, char **argv) {
 
     ControlCenter controlCenter(hour_t(properties.dt), windowDimensions.width);
 
-    CenterStage centerStage(windowDimensions.width, recorder);
+    auto outputTime = std::chrono::system_clock::to_time_t(start);
+    CenterStage centerStage(windowDimensions.width, outputTime);
 
     GraphicalOperations graphicalOperations(
             simulation,

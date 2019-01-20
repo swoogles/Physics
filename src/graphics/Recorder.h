@@ -8,11 +8,10 @@
 #include <fstream>
 #include <lib/pstream.h>
 #include <chrono>
-#include <iomanip>
 
 #include "jpeglib.h"
 
-using std::chrono::time_point;
+#include "FfmpegClient.h"
 
 using namespace std;
 
@@ -24,16 +23,15 @@ using namespace std;
  */
 class Recorder {
 public:
-	Recorder(std::time_t  start);
+	Recorder();
 
 	/*! \brief Call whenever you want to save current frame
 	 *
 	 *  Pieces together the correct filename for output image, then calls screenshot()
 	 */
 	bool captureThisFrame(unsigned int, unsigned int);
-	void createVideo();
+
 private:
-	const std::time_t  start;
 	string path;
 	string outFileName;
 	string extension;

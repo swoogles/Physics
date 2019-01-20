@@ -1,8 +1,7 @@
 #include "Recorder.h"
 
-Recorder::Recorder(const std::time_t  start)
-          :start(start)
-          ,curImage(1)
+Recorder::Recorder()
+          :curImage(1)
 {
     this->extension = "jpg";
     this->path = "output";
@@ -106,16 +105,3 @@ bool Recorder::screenshot(unsigned int width, unsigned int height, string path, 
    return ret;
 }
 
-void Recorder::createVideo() {
-   std::ostringstream stream;
-   stream << std::put_time(std::localtime(&this->start), "%F %T");
-   string ffmpegCommandAndOptions = "ffmpeg  -i ./output/outFrame%05d.jpg -framerate 1 -c:v libx264 -crf 18 -pix_fmt yuv420p \"";
-   string outDirectory = "./WorthyVideos/";
-   string outVideoFormat = ".mp4\"";
-   string fullCommand = ffmpegCommandAndOptions + outDirectory + stream.str() + outVideoFormat;
-   redi::ipstream in(fullCommand);
-   std::string ffmpegOutput;
-   while (in >> ffmpegOutput) { /* Do nothing */ }
-   redi::ipstream cleanup("rm -f ./output/*");
-
-}

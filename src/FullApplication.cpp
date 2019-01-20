@@ -9,7 +9,7 @@ FullApplication::FullApplication(Simulation &simulation, CenterStage mainDisplay
                                  time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
                                  chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations)
         : simulation(simulation), controlCenter(graphicalOperations.localControlCenter),
-          centerStage(mainDisplay), recorder(recorder), start(start),
+          centerStage(mainDisplay), recorder(recorder), recording(recorder == nullptr), start(start),
           maximumRuntime(maximumRuntime),
           graphicalOperations(graphicalOperations){}
 
@@ -19,7 +19,7 @@ void FullApplication::update() {
             simulation.update(dt);
             centerStage.update(dt.value());
 
-            if ( recorder ) {
+            if ( recording ) {
                 auto dimensions = graphicalOperations.currentDimensions();
                 recorder->captureThisFrame(dimensions.width, dimensions.height);
             }
@@ -38,9 +38,10 @@ void FullApplication::update() {
         std::chrono::duration<double> elapsed_seconds = end-start;
         if ( elapsed_seconds > (maximumRuntime)) {
             if ( recorder ) {
-                recorder->createVideo();
+                FfmpegClient client;
+                client.createVideo(std::chrono::system_clock::to_time_t(start));
+                exit(0);
             }
-            exit(0);
         }
     }
 

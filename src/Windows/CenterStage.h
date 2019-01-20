@@ -21,21 +21,15 @@ class CenterStage {
 public:
 	//! Unnecessary constructor for entirely static class
 	CenterStage() noexcept;
-	CenterStage(int windowWidth, shared_ptr<Recorder> recorder) noexcept;
-
-    /*! \brief Initializes values for the Main Window interface
-       *
-       *  Creates the Main Menu puMenuBar and populates it with open, save, etc. funcitnos
-       */
-    void init(int windowWidth, shared_ptr <Recorder> recorder);
+	CenterStage(int windowWidth, time_t &start) noexcept;
 
 	/*! \brief Updates the time values
-	 *
-	 *  Queries WorldSettings for timElapsed, then uses a series of mods
-	 *  and divisions to extract the different units of time that have
-	 *  elapsed. Once calculated, it sets the appropriate labels to
-	 *  these values.
-	 */
+     *
+     *  Queries WorldSettings for timElapsed, then uses a series of mods
+     *  and divisions to extract the different units of time that have
+     *  elapsed. Once calculated, it sets the appropriate labels to
+     *  these values.
+     */
 	void update(double timeElapsed);
 
 	//! Opens a file picker when Open is selected in Main Menu
@@ -61,9 +55,10 @@ public:
 	 *  Ultimately should query user whether or not they want to save the initial/current shape list
 	 */
 	static void exit_cb(puObject *);
+
+	static void createVideoAndExit(puObject *);
 private:
-    static shared_ptr<Recorder> recorder;
-	shared_ptr<Recorder> localRecorder;
+    static std::time_t start;
 	puMenuBar * main_menu;
 	puaFileSelector * open_selector;
 	puaFileSelector * save_selector;
