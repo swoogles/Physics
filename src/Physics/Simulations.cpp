@@ -7,11 +7,11 @@
 
 #include "Simulations.h"
 
-SimulationPointer_t Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties) {
+Simulation Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties) {
     ForceCalculationMethod forceCalculationMethod = simulationProperties.forceCalculationMethod;
     if ( simNumber == '0' ) {
     } else if ( simNumber == '1' ) {
-        return Simulations::bodyFormation_ArbitraryList(simulationProperties.numShapes, simulationProperties);
+        return Simulations::bodyFormation(simulationProperties.numShapes, simulationProperties);
     } else if ( simNumber == '2' ) {
         return Simulations::disruption_ArbitraryList(simulationProperties);
     } else if ( simNumber == '3' ) {
@@ -24,9 +24,8 @@ SimulationPointer_t Simulations::createSimulation(char simNumber, PhysicsSandbox
 
 }
 
-
-SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperties properties) {
-    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(properties.numShapes, properties);
+Simulation Simulations::disruption_ArbitraryList(PhysicsSandboxProperties properties) {
+    Simulation curSimulation = Simulations::bodyFormation(properties.numShapes, properties);
 
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = properties.mass * 250;
@@ -53,12 +52,12 @@ SimulationPointer_t Simulations::disruption_ArbitraryList(PhysicsSandboxProperti
             newColor
     );
     newParticles.addShapeToList(opposingBody);
-    return make_unique<Simulation>(*curSimulation, newParticles);
+    return Simulation(curSimulation, newParticles);
 }
 
 
-SimulationPointer_t Simulations::multipleOrbiters(PhysicsSandboxProperties properties){
-    SimulationPointer_t curSimulation = Simulations::bodyFormation_ArbitraryList(properties.numShapes, properties);
+Simulation Simulations::multipleOrbiters(PhysicsSandboxProperties properties){
+    Simulation curSimulation = Simulations::bodyFormation(properties.numShapes, properties);
 
     kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     kilogram_t pieceMass = properties.mass * 150;
@@ -105,10 +104,10 @@ SimulationPointer_t Simulations::multipleOrbiters(PhysicsSandboxProperties prope
     );
     newParticles.addShapeToList(opposingBodyOpposite);
 
-    return make_unique<Simulation>(*curSimulation, newParticles);
+    return Simulation(curSimulation, newParticles);
 }
 
-SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod) {
+Simulation Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod) {
     ParticleList physicalObjects;
 
     int numPieces=3;
@@ -159,10 +158,10 @@ SimulationPointer_t Simulations::QuadrantTesting_simplest(ForceCalculationMethod
             )
     );
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, forceCalculationMethod, 0.5);
+    return Simulation(physicalObjects, CollisionType::INELASTIC, forceCalculationMethod, 0.5);
 }
 
-SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties) {
+Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties properties) {
     ParticleList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
     const kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
@@ -201,7 +200,7 @@ SimulationPointer_t Simulations::bodyFormation_ArbitraryList(int numPieces, Phys
         physicalObjects.addShapeToList( curShape );
     }
 
-    return make_unique<Simulation>(physicalObjects, CollisionType::INELASTIC, properties.forceCalculationMethod, properties.octreeTheta);
+    return Simulation(physicalObjects, CollisionType::INELASTIC, properties.forceCalculationMethod, properties.octreeTheta);
 }
 
 PhysicalVector Simulations::randomSplitBodyPlacement(float pieceRadius, PhysicalVector target) {

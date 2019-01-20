@@ -39,7 +39,7 @@ shared_ptr<Recorder> parseRecordingParameters(char **argv, std::time_t  start) {
 int main(int argcp, char **argv) {
     char simulationParameter = argv[2][0];
     PhysicsSandboxProperties properties("simulation.properties");
-    SimulationPtr_t simulation = Simulations::createSimulation(simulationParameter, properties);
+    Simulation simulation = Simulations::createSimulation(simulationParameter, properties);
 
     auto windowDimensions =
             WindowDimensions(
@@ -64,13 +64,13 @@ int main(int argcp, char **argv) {
     CenterStage centerStage(windowDimensions.width, recorder);
 
     GraphicalOperations graphicalOperations(
-            *simulation,
+            simulation,
             controlCenter,
             openGlSetup.mainDisplayNum,
             openGlSetup.controlCenterNum,
             windowDimensions);
 
-    globalFullApplication = make_unique<FullApplication>(*simulation,
+    globalFullApplication = make_unique<FullApplication>(simulation,
                                                          centerStage,
                                                          recorder,
                                                          start,

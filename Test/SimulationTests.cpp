@@ -6,32 +6,28 @@
 #include "TestUtils.h"
 
 TEST_CASE( "Items are being removed from Simulation when Octree force calculations are used", "[green]" ) {
-    SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest(NAIVE);
-    simulation->update(hour_t(1));
-    REQUIRE(simulation->getSize() == 3);
+    Simulation  simulation = Simulations::QuadrantTesting_simplest(NAIVE);
+    simulation.update(hour_t(1));
+    REQUIRE(simulation.getSize() == 3);
 }
 
 TEST_CASE( "Run simple simulation until merge happens", "[green]" ) {
-    SimulationPointer_t  simulation = Simulations::QuadrantTesting_simplest(NAIVE);
-    auto initialMass = simulation->getMass();
-    REQUIRE(simulation->getSize() == 3);
+    Simulation  simulation = Simulations::QuadrantTesting_simplest(NAIVE);
+    auto initialMass = simulation.getMass();
+    REQUIRE(simulation.getSize() == 3);
     for (int i = 0; i < 1e4; i++) {
-        simulation->update(0);
+        simulation.update(hour_t(1));
     }
-    REQUIRE(simulation->getSize() == 1);
-    auto mergedMass = simulation->getMass();
+    REQUIRE(simulation.getSize() == 1);
+    auto mergedMass = simulation.getMass();
     REQUIRE(initialMass == mergedMass);
 }
 
 TEST_CASE( "Simulation is made", "[green]" ) {
-    SimulationPointer_t  testSimulationPtr = Simulations::QuadrantTesting_simplest(NAIVE);
+    Simulation  testSimulation = Simulations::QuadrantTesting_simplest(NAIVE);
 
     // REQUIRE( testSimulation.getForceCalcMethod() == Simulation::FORCE_CALC_METHOD_OCTREE );
-    REQUIRE( testSimulationPtr->getTimeElapsed() == 0 );
-}
-
-TEST_CASE( "non-ptr Simulation is made", "[green]" ) {
-    shared_ptr<Simulation> simulation = Simulations::QuadrantTesting_simplest(NAIVE);
+    REQUIRE( testSimulation.getTimeElapsed() == hour_t(0) );
 }
 
 TEST_CASE("Detonate", "[simulation]") {

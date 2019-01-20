@@ -8,25 +8,19 @@
 #include "AstronomicalValues.h"
 #include "PhysicsSandboxProperties.h"
 
-typedef unique_ptr<Simulation> SimulationPointer_t;
-
 class Simulations {
 public:
-    typedef unique_ptr<Simulation> SimulationPointer_t;
-    static SimulationPointer_t disruption_ArbitraryList(PhysicsSandboxProperties properties);
+    static Simulation disruption_ArbitraryList(PhysicsSandboxProperties properties);
 
-    static SimulationPointer_t multipleOrbiters(PhysicsSandboxProperties properties);
+    static Simulation multipleOrbiters(PhysicsSandboxProperties properties);
 
-    static SimulationPointer_t QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
+    static Simulation QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
 
-    static SimulationPointer_t bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
+    static Simulation bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
 
-    static SimulationPointer_t bodyFormationGeneric_ArbitraryList(
-            PhysicsSandboxProperties properties,
-            PhysicalVector target,
-            PhysicalVector groupMomentum);
+    static Simulation bodyFormation(int numPieces, PhysicsSandboxProperties properties);
 
-    static SimulationPointer_t createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
+    static Simulation createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
 
     static PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
   private:
