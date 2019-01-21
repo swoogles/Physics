@@ -40,6 +40,14 @@ void FullApplication::update() {
             observer.setAutoScaling(false);
         }
 
+    auto cameraAction = ControlCenter::currentCameraAction();
+    if (cameraAction.has_value()) {
+        cout << "CameraAction value: " << cameraAction.value() << endl;
+        auto observer = Observer::getCurObserverRef();
+        switch(cameraAction.value()) {
+        }
+        }
+
         // Should just directly call Observer::getCurObserverInstance()
         auto observer = graphicalOperations.localObserver;
         observer->update();

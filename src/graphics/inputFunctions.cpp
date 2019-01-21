@@ -37,6 +37,7 @@ void InputFunctions::myKey(unsigned char key, int x, int y) {
 
 optional<MouseAction> InputFunctions::currentMouseAction() {
     if (!InputFunctions::mouseActions.empty()) {
+        cout << "Number of actions remaining in queue: " << InputFunctions::mouseActions.size() << endl;
         auto currentAction = InputFunctions::mouseActions.front();
         InputFunctions::mouseActions.pop();
         return currentAction;

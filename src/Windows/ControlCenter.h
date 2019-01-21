@@ -1,12 +1,19 @@
 #ifndef CONTROL_CENTER_H_
 #define CONTROL_CENTER_H_
 
+#include <queue>
+#include <optional>
+
 #include <plib/pu.h>
 #include <plib/puAux.h>
 
 #include "../Observation/Observer.h"
+#include "../Input/CameraAction.h"
 
 #include <Physics/UnitDefinitions.h>
+
+using std::queue;
+using std::optional;
 
 /*! \brief Main UI for making objects and controlling simulation
  *
@@ -49,7 +56,9 @@ public:
 	bool isPaused() const;
 	duration getDt() const;
 	bool shouldRenderOctree();
+	static optional<CameraAction> currentCameraAction();
 private:
+	static queue<CameraAction> cameraActions;
 	static bool paused;
 	static duration dt;
 	duration localDt;
