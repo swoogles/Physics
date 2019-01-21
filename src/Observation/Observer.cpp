@@ -52,8 +52,8 @@ void Observer::toggleAutoScaling() {
     autoScale = !autoScale;
 }
 
-Observer &Observer::getCurObserverRef() {
-    return *observers.at(curObserver);
+shared_ptr<Observer> Observer::getCurObserver() {
+    return observers.at(curObserver);
 }
 
 void Observer::update() {

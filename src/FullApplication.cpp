@@ -28,23 +28,50 @@ void FullApplication::update() {
         auto mouseAction = InputFunctions::currentMouseAction();
         if (mouseAction.has_value()) {
             cout << "MouseAction value: " << mouseAction.value() << endl;
-            auto observer = Observer::getCurObserverRef();
+            auto observer = Observer::getCurObserver();
             switch(mouseAction.value()) {
                 case MouseAction::SCROLL_UP:
-                    observer.zoomIn();
+                    observer->zoomIn();
                     break;
                 case MouseAction::SCROLL_DOWN:
-                    observer.zoomOut();
+                    observer->zoomOut();
                     break;
             }
-            observer.setAutoScaling(false);
+            observer->setAutoScaling(false);
         }
 
     auto cameraAction = ControlCenter::currentCameraAction();
     if (cameraAction.has_value()) {
         cout << "CameraAction value: " << cameraAction.value() << endl;
-        auto observer = Observer::getCurObserverRef();
+        auto observer = Observer::getCurObserver();
         switch(cameraAction.value()) {
+            case CameraAction::ROTATE_LEFT: {
+                PhysicalVector leftAngVelocity(0, -.5f, 0);
+                observer->adjustAngularVelocity(leftAngVelocity);
+                break;
+            }
+            case CameraAction::ROTATE_RIGHT: {
+                PhysicalVector rightAngVelocity(0, .5f, 0);
+                observer->adjustAngularVelocity(rightAngVelocity);
+                break;
+            }
+            case CameraAction::ROTATE_UP: {
+                PhysicalVector upAngVelocity(+0.5f, 0, 0);
+                observer->adjustAngularVelocity(upAngVelocity);
+                break;
+            }
+            case CameraAction::ROTATE_DOWN: {
+                PhysicalVector downAngVelocity(-0.5f, 0, 0);
+                observer->adjustAngularVelocity(downAngVelocity);
+            }
+            case TOGGLE_AUTOSCALING: {
+                break;
+            }
+            case STOP_ROTATION: {
+                PhysicalVector stoppedAngVelocity(0,0,0);
+                observer->adjustAngularVelocity(stoppedAngVelocity);
+                break;
+            }
         }
         }
 

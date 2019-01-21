@@ -7,7 +7,6 @@
 #include <plib/pu.h>
 #include <plib/puAux.h>
 
-#include "../Observation/Observer.h"
 #include "../Input/CameraAction.h"
 
 #include <Physics/UnitDefinitions.h>
@@ -25,8 +24,8 @@ class ControlCenter {
 public:
 	ControlCenter();
 	ControlCenter(duration dt, int windowWidth);
-	void init(duration dt, int windowWidth);
-  inline bool isShowingRunTime() { return showingRunTime ; };
+
+    inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
 
 	//! Increases camera rotation around +Y axis

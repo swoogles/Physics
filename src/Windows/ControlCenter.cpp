@@ -15,13 +15,8 @@ bool ControlCenter::renderOctree = false;
 
 queue<CameraAction> ControlCenter::cameraActions;
 
-// TODO Is there any better candidate for breaking things apart than this functino?
-void ControlCenter::init(duration dt, int windowWidth) {
-}
-
 void ControlCenter::flipAutoScaling(puObject * caller) {
   ControlCenter::cameraActions.push(CameraAction::TOGGLE_AUTOSCALING);
-  Observer::getCurObserverRef().toggleAutoScaling();
 }
 
 void ControlCenter::alterDT(puObject * caller) {
@@ -40,31 +35,22 @@ void ControlCenter::pause_cb(puObject * caller) {
 }
 
 void ControlCenter::rotRight(puObject *) {
-  PhysicalVector angVelocity(0,.5,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
     ControlCenter::cameraActions.push(CameraAction::ROTATE_RIGHT);
 }
 
 void ControlCenter::rotLeft(puObject *) {
-  PhysicalVector angVelocity(0,-.5,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
   ControlCenter::cameraActions.push(CameraAction::ROTATE_LEFT);
 }
 
 void ControlCenter::rotUp(puObject *) {
-  PhysicalVector angVelocity(+.5,0,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
   ControlCenter::cameraActions.push(CameraAction::ROTATE_UP);
 }
 void ControlCenter::rotDown(puObject *) {
-  PhysicalVector angVelocity(-.5,0,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
   ControlCenter::cameraActions.push(CameraAction::ROTATE_DOWN);
 }
 
 void ControlCenter::rotStop(puObject *) {
-  PhysicalVector angVelocity(0,0,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+  ControlCenter::cameraActions.push(CameraAction::STOP_ROTATION);
 }
 
 bool ControlCenter::isPaused() const {
