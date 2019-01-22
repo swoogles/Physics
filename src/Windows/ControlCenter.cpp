@@ -9,6 +9,7 @@
 
 using namespace std;
 
+// TODO Ground these. No longer a need to make them static
 bool ControlCenter::paused = false;
 duration ControlCenter::dt;
 bool ControlCenter::renderOctree = false;
@@ -149,10 +150,6 @@ ControlCenter::ControlCenter(duration dt, int windowWidth): localDt(dt) {
   renderOctree_button->clrValue();
 
   runtime_group->close();
-}
-
-ControlCenter::ControlCenter() {
-
 }
 
 optional<CameraAction> ControlCenter::currentCameraAction() {

@@ -22,7 +22,6 @@ using std::optional;
  */
 class ControlCenter {
 public:
-	ControlCenter();
 	ControlCenter(duration dt, int windowWidth);
 
     inline bool isShowingRunTime() { return showingRunTime ; };
