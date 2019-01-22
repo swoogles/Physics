@@ -10,7 +10,7 @@ using std::size_t;
 
 void drawShapeInQuadrant(Quadrant quadrant) {
     auto shape = quadrant.getShapeInQuadrant();
-    if (shape != nullptr) Drawing::draw(shape);
+    if (shape != nullptr) Drawing::draw(*shape);
 };
 
 void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant) {
