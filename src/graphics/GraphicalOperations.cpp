@@ -59,9 +59,8 @@ GraphicalOperations::GraphicalOperations(Simulation & simulation, ControlCenter 
         , localControlCenter(controlCenter)
         , mainDisplayNum(CenterStageWindow)
         , control_center_num(controlCenterWindow)
+        , localObserver(make_shared<Observer>(windowDimensions))
 {
-    auto observer = Observer::init(windowDimensions);
-    localObserver = observer;
 }
 
 void GraphicalOperations::controlDisplay() {

@@ -4,14 +4,21 @@
 
 #include "FullApplication.h"
 
-FullApplication::FullApplication(Simulation &simulation, CenterStage mainDisplay,
-                                 bool shouldRecord,
-                                 time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
-                                 chrono::seconds maximumRuntime, GraphicalOperations graphicalOperations)
-        : simulation(simulation), controlCenter(graphicalOperations.localControlCenter),
-          centerStage(mainDisplay), recorder(Recorder()), recording(shouldRecord), start(start),
-          maximumRuntime(maximumRuntime),
-          graphicalOperations(graphicalOperations){}
+FullApplication::FullApplication(
+        Simulation &simulation,
+        CenterStage mainDisplay,
+        bool shouldRecord,
+        time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
+        chrono::seconds maximumRuntime,
+        GraphicalOperations graphicalOperations
+) : simulation(simulation),
+    controlCenter(graphicalOperations.localControlCenter),
+    centerStage(mainDisplay),
+    recorder(Recorder()),
+    recording(shouldRecord),
+    start(start),
+    maximumRuntime(maximumRuntime),
+    graphicalOperations(graphicalOperations){}
 
 void FullApplication::update() {
     // TODO ah! I should look at scrolling status of ControlCenter here, and *then* take action on Observer.
@@ -28,7 +35,7 @@ void FullApplication::update() {
         auto mouseAction = InputFunctions::currentMouseAction();
         if (mouseAction.has_value()) {
             cout << "MouseAction value: " << mouseAction.value() << endl;
-            auto observer = Observer::getCurObserver();
+            auto observer = graphicalOperations.localObserver;
             switch(mouseAction.value()) {
                 case MouseAction::SCROLL_UP:
                     observer->zoomIn();
@@ -43,7 +50,7 @@ void FullApplication::update() {
     auto cameraAction = ControlCenter::currentCameraAction();
     if (cameraAction.has_value()) {
         cout << "CameraAction value: " << cameraAction.value() << endl;
-        auto observer = Observer::getCurObserver();
+        auto observer = graphicalOperations.localObserver;
         switch(cameraAction.value()) {
             case CameraAction::ROTATE_LEFT: {
                 PhysicalVector leftAngVelocity(0, -.5f, 0);
