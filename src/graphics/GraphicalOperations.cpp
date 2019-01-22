@@ -10,7 +10,7 @@ using std::size_t;
 
 void drawShapeInQuadrant(Quadrant quadrant) {
     auto shape = quadrant.getShapeInQuadrant();
-    if (shape != nullptr) Drawing::draw(shape);
+    if (shape != nullptr) Drawing::draw(*shape);
 };
 
 void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant) {
@@ -33,7 +33,15 @@ void GraphicalOperations::localDisplay() {
 
     glMatrixMode(GL_MODELVIEW);
 
-    localSimulation.getQuadrant()->applyToAllChildren([this](Quadrant quadrant) {GraphicalOperations::fullQuadrantDrawingFunction(this->localControlCenter, quadrant);});
+    // TODO You know this is bad. Keep looking at it.
+    localSimulation
+        .getQuadrant()->applyToAllChildren(
+                [this](Quadrant quadrant) {
+                    GraphicalOperations::fullQuadrantDrawingFunction(
+                        this->localControlCenter,
+                        quadrant
+                    );
+                });
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
@@ -51,10 +59,8 @@ GraphicalOperations::GraphicalOperations(Simulation & simulation, ControlCenter 
         , localControlCenter(controlCenter)
         , mainDisplayNum(CenterStageWindow)
         , control_center_num(controlCenterWindow)
+        , localObserver(make_shared<Observer>(windowDimensions))
 {
-    auto observer = Observer::init(windowDimensions);
-    InputFunctions::init(observer);
-    localObserver = observer;
 }
 
 void GraphicalOperations::controlDisplay() {

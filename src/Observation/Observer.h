@@ -1,11 +1,10 @@
 #ifndef OBSERVER_H_
 #define OBSERVER_H_
 
-#include <boost/numeric/ublas/vector_sparse.hpp>
 #include <GL/glut.h>
 #include <plib/sg.h>
 
-#include "../Dimensions/Moveable.h"
+#include "../Dimensions/PhysicalVector.h"
 #include "../MaximumValues.h"
 
 #include "../WindowDimensions.h"
@@ -18,7 +17,6 @@
  */
 class Observer {
 public:
-	static shared_ptr<Observer> init(WindowDimensions windowDimensions);
 
 	//! Creates an Observer at the origin looking in the -Z direction
 	Observer(WindowDimensions windowDimensions);
@@ -38,10 +36,6 @@ public:
 
 	//! Set to true to autoscale with simulation
 	void setAutoScaling(bool shouldScale);
-	//! Returns true if Observer is currently set to autoscale with simulation
-	void toggleAutoScaling();
-
-	static Observer & getCurObserverRef();
 
 	void calcMinPullback(MaximumValues maximumValues);
 
@@ -49,23 +43,18 @@ public:
 	void update();
 
 	void adjustAngularVelocity(PhysicalVector dangVelocity);
-	void adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis);
+	void adjustAngle(SGfloat dAngle, PhysicalVector rotAxis);
 	void setPos(float inX, float inY, float inZ);
 private:
 	PhysicalVector pos;
-	Moveable * target;
+//	Moveable * target; // This has never actually been doing anyhting.
 	float * perspectiveMat;
 
-	int id;
 	bool autoScale;
-	static unsigned int curObserver;
 
 	const float fov;
 
 	void BuildPerspProjMat(float *m, float aspect, float znear, float zfar);
-
-	//! Stores all created Observers
-	static std::vector<shared_ptr<Observer>> observers;
 
     PhysicalVector angVelocity;
 	sgQuat orientationQuat;

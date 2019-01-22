@@ -1,18 +1,7 @@
 #include "Observer.h"
 
-std::vector<shared_ptr<Observer>> Observer::observers(0);
-unsigned int Observer::curObserver;
-
-shared_ptr<Observer> Observer::init(WindowDimensions windowDimensions) {
-    shared_ptr<Observer> initialObserver = make_shared<Observer>(windowDimensions);
-    observers.push_back(initialObserver);
-    curObserver = observers.size() - 1;
-    return initialObserver;
-}
-
 Observer::Observer(WindowDimensions windowDimensions)
           : pos(PhysicalVector(0,0,0))
-          , id( curObserver++ )
           , autoScale( true )
           , fov(45.0f) {
 	sgMakeIdentQuat(orientationQuat);
@@ -46,14 +35,6 @@ void Observer::zoomOut() {
 
 void Observer::setAutoScaling(bool shouldScale) {
 	autoScale = shouldScale;
-}
-
-void Observer::toggleAutoScaling() {
-    autoScale = !autoScale;
-}
-
-Observer &Observer::getCurObserverRef() {
-    return *observers.at(curObserver);
 }
 
 void Observer::update() {

@@ -9,16 +9,15 @@
 
 using namespace std;
 
+// TODO Ground these. No longer a need to make them static
 bool ControlCenter::paused = false;
 duration ControlCenter::dt;
 bool ControlCenter::renderOctree = false;
 
-// TODO Is there any better candidate for breaking things apart than this functino?
-void ControlCenter::init(duration dt, int windowWidth) {
-}
+queue<CameraAction> ControlCenter::cameraActions;
 
 void ControlCenter::flipAutoScaling(puObject * caller) {
-  Observer::getCurObserverRef().toggleAutoScaling();
+  ControlCenter::cameraActions.push(CameraAction::TOGGLE_AUTOSCALING);
 }
 
 void ControlCenter::alterDT(puObject * caller) {
@@ -37,27 +36,22 @@ void ControlCenter::pause_cb(puObject * caller) {
 }
 
 void ControlCenter::rotRight(puObject *) {
-  PhysicalVector angVelocity(0,.5,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+    ControlCenter::cameraActions.push(CameraAction::ROTATE_RIGHT);
 }
 
 void ControlCenter::rotLeft(puObject *) {
-  PhysicalVector angVelocity(0,-.5,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+  ControlCenter::cameraActions.push(CameraAction::ROTATE_LEFT);
 }
 
 void ControlCenter::rotUp(puObject *) {
-  PhysicalVector angVelocity(+.5,0,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+  ControlCenter::cameraActions.push(CameraAction::ROTATE_UP);
 }
 void ControlCenter::rotDown(puObject *) {
-  PhysicalVector angVelocity(-.5,0,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+  ControlCenter::cameraActions.push(CameraAction::ROTATE_DOWN);
 }
 
 void ControlCenter::rotStop(puObject *) {
-  PhysicalVector angVelocity(0,0,0);
-    Observer::getCurObserverRef().adjustAngularVelocity(angVelocity);
+  ControlCenter::cameraActions.push(CameraAction::STOP_ROTATION);
 }
 
 bool ControlCenter::isPaused() const {
@@ -144,7 +138,7 @@ ControlCenter::ControlCenter(duration dt, int windowWidth): localDt(dt) {
   autoScale_button = new puButton(curX, curHeight, curX+16, curHeight+16, PUBUTTON_RADIO);
   autoScale_button->setLabelPlace( PUPLACE_CENTERED_RIGHT );
   autoScale_button->setLabel("Autoscale");
-  autoScale_button->setValue(1);
+  autoScale_button->setValue(0);
   autoScale_button->setCallback(flipAutoScaling);
 
   curHeight -= elementHeight;
@@ -158,7 +152,14 @@ ControlCenter::ControlCenter(duration dt, int windowWidth): localDt(dt) {
   runtime_group->close();
 }
 
-ControlCenter::ControlCenter() {
-
+optional<CameraAction> ControlCenter::currentCameraAction() {
+  if (!ControlCenter::cameraActions.empty()) {
+    cout << "Number of actions remaining in CameraAction queue: " << ControlCenter::cameraActions.size() << endl;
+    auto currentAction = ControlCenter::cameraActions.front();
+    ControlCenter::cameraActions.pop();
+    return currentAction;
+  } else {
+    return {};
+  }
 }
 

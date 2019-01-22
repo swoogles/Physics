@@ -1,29 +1,16 @@
-/*
- * inputFunctions.cpp
- *
- *  Created on: Jul 10, 2011
- *      Author: brasure
- */
-
 #include "inputFunctions.h"
 
 using namespace std;
 
-shared_ptr<Observer> InputFunctions::observer;
-
-void InputFunctions::stopAutoScaling() {
-	InputFunctions::observer->setAutoScaling(false);
-}
+queue<MouseAction> InputFunctions::mouseActions;
 
 void InputFunctions::myMouse(int button, int state, int x, int y) {
     if (state == GLUT_UP) {
         if (button == GLUT_WHEEL_UP) {
-            InputFunctions::observer->zoomIn();
-            stopAutoScaling();
+            mouseActions.push(MouseAction::SCROLL_UP);
         }
         if (button == GLUT_WHEEL_DOWN) {
-            InputFunctions::observer->zoomOut();
-            stopAutoScaling();
+            mouseActions.push(MouseAction::SCROLL_DOWN);
         }
 
     }
@@ -48,6 +35,14 @@ void InputFunctions::myKey(unsigned char key, int x, int y) {
     puKeyboard(key, PU_DOWN);
 }
 
-void InputFunctions::init(shared_ptr<Observer> observer) {
-    InputFunctions::observer = observer;
+optional<MouseAction> InputFunctions::currentMouseAction() {
+    if (!InputFunctions::mouseActions.empty()) {
+        cout << "Number of actions remaining in queue: " << InputFunctions::mouseActions.size() << endl;
+        auto currentAction = InputFunctions::mouseActions.front();
+        InputFunctions::mouseActions.pop();
+        return currentAction;
+    } else {
+        return {};
+    }
+
 }

@@ -53,25 +53,24 @@ void Quadrant::insert(entity_t insertedShape) {
     this->adjustMass(insertedShape->mass());
     this->weightedPosition = this->weightedPosition.plus(insertedShape->weightedPosition());
 
-    this->subQuadrantThatContains(std::move(insertedShape));
+    this->createSubQuadrantThatContains(std::move(insertedShape));
     if ( isLeaf ) {
         isLeaf = false;
-        this->subQuadrantThatContains(std::move(shapeInQuadrant));
+        this->createSubQuadrantThatContains(std::move(shapeInQuadrant));
     }
     // 3.d centerOfMassRepresentation->setPos( CoMPosition );
 }
 
-QuadrantPointer_t Quadrant::subQuadrantThatContains(entity_t newShape) {
+void Quadrant::createSubQuadrantThatContains(entity_t newShape) {
     auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->position());
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
-        QuadrantPointer_t newSubQuadrant = this->makeSubQuadrant(std::move(newShape));
-        this->assignSubQuadrantAt(targetIndices, newSubQuadrant);
-        return newSubQuadrant;
+        this->assignSubQuadrantAt(
+                targetIndices,
+                this->makeSubQuadrant(std::move(newShape)));
     } else {
         insertionQuadrant->insert(std::move(newShape));
-        return insertionQuadrant;
    };
 
 }
@@ -95,7 +94,7 @@ QuadrantPointer_t Quadrant::makeSubQuadrant(entity_t newShape) const {
                     .withElementsMultipliedBy(targetIndices.polarities());
     PhysicalVector newPos = pos.plus( offsets );
 
-    return std::move(std::make_shared<Quadrant>( newShape, this->level + 1, newPos, this->getWidth() / 2.0 ) );
+    return std::move(make_shared<Quadrant>( newShape, this->level + 1, newPos, this->getWidth() / 2.0 ) );
 }
 
 bool Quadrant::positionIsInQuadrantBoundaries(PhysicalVector insertPos) const {

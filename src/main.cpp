@@ -36,7 +36,7 @@ bool parseRecordingParameters(char **argv, std::time_t  start) {
 }
 
 int main(int argcp, char **argv) {
-    char simulationParameter = argv[2][0];
+    char simulationParameter = argv[2][0]; // TODO I should convert to an Enum immediately, so I can safely pass that to the Simulations class
     PhysicsSandboxProperties properties("simulation.properties");
     Simulation simulation = Simulations::createSimulation(simulationParameter, properties);
 
