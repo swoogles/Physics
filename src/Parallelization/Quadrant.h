@@ -1,22 +1,14 @@
 #ifndef QUADRANT_H_
 #define QUADRANT_H_
 
-#include <plib/sg.h>
-
-#include "../Dimensions/Moveable.h"
 #include "../ShapeFiles/Box.h"
 #include "ShapeFiles/Particle.h"
-#include "../ShapeFiles/PairCollection.h"
 #include "OctreeCoordinates.h"
 
 #include <boost/multi_array/multi_array_ref.hpp>
 #include <boost/multi_array.hpp>
 #include <boost/ref.hpp>
-#include <memory>
-
 #include <functional>
-
-#include "ShapeType.h"
 
 #include <../lib/units.h>
 
@@ -24,7 +16,6 @@ using boost::extents;
 using boost::multi_array;
 
 using std::make_shared;
-using std::weak_ptr;
 
 typedef shared_ptr<Particle> entity_t;
 
@@ -45,7 +36,6 @@ public:
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 
     vector<shared_ptr<Quadrant>> children();
-    unique_ptr<vector<shared_ptr<Quadrant>>> children(unique_ptr<vector<shared_ptr<Quadrant>>> inVector);
 
     QuadrantPointer_t makeSubQuadrant(entity_t newShape) const;
     void applyToAllChildren(function<void (Quadrant)> functor);
@@ -64,7 +54,7 @@ public:
 
     array_typeNew  quadOctree;
 
-    QuadrantPointer_t subQuadrantThatContains(entity_t newShape);
+    void createSubQuadrantThatContains(entity_t newShape);
 
     //! Alters mass of object by dMass
     void adjustMass(kilogram_t dMass);
