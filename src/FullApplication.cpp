@@ -31,9 +31,9 @@ void FullApplication::update() {
                 recorder.captureThisFrame(dimensions.width, dimensions.height);
             }
         }
+        auto & observer = graphicalOperations.getObserver();
         auto mouseAction = InputFunctions::currentMouseAction();
         if (mouseAction.has_value()) {
-            auto & observer = graphicalOperations.getObserver();
             switch(mouseAction.value()) {
                 case MouseAction::SCROLL_UP:
                     observer.zoomIn();
@@ -47,7 +47,6 @@ void FullApplication::update() {
 
     auto cameraAction = ControlCenter::currentCameraAction();
     if (cameraAction.has_value()) {
-        auto & observer = graphicalOperations.getObserver();
         switch(cameraAction.value()) {
             case CameraAction::ROTATE_LEFT: {
                 PhysicalVector leftAngVelocity(0, -.5f, 0);
@@ -79,8 +78,6 @@ void FullApplication::update() {
         }
         }
 
-        // Should just directly call Observer::getCurObserverInstance()
-        auto & observer = graphicalOperations.getObserver();
         observer.update();
 
         // TODO This would be more valuable if it only tried to include the largest N items.
