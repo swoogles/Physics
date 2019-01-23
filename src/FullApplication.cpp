@@ -21,7 +21,6 @@ FullApplication::FullApplication(
     graphicalOperations(graphicalOperations){}
 
 void FullApplication::update() {
-    // TODO ah! I should look at scrolling status of ControlCenter here, and *then* take action on Observer.
         if (! controlCenter.isPaused() ) {
             auto dt = controlCenter.getDt();
             simulation.update(dt);
@@ -34,61 +33,59 @@ void FullApplication::update() {
         }
         auto mouseAction = InputFunctions::currentMouseAction();
         if (mouseAction.has_value()) {
-            cout << "MouseAction value: " << mouseAction.value() << endl;
-            auto observer = graphicalOperations.localObserver;
+            auto & observer = graphicalOperations.getObserver();
             switch(mouseAction.value()) {
                 case MouseAction::SCROLL_UP:
-                    observer->zoomIn();
+                    observer.zoomIn();
                     break;
                 case MouseAction::SCROLL_DOWN:
-                    observer->zoomOut();
+                    observer.zoomOut();
                     break;
             }
-            observer->setAutoScaling(false);
+            observer.setAutoScaling(false);
         }
 
     auto cameraAction = ControlCenter::currentCameraAction();
     if (cameraAction.has_value()) {
-        cout << "CameraAction value: " << cameraAction.value() << endl;
-        auto observer = graphicalOperations.localObserver;
+        auto & observer = graphicalOperations.getObserver();
         switch(cameraAction.value()) {
             case CameraAction::ROTATE_LEFT: {
                 PhysicalVector leftAngVelocity(0, -.5f, 0);
-                observer->adjustAngularVelocity(leftAngVelocity);
+                observer.adjustAngularVelocity(leftAngVelocity);
                 break;
             }
             case CameraAction::ROTATE_RIGHT: {
                 PhysicalVector rightAngVelocity(0, .5f, 0);
-                observer->adjustAngularVelocity(rightAngVelocity);
+                observer.adjustAngularVelocity(rightAngVelocity);
                 break;
             }
             case CameraAction::ROTATE_UP: {
                 PhysicalVector upAngVelocity(+0.5f, 0, 0);
-                observer->adjustAngularVelocity(upAngVelocity);
+                observer.adjustAngularVelocity(upAngVelocity);
                 break;
             }
             case CameraAction::ROTATE_DOWN: {
                 PhysicalVector downAngVelocity(-0.5f, 0, 0);
-                observer->adjustAngularVelocity(downAngVelocity);
+                observer.adjustAngularVelocity(downAngVelocity);
             }
             case TOGGLE_AUTOSCALING: {
                 break;
             }
             case STOP_ROTATION: {
                 PhysicalVector stoppedAngVelocity(0,0,0);
-                observer->adjustAngularVelocity(stoppedAngVelocity);
+                observer.adjustAngularVelocity(stoppedAngVelocity);
                 break;
             }
         }
         }
 
         // Should just directly call Observer::getCurObserverInstance()
-        auto observer = graphicalOperations.localObserver;
-        observer->update();
+        auto & observer = graphicalOperations.getObserver();
+        observer.update();
 
         // TODO This would be more valuable if it only tried to include the largest N items.
         // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
-        observer->calcMinPullback(simulation.getXYMinsAndMaxes());
+        observer.calcMinPullback(simulation.getXYMinsAndMaxes());
 
         time_point end = std::chrono::system_clock::now();
 

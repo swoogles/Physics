@@ -29,7 +29,7 @@ void GraphicalOperations::localDisplay() {
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
 
-    localObserver->applyView();
+    localObserver.applyView();
 
     glMatrixMode(GL_MODELVIEW);
 
@@ -59,7 +59,7 @@ GraphicalOperations::GraphicalOperations(Simulation & simulation, ControlCenter 
         , localControlCenter(controlCenter)
         , mainDisplayNum(CenterStageWindow)
         , control_center_num(controlCenterWindow)
-        , localObserver(make_shared<Observer>(windowDimensions))
+        , localObserver(windowDimensions)
 {
 }
 
@@ -86,5 +86,9 @@ WindowDimensions GraphicalOperations::currentDimensions() {
             glutGet(GLUT_WINDOW_HEIGHT),
             glutGet(GLUT_WINDOW_WIDTH)
             );
+}
+
+Observer & GraphicalOperations::getObserver() {
+    return this->localObserver;
 }
 

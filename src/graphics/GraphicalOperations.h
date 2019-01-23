@@ -29,19 +29,17 @@ public:
                         int CenterStageWindow, int controlCenterWindow,
                         WindowDimensions windowDimensions);
 
-    shared_ptr<Observer> localObserver;
     Simulation & localSimulation;
     ControlCenter localControlCenter;
     void localDisplay();
     void controlDisplay();
     void fullDisplay();
     WindowDimensions currentDimensions();
+    Observer & getObserver();
 private:
+    Observer localObserver;
     // TODO replace ControlCenter param with a simple "shouldRenderOctree" bool
     static void fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant);
-
-    void configureControlWindow(WindowDimensions mainWindowDimensions);
-
 
     int control_center_num;
     int mainDisplayNum;
