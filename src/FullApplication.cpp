@@ -4,6 +4,41 @@
 
 #include "FullApplication.h"
 
+void processCameraAction(
+        Observer & observer,
+        CameraAction cameraAction
+) {
+    switch(cameraAction) {
+        case CameraAction::ROTATE_LEFT: {
+            PhysicalVector leftAngVelocity(0, -.5f, 0);
+            observer.adjustAngularVelocity(leftAngVelocity);
+            break;
+        }
+        case CameraAction::ROTATE_RIGHT: {
+            PhysicalVector rightAngVelocity(0, .5f, 0);
+            observer.adjustAngularVelocity(rightAngVelocity);
+            break;
+        }
+        case CameraAction::ROTATE_UP: {
+            PhysicalVector upAngVelocity(+0.5f, 0, 0);
+            observer.adjustAngularVelocity(upAngVelocity);
+            break;
+        }
+        case CameraAction::ROTATE_DOWN: {
+            PhysicalVector downAngVelocity(-0.5f, 0, 0);
+            observer.adjustAngularVelocity(downAngVelocity);
+        }
+        case TOGGLE_AUTOSCALING: {
+            break;
+        }
+        case STOP_ROTATION: {
+            PhysicalVector stoppedAngVelocity(0,0,0);
+            observer.adjustAngularVelocity(stoppedAngVelocity);
+            break;
+        }
+    }
+}
+
 FullApplication::FullApplication(
         Simulation &simulation,
         CenterStage mainDisplay,
@@ -47,36 +82,8 @@ void FullApplication::update() {
 
     auto cameraAction = ControlCenter::currentCameraAction();
     if (cameraAction.has_value()) {
-        switch(cameraAction.value()) {
-            case CameraAction::ROTATE_LEFT: {
-                PhysicalVector leftAngVelocity(0, -.5f, 0);
-                observer.adjustAngularVelocity(leftAngVelocity);
-                break;
-            }
-            case CameraAction::ROTATE_RIGHT: {
-                PhysicalVector rightAngVelocity(0, .5f, 0);
-                observer.adjustAngularVelocity(rightAngVelocity);
-                break;
-            }
-            case CameraAction::ROTATE_UP: {
-                PhysicalVector upAngVelocity(+0.5f, 0, 0);
-                observer.adjustAngularVelocity(upAngVelocity);
-                break;
-            }
-            case CameraAction::ROTATE_DOWN: {
-                PhysicalVector downAngVelocity(-0.5f, 0, 0);
-                observer.adjustAngularVelocity(downAngVelocity);
-            }
-            case TOGGLE_AUTOSCALING: {
-                break;
-            }
-            case STOP_ROTATION: {
-                PhysicalVector stoppedAngVelocity(0,0,0);
-                observer.adjustAngularVelocity(stoppedAngVelocity);
-                break;
-            }
-        }
-        }
+        processCameraAction(observer, cameraAction.value());
+    }
 
         observer.update();
 
