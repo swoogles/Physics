@@ -90,6 +90,7 @@ int main(int argcp, char **argv) {
     );
 
     glutDisplayFunc([]() {
+        // TODO Should update ControlCenter every time, but only re-render simulation in the idle function
         globalFullApplication->graphicalOperations.fullDisplay();
     });
 
