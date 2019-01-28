@@ -7,13 +7,12 @@
 #include "../src/ShapeFiles/TouchingPair.h"
 #include "../src/ShapeFiles/PairCollection.h"
 #include "ShapeFiles/Particle.h"
-#include "../src/ShapeFiles/ComplicatedFunctions.h"
 #include "TestUtils.h"
 #include <plib/sg.h>
 
 #include <memory>
 
-TEST_CASE("normalize list of pairs", "[pairCollection]") {
+TEST_CASE("normalize list of pairs", "[green]") {
     shared_ptr<Particle> a = TestUtils::testCircle();
     cout << "a: " << &(*a) << endl;
     shared_ptr<Particle> b = TestUtils::testCircle();
@@ -44,6 +43,7 @@ TEST_CASE("normalize list of pairs", "[pairCollection]") {
             PairCollection pairs;
             pairs.insertIfUnique(ab);
             pairs.insertIfUnique(bc);
+            cout << "doomed : " << pairs.doomed() << endl;
             REQUIRE(pairs.size() == 2);
             REQUIRE(pairs.containsPair(TouchingPair(a, c)));
 

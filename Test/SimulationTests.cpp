@@ -15,8 +15,8 @@ TEST_CASE( "Run simple simulation until merge happens", "[green]" ) {
     Simulation  simulation = Simulations::QuadrantTesting_simplest(NAIVE);
     auto initialMass = simulation.getMass();
     REQUIRE(simulation.getSize() == 3);
-    for (int i = 0; i < 1e4; i++) {
-        simulation.update(hour_t(1));
+    for (int i = 0; i < 5e5; i++) {
+        simulation.update(hour_t(10000));
     }
     REQUIRE(simulation.getSize() == 1);
     auto mergedMass = simulation.getMass();

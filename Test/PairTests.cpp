@@ -93,6 +93,8 @@ TEST_CASE("add collections", "[green]") {
     const TouchingPair ac(a, c);
     const TouchingPair ca(c, a);
 
+    cout << "Pair: "  << ab << endl;
+
     SECTION("Add collection to collection") {
         PairCollection destination;
         PairCollection source;
@@ -100,10 +102,15 @@ TEST_CASE("add collections", "[green]") {
 
         source.insertIfUnique(ac);
 
+        cout << "source Collection: " << source << endl;
+
         destination.insertUniqueElements(source);
+        cout << "destination Collection: " << destination << endl;
+        cout << "destination doomed: " << destination.doomed() << endl;
         REQUIRE(destination.doomed().contains(b));
+        REQUIRE(destination.doomed().contains(c));
         // This needs to be denied in the current implementation to avoid faulty re-merges
-        REQUIRE_FALSE(destination.doomed().contains(c));
+        REQUIRE_FALSE(destination.doomed().contains(a));
     }
 }
 

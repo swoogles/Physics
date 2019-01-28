@@ -9,3 +9,4 @@ octree_theta=0.5
 sandbox_width=1e2
 #Figure out units here
 mass=598910
+maximum_runtime=12
