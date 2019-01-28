@@ -133,8 +133,8 @@ bool PairCollection::containsPair(const TouchingPair & newPair) {
 
 ostream &operator<<(ostream &os, const PairCollection &collection) {
     os << "[";
-    for (std::vector<TouchingPair>::const_iterator i = collection.pairs.begin(); i != collection.pairs.end(); ++i)
-        os  << *i << ' ';
+    for (auto i : collection.pairs)
+        os  << i << ' ';
     os << "]";
 
     return os;
