@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <optional>
+#include <ostream>
 
 
 using std::vector;
@@ -25,6 +26,8 @@ public:
 //    bool any_of( std::function< bool(const TouchingPair &)>& const lambda );
     inline vector<TouchingPair> brittlePairs() { return pairs; }
     bool containsPair(const TouchingPair & newPair);
+
+    friend ostream &operator<<(ostream &os, const PairCollection &collection);
 
 private:
     vector<TouchingPair> pairs;

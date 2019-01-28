@@ -130,3 +130,12 @@ bool PairCollection::containsPair(const TouchingPair & newPair) {
     auto pairFunc = [&newPair](const TouchingPair pair) { return newPair.sameItems(pair); };
     return std::any_of(pairs.begin(), pairs.end(), pairFunc);
 }
+
+ostream &operator<<(ostream &os, const PairCollection &collection) {
+    os << "[";
+    for (std::vector<TouchingPair>::const_iterator i = collection.pairs.begin(); i != collection.pairs.end(); ++i)
+        os  << *i << ' ';
+    os << "]";
+
+    return os;
+}
