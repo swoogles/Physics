@@ -55,6 +55,8 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 clean:
 	$(RM) -r $(BUILD_DIR)
 
+all: main test
+
 -include $(DEPS)
 
 MKDIR_P ?= mkdir -p
