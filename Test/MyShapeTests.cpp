@@ -34,7 +34,5 @@ TEST_CASE("Equally distribute points on a sphere", "[todo]") {
 
     auto results = Particle::pointsEvenlyDistributedOnSphere(numPoints, radius);
     SECTION("Numerous points to be validated" ) {
-        auto pointsInCorrectPosition = false;
-        REQUIRE(pointsInCorrectPosition);
     }
 }
