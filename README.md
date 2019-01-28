@@ -42,3 +42,11 @@ sudo apt install libjpeg-dev
 sudo apt-get install libgraphicsmagick++1-dev
 sudo apt-get install libgraphicsmagick1-dev
 
+
+
+Important Commands
+  // This is the command I should be executing as I develop
+  make && make test && ./build/Tests && ./build/PhysicsSandbox r 1
+ 
+  
+  
