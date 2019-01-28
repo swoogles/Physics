@@ -80,12 +80,13 @@ int main(int argcp, char **argv) {
             openGlSetup.controlCenterNum,
             windowDimensions);
 
-    globalFullApplication = make_unique<FullApplication>(simulation,
-                                                         centerStage,
-                                                         shouldRecord,
-                                                         start,
-                                                         properties.maximumRunTime,
-                                                         graphicalOperations
+    globalFullApplication = make_unique<FullApplication>(
+            simulation,
+            centerStage,
+            shouldRecord,
+            start,
+            properties.maximumRunTime,
+            graphicalOperations
     );
 
     glutDisplayFunc([]() {
