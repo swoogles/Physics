@@ -19,6 +19,8 @@
 #include "Physics/Simulations.h"
 #include "Physics/PhysicsSandboxProperties.h"
 
+#include "Sandbox/ApplicationResult.h"
+
 #include <lib/pstream.h>
 
 #include <chrono>
@@ -48,7 +50,8 @@ public:
     const std::chrono::seconds maximumRuntime;
     // TODO reinstate const-ness
     GraphicalOperations graphicalOperations;
-    void update();
+    // TODO Instead of void, return a Result[SUCCESSFUL_STEP, COMPLETED, FAILED]
+    ApplicationResult update();
 };
 
 

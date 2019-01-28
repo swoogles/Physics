@@ -24,7 +24,7 @@ using std::chrono::system_clock;
 
 unique_ptr<FullApplication> globalFullApplication;
 
-bool parseRecordingParameters(char **argv, std::time_t  start) {
+bool parseRecordingParameters(char **argv) {
     char recording = argv[1][0];
     if ( recording == 'r') {
         return true;
@@ -50,9 +50,18 @@ int main(int argcp, char **argv) {
             );
 
     time_point start = system_clock::now();
-    bool shouldRecord = parseRecordingParameters(argv, system_clock::to_time_t(start));
+    bool shouldRecord = parseRecordingParameters(argv);
 
-    auto idleFunction = []() { globalFullApplication->update(); };
+    auto idleFunction = []() {
+        auto result = globalFullApplication->update();
+        switch (result) {
+            case SUCESSFUL_STEP:
+                break;
+            case COMPLETED:
+                cout << "Should make new Simulation now." << endl;
+                exit(0);
+        }
+    };
     OpenGlSetup openGlSetup{};
     openGlSetup.initialize(
         windowDimensions,

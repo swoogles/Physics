@@ -92,7 +92,7 @@ FullApplication::FullApplication(
     maximumRuntime(maximumRuntime),
     graphicalOperations(graphicalOperations){}
 
-void FullApplication::update() {
+ApplicationResult FullApplication::update() {
     if (! controlCenter.isPaused() ) {
         auto dt = controlCenter.getDt();
         simulation.update(dt);
@@ -112,8 +112,10 @@ void FullApplication::update() {
         if ( recording ) {
             FfmpegClient client;
             client.createVideo(system_clock::to_time_t(start));
-            exit(0);
         }
+
+        return ApplicationResult::COMPLETED;
     }
+    return ApplicationResult::SUCESSFUL_STEP;
 }
 
