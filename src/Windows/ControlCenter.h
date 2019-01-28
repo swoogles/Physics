@@ -22,7 +22,7 @@ using std::optional;
  */
 class ControlCenter {
 public:
-	ControlCenter(duration dt, int windowWidth);
+	ControlCenter(local_duration dt, int windowWidth);
 
     inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
@@ -52,14 +52,14 @@ public:
 	static void flipAutoScaling(puObject * caller);
 
 	bool isPaused() const;
-	duration getDt() const;
+	local_duration getDt() const;
 	bool shouldRenderOctree();
 	static optional<CameraAction> currentCameraAction();
 private:
 	static queue<CameraAction> cameraActions;
 	static bool paused;
-	static duration dt;
-	duration localDt;
+	static local_duration dt;
+	local_duration localDt;
 	static bool renderOctree ;
 
 	puGroup * runtime_group;

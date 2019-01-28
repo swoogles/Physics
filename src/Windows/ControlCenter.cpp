@@ -11,7 +11,7 @@ using namespace std;
 
 // TODO Ground these. No longer a need to make them static
 bool ControlCenter::paused = false;
-duration ControlCenter::dt;
+local_duration ControlCenter::dt;
 bool ControlCenter::renderOctree = false;
 
 queue<CameraAction> ControlCenter::cameraActions;
@@ -58,7 +58,7 @@ bool ControlCenter::isPaused() const {
   return ControlCenter::paused;
 }
 
-duration ControlCenter::getDt() const {
+local_duration ControlCenter::getDt() const {
   return ControlCenter::dt;
 }
 
@@ -70,7 +70,7 @@ bool ControlCenter::shouldRenderOctree() {
     return renderOctree;
 }
 
-ControlCenter::ControlCenter(duration dt, int windowWidth): localDt(dt) {
+ControlCenter::ControlCenter(local_duration dt, int windowWidth): localDt(dt) {
   this->dt = dt;
   showingRunTime = false;
 

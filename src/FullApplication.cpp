@@ -54,11 +54,33 @@ void processCameraAction(
     }
 }
 
+void updateObserver(
+        Observer & observer,
+        MaximumValues maximumValues
+) {
+    auto mouseAction = InputFunctions::currentMouseAction();
+    if (mouseAction.has_value()) {
+        processMouseAction(observer, mouseAction.value());
+    }
+
+    auto cameraAction = ControlCenter::currentCameraAction();
+    if (cameraAction.has_value()) {
+        processCameraAction(observer, cameraAction.value());
+    }
+
+    observer.update();
+
+    // TODO This would be more valuable if it only tried to include the largest N items.
+    // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
+    observer.calcMinPullback(maximumValues);
+}
+
+
 FullApplication::FullApplication(
         Simulation &simulation,
         CenterStage mainDisplay,
         bool shouldRecord,
-        time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
+        time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
         chrono::seconds maximumRuntime,
         GraphicalOperations graphicalOperations
 ) : simulation(simulation),
@@ -81,30 +103,15 @@ void FullApplication::update() {
             recorder.captureThisFrame(dimensions.width, dimensions.height);
         }
     }
-    auto & observer = graphicalOperations.getObserver();
-    auto mouseAction = InputFunctions::currentMouseAction();
-    if (mouseAction.has_value()) {
-        processMouseAction(observer, mouseAction.value());
-    }
+    updateObserver(graphicalOperations.getObserver(), simulation.getXYMinsAndMaxes());
 
-    auto cameraAction = ControlCenter::currentCameraAction();
-    if (cameraAction.has_value()) {
-        processCameraAction(observer, cameraAction.value());
-    }
+    time_point end = system_clock::now();
 
-    observer.update();
-
-    // TODO This would be more valuable if it only tried to include the largest N items.
-    // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
-    observer.calcMinPullback(simulation.getXYMinsAndMaxes());
-
-    time_point end = std::chrono::system_clock::now();
-
-    std::chrono::duration<double> elapsed_seconds = end-start;
+    duration<double> elapsed_seconds = end-start;
     if ( elapsed_seconds > (maximumRuntime)) {
         if ( recording ) {
             FfmpegClient client;
-            client.createVideo(std::chrono::system_clock::to_time_t(start));
+            client.createVideo(system_clock::to_time_t(start));
             exit(0);
         }
     }

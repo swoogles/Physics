@@ -10,7 +10,7 @@ using namespace units::time;
 using namespace units::mass;
 using namespace units::density;
 
-typedef hour_t duration;
+typedef hour_t local_duration;
 typedef kilogram_t mass;
 typedef kilograms_per_cubic_meter_t density;
 

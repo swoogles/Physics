@@ -17,8 +17,8 @@ using std::size_t;
 class Interactions {
 public:
     ParticleList crackPhysicalObject(Particle &shape, joule_t kineticEnergy, int numberOfPieces);
-    PhysicalVector calcForceGravNew(Particle &object1, Moveable &object2, duration dt) const;
-    void elasticCollision(Particle &object1, Particle &object2, duration dt);
+    PhysicalVector calcForceGravNew(Particle &object1, Moveable &object2, local_duration dt) const;
+    void elasticCollision(Particle &object1, Particle &object2, local_duration dt);
 };
 
 

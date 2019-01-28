@@ -25,6 +25,8 @@
 #include <iomanip>
 
 using std::chrono::time_point;
+using std::chrono::duration;
+using std::chrono::system_clock;
 
 class FullApplication {
 public:
@@ -32,7 +34,7 @@ public:
         Simulation &simulation,
         CenterStage centerStage,
         bool shouldRecord,
-        time_point<chrono::system_clock, chrono::duration<long, ratio<1, 1000000000>>> start,
+        time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
         chrono::seconds maximumRuntime,
         GraphicalOperations graphicalOperations
     );
@@ -42,7 +44,7 @@ public:
     CenterStage centerStage;
     Recorder recorder;
     const bool recording;
-    const time_point<std::chrono::_V2::system_clock, std::chrono::duration<long int, std::ratio<1, 1000000000> >> start;
+    const time_point<system_clock, duration<long int, std::ratio<1, 1000000000> >> start;
     const std::chrono::seconds maximumRuntime;
     // TODO reinstate const-ness
     GraphicalOperations graphicalOperations;
