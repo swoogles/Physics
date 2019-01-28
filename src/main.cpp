@@ -20,6 +20,7 @@
 #include <iomanip>
 
 using std::chrono::time_point;
+using std::chrono::system_clock;
 
 unique_ptr<FullApplication> globalFullApplication;
 
@@ -48,8 +49,8 @@ int main(int argcp, char **argv) {
                     1280
             );
 
-    time_point start = std::chrono::system_clock::now();
-    bool shouldRecord = parseRecordingParameters(argv, std::chrono::system_clock::to_time_t(start));
+    time_point start = system_clock::now();
+    bool shouldRecord = parseRecordingParameters(argv, system_clock::to_time_t(start));
 
     auto idleFunction = []() { globalFullApplication->update(); };
     OpenGlSetup openGlSetup{};
@@ -60,7 +61,7 @@ int main(int argcp, char **argv) {
 
     ControlCenter controlCenter(hour_t(properties.dt), windowDimensions.width);
 
-    auto outputTime = std::chrono::system_clock::to_time_t(start);
+    auto outputTime = system_clock::to_time_t(start);
     CenterStage centerStage(windowDimensions.width, outputTime);
 
     GraphicalOperations graphicalOperations(
