@@ -119,3 +119,11 @@ bool ParticleList::contains(item_t searchShape) const {
         return searchShape == curShape;
     });
 }
+
+ostream &operator<<(ostream &os, const ParticleList &particleList) {
+    os << "[";
+    for (auto i : particleList.shapes)
+        os  << i << ' ';
+    os << "]";
+    return os;
+}

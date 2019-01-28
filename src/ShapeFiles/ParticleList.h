@@ -5,6 +5,8 @@
 #include <list>
 #include <algorithm>
 #include <../lib/units.h>
+#include <ostream>
+
 using namespace units::time;
 
 using std::size_t;
@@ -30,7 +32,10 @@ public:
     inline size_t size() { return shapes.size(); };
 
     bool contains(item_t searchShape) const;
-  private:
+
+    friend ostream &operator<<(ostream &os, const ParticleList &particleList);
+
+private:
     particleVector shapes;
     void ensureNoNullEntries(string caller);
 
