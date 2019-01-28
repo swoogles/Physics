@@ -4,6 +4,21 @@
 
 #include "FullApplication.h"
 
+void processMouseAction(
+        Observer & observer,
+        MouseAction  mouseAction
+) {
+    switch(mouseAction) {
+        case MouseAction::SCROLL_UP:
+            observer.zoomIn();
+            break;
+        case MouseAction::SCROLL_DOWN:
+            observer.zoomOut();
+            break;
+    }
+    observer.setAutoScaling(false);
+}
+
 void processCameraAction(
         Observer & observer,
         CameraAction cameraAction
@@ -56,50 +71,42 @@ FullApplication::FullApplication(
     graphicalOperations(graphicalOperations){}
 
 void FullApplication::update() {
-        if (! controlCenter.isPaused() ) {
-            auto dt = controlCenter.getDt();
-            simulation.update(dt);
-            centerStage.update(dt.value());
+    if (! controlCenter.isPaused() ) {
+        auto dt = controlCenter.getDt();
+        simulation.update(dt);
+        centerStage.update(dt.value());
 
-            if ( recording ) {
-                auto dimensions = graphicalOperations.currentDimensions();
-                recorder.captureThisFrame(dimensions.width, dimensions.height);
-            }
+        if ( recording ) {
+            auto dimensions = graphicalOperations.currentDimensions();
+            recorder.captureThisFrame(dimensions.width, dimensions.height);
         }
-        auto & observer = graphicalOperations.getObserver();
-        auto mouseAction = InputFunctions::currentMouseAction();
-        if (mouseAction.has_value()) {
-            switch(mouseAction.value()) {
-                case MouseAction::SCROLL_UP:
-                    observer.zoomIn();
-                    break;
-                case MouseAction::SCROLL_DOWN:
-                    observer.zoomOut();
-                    break;
-            }
-            observer.setAutoScaling(false);
-        }
+    }
+    auto & observer = graphicalOperations.getObserver();
+    auto mouseAction = InputFunctions::currentMouseAction();
+    if (mouseAction.has_value()) {
+        processMouseAction(observer, mouseAction.value());
+    }
 
     auto cameraAction = ControlCenter::currentCameraAction();
     if (cameraAction.has_value()) {
         processCameraAction(observer, cameraAction.value());
     }
 
-        observer.update();
+    observer.update();
 
-        // TODO This would be more valuable if it only tried to include the largest N items.
-        // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
-        observer.calcMinPullback(simulation.getXYMinsAndMaxes());
+    // TODO This would be more valuable if it only tried to include the largest N items.
+    // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
+    observer.calcMinPullback(simulation.getXYMinsAndMaxes());
 
-        time_point end = std::chrono::system_clock::now();
+    time_point end = std::chrono::system_clock::now();
 
-        std::chrono::duration<double> elapsed_seconds = end-start;
-        if ( elapsed_seconds > (maximumRuntime)) {
-            if ( recording ) {
-                FfmpegClient client;
-                client.createVideo(std::chrono::system_clock::to_time_t(start));
-                exit(0);
-            }
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    if ( elapsed_seconds > (maximumRuntime)) {
+        if ( recording ) {
+            FfmpegClient client;
+            client.createVideo(std::chrono::system_clock::to_time_t(start));
+            exit(0);
         }
     }
+}
 
