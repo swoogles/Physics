@@ -10,7 +10,7 @@ Observer::Observer(WindowDimensions windowDimensions)
 	float aspect= windowDimensions.width;
 	aspect /= windowDimensions.height;
 	float znear=1.0f;
-	float zfar=1e12f;
+	float zfar=1e15f;
 	perspectiveMat = new float [16];
     this->BuildPerspProjMat(perspectiveMat, aspect, znear, zfar);
 }

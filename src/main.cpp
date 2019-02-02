@@ -15,6 +15,7 @@
 #include "Physics/PhysicsSandboxProperties.h"
 
 #include "FullApplication.h"
+#include "Input/ParameterArguments.h"
 
 #include <chrono>
 #include <iomanip>
@@ -24,16 +25,17 @@ using std::chrono::system_clock;
 
 unique_ptr<FullApplication> globalFullApplication;
 
-bool parseRecordingParameters(char **argv) {
-    char recording = argv[1][0];
-    if ( recording == 'r') {
-        return true;
-    } else if (recording == 'x') {
-        return false;
-    } else {
-        cout << "Bad recording value! Must be 'x' or 'r'" << endl;
-        exit(1);
+void displayFunc() {
+    auto result = globalFullApplication->update();
+    switch (result) {
+        case SUCESSFUL_STEP:
+            break;
+        case COMPLETED:
+            cout << "Should make new Simulation now." << endl;
+            exit(0);
     }
+    // TODO Should update ControlCenter every time, but only re-render simulation in the idle function
+    globalFullApplication->graphicalOperations.fullDisplay();
 }
 
 int main(int argcp, char **argv) {
@@ -50,17 +52,10 @@ int main(int argcp, char **argv) {
             );
 
     time_point start = system_clock::now();
-    bool shouldRecord = parseRecordingParameters(argv);
+    ParameterArguments parameterArguments;
+    bool shouldRecord = parameterArguments.parseRecordingParameters(argv);
 
     auto idleFunction = []() {
-        auto result = globalFullApplication->update();
-        switch (result) {
-            case SUCESSFUL_STEP:
-                break;
-            case COMPLETED:
-                cout << "Should make new Simulation now." << endl;
-                exit(0);
-        }
     };
     OpenGlSetup openGlSetup{};
     openGlSetup.initialize(
@@ -90,8 +85,7 @@ int main(int argcp, char **argv) {
     );
 
     glutDisplayFunc([]() {
-        // TODO Should update ControlCenter every time, but only re-render simulation in the idle function
-        globalFullApplication->graphicalOperations.fullDisplay();
+        displayFunc();
     });
 
     glutMainLoop();
