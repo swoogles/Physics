@@ -34,7 +34,6 @@ void displayFunc() {
             cout << "Should make new Simulation now." << endl;
             exit(0);
     }
-    // TODO Should update ControlCenter every time, but only re-render simulation in the idle function
     globalFullApplication->graphicalOperations.fullDisplay();
 }
 
