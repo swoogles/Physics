@@ -52,8 +52,7 @@ int main(int argcp, char **argv) {
             );
 
     time_point start = system_clock::now();
-    ParameterArguments parameterArguments;
-    bool shouldRecord = parameterArguments.parseRecordingParameters(argv);
+    ParameterArguments parameterArguments(argv);
 
     auto idleFunction = []() {
     };
@@ -78,7 +77,7 @@ int main(int argcp, char **argv) {
     globalFullApplication = make_unique<FullApplication>(
             simulation,
             centerStage,
-            shouldRecord,
+            parameterArguments.isRecording(),
             start,
             properties.maximumRunTime,
             graphicalOperations

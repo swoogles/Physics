@@ -11,7 +11,14 @@ using namespace std;
 
 class ParameterArguments {
 public:
+    ParameterArguments(char **argv);
+
     bool parseRecordingParameters(char **argv);
+private:
+    char **argv;
+    bool recording;
+public:
+    bool isRecording() const;
 
 };
 
