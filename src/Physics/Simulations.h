@@ -7,6 +7,7 @@
 #include "ForceCalculationMethod.h"
 #include "AstronomicalValues.h"
 #include "PhysicsSandboxProperties.h"
+#include "CraftedSimulation.h"
 
 class Simulations {
 public:
@@ -20,7 +21,7 @@ public:
 
     static Simulation bodyFormation(int numPieces, PhysicsSandboxProperties properties);
 
-    static Simulation createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties);
+    static Simulation createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties);
 
     static PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
   private:

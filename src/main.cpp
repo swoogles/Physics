@@ -38,9 +38,11 @@ void displayFunc() {
 }
 
 int main(int argcp, char **argv) {
-    char simulationParameter = argv[2][0]; // TODO I should convert to an Enum immediately, so I can safely pass that to the Simulations class
     PhysicsSandboxProperties properties("simulation.properties");
-    Simulation simulation = Simulations::createSimulation(simulationParameter, properties);
+
+    ParameterArguments parameterArguments(argv);
+    Simulation simulation =
+            Simulations::createSimulation(parameterArguments.getCraftedSimulation(), properties);
 
     auto windowDimensions =
             WindowDimensions(
@@ -51,7 +53,6 @@ int main(int argcp, char **argv) {
             );
 
     time_point start = system_clock::now();
-    ParameterArguments parameterArguments(argv);
 
     auto idleFunction = []() {
     };

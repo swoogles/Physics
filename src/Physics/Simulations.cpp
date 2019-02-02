@@ -7,16 +7,15 @@
 
 #include "Simulations.h"
 
-Simulation Simulations::createSimulation(char simNumber, PhysicsSandboxProperties simulationProperties) {
+Simulation Simulations::createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties) {
     ForceCalculationMethod forceCalculationMethod = simulationProperties.forceCalculationMethod;
-    if ( simNumber == '0' ) {
-    } else if ( simNumber == '1' ) {
+    if ( simulation == CraftedSimulation::BODY_FORMATION) {
         return Simulations::bodyFormation(simulationProperties.numShapes, simulationProperties);
-    } else if ( simNumber == '2' ) {
+    } else if ( simulation == DISRUPT_GROUP) {
         return Simulations::disruption_ArbitraryList(simulationProperties);
-    } else if ( simNumber == '3' ) {
+    } else if ( simulation == QUADRANT_TESTING) {
         return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
-    } else if ( simNumber == '4') {
+    } else if ( simulation == MULTIPLE_ORBITERS) {
         return multipleOrbiters(simulationProperties);
     } else {
         exit(1);

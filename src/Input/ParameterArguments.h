@@ -6,6 +6,7 @@
 #define PHYSICS_PARAMETERARGUMENTS_H
 
 #include <iostream>
+#include <Physics/CraftedSimulation.h>
 
 using namespace std;
 
@@ -17,6 +18,10 @@ public:
 private:
     char **argv;
     bool recording;
+    CraftedSimulation craftedSimulation;
+public:
+    CraftedSimulation getCraftedSimulation() const;
+
 public:
     bool isRecording() const;
 
