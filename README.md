@@ -37,12 +37,15 @@ Installation requirements:
 sudo apt install libjpeg-dev
   -Correction:
   sudo apt install libjpeg8-dev
+	pacman -S libjpeg9
 
   // Some combination of these??
 sudo apt-get install libgraphicsmagick++1-dev
 sudo apt-get install libgraphicsmagick1-dev
 
 
+sudo pacman -S plib boost
+sudo pacman -S grc
 
 Important Commands
   // This is the command I should be executing as I develop

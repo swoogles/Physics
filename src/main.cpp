@@ -83,6 +83,11 @@ int main(int argcp, char **argv) {
             graphicalOperations
     );
 
+    glutSetWindow(1);
+    glutDisplayFunc([]() {
+        globalFullApplication->graphicalOperations.fullDisplay();
+    });
+    glutSetWindow(2);
     glutDisplayFunc([]() {
         displayFunc();
     });

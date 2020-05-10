@@ -191,8 +191,10 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
                 newColor
         );
 
+        cout << "got here" << endl;
         //Check if being placed on previously created object
         while ( physicalObjects.hasConflictsWith( *curShape ) ) {
+            cout << "conflict. trying again" << endl;
             PhysicalVector newPosAttempt = randomPointInSphere(properties.sandboxWidth, target);
             curShape->setPos( newPosAttempt );
         }

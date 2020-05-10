@@ -46,7 +46,7 @@ void GraphicalOperations::localDisplay() {
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
 
-    puDisplay();
+    puDisplay(mainDisplayNum);
     glutSwapBuffers();
     glutPostRedisplay();
 

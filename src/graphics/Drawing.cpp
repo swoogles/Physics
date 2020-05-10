@@ -5,6 +5,7 @@ void Drawing::draw(Moveable &myShape) {
 
     //Translate
     PhysicalVector pos (myShape.position());
+
     glTranslatef(pos.x(), pos.y(), pos.z());
 
     //Rotate

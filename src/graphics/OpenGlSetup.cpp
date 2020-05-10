@@ -26,6 +26,7 @@ void OpenGlSetup::initialize(WindowDimensions dimensions, void (*idleFunction)(v
     glutInitWindowSize(dimensions.width,dimensions.height);
 
     int main_window = glutCreateWindow("Center Stage");
+    cout << "main window: " << main_window << endl;
     glutSetWindow(main_window);
     mainDisplayNum = main_window;
 
@@ -34,6 +35,7 @@ void OpenGlSetup::initialize(WindowDimensions dimensions, void (*idleFunction)(v
 
     configureControlWindow(dimensions);
     controlCenterNum = glutCreateWindow("Control Center");
+    cout << "control center: " << controlCenterNum << endl;
 
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);

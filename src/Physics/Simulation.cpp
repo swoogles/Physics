@@ -227,6 +227,7 @@ void Simulation::calcForcesAll(hour_t dt) {
         case ForceCalculationMethod ::OCTREE:
             PairCollection deleteList;
 
+//            cout << this->physicalObjects.getShapes().at(0)->position() << endl;
             for ( const auto & curShape : this->physicalObjects.getShapes() ) {
                 deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, *this->getQuadrant(), dt, 0));
             }
