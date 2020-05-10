@@ -6,6 +6,10 @@ void Drawing::draw(Moveable &myShape) {
     //Translate
     PhysicalVector pos (myShape.position());
 
+    glBegin(GL_POINTS);                      // Select points as the primitive
+    glVertex3f(pos.x(), pos.y(), pos.z());    // Specify a point
+    glEnd();
+
     glTranslatef(pos.x(), pos.y(), pos.z());
 
     //Rotate
