@@ -191,7 +191,6 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
                 newColor
         );
 
-        cout << "got here" << endl;
         //Check if being placed on previously created object
         while ( physicalObjects.hasConflictsWith( *curShape ) ) {
             cout << "conflict. trying again" << endl;
@@ -233,7 +232,7 @@ PhysicalVector Simulations::randomSplitBodyMomentum(kilogram_t pieceMass) {
         randMult = rand()%100;
         if (randMult % 2 == 0)
             randMult *= -1;
-        value = randMult * pieceMass.value() * 0.000003;
+        value = randMult * pieceMass.value() * 0.0000003;
     }
     return PhysicalVector(values[0], values[1], values[2], false);
 }

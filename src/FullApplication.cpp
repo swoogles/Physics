@@ -99,6 +99,7 @@ ApplicationResult FullApplication::update() {
         centerStage.update(dt.value());
 
         if ( recording ) {
+            glutSetWindow(1); // TODO Find a more reliable way to get this int.
             auto dimensions = graphicalOperations.currentDimensions();
             recorder.captureThisFrame(dimensions.width, dimensions.height);
         }
