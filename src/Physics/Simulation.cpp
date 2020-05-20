@@ -107,43 +107,6 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 QuadrantPointer_t Simulation::getQuadrant() const { return quadrant; }
 
 
-// I'm working on this method because I think there are some basic
-// structural changes that I can make so that it will be more legible and
-// more suitable for later parallelization
-// TODO This should return the deleted list, so that it can coexist with the Octree version
-void Simulation::calcForcesAll_LessNaive(hour_t dt) {
-    particleVector physicalObjects = this->physicalObjects.getShapes();
-    ParticleList deleteList;
-
-    if (!physicalObjects.empty()) {
-        for (size_t i = 0; i < physicalObjects.size()-1; i++) {
-            Particle & object1 = *physicalObjects.at(i);
-
-            for (size_t j = i + 1; j < physicalObjects.size(); j++) {
-                Particle & object2 = *physicalObjects.at(j);
-
-                PhysicalVector gravVec = this->interactions.calcForceGravNew(object1, object2, dt );
-
-                object1.adjustMomentum(gravVec);
-                object2.adjustMomentum(gravVec.scaledBy(-1));
-
-                if (object1.isTouching(object2)) {
-                    if (this->collisionType == CollisionType::ELASTIC) {
-                        this->interactions.elasticCollision( object1, object2, dt );
-                    }
-                    else if (this->collisionType == CollisionType::INELASTIC){
-                        object1.mergeWith( object2 );
-                        deleteList.addShapeToList(physicalObjects.at(j));
-                    }
-                }
-            }
-        }
-
-        this->removePhysicalObjects(deleteList);
-    }
-
-}
-
 PairCollection Simulation::calculateForceOnExternalNode(
         const physicalObject_t &curObject,
         Quadrant &curQuadrant,
@@ -221,9 +184,6 @@ PairCollection Simulation::calcForceOnObject_Octree(
 
 void Simulation::calcForcesAll(hour_t dt) {
     switch(this->forceCalcMethod) {
-        case ForceCalculationMethod::NAIVE:
-            calcForcesAll_LessNaive(dt);
-            break;
         case ForceCalculationMethod ::OCTREE:
             PairCollection deleteList;
 

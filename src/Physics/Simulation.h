@@ -61,8 +61,7 @@ private:
 	PairCollection calcForceOnObject_Octree(physicalObject_t curObject, Quadrant &curQuadrant, hour_t dt,
 											int recursionLevel) const;
 
-	void calcForcesAll_LessNaive(hour_t dt);
-	void calcForcesAll(hour_t dt);
+    void calcForcesAll(hour_t dt);
 
 } ;
 
