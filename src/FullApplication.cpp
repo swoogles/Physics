@@ -105,6 +105,8 @@ ApplicationResult FullApplication::update() {
         }
     }
     updateObserver(graphicalOperations.getObserver(), simulation.getXYMinsAndMaxes());
+    graphicalOperations.getObserver().setAutoScaling(false);
+
 
     time_point end = system_clock::now();
 

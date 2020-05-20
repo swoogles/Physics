@@ -88,6 +88,7 @@ void Simulation::updateMinsAndMaxes() {
 void Simulation::update(hour_t dt) {
     calcForcesAll(dt);
     physicalObjects.update(dt);
+    cout << "num objects: " << physicalObjects.size() << endl;
     updateTimeElapsed(dt);
 
     // TODO This causes another full iteration of all shapes. If it's going to happen, it should be done during one of the earlier iterations.

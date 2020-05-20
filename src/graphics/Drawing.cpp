@@ -1,14 +1,11 @@
 #include "Drawing.h"
 
 void Drawing::draw(Moveable &myShape) {
+    cout << "drawing shape: " << &myShape <<  " with mass: " << myShape.mass() << " and momentum: " << myShape.momentum() <<  endl;
     glPushMatrix();
 
     //Translate
     PhysicalVector pos (myShape.position());
-
-    glBegin(GL_POINTS);                      // Select points as the primitive
-    glVertex3f(pos.x(), pos.y(), pos.z());    // Specify a point
-    glEnd();
 
     glTranslatef(pos.x(), pos.y(), pos.z());
 
@@ -31,6 +28,12 @@ void Drawing::draw(Moveable &myShape) {
 //            glutWireSphere( 1, numPts, numPts);
             break;
     }
+    glPopMatrix();
+
+    glPushMatrix();
+    glBegin(GL_POINTS);                      // Select points as the primitive
+    glVertex3f(pos.x(), pos.y(), pos.z());    // Specify a point
+    glEnd();
     glPopMatrix();
 
 }
