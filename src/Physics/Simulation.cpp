@@ -118,7 +118,7 @@ PairCollection Simulation::calculateForceOnExternalNode(
 
     //b.
     if ( curObject != shapeInQuadrant ) {
-        PhysicalVector gravVec = this->interactions.calcForceGravNew( *curObject, *shapeInQuadrant, dt);
+        PhysicalVector gravVec = this->interactions.calcForceGravNew( *curObject, curQuadrant, dt);
         curObject->adjustMomentum(gravVec);
         //c.
         if ( curObject->isTouching( *shapeInQuadrant ) ) {

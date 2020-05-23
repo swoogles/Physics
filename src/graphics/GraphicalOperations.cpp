@@ -6,12 +6,7 @@
 
 #include "GraphicalOperations.h"
 
-using std::size_t;
-
-void drawShapeInQuadrant(Quadrant quadrant) {
-    auto shape = quadrant.getShapeInQuadrant();
-    if (shape != nullptr && shape->mass() != kilogram_t(0)) Drawing::draw(*shape);
-};
+using std::size_t;;
 
 void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant) {
     if (controlCenter.shouldRenderOctree()) {

@@ -23,7 +23,6 @@ TEST_CASE("Get children", "[Quadrant]") {
     SECTION("Basic properties") {
         REQUIRE(quadrant.children().empty());
         REQUIRE(quadrant.mass() == shape->mass());
-        REQUIRE(quadrant.getShapeInQuadrant() == shape);
     }
 
     SECTION("Version with initial shape should match behavior of shape-added-later version") {
