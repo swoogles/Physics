@@ -212,3 +212,7 @@ kilogram_t Simulation::getMass() const {
     return mass;
 }
 
+const ParticleList &Simulation::getPhysicalObjects() const {
+    return physicalObjects;
+}
+

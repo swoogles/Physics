@@ -17,7 +17,7 @@ void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCente
     if (controlCenter.shouldRenderOctree()) {
         Drawing::draw(quadrant);
     }
-    drawShapeInQuadrant(quadrant);
+//    drawShapeInQuadrant(quadrant);
 };
 
 
@@ -42,6 +42,10 @@ void GraphicalOperations::localDisplay() {
                         quadrant
                     );
                 });
+    for ( const auto& shape : localSimulation.getPhysicalObjects().getShapes()) {
+        if (shape != nullptr && shape->mass() != kilogram_t(0)) Drawing::draw(*shape);
+    }
+
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();

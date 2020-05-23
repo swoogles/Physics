@@ -32,9 +32,12 @@ public:
     kilogram_t getMass() const;
 
     QuadrantPointer_t getQuadrant() const;
+public:
+    const ParticleList &getPhysicalObjects() const;
+
 private:
-	ParticleList physicalObjects;
-	hour_t timeElapsed;
+    ParticleList physicalObjects;
+    hour_t timeElapsed;
 
 	float minX, maxX, minY, maxY;
 
