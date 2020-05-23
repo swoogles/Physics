@@ -11,7 +11,6 @@
 
 using namespace units::time;
 
-typedef particle_t physicalObject_t;
 
 class Simulation {
 public:
@@ -60,8 +59,8 @@ private:
 
     void refreshQuadrant();
 
-	PairCollection calculateForceOnExternalNode(const physicalObject_t &curObject, Quadrant &curQuadrant, hour_t dt) const;
-	PairCollection calcForceOnObject_Octree(physicalObject_t curObject, Quadrant &curQuadrant, hour_t dt,
+	PairCollection calculateForceOnExternalNode(const shared_ptr<Particle> &curObject, Quadrant &curQuadrant, hour_t dt) const;
+	PairCollection calcForceOnObject_Octree(shared_ptr<Particle> curObject, Quadrant &curQuadrant, hour_t dt,
 											int recursionLevel) const;
 
     void calcForcesAll(hour_t dt);

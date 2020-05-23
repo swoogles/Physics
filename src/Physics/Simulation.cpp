@@ -109,12 +109,12 @@ QuadrantPointer_t Simulation::getQuadrant() const { return quadrant; }
 
 
 PairCollection Simulation::calculateForceOnExternalNode(
-        const physicalObject_t &curObject,
+        const shared_ptr<Particle> &curObject,
         Quadrant &curQuadrant,
         hour_t dt) const {
     //1. a.
     PairCollection deleteList;
-    physicalObject_t shapeInQuadrant = curQuadrant.getShapeInQuadrant();
+    shared_ptr<Particle> shapeInQuadrant = curQuadrant.getShapeInQuadrant();
 
     //b.
     if ( curObject != shapeInQuadrant ) {
@@ -142,7 +142,7 @@ PairCollection Simulation::calculateForceOnExternalNode(
 
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
 PairCollection Simulation::calcForceOnObject_Octree(
-        physicalObject_t curObject,
+        shared_ptr<Particle> curObject,
         Quadrant &curQuadrant,
         hour_t dt,
         int recursionLevel) const {
