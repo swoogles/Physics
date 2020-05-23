@@ -53,6 +53,13 @@ public:
 
     bool isTouching(Particle &otherShape) const;
   private:
+    bool touchingAnotherParticle;
+public:
+    bool isTouchingAnotherParticle() const;
+
+    void setTouchingAnotherParticle(bool touchingAnotherParticle);
+
+private:
     meter_t _radius;
 
     /*! \relates MyShape

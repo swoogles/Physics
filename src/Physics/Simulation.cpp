@@ -122,6 +122,7 @@ PairCollection Simulation::calculateForceOnExternalNode(
         curObject->adjustMomentum(gravVec);
         //c.
         if ( curObject->isTouching( *shapeInQuadrant ) ) {
+            curObject->setTouchingAnotherParticle(true);
             TouchingPair pair(curObject, shapeInQuadrant);
             deleteList.insertIfUnique(pair);
         }
