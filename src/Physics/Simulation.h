@@ -59,8 +59,8 @@ private:
 
     void refreshQuadrant();
 
-	void calculateForceOnExternalNode(const shared_ptr<Particle> &curObject, Quadrant &curQuadrant, hour_t dt) const;
-	void calcForceOnObject_Octree(shared_ptr<Particle> curObject, Quadrant &curQuadrant, hour_t dt,
+	void calculateForceOnExternalNode(Particle &curObject, Quadrant &curQuadrant, hour_t dt) const;
+	void calcForceOnObject_Octree(Particle &curObject, Quadrant &curQuadrant, hour_t dt,
 											int recursionLevel) const;
 
     void calcForcesAll(hour_t dt);

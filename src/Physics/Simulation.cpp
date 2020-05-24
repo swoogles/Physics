@@ -109,20 +109,20 @@ QuadrantPointer_t Simulation::getQuadrant() const { return quadrant; }
 
 
 void Simulation::calculateForceOnExternalNode(
-        const shared_ptr<Particle> &curObject,
+        Particle &curObject,
         Quadrant &curQuadrant,
         hour_t dt) const {
     //1. a.
     shared_ptr<Particle> shapeInQuadrant = curQuadrant.getShapeInQuadrant();
 
     //b.
-    if (!curQuadrant.positionIsInQuadrantBoundaries(curObject->position())) {
+    if (!curQuadrant.positionIsInQuadrantBoundaries(curObject.position())) {
 //    if ( curObject != shapeInQuadrant ) {
-        PhysicalVector gravVec = this->interactions.calcForceGravNew( *curObject, curQuadrant, dt);
-        curObject->adjustMomentum(gravVec);
+        PhysicalVector gravVec = this->interactions.calcForceGravNew( curObject, curQuadrant, dt);
+        curObject.adjustMomentum(gravVec);
         //c.
-        if ( curObject->isTouching( *shapeInQuadrant ) ) {
-            curObject->setTouchingAnotherParticle(true);
+        if ( curObject.isTouching( *shapeInQuadrant ) ) {
+            curObject.setTouchingAnotherParticle(true);
         }
     }
 }
@@ -139,7 +139,7 @@ void Simulation::calculateForceOnExternalNode(
 
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
 void Simulation::calcForceOnObject_Octree(
-        shared_ptr<Particle> curObject,
+        Particle & curObject,
         Quadrant &curQuadrant,
         hour_t dt,
         int recursionLevel) const {
@@ -147,12 +147,12 @@ void Simulation::calcForceOnObject_Octree(
         calculateForceOnExternalNode(curObject, curQuadrant, dt);
     }
     else {
-        double distance = curObject->distanceTo(curQuadrant);
+        double distance = curObject.distanceTo(curQuadrant);
         //2.a
         if ( curQuadrant.getWidth() / distance < octreeTheta ) {
-            PhysicalVector gravVec = this->interactions.calcForceGravNew( *curObject, curQuadrant, dt);
+            PhysicalVector gravVec = this->interactions.calcForceGravNew( curObject, curQuadrant, dt);
             //b.
-            curObject->adjustMomentum(gravVec);
+            curObject.adjustMomentum(gravVec);
         } else { //3.
             // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
             QuadrantPointer_t targetQuadrant;
@@ -176,10 +176,8 @@ void Simulation::calcForceOnObject_Octree(
 void Simulation::calcForcesAll(hour_t dt) {
     switch(this->forceCalcMethod) {
         case ForceCalculationMethod ::OCTREE:
-            PairCollection deleteList;
-
             for ( const auto & curShape : this->physicalObjects.getShapes() ) {
-                calcForceOnObject_Octree(curShape, *this->getQuadrant(), dt, 0);
+                calcForceOnObject_Octree(*curShape, *this->getQuadrant(), dt, 0);
             }
 
             break;
