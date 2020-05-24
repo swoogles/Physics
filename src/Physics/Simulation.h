@@ -2,7 +2,6 @@
 #define SIMULATION_H_
 
 #include "../Parallelization/Quadrant.h"
-#include "ForceCalculationMethod.h"
 #include "CollisionType.h"
 #include <ShapeFiles/ParticleList.h>
 #include "../MaximumValues.h"
@@ -14,8 +13,7 @@ using namespace units::time;
 
 class Simulation {
 public:
-    Simulation(ParticleList physicalObjects, CollisionType collisionType,
-               ForceCalculationMethod forceCalculationMethod, float octreeTheta);
+    Simulation(ParticleList physicalObjects, CollisionType collisionType, float octreeTheta);
 
     Simulation(Simulation & originalSimulation, ParticleList newParticles);
 
@@ -44,7 +42,6 @@ private:
 
     QuadrantPointer_t quadrant;
 
-    ForceCalculationMethod forceCalcMethod;
     CollisionType collisionType;
 
     Interactions interactions;

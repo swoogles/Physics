@@ -8,13 +8,12 @@
 #include "Simulations.h"
 
 Simulation Simulations::createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties) {
-    ForceCalculationMethod forceCalculationMethod = simulationProperties.forceCalculationMethod;
     if ( simulation == CraftedSimulation::BODY_FORMATION) {
         return Simulations::bodyFormation(simulationProperties.numShapes, simulationProperties);
     } else if ( simulation == DISRUPT_GROUP) {
         return Simulations::disruption_ArbitraryList(simulationProperties);
     } else if ( simulation == QUADRANT_TESTING) {
-        return Simulations::QuadrantTesting_simplest(forceCalculationMethod);
+        return Simulations::QuadrantTesting_simplest();
     } else if ( simulation == MULTIPLE_ORBITERS) {
         return multipleOrbiters(simulationProperties);
     } else {
@@ -106,7 +105,7 @@ Simulation Simulations::multipleOrbiters(PhysicsSandboxProperties properties){
     return Simulation(curSimulation, newParticles);
 }
 
-Simulation Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod) {
+Simulation Simulations::QuadrantTesting_simplest() {
     ParticleList physicalObjects;
 
     int numPieces=3;
@@ -157,7 +156,7 @@ Simulation Simulations::QuadrantTesting_simplest(ForceCalculationMethod forceCal
             )
     );
 
-    return Simulation(physicalObjects, CollisionType::INELASTIC, forceCalculationMethod, 0.5);
+    return Simulation(physicalObjects, CollisionType::INELASTIC, 0.5);
 }
 
 Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties properties) {
@@ -200,7 +199,7 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
         physicalObjects.addShapeToList( curShape );
     }
 
-    return Simulation(physicalObjects, CollisionType::INELASTIC, properties.forceCalculationMethod, properties.octreeTheta);
+    return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
 }
 
 PhysicalVector Simulations::randomSplitBodyPlacement(float pieceRadius, PhysicalVector target) {

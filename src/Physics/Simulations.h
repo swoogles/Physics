@@ -4,7 +4,6 @@
 #include "ShapeFiles/Particle.h"
 #include "Simulation.h"
 #include "CollisionType.h"
-#include "ForceCalculationMethod.h"
 #include "AstronomicalValues.h"
 #include "PhysicsSandboxProperties.h"
 #include "CraftedSimulation.h"
@@ -15,7 +14,7 @@ public:
 
     static Simulation multipleOrbiters(PhysicsSandboxProperties properties);
 
-    static Simulation QuadrantTesting_simplest(ForceCalculationMethod forceCalculationMethod);
+    static Simulation QuadrantTesting_simplest();
 
     static Simulation bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
 

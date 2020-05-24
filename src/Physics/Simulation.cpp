@@ -1,14 +1,12 @@
 #include "Simulation.h"
 
-Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType,
-                       ForceCalculationMethod forceCalculationMethod, float octreeTheta)
+Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType, float octreeTheta)
         :physicalObjects(std::move(physicalObjects))
         ,timeElapsed(0)
         ,minX(FLT_MAX)
         ,maxX(FLT_MIN)
         ,minY(FLT_MAX)
         ,maxY(FLT_MIN)
-        ,forceCalcMethod(forceCalculationMethod)
         ,collisionType(collisionType)
         ,octreeTheta(octreeTheta)
 {
@@ -23,7 +21,6 @@ Simulation::Simulation(Simulation &originalSimulation, ParticleList newParticles
             ,maxX(FLT_MIN)
             ,minY(FLT_MAX)
             ,maxY(FLT_MIN)
-            ,forceCalcMethod(originalSimulation.forceCalcMethod)
             ,collisionType(originalSimulation.collisionType)
             ,octreeTheta(originalSimulation.octreeTheta)
 {
@@ -174,13 +171,8 @@ void Simulation::calcForceOnObject_Octree(
 }
 
 void Simulation::calcForcesAll(hour_t dt) {
-    switch(this->forceCalcMethod) {
-        case ForceCalculationMethod ::OCTREE:
-            for ( const auto & curShape : this->physicalObjects.getShapes() ) {
-                calcForceOnObject_Octree(*curShape, *this->getQuadrant(), dt, 0);
-            }
-
-            break;
+    for ( const auto & curShape : this->physicalObjects.getShapes() ) {
+        calcForceOnObject_Octree(*curShape, *this->getQuadrant(), dt, 0);
     }
 }
 

@@ -1,7 +1,0 @@
-#ifndef PHYSICS_FORCECALCULATIONMETHOD_H
-#define PHYSICS_FORCECALCULATIONMETHOD_H
-
-enum ForceCalculationMethod {
-    OCTREE, NAIVE
-};
-#endif
