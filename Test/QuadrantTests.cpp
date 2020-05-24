@@ -19,7 +19,7 @@ TEST_CASE("Get children", "[Quadrant]") {
     float width = 200;
     shared_ptr<Particle> shape = TestUtils::circleAt(5, 5, 5);
     
-    Quadrant quadrant(shape, 0, pos, width);
+    Quadrant quadrant(shape, 0, pos, width, units::length::meter_t(), PhysicalVector(), units::mass::kilogram_t());
     SECTION("Basic properties") {
         REQUIRE(quadrant.children().empty());
         REQUIRE(quadrant.mass() == shape->mass());
@@ -31,7 +31,8 @@ TEST_CASE("Get children", "[Quadrant]") {
         auto c = TestUtils::circleAt(5, -5, 5);
         auto d = TestUtils::circleAt(-5, 5, 5);
 
-        Quadrant lessMutableQuadrant(a, 0, pos, width);
+        Quadrant lessMutableQuadrant(a, 0, pos, width, units::length::meter_t(), PhysicalVector(),
+                                     units::mass::kilogram_t());
         lessMutableQuadrant.insert(b);
         lessMutableQuadrant.insert(c);
         lessMutableQuadrant.insert(d);
@@ -45,7 +46,8 @@ TEST_CASE("Get children", "[Quadrant]") {
     }
 
     SECTION("SubQuadrant") {
-        Quadrant quadrantForSubdivision(shape, 0, pos, width);
+        Quadrant quadrantForSubdivision(shape, 0, pos, width, units::length::meter_t(), PhysicalVector(),
+                                        units::mass::kilogram_t());
         auto subWidth = width / 2.0f;
         auto offset = subWidth / 2.0f;
         SECTION("[0,0,0]") { // 1

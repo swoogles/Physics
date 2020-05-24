@@ -40,7 +40,7 @@ void Simulation::refreshQuadrant() {
 
     for ( const auto & curShape : physicalObjects.getShapes() ) {
         if ( quadrant == nullptr ) {
-            quadrant = std::make_shared<Quadrant>( curShape, 1, pos, side ) ;
+            quadrant = std::make_shared<Quadrant>( curShape, 1, pos, side, curShape->radius(), curShape->weightedPosition(), curShape->mass() ) ;
         } else {
             quadrant->insert(curShape);
         }

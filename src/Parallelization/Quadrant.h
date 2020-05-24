@@ -21,7 +21,8 @@ class Quadrant : public Box
 {
 public:
     typedef shared_ptr<Quadrant> QuadrantPointer_t;
-    Quadrant(shared_ptr<Particle> newShape, int level, PhysicalVector &pos, float width);
+    Quadrant(shared_ptr<Particle> newShape, int level, PhysicalVector &pos, float width, meter_t radius,
+             PhysicalVector weightedPosition, kilogram_t mass);
 
     void insert(shared_ptr<Particle> newShape);
 
@@ -33,7 +34,7 @@ public:
 
     vector<shared_ptr<Quadrant>> children();
 
-    QuadrantPointer_t makeSubQuadrant(shared_ptr<Particle> newShape) const;
+    QuadrantPointer_t makeSubQuadrant(shared_ptr<Particle> newShape, meter_t  radius, PhysicalVector weightedPosition) const;
     void applyToAllChildren(function<void (Quadrant)> functor);
 
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
@@ -61,7 +62,7 @@ private:
 
     array_typeNew  quadOctree;
 
-    void createSubQuadrantThatContains(shared_ptr<Particle> newShape);
+    void createSubQuadrantThatContains(shared_ptr<Particle> newShape, meter_t  radius, PhysicalVector weightedPosition);
 
     //! Alters mass of object by dMass
     void adjustMass(kilogram_t dMass);
