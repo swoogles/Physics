@@ -37,9 +37,14 @@ void GraphicalOperations::localDisplay() {
                         quadrant
                     );
                 });
-    for ( const auto& shape : localSimulation.getPhysicalObjects().getShapes()) {
-        if (shape != nullptr && shape->mass() != kilogram_t(0)) Drawing::draw(*shape);
-    }
+    localSimulation.getPhysicalObjects().applyToAllParticles(
+            [this](Particle & particle) {
+                if (particle.mass() != kilogram_t(0)) Drawing::draw(particle);
+            }
+            );
+//    for ( const auto& shape : localSimulation.getPhysicalObjects().getShapes()) {
+//        if (shape != nullptr && shape->mass() != kilogram_t(0)) Drawing::draw(*shape);
+//    }
 
 
     glMatrixMode(GL_PROJECTION);

@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <../lib/units.h>
 #include <ostream>
+#include <functional>
 
 using namespace units::time;
 
@@ -17,6 +18,8 @@ typedef typename std::vector<item_t> particleVector;
 
 class ParticleList {
 public:
+    void applyToAllParticles(
+            function<void (Particle &)> functor );
     ParticleList();
     ParticleList(item_t initialShape);
     ParticleList(particleVector shapesIn);

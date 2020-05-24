@@ -30,7 +30,7 @@ public:
 
     QuadrantPointer_t getQuadrant() const;
 public:
-    const ParticleList &getPhysicalObjects() const;
+    ParticleList &getPhysicalObjects() ;
 
 private:
     ParticleList physicalObjects;

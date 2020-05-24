@@ -144,3 +144,12 @@ ostream &operator<<(ostream &os, const ParticleList &particleList) {
     os << "]";
     return os;
 }
+
+void ParticleList::applyToAllParticles(
+        function<void (Particle &)> functor ) {
+//        void func(Particle &)) {
+    for ( const auto & curShape : shapes ) {
+        functor(*curShape);
+    }
+
+}
