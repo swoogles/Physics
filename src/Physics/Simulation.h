@@ -27,7 +27,7 @@ public:
 
     size_t getSize() const;
 
-    shared_ptr<Quadrant>  getQuadrant() const;
+    Quadrant &  getQuadrant() const;
 public:
     ParticleList &getPhysicalObjects() ;
 

@@ -24,7 +24,7 @@ void GraphicalOperations::localDisplay() {
     // TODO You know this is bad. Keep looking at it.
 //    if (controlCenter.shouldRenderOctree()) {
     localSimulation
-        .getQuadrant()->applyToAllChildren(
+        .getQuadrant().applyToAllChildren(
                 [this](Quadrant & quadrant) {
                     Drawing::draw(quadrant);
                 });
