@@ -170,7 +170,7 @@ void Quadrant::assignSubQuadrantAt(OctreeCoordinates indices, shared_ptr<Quadran
     this->quadOctree[ints[0]][ints[1]][ints[2]] = std::move(newQuadrant);
 }
 
-void Quadrant::applyToAllChildren(function<void (Quadrant)> functor) {
+void Quadrant::applyToAllChildren(function<void (Quadrant &)> functor) {
     functor(*this); // Location of this call determines traversal strategy.
 
     for ( int x = 0; x < 2; x++ ) {

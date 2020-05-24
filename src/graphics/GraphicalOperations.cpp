@@ -9,9 +9,9 @@
 using std::size_t;;
 
 void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant &quadrant) {
-    if (controlCenter.shouldRenderOctree()) {
+//    if (controlCenter.shouldRenderOctree()) {
         Drawing::draw(quadrant);
-    }
+//    }
 };
 
 
@@ -28,14 +28,13 @@ void GraphicalOperations::localDisplay() {
     glMatrixMode(GL_MODELVIEW);
 
     // TODO You know this is bad. Keep looking at it.
+//    if (controlCenter.shouldRenderOctree()) {
     localSimulation
         .getQuadrant()->applyToAllChildren(
-                [this](Quadrant quadrant) {
-                    GraphicalOperations::fullQuadrantDrawingFunction(
-                        this->localControlCenter,
-                        quadrant
-                    );
+                [this](Quadrant & quadrant) {
+                    Drawing::draw(quadrant);
                 });
+//    }
     localSimulation.getPhysicalObjects().applyToAllParticles(
             [this](Particle & particle) {
                 if (particle.mass() != kilogram_t(0)) Drawing::draw(particle);
