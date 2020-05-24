@@ -27,7 +27,7 @@ public:
 	 * \n -Translates using pos
 	 * \n -Rotates by multiplying by orientationMat
 	 */
-	void applyView();
+	void applyView() const;
 
 	//! Move observer closer to target
 	void zoomIn();

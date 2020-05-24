@@ -8,8 +8,57 @@
 
 using std::size_t;;;
 
+void processMouseAction(
+        Observer & observer,
+        MouseAction  mouseAction
+) {
+    switch(mouseAction) {
+        case MouseAction::SCROLL_UP:
+            observer.zoomIn();
+            break;
+        case MouseAction::SCROLL_DOWN:
+            observer.zoomOut();
+            break;
+    }
+    observer.setAutoScaling(false);
+}
 
-void GraphicalOperations::localDisplay() {
+void processCameraAction(
+        Observer & observer,
+        CameraAction cameraAction
+) {
+    switch(cameraAction) {
+        case CameraAction::ROTATE_LEFT: {
+            PhysicalVector leftAngVelocity(0, -.5f, 0);
+            observer.adjustAngularVelocity(leftAngVelocity);
+            break;
+        }
+        case CameraAction::ROTATE_RIGHT: {
+            PhysicalVector rightAngVelocity(0, .5f, 0);
+            observer.adjustAngularVelocity(rightAngVelocity);
+            break;
+        }
+        case CameraAction::ROTATE_UP: {
+            PhysicalVector upAngVelocity(+0.5f, 0, 0);
+            observer.adjustAngularVelocity(upAngVelocity);
+            break;
+        }
+        case CameraAction::ROTATE_DOWN: {
+            PhysicalVector downAngVelocity(-0.5f, 0, 0);
+            observer.adjustAngularVelocity(downAngVelocity);
+        }
+        case TOGGLE_AUTOSCALING: {
+            break;
+        }
+        case STOP_ROTATION: {
+            PhysicalVector stoppedAngVelocity(0,0,0);
+            observer.adjustAngularVelocity(stoppedAngVelocity);
+            break;
+        }
+    }
+}
+
+void GraphicalOperations::localDisplay() const {
     glutSetWindow(mainDisplayNum);
     glClearColor(0,0,0,0);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -21,17 +70,19 @@ void GraphicalOperations::localDisplay() {
 
     glMatrixMode(GL_MODELVIEW);
 
+    Drawing drawing;
+
     // TODO You know this is bad. Keep looking at it.
 //    if (controlCenter.shouldRenderOctree()) {
     localSimulation
-        .getQuadrant().applyToAllChildren(
-                [this](Quadrant & quadrant) {
-                    Drawing::draw(quadrant);
+        .getQuadrant().applyToAllChildrenConstant(
+                [this, drawing](const Quadrant & quadrant) {
+                    drawing.draw(quadrant);
                 });
 //    }
     localSimulation.getPhysicalObjects().applyToAllParticles(
-            [this](Particle & particle) {
-                if (particle.mass() != kilogram_t(0)) Drawing::draw(particle);
+            [this, drawing](Particle & particle) {
+                if (particle.mass() != kilogram_t(0)) drawing.draw(particle);
             }
             );
 
@@ -55,7 +106,7 @@ GraphicalOperations::GraphicalOperations(Simulation & simulation, ControlCenter 
 {
 }
 
-void GraphicalOperations::controlDisplay() {
+void GraphicalOperations::controlDisplay() const {
     glutSetWindow(control_center_num);
     glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -66,12 +117,12 @@ void GraphicalOperations::controlDisplay() {
     glutPostRedisplay();
 }
 
-void GraphicalOperations::fullDisplay() {
+void GraphicalOperations::fullDisplay() const {
     localDisplay();
     controlDisplay();
 }
 
-WindowDimensions GraphicalOperations::currentDimensions() {
+WindowDimensions GraphicalOperations::currentDimensions() const {
     return WindowDimensions(
             glutGet(GLUT_WINDOW_X),
             glutGet(GLUT_WINDOW_Y),
@@ -80,7 +131,24 @@ WindowDimensions GraphicalOperations::currentDimensions() {
             );
 }
 
-Observer & GraphicalOperations::getObserver() {
-    return this->localObserver;
+void GraphicalOperations::updateObserver(
+        MaximumValues maximumValues
+        ) {
+    auto mouseAction = InputFunctions::currentMouseAction();
+    if (mouseAction.has_value()) {
+        processMouseAction(localObserver, mouseAction.value());
+    }
+
+    auto cameraAction = ControlCenter::currentCameraAction();
+    if (cameraAction.has_value()) {
+        processCameraAction(localObserver, cameraAction.value());
+    }
+
+    localObserver.update();
+
+    // TODO This would be more valuable if it only tried to include the largest N items.
+    // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
+    localObserver.calcMinPullback(maximumValues);
+    localObserver.setAutoScaling(false); // TODO Where to put this? I Only need it executed one time.
 }
 

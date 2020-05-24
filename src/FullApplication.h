@@ -48,7 +48,7 @@ public:
     const bool recording;
     const time_point<system_clock, duration<long int, std::ratio<1, 1000000000> >> start;
     const std::chrono::seconds maximumRuntime;
-    // TODO reinstate const-ness
+    void display() const;
     GraphicalOperations graphicalOperations;
     // TODO Instead of void, return a Result[SUCCESSFUL_STEP, COMPLETED, FAILED]
     ApplicationResult update();

@@ -30,13 +30,14 @@ public:
 
     inline bool isExternal() const { return isLeaf; }
 
-    shared_ptr<Quadrant>  getQuadrantFromCell( int x, int y, int z );
+    shared_ptr<Quadrant>  getQuadrantFromCell( int x, int y, int z ) const;
 
     vector<shared_ptr<Quadrant>> children();
 
     shared_ptr<Quadrant>  makeSubQuadrant(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
                                       PhysicalVector shapePositionParameter) const;
     void applyToAllChildren(function<void (Quadrant &)> functor);
+    void applyToAllChildrenConstant(function<void (const Quadrant &)> functor) const;
 
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
 

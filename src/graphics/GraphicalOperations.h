@@ -31,11 +31,14 @@ public:
 
     Simulation & localSimulation;
     ControlCenter localControlCenter;
-    void localDisplay();
-    void controlDisplay();
-    void fullDisplay();
-    WindowDimensions currentDimensions();
-    Observer & getObserver();
+    void localDisplay() const;
+    void controlDisplay() const;
+    void fullDisplay() const;
+    WindowDimensions currentDimensions() const;
+
+    void updateObserver(
+            MaximumValues maximumValues
+            );
 private:
     Observer localObserver;
 

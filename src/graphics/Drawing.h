@@ -8,7 +8,7 @@
 
 class Drawing {
 public:
-    static void draw(Moveable &myShape);
+    void draw(const Moveable &myShape) const;
 };
 
 #endif

@@ -67,25 +67,22 @@ int main(int argcp, char **argv) {
     auto outputTime = system_clock::to_time_t(start);
     CenterStage centerStage(windowDimensions.width, outputTime);
 
-    GraphicalOperations graphicalOperations(
-            simulation,
-            controlCenter,
-            openGlSetup.mainDisplayNum,
-            openGlSetup.controlCenterNum,
-            windowDimensions);
-
     globalFullApplication = make_unique<FullApplication>(
             simulation,
             centerStage,
             parameterArguments.isRecording(),
             start,
             properties.maximumRunTime,
-            graphicalOperations
+            GraphicalOperations(            simulation,
+                                            controlCenter,
+                                            openGlSetup.mainDisplayNum,
+                                            openGlSetup.controlCenterNum,
+                                            windowDimensions)
     );
 
     glutSetWindow(1);
     glutDisplayFunc([]() {
-        globalFullApplication->graphicalOperations.fullDisplay();
+        globalFullApplication->display();
     });
     glutSetWindow(2);
     glutDisplayFunc([]() {

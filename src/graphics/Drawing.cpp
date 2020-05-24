@@ -1,6 +1,6 @@
 #include "Drawing.h"
 
-void Drawing::draw(Moveable &myShape) {
+void Drawing::draw(const Moveable &myShape) const {
 //    cout << "drawing shape: " << &myShape <<  " with mass: " << myShape.mass() << " and momentum: " << myShape.momentum() <<  endl;
     glPushMatrix();
 

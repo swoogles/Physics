@@ -15,7 +15,7 @@ Observer::Observer(WindowDimensions windowDimensions)
     this->BuildPerspProjMat(perspectiveMat, aspect, znear, zfar);
 }
 
-void Observer::applyView() {
+void Observer::applyView() const {
 	glLoadMatrixf(perspectiveMat);
 
 	glTranslatef(pos.x(), pos.y(), pos.z());

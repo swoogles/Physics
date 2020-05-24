@@ -36,7 +36,7 @@ Quadrant::Quadrant(
         ,shapeWeightPosition(weightedPosition)
         ,shapeWeight(mass){}
 
-shared_ptr<Quadrant>   Quadrant::getQuadrantFromCell( int x, int y, int z ) {
+shared_ptr<Quadrant>   Quadrant::getQuadrantFromCell( int x, int y, int z ) const {
   return this->quadOctree[x][y][z];
 }
 
@@ -179,6 +179,21 @@ void Quadrant::applyToAllChildren(function<void (Quadrant &)> functor) {
                 shared_ptr<Quadrant>  targetQuadrant = this->getQuadrantFromCell( x, y, z );
                 if ( targetQuadrant != nullptr ) {
                     targetQuadrant->applyToAllChildren(functor);
+                }
+            }
+        }
+    }
+
+}
+void Quadrant::applyToAllChildrenConstant(function<void (const Quadrant &)> functor) const {
+    functor(*this); // Location of this call determines traversal strategy.
+
+    for ( int x = 0; x < 2; x++ ) {
+        for ( int y = 0; y < 2; y++ ) {
+            for ( int z = 0; z < 2; z++ ) {
+                shared_ptr<Quadrant>  targetQuadrant = this->getQuadrantFromCell( x, y, z );
+                if ( targetQuadrant != nullptr ) {
+                    targetQuadrant->applyToAllChildrenConstant(functor);
                 }
             }
         }

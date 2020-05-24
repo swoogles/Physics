@@ -4,76 +4,6 @@
 
 #include "FullApplication.h"
 
-void processMouseAction(
-        Observer & observer,
-        MouseAction  mouseAction
-) {
-    switch(mouseAction) {
-        case MouseAction::SCROLL_UP:
-            observer.zoomIn();
-            break;
-        case MouseAction::SCROLL_DOWN:
-            observer.zoomOut();
-            break;
-    }
-    observer.setAutoScaling(false);
-}
-
-void processCameraAction(
-        Observer & observer,
-        CameraAction cameraAction
-) {
-    switch(cameraAction) {
-        case CameraAction::ROTATE_LEFT: {
-            PhysicalVector leftAngVelocity(0, -.5f, 0);
-            observer.adjustAngularVelocity(leftAngVelocity);
-            break;
-        }
-        case CameraAction::ROTATE_RIGHT: {
-            PhysicalVector rightAngVelocity(0, .5f, 0);
-            observer.adjustAngularVelocity(rightAngVelocity);
-            break;
-        }
-        case CameraAction::ROTATE_UP: {
-            PhysicalVector upAngVelocity(+0.5f, 0, 0);
-            observer.adjustAngularVelocity(upAngVelocity);
-            break;
-        }
-        case CameraAction::ROTATE_DOWN: {
-            PhysicalVector downAngVelocity(-0.5f, 0, 0);
-            observer.adjustAngularVelocity(downAngVelocity);
-        }
-        case TOGGLE_AUTOSCALING: {
-            break;
-        }
-        case STOP_ROTATION: {
-            PhysicalVector stoppedAngVelocity(0,0,0);
-            observer.adjustAngularVelocity(stoppedAngVelocity);
-            break;
-        }
-    }
-}
-
-void updateObserver(
-        Observer & observer,
-        MaximumValues maximumValues
-) {
-    auto mouseAction = InputFunctions::currentMouseAction();
-    if (mouseAction.has_value()) {
-        processMouseAction(observer, mouseAction.value());
-    }
-
-    auto cameraAction = ControlCenter::currentCameraAction();
-    if (cameraAction.has_value()) {
-        processCameraAction(observer, cameraAction.value());
-    }
-
-    observer.update();
-
-    // TODO This would be more valuable if it only tried to include the largest N items.
-    // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
-    observer.calcMinPullback(maximumValues);
-}
 
 
 FullApplication::FullApplication(
@@ -104,9 +34,7 @@ ApplicationResult FullApplication::update() {
             recorder.captureThisFrame(dimensions.width, dimensions.height);
         }
     }
-    updateObserver(graphicalOperations.getObserver(), simulation.getXYMinsAndMaxes());
-    graphicalOperations.getObserver().setAutoScaling(false);
-
+    graphicalOperations.updateObserver(simulation.getXYMinsAndMaxes());
 
     time_point end = system_clock::now();
 
@@ -120,5 +48,9 @@ ApplicationResult FullApplication::update() {
         return ApplicationResult::COMPLETED;
     }
     return ApplicationResult::SUCESSFUL_STEP;
+}
+
+void FullApplication::display() const {
+    this->graphicalOperations.fullDisplay();
 }
 
