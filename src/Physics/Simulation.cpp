@@ -36,7 +36,7 @@ void Simulation::refreshQuadrant() {
     PhysicalVector pos(0, 0, 0, true);
 
     float side = 10e7; //Formation Value . ACK!!!! How miserably hard-coded!!
-    quadrant = nullptr;
+//    quadrant = nullptr;
 
     shared_ptr<Quadrant> localQuadrant;
     this->physicalObjects.applyToAllParticles(
@@ -97,10 +97,6 @@ void Simulation::update(hour_t dt) {
     updateMinsAndMaxes();
     // This is the first "n" part in "n log(n)"
     refreshQuadrant();
-}
-
-void Simulation::removePhysicalObjects(ParticleList shapesToRemove) {
-    physicalObjects.remove(shapesToRemove);
 }
 
 void Simulation::updateTimeElapsed(hour_t dt) { timeElapsed += dt; }

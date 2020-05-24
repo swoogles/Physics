@@ -4,9 +4,6 @@
 #include <plib/pu.h>
 #include <plib/puAux.h>
 #include <graphics/Recorder.h>
-#include <memory>
-
-using std::shared_ptr;
 
 /*! \brief UI class that handles everything in the main window
  *

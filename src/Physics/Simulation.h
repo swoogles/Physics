@@ -51,9 +51,7 @@ private:
     void resetXYMinsAndMaxes();
     void updateXYMinsAndMaxes(PhysicalVector curPos);
 
-	void removePhysicalObjects( ParticleList shapesToRemove );
-
-    void refreshQuadrant();
+	void refreshQuadrant();
 
 	void calculateForceOnExternalNode(Particle &curObject, Quadrant &curQuadrant, hour_t dt) const;
 	void calcForceOnObject_Octree(Particle &curObject, Quadrant &curQuadrant, hour_t dt,
