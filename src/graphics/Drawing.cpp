@@ -1,7 +1,7 @@
 #include "Drawing.h"
 
 void Drawing::draw(Moveable &myShape) {
-    cout << "drawing shape: " << &myShape <<  " with mass: " << myShape.mass() << " and momentum: " << myShape.momentum() <<  endl;
+//    cout << "drawing shape: " << &myShape <<  " with mass: " << myShape.mass() << " and momentum: " << myShape.momentum() <<  endl;
     glPushMatrix();
 
     //Translate

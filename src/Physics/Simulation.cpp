@@ -88,7 +88,7 @@ void Simulation::updateMinsAndMaxes() {
 void Simulation::update(hour_t dt) {
     calcForcesAll(dt);
     physicalObjects.update(dt);
-    cout << "num objects: " << physicalObjects.size() << endl;
+//    cout << "num objects: " << physicalObjects.size() << endl;
     updateTimeElapsed(dt);
 
     // TODO This causes another full iteration of all shapes. If it's going to happen, it should be done during one of the earlier iterations.
@@ -108,12 +108,11 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 QuadrantPointer_t Simulation::getQuadrant() const { return quadrant; }
 
 
-PairCollection Simulation::calculateForceOnExternalNode(
+void Simulation::calculateForceOnExternalNode(
         const shared_ptr<Particle> &curObject,
         Quadrant &curQuadrant,
         hour_t dt) const {
     //1. a.
-    PairCollection deleteList;
     shared_ptr<Particle> shapeInQuadrant = curQuadrant.getShapeInQuadrant();
 
     //b.
@@ -123,12 +122,8 @@ PairCollection Simulation::calculateForceOnExternalNode(
         //c.
         if ( curObject->isTouching( *shapeInQuadrant ) ) {
             curObject->setTouchingAnotherParticle(true);
-            TouchingPair pair(curObject, shapeInQuadrant);
-            deleteList.insertIfUnique(pair);
         }
     }
-
-    return deleteList;
 }
 //1.
 //a. If the current node is an external node
@@ -142,16 +137,15 @@ PairCollection Simulation::calculateForceOnExternalNode(
 
 
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
-PairCollection Simulation::calcForceOnObject_Octree(
+void Simulation::calcForceOnObject_Octree(
         shared_ptr<Particle> curObject,
         Quadrant &curQuadrant,
         hour_t dt,
         int recursionLevel) const {
     if ( curQuadrant.isExternal() ) {
-        return calculateForceOnExternalNode(curObject, curQuadrant, dt);
+        calculateForceOnExternalNode(curObject, curQuadrant, dt);
     }
     else {
-        PairCollection deleteList;
         double distance = curObject->distanceTo(curQuadrant);
         //2.a
         if ( curQuadrant.getWidth() / distance < octreeTheta ) {
@@ -159,11 +153,6 @@ PairCollection Simulation::calcForceOnObject_Octree(
             //b.
             curObject->adjustMomentum(gravVec);
         } else { //3.
-            /* This seems to work now; it's just absurdly slow
-            for (const auto & curQuadrantNew: curQuadrant->children()) {
-                deleteList.insertUniqueElements(calcForceOnObject_Octree(curObject, curQuadrantNew, dt, recursionLevel + 1)) ;
-            }
-             */
             // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
             QuadrantPointer_t targetQuadrant;
             for ( int x = 0; x < 2; x++ ) {
@@ -171,14 +160,13 @@ PairCollection Simulation::calcForceOnObject_Octree(
                     for ( int z = 0; z < 2; z++ ) {
                         targetQuadrant = curQuadrant.getQuadrantFromCell( x, y, z );
                         if ( targetQuadrant != nullptr ) {
-                            deleteList.insertUniqueElements(calcForceOnObject_Octree(curObject, *targetQuadrant, dt, recursionLevel + 1)) ;
+                            calcForceOnObject_Octree(curObject, *targetQuadrant, dt, recursionLevel + 1) ;
                         }
                     }
                 }
             }
 
         }
-        return deleteList;
     }
 
 
@@ -189,13 +177,10 @@ void Simulation::calcForcesAll(hour_t dt) {
         case ForceCalculationMethod ::OCTREE:
             PairCollection deleteList;
 
-//            cout << this->physicalObjects.getShapes().at(0)->position() << endl;
             for ( const auto & curShape : this->physicalObjects.getShapes() ) {
-                deleteList.insertUniqueElements(calcForceOnObject_Octree(curShape, *this->getQuadrant(), dt, 0));
+                calcForceOnObject_Octree(curShape, *this->getQuadrant(), dt, 0);
             }
 
-            this->removePhysicalObjects(deleteList.doomed().getShapes() );
-            deleteList.mergePairs();
             break;
     }
 }

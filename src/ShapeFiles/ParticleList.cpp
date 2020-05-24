@@ -1,6 +1,7 @@
 #include <utility>
 
 #include "ParticleList.h"
+#include "PairCollection.h"
 
 void ParticleList::ensureNoNullEntries(string caller) {
   for (const auto & curShape : this->shapes ) {
@@ -73,13 +74,29 @@ particleVector ParticleList::getShapes() const{
 }
 
 void ParticleList::update(hour_t dt) {
+    PairCollection deleteList;
   for (const auto & curShape : shapes ) {
       if (curShape == nullptr) {
           fprintf(stderr, "Error: Null Shape in ParticleList::update\n");
           exit(1);
       }
     curShape->update( dt );
+      for (const auto & innerShape : shapes) {
+          if (curShape != innerShape) {
+              if (curShape->isTouching(*innerShape)) {
+                  TouchingPair touchingPair(curShape, innerShape);
+                  deleteList.insertIfUnique(touchingPair);
+              }
+          }
+      }
   }
+
+    deleteList.mergePairs();
+    ParticleList doomedList(deleteList.doomed() );
+    if (doomedList.size() > 0) {
+        cout << "removing this many particles: " << doomedList.size() << endl;
+    }
+    ParticleList::remove(doomedList);
 }
 
 int ParticleList::remove(ParticleList &shapesToRemove) {
