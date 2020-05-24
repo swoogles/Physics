@@ -6,13 +6,7 @@
 
 #include "GraphicalOperations.h"
 
-using std::size_t;;
-
-void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant &quadrant) {
-//    if (controlCenter.shouldRenderOctree()) {
-        Drawing::draw(quadrant);
-//    }
-};
+using std::size_t;;;
 
 
 void GraphicalOperations::localDisplay() {
