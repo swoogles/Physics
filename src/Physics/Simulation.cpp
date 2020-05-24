@@ -76,10 +76,11 @@ void Simulation::resetXYMinsAndMaxes() {
 }
 
 void Simulation::updateMinsAndMaxes() {
-    for ( const auto & curShape : this->physicalObjects.getShapes() ) {
-        PhysicalVector curPos(curShape->position());
-        updateXYMinsAndMaxes(curPos);
-    }
+    this->physicalObjects.applyToAllParticles(
+            [this](Particle & curShape) {
+                PhysicalVector curPos(curShape.position());
+                updateXYMinsAndMaxes(curPos);
+            });
 }
 
 void Simulation::update(hour_t dt) {
@@ -171,22 +172,14 @@ void Simulation::calcForceOnObject_Octree(
 }
 
 void Simulation::calcForcesAll(hour_t dt) {
-    for ( const auto & curShape : this->physicalObjects.getShapes() ) {
-        calcForceOnObject_Octree(*curShape, *this->getQuadrant(), dt, 0);
-    }
+    this->physicalObjects.applyToAllParticles(
+            [this, dt](Particle & curShape) {
+                calcForceOnObject_Octree(curShape, *this->getQuadrant(), dt, 0);
+            });
 }
 
 size_t Simulation::getSize() const {
-    return this->physicalObjects.getShapes().size();
-}
-
-// TODO Update this very soon
-kilogram_t Simulation::getMass() const {
-    auto mass = kilogram_t(0);
-    for (const auto & shape : this->physicalObjects.getShapes()) {
-        mass += shape->mass();
-    }
-    return mass;
+    return this->physicalObjects.size();
 }
 
 ParticleList &Simulation::getPhysicalObjects() {

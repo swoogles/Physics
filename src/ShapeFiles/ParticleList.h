@@ -20,6 +20,8 @@ class ParticleList {
 public:
     void applyToAllParticles(
             function<void (Particle &)> functor );
+    void checkForAllParticles(
+            function<void (const Particle &)> functor ) const;
     ParticleList();
     ParticleList(item_t initialShape);
     ParticleList(particleVector shapesIn);
@@ -32,7 +34,7 @@ public:
     size_t clearShapes();
     particleVector getShapes() const;
     void update(hour_t dt);
-    inline size_t size() { return shapes.size(); };
+    inline size_t size() const { return shapes.size(); } ;
 
     bool contains(item_t searchShape) const;
 

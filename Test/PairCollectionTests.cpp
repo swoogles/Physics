@@ -152,7 +152,6 @@ TEST_CASE("normalize list of pairs", "[green]") {
             uniquePairs.mergePairs();
 
 //            REQUIRE(result.size() == 1);
-//            REQUIRE(result.getShapes()[0]->getMass() == d->mass() * 2);
         }
     }
     */

@@ -26,7 +26,6 @@ public:
     MaximumValues getXYMinsAndMaxes() const;
 
     size_t getSize() const;
-    kilogram_t getMass() const;
 
     QuadrantPointer_t getQuadrant() const;
 public:

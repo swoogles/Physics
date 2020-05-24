@@ -18,9 +18,6 @@ using namespace units::mass;
 TEST_CASE( "Remove ref", "[ParticleList]" ) {
     ParticleList shapes(particleVector { TestUtils::testCircle(), TestUtils::testCircle()});
     REQUIRE(shapes.size() == 2);
-    shapes.removeShapeFromList(shapes.getShapes()[0]);
-    cout << "in between destruction" << endl;
-    REQUIRE(shapes.size() == 1);
 }
 
 TEST_CASE( "contains ptr", "[ParticleList]" ) {
@@ -60,7 +57,6 @@ TEST_CASE( "Construct a list with a single item", "[ParticleList][red]" ) {
     auto a = TestUtils::testCircle();
     ParticleList singleItemList(a);
     REQUIRE(singleItemList.size() == 1);
-    REQUIRE(singleItemList.getShapes()[0]->mass() == kilogram_t(100));
     REQUIRE(singleItemList.contains(a));
 }
 
