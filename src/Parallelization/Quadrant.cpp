@@ -48,7 +48,7 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
 
 void Quadrant::insert(shared_ptr<Particle> insertedShape, meter_t radius, PhysicalVector weightedPosition,
                       kilogram_t mass) {
-    if (!positionIsInQuadrantBoundaries(insertedShape->position())) { return; }
+    if (!positionIsInQuadrantBoundaries(weightedPosition.scaledBy(1.0/mass.value()))) { return; }
 
     this->adjustMass(insertedShape->mass());
     this->weightedPosition = this->weightedPosition.plus(insertedShape->weightedPosition()); // TODO Um, think this is broken. I'm not actually *using* insertedShape
