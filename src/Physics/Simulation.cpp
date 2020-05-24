@@ -36,19 +36,16 @@ void Simulation::refreshQuadrant() {
     PhysicalVector pos(0, 0, 0, true);
 
     float side = 10e7; //Formation Value . ACK!!!! How miserably hard-coded!!
-//    quadrant = nullptr;
 
-    shared_ptr<Quadrant> localQuadrant;
+    quadrant = std::make_shared<Quadrant>( 1, pos, side, meter_t(0), PhysicalVector(), kilogram_t(0), PhysicalVector() ) ;
     this->physicalObjects.checkForAllParticles(
-            [*this, &localQuadrant, &pos, side](const Particle & curShape) {
-                if ( localQuadrant == nullptr ) {
-                    localQuadrant = std::make_shared<Quadrant>( 1, pos, side, curShape.radius(), curShape.weightedPosition(), curShape.mass(), curShape.position() ) ;
-                } else {
-                    localQuadrant->insert(curShape.radius(), curShape.weightedPosition(), curShape.mass(),
-                                          curShape.position());
-                }
+            [*this, &pos, side](const Particle & curShape) {
+                this->quadrant->insert(
+                        curShape.radius(),
+                        curShape.weightedPosition(),
+                        curShape.mass(),
+                        curShape.position());
             });
-    quadrant = localQuadrant;
 }
 
 void Simulation::updateXYMinsAndMaxes(PhysicalVector curPos) {
