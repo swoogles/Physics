@@ -22,10 +22,10 @@ class Quadrant : public Box
 public:
     typedef shared_ptr<Quadrant> QuadrantPointer_t;
     Quadrant(shared_ptr<Particle> newShape, int level, PhysicalVector &pos, float width, meter_t radius,
-             PhysicalVector weightedPosition, kilogram_t mass);
+             PhysicalVector weightedPosition, kilogram_t mass, PhysicalVector shapePosition);
 
-    void insert(shared_ptr<Particle> newShape, meter_t radius, PhysicalVector weightedPosition,
-                kilogram_t mass);
+    void insert(shared_ptr<Particle> insertedShape, meter_t radius, PhysicalVector weightedPosition, kilogram_t mass,
+                PhysicalVector shapePosition);
 
     inline float getWidth() const { return dimensions.vec[0]; }
 
@@ -36,7 +36,7 @@ public:
     vector<shared_ptr<Quadrant>> children();
 
     QuadrantPointer_t makeSubQuadrant(shared_ptr<Particle> newShape, meter_t radius, PhysicalVector weightedPosition,
-                                      kilogram_t mass) const;
+                                      kilogram_t mass, PhysicalVector shapePosition) const;
     void applyToAllChildren(function<void (Quadrant)> functor);
 
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
@@ -56,6 +56,7 @@ private:
     shared_ptr<Particle> shapeInQuadrant;
 
     PhysicalVector weightedPosition;
+    PhysicalVector shapePosition;
 public:
     const PhysicalVector &getWeightedPosition() const;
 
@@ -65,7 +66,7 @@ private:
     array_typeNew  quadOctree;
 
     void createSubQuadrantThatContains(shared_ptr<Particle> newShape, meter_t radius, PhysicalVector weightedPosition,
-                                       kilogram_t mass);
+                                       kilogram_t mass, PhysicalVector shapePosition);
 
     //! Alters mass of object by dMass
     void adjustMass(kilogram_t dMass);

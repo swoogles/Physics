@@ -19,7 +19,8 @@ TEST_CASE("Get children", "[Quadrant]") {
     float width = 200;
     shared_ptr<Particle> shape = TestUtils::circleAt(5, 5, 5);
     
-    Quadrant quadrant(shape, 0, pos, width, units::length::meter_t(), PhysicalVector(), units::mass::kilogram_t());
+    Quadrant quadrant(shape, 0, pos, width, units::length::meter_t(), PhysicalVector(), units::mass::kilogram_t(),
+                      PhysicalVector());
     SECTION("Basic properties") {
         REQUIRE(quadrant.children().empty());
         REQUIRE(quadrant.mass() == shape->mass());
@@ -32,10 +33,13 @@ TEST_CASE("Get children", "[Quadrant]") {
         auto d = TestUtils::circleAt(-5, 5, 5);
 
         Quadrant lessMutableQuadrant(a, 0, pos, width, units::length::meter_t(), PhysicalVector(),
-                                     units::mass::kilogram_t());
-        lessMutableQuadrant.insert(b);
-        lessMutableQuadrant.insert(c);
-        lessMutableQuadrant.insert(d);
+                                     units::mass::kilogram_t(), PhysicalVector());
+        lessMutableQuadrant.insert(b, units::length::meter_t(), PhysicalVector(), units::mass::kilogram_t(),
+                                   PhysicalVector());
+        lessMutableQuadrant.insert(c, units::length::meter_t(), PhysicalVector(), units::mass::kilogram_t(),
+                                   PhysicalVector());
+        lessMutableQuadrant.insert(d, units::length::meter_t(), PhysicalVector(), units::mass::kilogram_t(),
+                                   PhysicalVector());
 
         int counter = 0;
         function<void(Quadrant)> countingFunction = [&counter](Quadrant quadrant) {
@@ -47,13 +51,14 @@ TEST_CASE("Get children", "[Quadrant]") {
 
     SECTION("SubQuadrant") {
         Quadrant quadrantForSubdivision(shape, 0, pos, width, units::length::meter_t(), PhysicalVector(),
-                                        units::mass::kilogram_t());
+                                        units::mass::kilogram_t(), PhysicalVector());
         auto subWidth = width / 2.0f;
         auto offset = subWidth / 2.0f;
         SECTION("[0,0,0]") { // 1
             auto subShape =  TestUtils::circleAt(5, 5, 5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
-                                                                      PhysicalVector(), units::mass::kilogram_t());
+                                                                      PhysicalVector(), units::mass::kilogram_t(),
+                                                                      PhysicalVector());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, offset, offset));
         }
@@ -61,7 +66,8 @@ TEST_CASE("Get children", "[Quadrant]") {
         SECTION("[0,0,1]") { // 2
             auto subShape =  TestUtils::circleAt(5, 5, -5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
-                                                                      PhysicalVector(), units::mass::kilogram_t());
+                                                                      PhysicalVector(), units::mass::kilogram_t(),
+                                                                      PhysicalVector());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, offset, -offset));
         }
@@ -69,7 +75,8 @@ TEST_CASE("Get children", "[Quadrant]") {
         SECTION("[0,1,0]") { // 3
             auto subShape =  TestUtils::circleAt(5, -5, 5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
-                                                                      PhysicalVector(), units::mass::kilogram_t());
+                                                                      PhysicalVector(), units::mass::kilogram_t(),
+                                                                      PhysicalVector());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, -offset, offset));
         }
@@ -77,7 +84,8 @@ TEST_CASE("Get children", "[Quadrant]") {
         SECTION("[0,1,1]") { // 4
             auto subShape =  TestUtils::circleAt(5, -5, -5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
-                                                                      PhysicalVector(), units::mass::kilogram_t());
+                                                                      PhysicalVector(), units::mass::kilogram_t(),
+                                                                      PhysicalVector());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, -offset, -offset));
         }
@@ -85,7 +93,8 @@ TEST_CASE("Get children", "[Quadrant]") {
         SECTION("[1,0,0]") { // 5
             auto subShape =  TestUtils::circleAt(-5, 5, 5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
-                                                                      PhysicalVector(), units::mass::kilogram_t());
+                                                                      PhysicalVector(), units::mass::kilogram_t(),
+                                                                      PhysicalVector());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, offset, offset));
         }
@@ -93,7 +102,8 @@ TEST_CASE("Get children", "[Quadrant]") {
         SECTION("[1,0,1]") { // 6
             auto subShape =  TestUtils::circleAt(-5, 5, -5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
-                                                                      PhysicalVector(), units::mass::kilogram_t());
+                                                                      PhysicalVector(), units::mass::kilogram_t(),
+                                                                      PhysicalVector());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, offset, -offset));
         }
@@ -101,7 +111,8 @@ TEST_CASE("Get children", "[Quadrant]") {
         SECTION("[1,1,0]") { // 7
             auto subShape =  TestUtils::circleAt(-5, -5, 5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
-                                                                      PhysicalVector(), units::mass::kilogram_t());
+                                                                      PhysicalVector(), units::mass::kilogram_t(),
+                                                                      PhysicalVector());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, -offset, offset));
         }
@@ -109,7 +120,8 @@ TEST_CASE("Get children", "[Quadrant]") {
         SECTION("[1,1,1]") { // 8
             auto subShape =  TestUtils::circleAt(-5, -5, -5);
             auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
-                                                                      PhysicalVector(), units::mass::kilogram_t());
+                                                                      PhysicalVector(), units::mass::kilogram_t(),
+                                                                      PhysicalVector());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, -offset, -offset));
         }
@@ -117,11 +129,13 @@ TEST_CASE("Get children", "[Quadrant]") {
 
     SECTION("Multiple Insertions") {
         auto a = TestUtils::circleAt(5, 5, 5);
-        quadrant.insert(a);
+        quadrant.insert(a, units::length::meter_t(), PhysicalVector(), units::mass::kilogram_t(), PhysicalVector());
         auto b = TestUtils::circleAt(5, 5, -5);
-        quadrant.insert(b);
-        quadrant.insert(TestUtils::circleAt(-5, 5, 5));
-        quadrant.insert(TestUtils::circleAt(5, -5, 5));
+        quadrant.insert(b, units::length::meter_t(), PhysicalVector(), units::mass::kilogram_t(), PhysicalVector());
+        quadrant.insert(TestUtils::circleAt(-5, 5, 5), units::length::meter_t(), PhysicalVector(),
+                        units::mass::kilogram_t(), PhysicalVector());
+        quadrant.insert(TestUtils::circleAt(5, -5, 5), units::length::meter_t(), PhysicalVector(),
+                        units::mass::kilogram_t(), PhysicalVector());
 
         for (const auto &subQuadrant: quadrant.children()) {
             REQUIRE_FALSE(subQuadrant == nullptr);
