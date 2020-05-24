@@ -31,10 +31,6 @@ shared_ptr<Particle> TouchingPair::merge() {
     return a;
 }
 
-bool TouchingPair::contains(shared_ptr<Particle> search) const {
-    return a == search || b == search;
-}
-
 ostream &operator<<(ostream &os, const TouchingPair &touchingPair) {
     os << "[a: " << touchingPair.a << " b: " << touchingPair.b << "]";
     return os;

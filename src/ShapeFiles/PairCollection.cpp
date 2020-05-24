@@ -118,7 +118,7 @@ size_t PairCollection::size() const {
 
 ParticleList PairCollection::doomed() {
     particleVector doomed(pairs.size());
-    std::transform (pairs.begin(), pairs.end(), doomed.begin(), [](TouchingPair pair) { return pair.getB();});
+    std::transform (pairs.begin(), pairs.end(), doomed.begin(), [](const TouchingPair& pair) { return pair.getB();});
     return ParticleList (doomed);
 }
 
@@ -129,7 +129,7 @@ void PairCollection::mergePairs() {
 }
 
 bool PairCollection::containsPair(const TouchingPair & newPair) {
-    auto pairFunc = [&newPair](const TouchingPair pair) { return newPair.sameItems(pair); };
+    auto pairFunc = [&newPair](const TouchingPair& pair) { return newPair.sameItems(pair); };
     return std::any_of(pairs.begin(), pairs.end(), pairFunc);
 }
 

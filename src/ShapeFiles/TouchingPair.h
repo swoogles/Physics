@@ -10,7 +10,6 @@ public:
 
     bool sameItems(const TouchingPair & touchingPair) const;
     bool contains(Particle &shape) const;
-    bool contains(shared_ptr<Particle> searchShape) const;
     inline shared_ptr<Particle> getA() const { return a; };
     inline shared_ptr<Particle> getB() const { return b; };
     shared_ptr<Particle> merge();
