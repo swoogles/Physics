@@ -39,8 +39,8 @@ void Simulation::refreshQuadrant() {
 //    quadrant = nullptr;
 
     shared_ptr<Quadrant> localQuadrant;
-    this->physicalObjects.applyToAllParticles(
-            [*this, &localQuadrant, &pos, side](Particle & curShape) {
+    this->physicalObjects.checkForAllParticles(
+            [*this, &localQuadrant, &pos, side](const Particle & curShape) {
                 if ( localQuadrant == nullptr ) {
                     localQuadrant = std::make_shared<Quadrant>( 1, pos, side, curShape.radius(), curShape.weightedPosition(), curShape.mass(), curShape.position() ) ;
                 } else {
