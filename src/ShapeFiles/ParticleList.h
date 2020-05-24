@@ -29,8 +29,7 @@ public:
 
     int removeShapeFromList(shared_ptr<Particle> shapeToRemove);
     int remove(ParticleList & shapesToRemove);
-    size_t clearShapes();
-    std::vector<shared_ptr<Particle>> getShapes() const;
+
     void update(hour_t dt);
     inline size_t size() const { return shapes.size(); } ;
 

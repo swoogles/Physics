@@ -42,10 +42,6 @@ void GraphicalOperations::localDisplay() {
                 if (particle.mass() != kilogram_t(0)) Drawing::draw(particle);
             }
             );
-//    for ( const auto& shape : localSimulation.getPhysicalObjects().getShapes()) {
-//        if (shape != nullptr && shape->mass() != kilogram_t(0)) Drawing::draw(*shape);
-//    }
-
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();

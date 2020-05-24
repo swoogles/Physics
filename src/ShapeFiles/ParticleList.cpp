@@ -1,7 +1,5 @@
-#include <utility>
-
 #include "ParticleList.h"
-#include "PairCollection.h"
+#include "PairCollection.h" // TODO Ugh. No good.
 
 void ParticleList::ensureNoNullEntries(string caller) {
   for (const auto & curShape : this->shapes ) {
@@ -61,16 +59,6 @@ size_t ParticleList::addList(ParticleList addList)
         // addedItems.clear();
     }
     return shapes.size();
-}
-
-size_t ParticleList::clearShapes() {
-  shapes.clear();
-  shapes.resize(0);
-  return shapes.size();
-}
-
-std::vector<shared_ptr<Particle>> ParticleList::getShapes() const{
-  return shapes;
 }
 
 void ParticleList::update(hour_t dt) {
