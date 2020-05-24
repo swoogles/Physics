@@ -38,14 +38,17 @@ void Simulation::refreshQuadrant() {
     float side = 10e7; //Formation Value . ACK!!!! How miserably hard-coded!!
     quadrant = nullptr;
 
-    for ( const auto & curShape : physicalObjects.getShapes() ) {
-        if ( quadrant == nullptr ) {
-            quadrant = std::make_shared<Quadrant>( curShape, 1, pos, side, curShape->radius(), curShape->weightedPosition(), curShape->mass(), curShape->position() ) ;
-        } else {
-            quadrant->insert(curShape, curShape->radius(), curShape->weightedPosition(), curShape->mass(),
-                             curShape->position());
-        }
-    }
+    shared_ptr<Quadrant> localQuadrant;
+    this->physicalObjects.applyToAllParticles(
+            [*this, &localQuadrant, &pos, side](Particle & curShape) {
+                if ( localQuadrant == nullptr ) {
+                    localQuadrant = std::make_shared<Quadrant>( 1, pos, side, curShape.radius(), curShape.weightedPosition(), curShape.mass(), curShape.position() ) ;
+                } else {
+                    localQuadrant->insert(curShape.radius(), curShape.weightedPosition(), curShape.mass(),
+                                          curShape.position());
+                }
+            });
+    quadrant = localQuadrant;
 }
 
 void Simulation::updateXYMinsAndMaxes(PhysicalVector curPos) {
@@ -116,7 +119,7 @@ void Simulation::calculateForceOnExternalNode(
         PhysicalVector gravVec = this->interactions.calcForceGravNew( curObject, curQuadrant, dt);
         curObject.adjustMomentum(gravVec);
         //c.
-        if ( curObject.isTouching(curQuadrant.position(), curQuadrant.getShapeRadius()) ) {
+        if ( curObject.isTouching(curQuadrant.getShapePosition(), curQuadrant.getShapeRadius()) ) {
             curObject.setTouchingAnotherParticle(true);
         }
     }
