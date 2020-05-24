@@ -38,6 +38,8 @@ public:
     QuadrantPointer_t makeSubQuadrant(shared_ptr<Particle> newShape) const;
     void applyToAllChildren(function<void (Quadrant)> functor);
 
+    bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
+
   private:
     typedef multi_array< QuadrantPointer_t, 3> array_typeNew;
 
@@ -56,8 +58,6 @@ public:
 
     //! Alters mass of object by dMass
     void adjustMass(kilogram_t dMass);
-
-    bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
 
     QuadrantPointer_t subQuadrantAt(OctreeCoordinates indices) const;
     void assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newSubQuadrant);

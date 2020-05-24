@@ -116,7 +116,8 @@ void Simulation::calculateForceOnExternalNode(
     shared_ptr<Particle> shapeInQuadrant = curQuadrant.getShapeInQuadrant();
 
     //b.
-    if ( curObject != shapeInQuadrant ) {
+    if (!curQuadrant.positionIsInQuadrantBoundaries(curObject->position())) {
+//    if ( curObject != shapeInQuadrant ) {
         PhysicalVector gravVec = this->interactions.calcForceGravNew( *curObject, curQuadrant, dt);
         curObject->adjustMomentum(gravVec);
         //c.
