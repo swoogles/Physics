@@ -50,7 +50,7 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
 void
 Quadrant::insert(shared_ptr<Particle> insertedShape, meter_t radius, PhysicalVector weightedPosition, kilogram_t mass,
                  PhysicalVector shapePosition) {
-    if (!positionIsInQuadrantBoundaries(weightedPosition.scaledBy(1.0/mass.value()))) { return; }
+    if (!positionIsInQuadrantBoundaries(shapePosition)) { return; }
 
     this->adjustMass(mass);
     this->weightedPosition = this->weightedPosition.plus(weightedPosition); // TODO Um, think this is broken. I'm not actually *using* insertedShape
@@ -68,7 +68,7 @@ Quadrant::insert(shared_ptr<Particle> insertedShape, meter_t radius, PhysicalVec
 void
 Quadrant::createSubQuadrantThatContains(shared_ptr<Particle> newShape, meter_t radius, PhysicalVector weightedPosition,
                                         kilogram_t mass, PhysicalVector shapePosition) {
-auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->position());
+auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->position()); // TODO This has been difficult to change :/
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
@@ -95,7 +95,7 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(PhysicalVector p
 QuadrantPointer_t
 Quadrant::makeSubQuadrant(shared_ptr<Particle> newShape, meter_t radius, PhysicalVector weightedPosition,
                           kilogram_t mass, PhysicalVector shapePosition) const {
-    auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->position());
+    auto targetIndices = this->coordinatesForSubQuadrantContaining(shapePosition);
     PhysicalVector offsets =
             dimensions
                     .scaledBy(.25)
