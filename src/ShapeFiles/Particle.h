@@ -52,6 +52,7 @@ public:
     void mergeWith(Particle &otherShape);
 
     bool isTouching(Particle &otherShape) const;
+    bool isTouching(PhysicalVector pos, meter_t radius) const;
   private:
     bool touchingAnotherParticle;
 public:

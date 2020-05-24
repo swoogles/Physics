@@ -29,8 +29,6 @@ public:
 
     inline bool isExternal() const { return isLeaf; }
 
-    shared_ptr<Particle> getShapeInQuadrant() const ;
-
     QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
 
     vector<shared_ptr<Quadrant>> children();
@@ -43,6 +41,11 @@ public:
   private:
     typedef multi_array< QuadrantPointer_t, 3> array_typeNew;
 
+    meter_t shapeRadius;
+public:
+    const meter_t &getShapeRadius() const;
+
+private:
     bool isLeaf;
     bool containsBody;
     const int level;
@@ -50,6 +53,10 @@ public:
     shared_ptr<Particle> shapeInQuadrant;
 
     PhysicalVector weightedPosition;
+public:
+    const PhysicalVector &getWeightedPosition() const;
+
+private:
     const PhysicalVector dimensions;
 
     array_typeNew  quadOctree;

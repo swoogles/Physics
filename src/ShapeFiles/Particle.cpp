@@ -127,3 +127,9 @@ bool Particle::isTouching(Particle &otherShape) const {
 	return (sepVec.length() < minSep);
 }
 
+bool Particle::isTouching(PhysicalVector pos, meter_t radius) const {
+    double minSep = (this->radius() + radius).value();
+    return this->position().minus(pos).length() < minSep;
+//    return false;
+}
+

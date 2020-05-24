@@ -8,20 +8,18 @@ bool withinBoundaries(PhysicalVector & insertPos, PhysicalVector & minBoundaries
   return withinBoundaries;
 }
 
-shared_ptr<Particle> Quadrant::getShapeInQuadrant() const {
-  return shapeInQuadrant;
-}
-
 
 Quadrant::Quadrant(shared_ptr<Particle> newShape, int level, PhysicalVector &pos, float width)
         :Box(pos, width, PhysicalVector(level*.10f, 1-level*.10f, 1-level*.10f))
         ,isLeaf(true)
         ,containsBody(true)
-        ,shapeInQuadrant(std::move(newShape))
+        ,shapeInQuadrant(newShape)
+        ,shapeRadius(newShape->radius())
         ,level(level)
         ,dimensions(width, width, width)
         ,quadOctree(extents[2][2][2])
-        ,weightedPosition(0,0,0) // Properly using this will help avoid a shape reference.
+//        ,weightedPosition(0,0,0) // Properly using this will help avoid a shape reference.
+        ,weightedPosition(newShape->position().x(), newShape->position().y(), newShape->position().z()) // Properly using this will help avoid a shape reference.
 {
   // TODO Get this in a more idiomatic form
   this->setMass(shapeInQuadrant->mass());
@@ -151,6 +149,14 @@ void Quadrant::applyToAllChildren(function<void (Quadrant)> functor) {
         }
     }
 
+}
+
+const meter_t &Quadrant::getShapeRadius() const {
+    return shapeRadius;
+}
+
+const PhysicalVector &Quadrant::getWeightedPosition() const {
+    return weightedPosition;
 }
 
 
