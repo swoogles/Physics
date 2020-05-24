@@ -16,10 +16,10 @@ void ParticleList::ensureNoNullEntries(string caller) {
 ParticleList::ParticleList() = default;
 
 
-ParticleList::ParticleList(item_t initialShape): shapes{std::move(initialShape)} {
+ParticleList::ParticleList(shared_ptr<Particle> initialShape): shapes{std::move(initialShape)} {
 }
 
-ParticleList::ParticleList(particleVector shapesIn)
+ParticleList::ParticleList(std::vector<shared_ptr<Particle>> shapesIn)
 :shapes(shapesIn.begin(), shapesIn.end()) {
     ensureNoNullEntries("ParticleList(particleVector)");
 }
@@ -28,7 +28,7 @@ bool ParticleList::hasConflictsWith(Particle &insertShape)
 {
   bool conflict = false;
 
-  item_t object1;
+  shared_ptr<Particle> object1;
 
   for (size_t i = 0; i < shapes.size() && conflict == false; i++)
   {
@@ -38,7 +38,7 @@ bool ParticleList::hasConflictsWith(Particle &insertShape)
   return conflict;
 }
 
-size_t ParticleList::addShapeToList(item_t insertShape)
+size_t ParticleList::addShapeToList(shared_ptr<Particle> insertShape)
 {
   shapes.push_back(std::move(insertShape));
   return shapes.size();
@@ -46,7 +46,7 @@ size_t ParticleList::addShapeToList(item_t insertShape)
 
 size_t ParticleList::addList(ParticleList addList)
 {
-    particleVector & addedItems = addList.shapes;
+    std::vector<shared_ptr<Particle>> & addedItems = addList.shapes;
     if (shapes.empty())
     {
         cout << "XXX empty case" << endl;
@@ -69,7 +69,7 @@ size_t ParticleList::clearShapes() {
   return shapes.size();
 }
 
-particleVector ParticleList::getShapes() const{
+std::vector<shared_ptr<Particle>> ParticleList::getShapes() const{
   return shapes;
 }
 
@@ -117,7 +117,7 @@ int ParticleList::remove(ParticleList &shapesToRemove) {
 
 }
 
-int ParticleList::removeShapeFromList(item_t shapeToRemove) {
+int ParticleList::removeShapeFromList(shared_ptr<Particle> shapeToRemove) {
     size_t newSize =  shapes.size() - 1;
 
     auto newIterator = std::remove_if(shapes.begin(), shapes.end(), [shapeToRemove](auto shape) {
@@ -131,8 +131,8 @@ int ParticleList::removeShapeFromList(item_t shapeToRemove) {
     return 0;
 }
 
-bool ParticleList::contains(item_t searchShape) const {
-    return std::any_of(shapes.begin(), shapes.end(), [searchShape](item_t curShape) {
+bool ParticleList::contains(shared_ptr<Particle> searchShape) const {
+    return std::any_of(shapes.begin(), shapes.end(), [searchShape](shared_ptr<Particle> curShape) {
         return searchShape == curShape;
     });
 }

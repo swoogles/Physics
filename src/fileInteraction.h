@@ -4,8 +4,6 @@
 #include <fstream>
 #include "ShapeFiles/Particle.h"
 
-typedef typename std::vector<shapePointer_t> vectorT;
-
 /*  README: Out of all the functions written so far, I believe the save/open functions are the ones that need the most hardening
  *  Right now they are very particular about what they can do and how they can do it, with NO error checking of any kind in play.
  *
@@ -29,7 +27,7 @@ typedef typename std::vector<shapePointer_t> vectorT;
  *  \n -Density (float)
  *  \n -Color (float float float)
  */
-void saveShapes(char * fileName, vectorT shapes);
+void saveShapes(char * fileName, std::vector<shared_ptr<Moveable>> shapes);
 
 
 /*! \brief Opens a saved file and loads WorldSettings info and shapes info
@@ -49,7 +47,7 @@ void saveShapes(char * fileName, vectorT shapes);
  *  \n -Color (float float float)
  *
  */
-void openShapes(char * fileName, vectorT shapes);
+void openShapes(char * fileName, std::vector<shared_ptr<Moveable>> shapes);
 
 /*! \interface sgVec
  *  \brief Vector class used in several places throughout the project

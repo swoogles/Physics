@@ -36,7 +36,7 @@ Quadrant::Quadrant(
         ,shapeWeightPosition(weightedPosition)
         ,shapeWeight(mass){}
 
-QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
+shared_ptr<Quadrant>   Quadrant::getQuadrantFromCell( int x, int y, int z ) {
   return this->quadOctree[x][y][z];
 }
 
@@ -91,7 +91,7 @@ void Quadrant::createSubQuadrantThatContains(
         kilogram_t mass,
         const PhysicalVector shapePositionParameter) {
     auto targetIndices = this->coordinatesForSubQuadrantContaining(shapePositionParameter);
-    QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
+    shared_ptr<Quadrant>  insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
         this->assignSubQuadrantAt(
@@ -114,7 +114,7 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(PhysicalVector p
 
 // Note/warning: This makes the assumption that newShape *belongs* in the subQuadrant that matches the coordinates.
 // Could be dangerous.
-QuadrantPointer_t Quadrant::makeSubQuadrant(
+shared_ptr<Quadrant>  Quadrant::makeSubQuadrant(
         meter_t radius,
         PhysicalVector weightedPositionParameter,
         kilogram_t mass,
@@ -148,7 +148,7 @@ vector<shared_ptr<Quadrant>> Quadrant::children() {
   for ( int x = 0; x < 2; x++ ) {
     for ( int y = 0; y < 2; y++ ) {
       for ( int z = 0; z < 2; z++ ) {
-        QuadrantPointer_t targetQuadrant = this->getQuadrantFromCell( x, y, z );
+        shared_ptr<Quadrant>  targetQuadrant = this->getQuadrantFromCell( x, y, z );
         if ( targetQuadrant != nullptr ) {
           liveChildren.push_back(targetQuadrant);
           auto nextChildren = targetQuadrant->children();
@@ -160,12 +160,12 @@ vector<shared_ptr<Quadrant>> Quadrant::children() {
   return std::move(liveChildren);
 }
 
-QuadrantPointer_t Quadrant::subQuadrantAt(OctreeCoordinates indices) const {
+shared_ptr<Quadrant>  Quadrant::subQuadrantAt(OctreeCoordinates indices) const {
     auto ints = indices.ints();
     return quadOctree[ints[0]][ints[1]][ints[2]];
 }
 
-void Quadrant::assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newQuadrant) {
+void Quadrant::assignSubQuadrantAt(OctreeCoordinates indices, shared_ptr<Quadrant>  newQuadrant) {
     auto ints = indices.ints();
     this->quadOctree[ints[0]][ints[1]][ints[2]] = std::move(newQuadrant);
 }
@@ -176,7 +176,7 @@ void Quadrant::applyToAllChildren(function<void (Quadrant)> functor) {
     for ( int x = 0; x < 2; x++ ) {
         for ( int y = 0; y < 2; y++ ) {
             for ( int z = 0; z < 2; z++ ) {
-                QuadrantPointer_t targetQuadrant = this->getQuadrantFromCell( x, y, z );
+                shared_ptr<Quadrant>  targetQuadrant = this->getQuadrantFromCell( x, y, z );
                 if ( targetQuadrant != nullptr ) {
                     targetQuadrant->applyToAllChildren(functor);
                 }

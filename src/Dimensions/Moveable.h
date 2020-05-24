@@ -18,8 +18,6 @@ using namespace std;
 
 using std::unique_ptr;
 
-typedef std::unique_ptr<PhysicalVector> vecPtr;
-
 /*! \brief The class at the heart of all the physical calculations
  *
  *  This class holds all the attributes needed to non-physical, abstract objects:
@@ -92,7 +90,4 @@ protected:
 private:
 	const ShapeType shapeType;
 };
-typedef shared_ptr<Moveable> shapePointer_t;
-typedef typename std::vector<shapePointer_t> vectorT;
-
 #endif

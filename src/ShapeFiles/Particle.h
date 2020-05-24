@@ -82,6 +82,4 @@ private:
     PhysicalVector calcMergedAngMomentum(Particle &otherShape) const;
 
 };
-
-typedef shared_ptr<Particle> particle_t;
 #endif

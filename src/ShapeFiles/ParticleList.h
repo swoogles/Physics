@@ -12,9 +12,7 @@ using namespace units::time;
 
 using std::size_t;
 
-typedef particle_t item_t;
-
-typedef typename std::vector<item_t> particleVector;
+typedef typename std::vector<shared_ptr<Particle>> particleVector;
 
 class ParticleList {
 public:
@@ -23,25 +21,25 @@ public:
     void checkForAllParticles(
             function<void (const Particle &)> functor ) const;
     ParticleList();
-    ParticleList(item_t initialShape);
-    ParticleList(particleVector shapesIn);
+    ParticleList(shared_ptr<Particle> initialShape);
+    ParticleList(std::vector<shared_ptr<Particle>> shapesIn);
     bool hasConflictsWith(Particle &insertShape);
-    size_t addShapeToList(item_t insertShape);
+    size_t addShapeToList(shared_ptr<Particle> insertShape);
     size_t addList(ParticleList addList);
 
-    int removeShapeFromList(item_t shapeToRemove);
+    int removeShapeFromList(shared_ptr<Particle> shapeToRemove);
     int remove(ParticleList & shapesToRemove);
     size_t clearShapes();
-    particleVector getShapes() const;
+    std::vector<shared_ptr<Particle>> getShapes() const;
     void update(hour_t dt);
     inline size_t size() const { return shapes.size(); } ;
 
-    bool contains(item_t searchShape) const;
+    bool contains(shared_ptr<Particle> searchShape) const;
 
     friend ostream &operator<<(ostream &os, const ParticleList &particleList);
 
 private:
-    particleVector shapes;
+    std::vector<shared_ptr<Particle>> shapes;
     void ensureNoNullEntries(string caller);
 
 };

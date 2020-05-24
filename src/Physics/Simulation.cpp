@@ -107,7 +107,7 @@ void Simulation::updateTimeElapsed(hour_t dt) { timeElapsed += dt; }
 
 hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 
-QuadrantPointer_t Simulation::getQuadrant() const { return quadrant; }
+shared_ptr<Quadrant>  Simulation::getQuadrant() const { return quadrant; }
 
 
 void Simulation::calculateForceOnExternalNode(
@@ -153,7 +153,7 @@ void Simulation::calcForceOnObject_Octree(
             curObject.adjustMomentum(gravVec);
         } else { //3.
             // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
-            QuadrantPointer_t targetQuadrant;
+            shared_ptr<Quadrant>  targetQuadrant;
             for ( int x = 0; x < 2; x++ ) {
                 for ( int y = 0; y < 2; y++ ) {
                     for ( int z = 0; z < 2; z++ ) {

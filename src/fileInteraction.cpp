@@ -7,8 +7,8 @@
 
 #include "fileInteraction.h"
 
-void saveShapes(char * fileName, vectorT shapes) {
-	shapePointer_t curShape;
+void saveShapes(char * fileName, std::vector<shared_ptr<Moveable>> shapes) {
+	shared_ptr<Moveable> curShape;
 	ofstream myfile;
 	myfile.open (fileName);
 	myfile << shapes.size() << endl;
@@ -39,10 +39,10 @@ void saveShapes(char * fileName, vectorT shapes) {
 
 }
 
-void openShapes(char * fileName, vectorT shapes) {
+void openShapes(char * fileName, std::vector<shared_ptr<Moveable>> shapes) {
 	ifstream curFile;
 	float curVar;
-	shapePointer_t curShape;
+	shared_ptr<Moveable> curShape;
 
 	float newDT;
 	int type;
@@ -84,7 +84,7 @@ void openShapes(char * fileName, vectorT shapes) {
 			PhysicalVector color; // TODO decide whether to serialize. Probably yes.
 			vecFileRead(curFile);
 
-			shapePointer_t curShape = std::make_shared<Particle>(
+			shared_ptr<Moveable> curShape = std::make_shared<Particle>(
 					pos,
 					typedMass,
 					momentum,

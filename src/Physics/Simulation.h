@@ -27,7 +27,7 @@ public:
 
     size_t getSize() const;
 
-    QuadrantPointer_t getQuadrant() const;
+    shared_ptr<Quadrant>  getQuadrant() const;
 public:
     ParticleList &getPhysicalObjects() ;
 
@@ -39,7 +39,7 @@ private:
 
     float octreeTheta;
 
-    QuadrantPointer_t quadrant;
+    shared_ptr<Quadrant>  quadrant;
 
     CollisionType collisionType;
 

@@ -20,7 +20,6 @@ using std::make_shared;
 class Quadrant : public Box
 {
 public:
-    typedef shared_ptr<Quadrant> QuadrantPointer_t;
     Quadrant(int level, PhysicalVector &pos, float width, meter_t radius, PhysicalVector weightedPosition,
              kilogram_t mass, const PhysicalVector shapePosition);
 
@@ -31,19 +30,17 @@ public:
 
     inline bool isExternal() const { return isLeaf; }
 
-    QuadrantPointer_t getQuadrantFromCell( int x, int y, int z );
+    shared_ptr<Quadrant>  getQuadrantFromCell( int x, int y, int z );
 
     vector<shared_ptr<Quadrant>> children();
 
-    QuadrantPointer_t makeSubQuadrant(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
+    shared_ptr<Quadrant>  makeSubQuadrant(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
                                       PhysicalVector shapePositionParameter) const;
     void applyToAllChildren(function<void (Quadrant)> functor);
 
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
 
   private:
-    typedef multi_array< QuadrantPointer_t, 3> array_typeNew;
-
     meter_t shapeRadius;
     PhysicalVector shapeWeightPosition;
 public:
@@ -63,7 +60,7 @@ public:
 private:
     const PhysicalVector dimensions;
 
-    array_typeNew  quadOctree;
+    multi_array<shared_ptr<Quadrant>,3>  quadOctree;
 
     void createSubQuadrantThatContains(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
                                        PhysicalVector shapePositionParameter);
@@ -71,9 +68,8 @@ private:
     //! Alters mass of object by dMass
     void adjustMass(kilogram_t dMass);
 
-    QuadrantPointer_t subQuadrantAt(OctreeCoordinates indices) const;
-    void assignSubQuadrantAt(OctreeCoordinates indices, QuadrantPointer_t newSubQuadrant);
+    shared_ptr<Quadrant>  subQuadrantAt(OctreeCoordinates indices) const;
+    void assignSubQuadrantAt(OctreeCoordinates indices, shared_ptr<Quadrant>  newSubQuadrant);
     OctreeCoordinates coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant) const;
 };
-typedef shared_ptr<Quadrant> QuadrantPointer_t;
 #endif

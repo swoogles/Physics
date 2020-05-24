@@ -29,7 +29,7 @@ TEST_CASE("normalize list of pairs", "[green]") {
     const TouchingPair ca(c, a);
     const TouchingPair cb(c, b);
 
-    vectorT originalCircles = {a, b, c, d};
+    std::vector<shared_ptr<Moveable>> originalCircles = {a, b, c, d};
 
     SECTION("Merged chained items") {
 

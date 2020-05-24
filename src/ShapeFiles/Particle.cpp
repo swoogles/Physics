@@ -101,7 +101,7 @@ PhysicalVector Particle::calcMergedAngMomentum(Particle &otherShape) const {
 	PhysicalVector aMomentum(this->momentum());
 	PhysicalVector bMomentum(otherShape.momentum());
 
-	vecPtr sepVec(PhysicalVector::vecFromAtoB(aPos, bPos));
+    std::unique_ptr<PhysicalVector> sepVec(PhysicalVector::vecFromAtoB(aPos, bPos));
 
 	PhysicalVector hitPointOnA = sepVec->unit().scaledBy(this->radius().value());
 
