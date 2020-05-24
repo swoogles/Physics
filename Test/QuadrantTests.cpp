@@ -52,56 +52,64 @@ TEST_CASE("Get children", "[Quadrant]") {
         auto offset = subWidth / 2.0f;
         SECTION("[0,0,0]") { // 1
             auto subShape =  TestUtils::circleAt(5, 5, 5);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
+                                                                      PhysicalVector(), units::mass::kilogram_t());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, offset, offset));
         }
 
         SECTION("[0,0,1]") { // 2
             auto subShape =  TestUtils::circleAt(5, 5, -5);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
+                                                                      PhysicalVector(), units::mass::kilogram_t());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, offset, -offset));
         }
 
         SECTION("[0,1,0]") { // 3
             auto subShape =  TestUtils::circleAt(5, -5, 5);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
+                                                                      PhysicalVector(), units::mass::kilogram_t());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, -offset, offset));
         }
 
         SECTION("[0,1,1]") { // 4
             auto subShape =  TestUtils::circleAt(5, -5, -5);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
+                                                                      PhysicalVector(), units::mass::kilogram_t());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(offset, -offset, -offset));
         }
 
         SECTION("[1,0,0]") { // 5
             auto subShape =  TestUtils::circleAt(-5, 5, 5);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
+                                                                      PhysicalVector(), units::mass::kilogram_t());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, offset, offset));
         }
 
         SECTION("[1,0,1]") { // 6
             auto subShape =  TestUtils::circleAt(-5, 5, -5);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
+                                                                      PhysicalVector(), units::mass::kilogram_t());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, offset, -offset));
         }
 
         SECTION("[1,1,0]") { // 7
             auto subShape =  TestUtils::circleAt(-5, -5, 5);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
+                                                                      PhysicalVector(), units::mass::kilogram_t());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, -offset, offset));
         }
 
         SECTION("[1,1,1]") { // 8
             auto subShape =  TestUtils::circleAt(-5, -5, -5);
-            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape);
+            auto subQuadrant = quadrantForSubdivision.makeSubQuadrant(subShape, units::length::meter_t(),
+                                                                      PhysicalVector(), units::mass::kilogram_t());
             auto subQuadrantPos = subQuadrant->position();
             REQUIRE(subQuadrantPos.hasValues(-offset, -offset, -offset));
         }

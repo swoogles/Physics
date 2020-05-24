@@ -54,25 +54,26 @@ void Quadrant::insert(shared_ptr<Particle> insertedShape) {
 
     auto subRadius = insertedShape->radius();
     auto subWeightedPosition = insertedShape->weightedPosition();
-    this->createSubQuadrantThatContains(std::move(insertedShape), subRadius, subWeightedPosition);
+    this->createSubQuadrantThatContains(std::move(insertedShape), subRadius, subWeightedPosition,
+                                        units::mass::kilogram_t());
     if ( isLeaf ) {
         isLeaf = false;
-        this->createSubQuadrantThatContains(std::move(shapeInQuadrant), subRadius, subWeightedPosition);
+        this->createSubQuadrantThatContains(std::move(shapeInQuadrant), subRadius, subWeightedPosition,
+                                            units::mass::kilogram_t());
     }
     // 3.d centerOfMassRepresentation->setPos( CoMPosition );
 }
 
-void Quadrant::createSubQuadrantThatContains(shared_ptr<Particle> newShape, meter_t  radius, PhysicalVector weightedPosition
-) {
+void
+Quadrant::createSubQuadrantThatContains(shared_ptr<Particle> newShape, meter_t radius, PhysicalVector weightedPosition,
+                                        kilogram_t mass) {
 auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->position());
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
-    auto shapeRadius = newShape->radius();
-    auto shapeWeightedPosition = newShape->weightedPosition();
     if ( insertionQuadrant == nullptr ) {
         this->assignSubQuadrantAt(
                 targetIndices,
-                this->makeSubQuadrant(std::move(newShape), shapeRadius, shapeWeightedPosition));
+                this->makeSubQuadrant(std::move(newShape), radius, weightedPosition, mass));
     } else {
         insertionQuadrant->insert(std::move(newShape));
    };
@@ -90,7 +91,9 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(PhysicalVector p
 
 // Note/warning: This makes the assumption that newShape *belongs* in the subQuadrant that matches the coordinates.
 // Could be dangerous.
-QuadrantPointer_t Quadrant::makeSubQuadrant(shared_ptr<Particle> newShape, meter_t  radius, PhysicalVector weightedPosition) const {
+QuadrantPointer_t
+Quadrant::makeSubQuadrant(shared_ptr<Particle> newShape, meter_t radius, PhysicalVector weightedPosition,
+                          kilogram_t mass) const {
     auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->position());
     PhysicalVector offsets =
             dimensions
@@ -98,7 +101,7 @@ QuadrantPointer_t Quadrant::makeSubQuadrant(shared_ptr<Particle> newShape, meter
                     .withElementsMultipliedBy(targetIndices.polarities());
     PhysicalVector newPos = pos.plus( offsets );
 
-    return std::move(make_shared<Quadrant>( newShape, this->level + 1, newPos, this->getWidth() / 2.0, radius, newShape->weightedPosition(), newShape->mass() ) );
+    return std::move(make_shared<Quadrant>( newShape, this->level + 1, newPos, this->getWidth() / 2.0, radius, weightedPosition, mass ) );
 }
 
 bool Quadrant::positionIsInQuadrantBoundaries(PhysicalVector insertPos) const {

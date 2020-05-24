@@ -34,7 +34,8 @@ public:
 
     vector<shared_ptr<Quadrant>> children();
 
-    QuadrantPointer_t makeSubQuadrant(shared_ptr<Particle> newShape, meter_t  radius, PhysicalVector weightedPosition) const;
+    QuadrantPointer_t makeSubQuadrant(shared_ptr<Particle> newShape, meter_t radius, PhysicalVector weightedPosition,
+                                      kilogram_t mass) const;
     void applyToAllChildren(function<void (Quadrant)> functor);
 
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
@@ -62,7 +63,8 @@ private:
 
     array_typeNew  quadOctree;
 
-    void createSubQuadrantThatContains(shared_ptr<Particle> newShape, meter_t  radius, PhysicalVector weightedPosition);
+    void createSubQuadrantThatContains(shared_ptr<Particle> newShape, meter_t radius, PhysicalVector weightedPosition,
+                                       kilogram_t mass);
 
     //! Alters mass of object by dMass
     void adjustMass(kilogram_t dMass);
