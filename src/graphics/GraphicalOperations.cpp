@@ -9,10 +9,9 @@
 using std::size_t;;
 
 void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant) {
-    if (controlCenter.shouldRenderOctree()) {
+//    if (controlCenter.shouldRenderOctree()) {
         Drawing::draw(quadrant);
-    }
-//    drawShapeInQuadrant(quadrant);
+//    }
 };
 
 

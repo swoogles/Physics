@@ -21,6 +21,7 @@ void Drawing::draw(Moveable &myShape) {
     int numPts = 16;
     switch (myShape.getType()) {
         case box:
+            cout << "printing quadrant box" << endl;
             glutWireCube( 1.0 );
             break;
         case circle:
@@ -30,10 +31,12 @@ void Drawing::draw(Moveable &myShape) {
     }
     glPopMatrix();
 
-    glPushMatrix();
-    glBegin(GL_POINTS);                      // Select points as the primitive
-    glVertex3f(pos.x(), pos.y(), pos.z());    // Specify a point
-    glEnd();
-    glPopMatrix();
+    if (myShape.getType() == circle) {
+        glPushMatrix();
+        glBegin(GL_POINTS);                      // Select points as the primitive
+        glVertex3f(pos.x(), pos.y(), pos.z());    // Specify a point
+        glEnd();
+        glPopMatrix();
+    }
 
 }
