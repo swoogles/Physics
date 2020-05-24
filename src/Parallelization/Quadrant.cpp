@@ -9,9 +9,22 @@ bool withinBoundaries(PhysicalVector & insertPos, PhysicalVector & minBoundaries
 }
 
 
-Quadrant::Quadrant(int level, PhysicalVector &pos, float width, meter_t radius, PhysicalVector weightedPosition,
-                   kilogram_t mass, const PhysicalVector shapePosition)
-        : Box(pos, width, PhysicalVector(level * .10f, 1 - level * .10f, 1 - level * .10f), mass)
+Quadrant::Quadrant(
+        int level,
+        PhysicalVector &pos,
+        float width,
+        meter_t radius,
+        PhysicalVector weightedPosition,
+        kilogram_t mass,
+        const PhysicalVector shapePosition)
+        : Box(
+                pos,
+                width,
+                PhysicalVector(
+                        level * .10f,
+                        1 - level * .10f,
+                        1 - level * .10f),
+                    mass)
         ,isLeaf(true)
         ,containsBody(true)
         ,shapeRadius(radius)
@@ -19,7 +32,9 @@ Quadrant::Quadrant(int level, PhysicalVector &pos, float width, meter_t radius, 
         ,dimensions(width, width, width)
         ,quadOctree(extents[2][2][2])
         ,weightedPosition(weightedPosition) // Properly using this will help avoid a shape reference.
-        ,shapePosition(shapePosition) {}
+        ,shapePosition(shapePosition)
+        ,shapeWeightPosition(weightedPosition)
+        ,shapeWeight(mass){}
 
 QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
   return this->quadOctree[x][y][z];
@@ -49,24 +64,30 @@ void Quadrant::insert(meter_t radius, PhysicalVector weightedPositionParameter, 
     }
 
 
-    this->createSubQuadrantThatContains(radius, weightedPositionParameter,
-                                        massParameter, shapePositionParameter);
     if ( isLeaf ) {
         isLeaf = false;
         this->createSubQuadrantThatContains(
                 this->shapeRadius,
-                this->weightedPosition,
-
-                this->mass(),
+                this->shapeWeightPosition,
+                this->shapeWeight,
                 this->shapePosition);
     }
+    this->createSubQuadrantThatContains(
+            radius,
+            weightedPositionParameter,
+            massParameter,
+            shapePositionParameter);
 
     this->adjustMass(massParameter);
     this->weightedPosition = this->weightedPosition.plus(weightedPositionParameter);
 }
 
-void Quadrant::createSubQuadrantThatContains(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
-                                             const PhysicalVector shapePositionParameter) {
+void Quadrant::createSubQuadrantThatContains(
+        meter_t radius,
+        PhysicalVector
+        weightedPositionParameter,
+        kilogram_t mass,
+        const PhysicalVector shapePositionParameter) {
 
     auto targetIndices = this->coordinatesForSubQuadrantContaining(shapePositionParameter); // TODO This has been difficult to change :/
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);

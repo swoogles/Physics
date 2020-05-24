@@ -45,6 +45,7 @@ public:
     typedef multi_array< QuadrantPointer_t, 3> array_typeNew;
 
     meter_t shapeRadius;
+    PhysicalVector shapeWeightPosition;
 public:
     const meter_t &getShapeRadius() const;
 
@@ -55,6 +56,7 @@ private:
 
     PhysicalVector weightedPosition;
     PhysicalVector shapePosition;
+    kilogram_t shapeWeight;
 public:
     const PhysicalVector &getShapePosition() const;
 
