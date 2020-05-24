@@ -11,7 +11,7 @@ bool withinBoundaries(PhysicalVector & insertPos, PhysicalVector & minBoundaries
 
 Quadrant::Quadrant(shared_ptr<Particle> newShape, int level, PhysicalVector &pos, float width, meter_t radius,
                    PhysicalVector weightedPosition, kilogram_t mass, PhysicalVector shapePosition)
-        :Box(pos, width, PhysicalVector(level*.10f, 1-level*.10f, 1-level*.10f))
+        : Box(pos, width, PhysicalVector(level * .10f, 1 - level * .10f, 1 - level * .10f), mass)
         ,isLeaf(true)
         ,containsBody(true)
         ,shapeInQuadrant(newShape)
@@ -21,11 +21,7 @@ Quadrant::Quadrant(shared_ptr<Particle> newShape, int level, PhysicalVector &pos
         ,quadOctree(extents[2][2][2])
 //        ,weightedPosition(0,0,0) // Properly using this will help avoid a shape reference.
         ,weightedPosition(weightedPosition) // Properly using this will help avoid a shape reference.
-        ,shapePosition(shapePosition)
-{
-  // TODO Get this in a more idiomatic form
-  this->setMass(mass);
-}
+        ,shapePosition(shapePosition) {}
 
 QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
   return this->quadOctree[x][y][z];

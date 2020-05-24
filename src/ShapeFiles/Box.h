@@ -5,7 +5,7 @@
 
 class Box: public Moveable {
 public:
-	Box(PhysicalVector pos, float sideLength, PhysicalVector color);
+	Box(PhysicalVector pos, float sideLength, PhysicalVector color, kilogram_t mass);
 
 	double scale() const override;
 

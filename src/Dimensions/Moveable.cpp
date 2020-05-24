@@ -86,7 +86,9 @@ PhysicalVector Moveable::weightedPosition() const {
 
 double Moveable::distanceTo(Moveable &object2) const {
     return this->vectorTo(object2).length();
-}Moveable::Moveable(ShapeType shapeType, PhysicalVector momentum)
+}
+
+Moveable::Moveable(ShapeType shapeType, PhysicalVector momentum)
 		: _momentum(momentum)
 		, shapeType(shapeType) {
 }
