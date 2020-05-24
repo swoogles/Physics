@@ -21,11 +21,11 @@ void Drawing::draw(Moveable &myShape) {
     int numPts = 16;
     switch (myShape.getType()) {
         case box:
-            cout << "printing quadrant box with scale: " << scale << endl;
-            cout << "printing quadrant box with pos: " << myShape.position() << endl;
-            cout << "printing quadrant box with color: " << myShape.getColor() << endl;
+//            cout << "printing quadrant box with scale: " << scale << endl;
+//            cout << "printing quadrant box with pos: " << myShape.position() << endl;
+//            cout << "printing quadrant box with color: " << myShape.getColor() << endl;
             glColor3f(1.0f, 0.0f, 0.0f);
-            glutWireCube( 1.0 );
+            glutWireCube( 1000.0 );
             break;
         case circle:
             glutSolidSphere( 1, numPts, numPts);

@@ -39,7 +39,7 @@ public:
 private:
     Observer localObserver;
     // TODO replace ControlCenter param with a simple "shouldRenderOctree" bool
-    static void fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant);
+    static void fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant & quadrant);
 
     int control_center_num;
     int mainDisplayNum;

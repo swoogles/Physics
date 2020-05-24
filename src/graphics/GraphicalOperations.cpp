@@ -8,10 +8,10 @@
 
 using std::size_t;;
 
-void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant quadrant) {
-//    if (controlCenter.shouldRenderOctree()) {
+void GraphicalOperations::fullQuadrantDrawingFunction(ControlCenter controlCenter, Quadrant &quadrant) {
+    if (controlCenter.shouldRenderOctree()) {
         Drawing::draw(quadrant);
-//    }
+    }
 };
 
 
@@ -42,7 +42,7 @@ void GraphicalOperations::localDisplay() {
             }
             );
 
-    glMatrixMode(GL_PROJECTION);
+//    glMatrixMode(GL_PROJECTION);
     glPopMatrix();
 
     puDisplay(mainDisplayNum);
