@@ -42,7 +42,7 @@ void Simulation::refreshQuadrant() {
         if ( quadrant == nullptr ) {
             quadrant = std::make_shared<Quadrant>( curShape, 1, pos, side, curShape->radius(), curShape->weightedPosition(), curShape->mass() ) ;
         } else {
-            quadrant->insert(curShape);
+            quadrant->insert(curShape, curShape->radius(), curShape->weightedPosition(), curShape->mass() );
         }
     }
 }

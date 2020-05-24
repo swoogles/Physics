@@ -24,7 +24,8 @@ public:
     Quadrant(shared_ptr<Particle> newShape, int level, PhysicalVector &pos, float width, meter_t radius,
              PhysicalVector weightedPosition, kilogram_t mass);
 
-    void insert(shared_ptr<Particle> newShape);
+    void insert(shared_ptr<Particle> newShape, meter_t radius, PhysicalVector weightedPosition,
+                kilogram_t mass);
 
     inline float getWidth() const { return dimensions.vec[0]; }
 

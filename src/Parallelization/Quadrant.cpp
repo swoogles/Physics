@@ -46,20 +46,19 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
      *  Expand the Quadrant until it *does* include the shape
 */
 
-void Quadrant::insert(shared_ptr<Particle> insertedShape) {
+void Quadrant::insert(shared_ptr<Particle> insertedShape, meter_t radius, PhysicalVector weightedPosition,
+                      kilogram_t mass) {
     if (!positionIsInQuadrantBoundaries(insertedShape->position())) { return; }
 
     this->adjustMass(insertedShape->mass());
     this->weightedPosition = this->weightedPosition.plus(insertedShape->weightedPosition()); // TODO Um, think this is broken. I'm not actually *using* insertedShape
 
-    auto subRadius = insertedShape->radius();
-    auto subWeightedPosition = insertedShape->weightedPosition();
-    this->createSubQuadrantThatContains(std::move(insertedShape), subRadius, subWeightedPosition,
-                                        units::mass::kilogram_t());
+    this->createSubQuadrantThatContains(std::move(insertedShape), radius, weightedPosition,
+                                        mass);
     if ( isLeaf ) {
         isLeaf = false;
-        this->createSubQuadrantThatContains(std::move(shapeInQuadrant), subRadius, subWeightedPosition,
-                                            units::mass::kilogram_t());
+        this->createSubQuadrantThatContains(std::move(shapeInQuadrant), radius, weightedPosition,
+                                            mass);
     }
     // 3.d centerOfMassRepresentation->setPos( CoMPosition );
 }
@@ -75,7 +74,7 @@ auto targetIndices = this->coordinatesForSubQuadrantContaining(newShape->positio
                 targetIndices,
                 this->makeSubQuadrant(std::move(newShape), radius, weightedPosition, mass));
     } else {
-        insertionQuadrant->insert(std::move(newShape));
+        insertionQuadrant->insert(std::move(newShape), radius, weightedPosition, mass);
    };
 
 }
