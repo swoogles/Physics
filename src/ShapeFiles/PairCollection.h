@@ -24,12 +24,12 @@ public:
     ParticleList doomed();
     void mergePairs();
 //    bool any_of( std::function< bool(const TouchingPair &)>& const lambda );
-    inline vector<TouchingPair> brittlePairs() { return pairs; }
     bool containsPair(const TouchingPair & newPair);
 
     friend ostream &operator<<(ostream &os, const PairCollection &collection);
 
 private:
+    inline vector<TouchingPair> brittlePairs() { return pairs; }
     vector<TouchingPair> pairs;
 
 };

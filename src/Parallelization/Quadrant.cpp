@@ -56,11 +56,13 @@ QuadrantPointer_t  Quadrant::getQuadrantFromCell( int x, int y, int z ) {
      *  Expand the Quadrant until it *does* include the shape
 */
 
-void Quadrant::insert(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t massParameter,
-                      const PhysicalVector shapePositionParameter) {
+void Quadrant::insert(
+        meter_t radius,
+        PhysicalVector weightedPositionParameter,
+        kilogram_t massParameter,
+        const PhysicalVector shapePositionParameter) {
     if (!positionIsInQuadrantBoundaries(shapePositionParameter)) {
         std::throw_with_nested(std::runtime_error(__func__));
-        return;
     }
 
 
@@ -88,8 +90,7 @@ void Quadrant::createSubQuadrantThatContains(
         weightedPositionParameter,
         kilogram_t mass,
         const PhysicalVector shapePositionParameter) {
-
-    auto targetIndices = this->coordinatesForSubQuadrantContaining(shapePositionParameter); // TODO This has been difficult to change :/
+    auto targetIndices = this->coordinatesForSubQuadrantContaining(shapePositionParameter);
     QuadrantPointer_t insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
@@ -113,8 +114,11 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(PhysicalVector p
 
 // Note/warning: This makes the assumption that newShape *belongs* in the subQuadrant that matches the coordinates.
 // Could be dangerous.
-QuadrantPointer_t Quadrant::makeSubQuadrant(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
-                                            PhysicalVector shapePositionParameter) const {
+QuadrantPointer_t Quadrant::makeSubQuadrant(
+        meter_t radius,
+        PhysicalVector weightedPositionParameter,
+        kilogram_t mass,
+        PhysicalVector shapePositionParameter) const {
     auto targetIndices = this->coordinatesForSubQuadrantContaining(shapePositionParameter);
     PhysicalVector newPos =
             pos.plus(
@@ -184,10 +188,6 @@ void Quadrant::applyToAllChildren(function<void (Quadrant)> functor) {
 
 const meter_t &Quadrant::getShapeRadius() const {
     return shapeRadius;
-}
-
-const PhysicalVector &Quadrant::getWeightedPosition() const {
-    return weightedPosition;
 }
 
 const PhysicalVector &Quadrant::getShapePosition() const {

@@ -60,16 +60,13 @@ private:
 public:
     const PhysicalVector &getShapePosition() const;
 
-public:
-    const PhysicalVector &getWeightedPosition() const;
-
 private:
     const PhysicalVector dimensions;
 
     array_typeNew  quadOctree;
 
     void createSubQuadrantThatContains(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
-                                       const PhysicalVector shapePositionParameter);
+                                       PhysicalVector shapePositionParameter);
 
     //! Alters mass of object by dMass
     void adjustMass(kilogram_t dMass);
