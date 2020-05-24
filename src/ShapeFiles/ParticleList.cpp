@@ -18,7 +18,8 @@ ParticleList::ParticleList(shared_ptr<Particle> initialShape): shapes{std::move(
 }
 
 ParticleList::ParticleList(std::vector<shared_ptr<Particle>> shapesIn)
-:shapes(shapesIn.begin(), shapesIn.end()) {
+    :shapes(shapesIn.begin(), shapesIn.end()
+) {
     ensureNoNullEntries("ParticleList(particleVector)");
 }
 
@@ -62,25 +63,33 @@ size_t ParticleList::addList(ParticleList addList)
 }
 
 void ParticleList::update(hour_t dt) {
-    PairCollection deleteList;
-  for (const auto & curShape : shapes ) {
-      if (curShape == nullptr) {
-          fprintf(stderr, "Error: Null Shape in ParticleList::update\n");
-          exit(1);
-      }
-    curShape->update( dt );
-      for (const auto & innerShape : shapes) {
-          if (curShape != innerShape) {
-              if (curShape->isTouching(*innerShape)) {
-                  TouchingPair touchingPair(curShape, innerShape);
-                  deleteList.insertIfUnique(touchingPair);
-              }
-          }
-      }
-  }
+    ParticleList touchingParticles;
+    for (const auto & curShape : shapes ) {
+        if (curShape == nullptr) {
+            fprintf(stderr, "Error: Null Shape in ParticleList::update\n");
+            exit(1);
+        }
+        if (curShape->isTouchingAnotherParticle()) {
+            touchingParticles.addShapeToList(curShape);
+        }
+        curShape->update( dt );
+    }
 
+    PairCollection deleteList;
+    for (const auto & touchingShape : touchingParticles.shapes) {
+        for (const auto & innerShape : shapes) {
+            if (touchingShape != innerShape) {
+                if (touchingShape->isTouching(*innerShape)) {
+                    TouchingPair touchingPair(touchingShape, innerShape);
+                    deleteList.insertIfUnique(touchingPair);
+                }
+            }
+        }
+
+    }
     deleteList.mergePairs();
     ParticleList doomedList(deleteList.doomed() );
+
     if (doomedList.size() > 0) {
         cout << "removing this many particles: " << doomedList.size() << endl;
     }

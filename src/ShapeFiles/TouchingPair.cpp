@@ -27,6 +27,7 @@ TouchingPair::TouchingPair(shared_ptr<Particle> aIn, shared_ptr<Particle> bIn)
 shared_ptr<Particle> TouchingPair::merge() {
     // Simpler when merge returns A's pointer directly.
     a->mergeWith(*b);
+    b = nullptr; // TODO Dunno if this is crazy or not...
     return a;
 }
 
