@@ -41,8 +41,6 @@ int main(int argcp, char **argv) {
     PhysicsSandboxProperties properties("simulation.properties");
 
     ParameterArguments parameterArguments(argv);
-    Simulation simulation =
-            Simulations::createSimulation(parameterArguments.getCraftedSimulation(), properties);
 
     auto windowDimensions =
             WindowDimensions(
@@ -68,16 +66,16 @@ int main(int argcp, char **argv) {
     CenterStage centerStage(windowDimensions.width, outputTime);
 
     globalFullApplication = make_unique<FullApplication>(
-            simulation,
+            Simulations::bodyFormation(properties.numShapes, properties),
             centerStage,
             parameterArguments.isRecording(),
             start,
             properties.maximumRunTime,
-            GraphicalOperations(            simulation,
-                                            controlCenter,
-                                            openGlSetup.mainDisplayNum,
-                                            openGlSetup.controlCenterNum,
-                                            windowDimensions)
+            GraphicalOperations(
+                    controlCenter,
+                    openGlSetup.mainDisplayNum,
+                    openGlSetup.controlCenterNum,
+                    windowDimensions)
     );
 
     glutSetWindow(1);

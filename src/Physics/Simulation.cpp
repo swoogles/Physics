@@ -15,7 +15,7 @@ Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType
     this->refreshQuadrant();
 }
 
-Simulation::Simulation(Simulation &originalSimulation, ParticleList newParticles)
+Simulation::Simulation(Simulation originalSimulation, ParticleList newParticles)
     : timeElapsed(originalSimulation.timeElapsed)
             ,minX(FLT_MAX)
             ,maxX(FLT_MIN)
@@ -37,9 +37,9 @@ void Simulation::refreshQuadrant() {
 
     float side = 10e7; //Formation Value . ACK!!!! How miserably hard-coded!!
 
-    quadrant = std::make_shared<Quadrant>( 1, pos, side, meter_t(0), PhysicalVector(), kilogram_t(0), PhysicalVector() ) ;
+    quadrant = std::make_unique<Quadrant>( 1, pos, side, meter_t(0), PhysicalVector(), kilogram_t(0), PhysicalVector() ) ;
     this->physicalObjects.checkForAllParticles(
-            [*this, &pos, side](const Particle & curShape) {
+            [this, &pos, side](const Particle & curShape) {
                 this->quadrant->insert(
                         curShape.radius(),
                         curShape.weightedPosition(),

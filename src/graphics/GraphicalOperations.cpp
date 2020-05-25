@@ -92,11 +92,10 @@ void GraphicalOperations::localDisplay(Simulation & simulation) const {
 
 }
 
-GraphicalOperations::GraphicalOperations(Simulation & simulation, ControlCenter controlCenter,
+GraphicalOperations::GraphicalOperations(ControlCenter controlCenter,
                                          int CenterStageWindow, int controlCenterWindow,
                                          WindowDimensions windowDimensions)
-        : localSimulation(simulation)
-        , localControlCenter(controlCenter)
+        : localControlCenter(controlCenter)
         , mainDisplayNum(CenterStageWindow)
         , control_center_num(controlCenterWindow)
         , localObserver(windowDimensions)

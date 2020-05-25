@@ -10,9 +10,6 @@
 
 class Simulations {
 public:
-    static Simulation disruption_ArbitraryList(PhysicsSandboxProperties properties);
-
-    static Simulation multipleOrbiters(PhysicsSandboxProperties properties);
 
     static Simulation QuadrantTesting_simplest();
 

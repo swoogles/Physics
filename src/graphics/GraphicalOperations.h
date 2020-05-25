@@ -25,11 +25,10 @@
 
 class GraphicalOperations {
 public:
-    GraphicalOperations(Simulation & simulation, ControlCenter controlCenter,
+    GraphicalOperations(ControlCenter controlCenter,
                         int CenterStageWindow, int controlCenterWindow,
                         WindowDimensions windowDimensions);
 
-    Simulation & localSimulation;
     ControlCenter localControlCenter;
     void localDisplay(Simulation & simulation) const;
     void controlDisplay() const;

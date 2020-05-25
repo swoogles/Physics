@@ -13,7 +13,7 @@ FullApplication::FullApplication(
         time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
         chrono::seconds maximumRuntime,
         GraphicalOperations graphicalOperations
-) : simulation(simulation),
+) : simulation(std::move(simulation)),
     controlCenter(graphicalOperations.localControlCenter),
     centerStage(mainDisplay),
     recorder(Recorder()),
