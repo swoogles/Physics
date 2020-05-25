@@ -7,6 +7,7 @@
 #include "../MaximumValues.h"
 #include <Physics/Interactions.h>
 #include "lib/units.h"
+#include <graphics/Drawing.h>
 
 using namespace units::time;
 
@@ -16,6 +17,11 @@ public:
     Simulation(ParticleList physicalObjects, CollisionType collisionType, float octreeTheta);
 
     Simulation(Simulation & originalSimulation, ParticleList newParticles);
+
+    void applySideEffectingFunctionsToInnards(
+			function<void (const Quadrant &)> quadrantFunctor,
+			function<void (const Particle &)> particleFunctor
+	)const ;
 
 
     hour_t getTimeElapsed() const;

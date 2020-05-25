@@ -179,3 +179,10 @@ ParticleList &Simulation::getPhysicalObjects() {
     return physicalObjects;
 }
 
+void Simulation::applySideEffectingFunctionsToInnards(function<void(const Quadrant &)> quadrantFunctor,
+                                                      function<void (const Particle &)> particleFunctor) const {
+    quadrant->applyToAllChildrenConstant(quadrantFunctor);
+    physicalObjects.checkForAllParticles(particleFunctor);
+
+}
+

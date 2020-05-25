@@ -73,18 +73,15 @@ void GraphicalOperations::localDisplay() const {
     Drawing drawing;
 
     // TODO You know this is bad. Keep looking at it.
-//    if (controlCenter.shouldRenderOctree()) {
-    localSimulation
-        .getQuadrant().applyToAllChildrenConstant(
-                [this, drawing](const Quadrant & quadrant) {
-                    drawing.draw(quadrant);
-                });
-//    }
-    localSimulation.getPhysicalObjects().applyToAllParticles(
-            [this, drawing](Particle & particle) {
+    //    if (controlCenter.shouldRenderOctree()) {
+    localSimulation.applySideEffectingFunctionsToInnards(
+            [this, drawing](const Quadrant & quadrant) {
+                drawing.draw(quadrant);
+            },
+            [this, drawing](const Particle & particle) {
                 if (particle.mass() != kilogram_t(0)) drawing.draw(particle);
             }
-            );
+    );
 
 //    glMatrixMode(GL_PROJECTION);
     glPopMatrix();
