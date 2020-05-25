@@ -83,7 +83,7 @@ void GraphicalOperations::localDisplay(Simulation & simulation) const {
             }
     );
 
-//    glMatrixMode(GL_PROJECTION);
+    glMatrixMode(GL_PROJECTION);
     glPopMatrix();
 
     puDisplay(mainDisplayNum);

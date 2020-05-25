@@ -112,7 +112,7 @@ void Simulation::calculateForceOnExternalNode(
         PhysicalVector gravVec = this->interactions.calcForceGravNew( curObject, curQuadrant, dt);
         curObject.adjustMomentum(gravVec);
         //c.
-        if ( curObject.isTouching(curQuadrant.getShapePosition(), curQuadrant.getShapeRadius()) ) {
+        if ( curQuadrant.isExternal() &&  curObject.isTouching(curQuadrant.getShapePosition(), curQuadrant.getShapeRadius()) ) {
             curObject.setTouchingAnotherParticle(true);
         }
     }
