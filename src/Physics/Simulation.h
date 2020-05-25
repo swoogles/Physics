@@ -34,8 +34,6 @@ public:
     size_t getSize() const;
 
     Quadrant &  getQuadrant() const;
-public:
-    ParticleList &getPhysicalObjects() ;
 
 private:
     ParticleList physicalObjects;

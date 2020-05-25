@@ -40,14 +40,13 @@ public:
     void applyToAllChildrenConstant(function<void (const Quadrant &)> functor) const;
 
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
-
-  private:
-    meter_t shapeRadius;
-    PhysicalVector shapeWeightPosition;
-public:
     const meter_t &getShapeRadius() const;
+    const PhysicalVector &getShapePosition() const;
+
 
 private:
+    meter_t shapeRadius;
+    PhysicalVector shapeWeightPosition;
     bool isLeaf;
     bool containsBody;
     const int level;
@@ -55,10 +54,6 @@ private:
     PhysicalVector weightedPosition;
     PhysicalVector shapePosition;
     kilogram_t shapeWeight;
-public:
-    const PhysicalVector &getShapePosition() const;
-
-private:
     const PhysicalVector dimensions;
 
     multi_array<shared_ptr<Quadrant>,3>  quadOctree;

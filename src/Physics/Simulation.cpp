@@ -175,10 +175,6 @@ size_t Simulation::getSize() const {
     return this->physicalObjects.size();
 }
 
-ParticleList &Simulation::getPhysicalObjects() {
-    return physicalObjects;
-}
-
 void Simulation::applySideEffectingFunctionsToInnards(function<void(const Quadrant &)> quadrantFunctor,
                                                       function<void (const Particle &)> particleFunctor) const {
     quadrant->applyToAllChildrenConstant(quadrantFunctor);
