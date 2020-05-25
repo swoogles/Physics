@@ -103,20 +103,6 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 Quadrant &  Simulation::getQuadrant() const { return *quadrant; }
 
 
-void Simulation::calculateForceOnExternalNode(
-        Particle &curObject,
-        Quadrant &curQuadrant,
-        hour_t dt) const {
-    //1. a. b.
-    if (!curQuadrant.positionIsInQuadrantBoundaries(curObject.position())) {
-        PhysicalVector gravVec = this->interactions.calcForceGravNew( curObject, curQuadrant, dt);
-        curObject.adjustMomentum(gravVec);
-        //c.
-        if ( curQuadrant.isExternal() &&  curObject.isTouching(curQuadrant.getShapePosition(), curQuadrant.getShapeRadius()) ) {
-            curObject.setTouchingAnotherParticle(true);
-        }
-    }
-}
 //1.
 //a. If the current node is an external node
 //b. (and it is not body b),
@@ -134,31 +120,29 @@ void Simulation::calcForceOnObject_Octree(
         Quadrant &curQuadrant,
         hour_t dt,
         int recursionLevel) const {
-    if ( curQuadrant.isExternal() ) {
-        calculateForceOnExternalNode(curObject, curQuadrant, dt);
-    }
-    else {
-        double distance = curObject.distanceTo(curQuadrant);
-        //2.a
-        if ( curQuadrant.getWidth() / distance < octreeTheta ) {
-            PhysicalVector gravVec = this->interactions.calcForceGravNew( curObject, curQuadrant, dt);
-            //b.
-            curObject.adjustMomentum(gravVec);
-        } else { //3.
-            // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
-            shared_ptr<Quadrant>  targetQuadrant;
-            for ( int x = 0; x < 2; x++ ) {
-                for ( int y = 0; y < 2; y++ ) {
-                    for ( int z = 0; z < 2; z++ ) {
-                        targetQuadrant = curQuadrant.getQuadrantFromCell( x, y, z );
-                        if ( targetQuadrant != nullptr ) {
-                            calcForceOnObject_Octree(curObject, *targetQuadrant, dt, recursionLevel + 1) ;
-                        }
+    double distance = curObject.distanceTo(curQuadrant);
+    //2.a
+    if ( curQuadrant.getWidth() / distance < octreeTheta  && !curQuadrant.positionIsInQuadrantBoundaries(curObject.position())) {
+        PhysicalVector gravVec = this->interactions.calcForceGravNew( curObject, curQuadrant, dt);
+        curObject.adjustMomentum(gravVec);
+        //c.
+        if ( curQuadrant.isExternal() &&  curObject.isTouching(curQuadrant.getShapePosition(), curQuadrant.getShapeRadius()) ) {
+            curObject.setTouchingAnotherParticle(true);
+        }
+    } else { //3.
+        // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
+        shared_ptr<Quadrant>  targetQuadrant;
+        for ( int x = 0; x < 2; x++ ) {
+            for ( int y = 0; y < 2; y++ ) {
+                for ( int z = 0; z < 2; z++ ) {
+                    targetQuadrant = curQuadrant.getQuadrantFromCell( x, y, z );
+                    if ( targetQuadrant != nullptr ) {
+                        calcForceOnObject_Octree(curObject, *targetQuadrant, dt, recursionLevel + 1) ;
                     }
                 }
             }
-
         }
+
     }
 
 

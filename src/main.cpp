@@ -80,7 +80,7 @@ int main(int argcp, char **argv) {
 
     glutSetWindow(1);
     glutDisplayFunc([]() {
-        globalFullApplication->display();
+//        globalFullApplication->display();
     });
     glutSetWindow(2);
     glutDisplayFunc([]() {

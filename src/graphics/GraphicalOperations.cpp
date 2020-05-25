@@ -76,7 +76,7 @@ void GraphicalOperations::localDisplay(Simulation & simulation) const {
     //    if (controlCenter.shouldRenderOctree()) {
     simulation.applySideEffectingFunctionsToInnards(
             [this, drawing](const Quadrant & quadrant) {
-//                drawing.draw(quadrant);
+                drawing.draw(quadrant);
             },
             [this, drawing](const Particle & particle) {
                 if (particle.mass() != kilogram_t(0)) drawing.draw(particle);

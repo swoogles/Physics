@@ -10,7 +10,6 @@ void Drawing::draw(const Moveable &myShape) const {
     glTranslatef(pos.x(), pos.y(), pos.z());
 
     //Rotate
-    glMultMatrixf( (const GLfloat*) myShape.getOrientationMat().get());
 
     //Scale
     float scale = myShape.scale();
@@ -24,10 +23,11 @@ void Drawing::draw(const Moveable &myShape) const {
 //            cout << "printing quadrant box with scale: " << scale << endl;
 //            cout << "printing quadrant box with pos: " << myShape.position() << endl;
 //            cout << "printing quadrant box with color: " << myShape.getColor() << endl;
-            glColor3f(1.0f, 0.0f, 0.0f);
+//            glColor3f(1.0f, 0.0f, 0.0f);
             glutWireCube( 1.0 );
             break;
         case circle:
+            glMultMatrixf( (const GLfloat*) myShape.getOrientationMat().get());
             glutSolidSphere( 1, numPts, numPts);
 //            glutWireSphere( 1, numPts, numPts);
             break;
