@@ -58,7 +58,7 @@ void processCameraAction(
     }
 }
 
-void GraphicalOperations::localDisplay() const {
+void GraphicalOperations::localDisplay(Simulation & simulation) const {
     glutSetWindow(mainDisplayNum);
     glClearColor(0,0,0,0);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -74,9 +74,9 @@ void GraphicalOperations::localDisplay() const {
 
     // TODO You know this is bad. Keep looking at it.
     //    if (controlCenter.shouldRenderOctree()) {
-    localSimulation.applySideEffectingFunctionsToInnards(
+    simulation.applySideEffectingFunctionsToInnards(
             [this, drawing](const Quadrant & quadrant) {
-                drawing.draw(quadrant);
+//                drawing.draw(quadrant);
             },
             [this, drawing](const Particle & particle) {
                 if (particle.mass() != kilogram_t(0)) drawing.draw(particle);
@@ -114,8 +114,8 @@ void GraphicalOperations::controlDisplay() const {
     glutPostRedisplay();
 }
 
-void GraphicalOperations::fullDisplay() const {
-    localDisplay();
+void GraphicalOperations::fullDisplay(Simulation & simulation) const {
+    localDisplay(simulation);
     controlDisplay();
 }
 

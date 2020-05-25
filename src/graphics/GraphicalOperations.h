@@ -31,9 +31,9 @@ public:
 
     Simulation & localSimulation;
     ControlCenter localControlCenter;
-    void localDisplay() const;
+    void localDisplay(Simulation & simulation) const;
     void controlDisplay() const;
-    void fullDisplay() const;
+    void fullDisplay(Simulation & simulation) const;
     WindowDimensions currentDimensions() const;
 
     void updateObserver(

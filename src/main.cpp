@@ -34,7 +34,7 @@ void displayFunc() {
             cout << "Should make new Simulation now." << endl;
             exit(0);
     }
-    globalFullApplication->graphicalOperations.fullDisplay();
+    globalFullApplication->display();
 }
 
 int main(int argcp, char **argv) {

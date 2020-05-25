@@ -33,7 +33,7 @@ using std::chrono::system_clock;
 class FullApplication {
 public:
     FullApplication(
-        Simulation &simulation,
+        Simulation simulation,
         CenterStage centerStage,
         bool shouldRecord,
         time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
@@ -48,7 +48,7 @@ public:
     const bool recording;
     const time_point<system_clock, duration<long int, std::ratio<1, 1000000000> >> start;
     const std::chrono::seconds maximumRuntime;
-    void display() const;
+    void display() ;
     GraphicalOperations graphicalOperations;
     // TODO Instead of void, return a Result[SUCCESSFUL_STEP, COMPLETED, FAILED]
     ApplicationResult update();

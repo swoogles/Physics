@@ -7,7 +7,7 @@
 
 
 FullApplication::FullApplication(
-        Simulation &simulation,
+        Simulation simulation,
         CenterStage mainDisplay,
         bool shouldRecord,
         time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
@@ -50,7 +50,7 @@ ApplicationResult FullApplication::update() {
     return ApplicationResult::SUCESSFUL_STEP;
 }
 
-void FullApplication::display() const {
-    this->graphicalOperations.fullDisplay();
+void FullApplication::display() {
+    this->graphicalOperations.fullDisplay(simulation);
 }
 
