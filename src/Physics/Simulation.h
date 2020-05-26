@@ -31,8 +31,6 @@ public:
 
     MaximumValues getXYMinsAndMaxes() const;
 
-    size_t getSize() const;
-
 private:
     ParticleList physicalObjects;
     hour_t timeElapsed;

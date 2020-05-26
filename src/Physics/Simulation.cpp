@@ -1,6 +1,9 @@
 #include "Simulation.h"
 
-Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType, float octreeTheta)
+Simulation::Simulation(
+        ParticleList physicalObjects,
+        CollisionType collisionType,
+        float octreeTheta)
         :physicalObjects(std::move(physicalObjects))
         ,timeElapsed(0)
         ,minX(FLT_MAX)
@@ -46,7 +49,6 @@ void Simulation::refreshQuadrant() {
 }
 
 void Simulation::updateXYMinsAndMaxes(PhysicalVector curPos) {
-    // TODO Use min/max functions instead of comparisons here.
     resetXYMinsAndMaxes();
     maxX = std::max(maxX, curPos.x());
     minX = std::min(minX, curPos.x());
@@ -63,7 +65,6 @@ MaximumValues Simulation::getXYMinsAndMaxes() const {
             this->maxY
     };
 }
-
 
 void Simulation::resetXYMinsAndMaxes() {
 	minX = FLT_MAX;
@@ -140,8 +141,6 @@ void Simulation::calcForceOnObject_Octree(
         }
 
     }
-
-
 }
 
 void Simulation::calcForcesAll(hour_t dt) {
@@ -151,14 +150,11 @@ void Simulation::calcForcesAll(hour_t dt) {
             });
 }
 
-size_t Simulation::getSize() const {
-    return this->physicalObjects.size();
-}
-
-void Simulation::applySideEffectingFunctionsToInnards(function<void(const Quadrant &)> quadrantFunctor,
-                                                      function<void (const Particle &)> particleFunctor) const {
+void Simulation::applySideEffectingFunctionsToInnards(
+        function<void(const Quadrant &)> quadrantFunctor,
+        function<void (const Particle &)> particleFunctor)
+        const {
     quadrant->applyToAllChildrenConstant(quadrantFunctor);
     physicalObjects.checkForAllParticles(particleFunctor);
-
 }
 
