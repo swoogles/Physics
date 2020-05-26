@@ -16,7 +16,7 @@ Quadrant::Quadrant(
         meter_t radius,
         PhysicalVector weightedPosition,
         kilogram_t mass,
-        const PhysicalVector shapePosition)
+        const PhysicalVector particlePosition)
         : Box(
                 pos,
                 width,
@@ -25,16 +25,16 @@ Quadrant::Quadrant(
                         1 - level * .10f,
                         1 - level * .10f),
                     mass)
-        ,isLeaf(true)
-        ,containsBody(true)
-        ,shapeRadius(radius)
-        ,level(level)
-        ,dimensions(width, width, width)
-        ,quadOctree(extents[2][2][2])
-        ,weightedPosition(weightedPosition) // Properly using this will help avoid a shape reference.
-        ,shapePosition(shapePosition)
-        ,shapeWeightPosition(weightedPosition)
-        ,shapeWeight(mass){}
+        , isLeaf(true)
+        , containsBody(true)
+        , particleRadius(radius)
+        , level(level)
+        , dimensions(width, width, width)
+        , quadOctree(extents[2][2][2])
+        , weightedPosition(weightedPosition)
+        , particlePosition(particlePosition)
+        , particleWeightedPosition(weightedPosition)
+        , particleWeight(mass){}
 
 shared_ptr<Quadrant>   Quadrant::getQuadrantFromCell( int x, int y, int z ) const {
   return this->quadOctree[x][y][z];
@@ -51,17 +51,18 @@ shared_ptr<Quadrant>   Quadrant::getQuadrantFromCell( int x, int y, int z ) cons
   3. a. If node x is an external node, say containing a body named c, then there are two bodies b and c in the same region. 
      b. Subdivide the region further by creating four children. Then, recursively insert both b and c into the appropriate quadrant(s). Since b and c may still end up in the same quadrant, there may be several subdivisions during a single insertion.      c. Finally, update the center-of-mass and total mass of x.
 
-     TODO Regarding shapes outside of the quadrant, I should either
-     *  Mark the shape for deletion in some way
-     *  Expand the Quadrant until it *does* include the shape
+     TODO Regarding particle outside of the quadrant, I should either
+     *  Mark the particle for deletion in some way
+     *  Expand the Quadrant until it *does* include the particle
+     *
 */
 
 void Quadrant::insert(
         meter_t radius,
         PhysicalVector weightedPositionParameter,
         kilogram_t massParameter,
-        const PhysicalVector shapePositionParameter) {
-    if (!positionIsInQuadrantBoundaries(shapePositionParameter)) {
+        const PhysicalVector particlePositionParameter) {
+    if (!positionIsInQuadrantBoundaries(particlePositionParameter)) {
         std::throw_with_nested(std::runtime_error(__func__));
     }
 
@@ -69,16 +70,16 @@ void Quadrant::insert(
     if ( isLeaf ) {
         isLeaf = false;
         this->createSubQuadrantThatContains(
-                this->shapeRadius,
-                this->shapeWeightPosition,
-                this->shapeWeight,
-                this->shapePosition);
+                this->particleRadius,
+                this->particleWeightedPosition,
+                this->particleWeight,
+                this->particlePosition);
     }
     this->createSubQuadrantThatContains(
             radius,
             weightedPositionParameter,
             massParameter,
-            shapePositionParameter);
+            particlePositionParameter);
 
     this->adjustMass(massParameter);
     this->weightedPosition = this->weightedPosition.plus(weightedPositionParameter);
@@ -89,16 +90,16 @@ void Quadrant::createSubQuadrantThatContains(
         PhysicalVector
         weightedPositionParameter,
         kilogram_t mass,
-        const PhysicalVector shapePositionParameter) {
-    auto targetIndices = this->coordinatesForSubQuadrantContaining(shapePositionParameter);
+        PhysicalVector particlePositionParameter) {
+    auto targetIndices = this->coordinatesForSubQuadrantContaining(particlePositionParameter);
     shared_ptr<Quadrant>  insertionQuadrant = this->subQuadrantAt(targetIndices);
 
     if ( insertionQuadrant == nullptr ) {
         this->assignSubQuadrantAt(
                 targetIndices,
-                this->makeSubQuadrant(radius, weightedPositionParameter, mass, shapePositionParameter));
+                this->makeSubQuadrant(radius, weightedPositionParameter, mass, particlePositionParameter));
     } else {
-        insertionQuadrant->insert(radius, weightedPositionParameter, mass, shapePositionParameter);
+        insertionQuadrant->insert(radius, weightedPositionParameter, mass, particlePositionParameter);
     };
 
 }
@@ -118,8 +119,8 @@ shared_ptr<Quadrant>  Quadrant::makeSubQuadrant(
         meter_t radius,
         PhysicalVector weightedPositionParameter,
         kilogram_t mass,
-        PhysicalVector shapePositionParameter) const {
-    auto targetIndices = this->coordinatesForSubQuadrantContaining(shapePositionParameter);
+        PhysicalVector particlePositionParameter) const {
+    auto targetIndices = this->coordinatesForSubQuadrantContaining(particlePositionParameter);
     PhysicalVector newPos =
             pos.plus(
                     dimensions
@@ -127,7 +128,7 @@ shared_ptr<Quadrant>  Quadrant::makeSubQuadrant(
                             .withElementsMultipliedBy(targetIndices.polarities())
                     );
 
-    return std::move(make_shared<Quadrant>(this->level + 1, newPos, this->getWidth() / 2.0, radius, weightedPositionParameter, mass, shapePositionParameter ) );
+    return std::move(make_shared<Quadrant>(this->level + 1, newPos, this->getWidth() / 2.0, radius, weightedPositionParameter, mass, particlePositionParameter ) );
 }
 
 bool Quadrant::positionIsInQuadrantBoundaries(PhysicalVector insertPos) const {
@@ -203,12 +204,12 @@ void Quadrant::applyToAllChildrenConstant(function<void (const Quadrant &)> func
 
 }
 
-const meter_t &Quadrant::getShapeRadius() const {
-    return shapeRadius;
+const meter_t &Quadrant::getParticleRadius() const {
+    return particleRadius;
 }
 
-const PhysicalVector &Quadrant::getShapePosition() const {
-    return shapePosition;
+const PhysicalVector &Quadrant::getParticlePosition() const {
+    return particlePosition;
 }
 
 

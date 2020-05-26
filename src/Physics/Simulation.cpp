@@ -113,20 +113,21 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 
 void Simulation::calcForcesAll(hour_t dt) {
     this->physicalObjects.applyToAllParticles(
-            [this, dt](Particle & curShape) {
+            [this, dt](Particle & particle) {
                 auto quadrantFunction =
-                [this, &curShape, dt](Quadrant & quadrant) {
-                    PhysicalVector gravVec = this->interactions.calcForceGravNew( curShape, quadrant, dt);
-                    curShape.adjustMomentum(gravVec);
+                [this, &particle, dt](Quadrant & quadrant) {
+                    PhysicalVector gravVec = this->interactions.calcForceGravNew(particle, quadrant, dt);
+                    particle.adjustMomentum(gravVec);
                     //c.
-                    if ( quadrant.isExternal() &&  curShape.isTouching(quadrant.getShapePosition(), quadrant.getShapeRadius()) ) {
-                        curShape.setTouchingAnotherParticle(true);
+                    if (quadrant.isExternal() && particle.isTouching(quadrant.getParticlePosition(),
+                                                                     quadrant.getParticleRadius()) ) {
+                        particle.setTouchingAnotherParticle(true);
                     }
                 };
                 auto terminalPredicate =
-                        [this, &curShape](Quadrant & quadrant) {
-                            double distance = curShape.distanceTo(quadrant);
-                            return quadrant.getWidth() / distance < octreeTheta  && !quadrant.positionIsInQuadrantBoundaries(curShape.position());
+                        [this, &particle](Quadrant & quadrant) {
+                            double distance = particle.distanceTo(quadrant);
+                            return quadrant.getWidth() / distance < octreeTheta  && !quadrant.positionIsInQuadrantBoundaries(particle.position());
                 };
                 quadrant->applyToAllChildren(quadrantFunction, terminalPredicate);
             });

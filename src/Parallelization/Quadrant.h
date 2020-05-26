@@ -21,10 +21,10 @@ class Quadrant : public Box
 {
 public:
     Quadrant(int level, PhysicalVector &pos, float width, meter_t radius, PhysicalVector weightedPosition,
-             kilogram_t mass, const PhysicalVector shapePosition);
+             kilogram_t mass, const PhysicalVector particlePosition);
 
     void insert(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t massParameter,
-                const PhysicalVector shapePositionParameter);
+                const PhysicalVector particlePositionParameter);
 
     inline float getWidth() const { return dimensions.vec[0]; }
 
@@ -35,31 +35,31 @@ public:
     vector<shared_ptr<Quadrant>> children();
 
     shared_ptr<Quadrant>  makeSubQuadrant(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
-                                      PhysicalVector shapePositionParameter) const;
+                                      PhysicalVector particlePositionParameter) const;
     void applyToAllChildren(function<void (Quadrant &)> functor, function<bool (Quadrant &)> terminalPredicate);
     void applyToAllChildrenConstant(function<void (const Quadrant &)> functor) const;
 
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
-    const meter_t &getShapeRadius() const;
-    const PhysicalVector &getShapePosition() const;
+    const meter_t &getParticleRadius() const;
+    const PhysicalVector &getParticlePosition() const;
 
 
 private:
-    meter_t shapeRadius;
-    PhysicalVector shapeWeightPosition;
+    meter_t particleRadius;
+    PhysicalVector particleWeightedPosition;
     bool isLeaf;
     bool containsBody;
     const int level;
 
     PhysicalVector weightedPosition;
-    PhysicalVector shapePosition;
-    kilogram_t shapeWeight;
+    PhysicalVector particlePosition;
+    kilogram_t particleWeight;
     const PhysicalVector dimensions;
 
     multi_array<shared_ptr<Quadrant>,3>  quadOctree;
 
     void createSubQuadrantThatContains(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
-                                       PhysicalVector shapePositionParameter);
+                                       PhysicalVector particlePositionParameter);
 
     //! Alters mass of object by dMass
     void adjustMass(kilogram_t dMass);
