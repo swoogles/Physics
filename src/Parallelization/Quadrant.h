@@ -36,7 +36,7 @@ public:
 
     shared_ptr<Quadrant>  makeSubQuadrant(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
                                       PhysicalVector shapePositionParameter) const;
-    void applyToAllChildren(function<void (Quadrant &)> functor);
+    void applyToAllChildren(function<void (Quadrant &)> functor, function<bool (Quadrant &)> terminalPredicate);
     void applyToAllChildrenConstant(function<void (const Quadrant &)> functor) const;
 
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;

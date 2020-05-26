@@ -170,15 +170,17 @@ void Quadrant::assignSubQuadrantAt(OctreeCoordinates indices, shared_ptr<Quadran
     this->quadOctree[ints[0]][ints[1]][ints[2]] = std::move(newQuadrant);
 }
 
-void Quadrant::applyToAllChildren(function<void (Quadrant &)> functor) {
-    functor(*this); // Location of this call determines traversal strategy.
-
-    for ( int x = 0; x < 2; x++ ) {
-        for ( int y = 0; y < 2; y++ ) {
-            for ( int z = 0; z < 2; z++ ) {
-                shared_ptr<Quadrant>  targetQuadrant = this->getQuadrantFromCell( x, y, z );
-                if ( targetQuadrant != nullptr ) {
-                    targetQuadrant->applyToAllChildren(functor);
+void Quadrant::applyToAllChildren(function<void (Quadrant &)> functor, function<bool (Quadrant &)> terminalPredicate) {
+    if (terminalPredicate(*this)) {
+        functor(*this); // Location of this call determines traversal strategy.
+    } else {
+        for (int x = 0; x < 2; x++) {
+            for (int y = 0; y < 2; y++) {
+                for (int z = 0; z < 2; z++) {
+                    shared_ptr<Quadrant> targetQuadrant = this->getQuadrantFromCell(x, y, z);
+                    if (targetQuadrant != nullptr) {
+                        targetQuadrant->applyToAllChildren(functor, terminalPredicate);
+                    }
                 }
             }
         }

@@ -112,7 +112,7 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 
 
 // TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
-void Simulation::calcForceOnObject_Octree(
+void Simulation::calcForceOnObject(
         Particle & curObject,
         Quadrant &curQuadrant,
         hour_t dt,
@@ -134,7 +134,7 @@ void Simulation::calcForceOnObject_Octree(
                 for ( int z = 0; z < 2; z++ ) {
                     targetQuadrant = curQuadrant.getQuadrantFromCell( x, y, z );
                     if ( targetQuadrant != nullptr ) {
-                        calcForceOnObject_Octree(curObject, *targetQuadrant, dt, recursionLevel + 1) ;
+                        calcForceOnObject(curObject, *targetQuadrant, dt, recursionLevel + 1) ;
                     }
                 }
             }
@@ -146,7 +146,7 @@ void Simulation::calcForceOnObject_Octree(
 void Simulation::calcForcesAll(hour_t dt) {
     this->physicalObjects.applyToAllParticles(
             [this, dt](Particle & curShape) {
-                calcForceOnObject_Octree(curShape, *this->quadrant, dt, 0);
+                calcForceOnObject(curShape, *this->quadrant, dt, 0);
             });
 }
 

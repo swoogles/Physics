@@ -45,7 +45,7 @@ TEST_CASE("Get children", "[Quadrant]") {
         function<void(Quadrant)> countingFunction = [&counter](Quadrant quadrant) {
             counter += 1;
         };
-        lessMutableQuadrant.applyToAllChildren(countingFunction);
+//        lessMutableQuadrant.applyToAllChildren(countingFunction);
         REQUIRE(counter == 5);
     }
 
