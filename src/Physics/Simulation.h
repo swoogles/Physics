@@ -33,8 +33,6 @@ public:
 
     size_t getSize() const;
 
-    Quadrant &  getQuadrant() const;
-
 private:
     ParticleList physicalObjects;
     hour_t timeElapsed;

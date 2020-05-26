@@ -10,7 +10,6 @@ Simulation::Simulation(ParticleList physicalObjects, CollisionType collisionType
         ,collisionType(collisionType)
         ,octreeTheta(octreeTheta)
 {
-    cout << "Constructing" << endl;
     this->updateMinsAndMaxes();
     this->refreshQuadrant();
 }
@@ -28,9 +27,7 @@ Simulation::Simulation(Simulation originalSimulation, ParticleList newParticles)
     this->physicalObjects = originalSimulation.physicalObjects;
     this->updateMinsAndMaxes();
     this->refreshQuadrant();
-
 }
-
 
 void Simulation::refreshQuadrant() {
     PhysicalVector pos(0, 0, 0, true);
@@ -85,12 +82,13 @@ void Simulation::updateMinsAndMaxes() {
 }
 
 void Simulation::update(hour_t dt) {
+    // This is the first "log(n)" part in "n log(n)"
     calcForcesAll(dt);
     physicalObjects.update(dt);
-//    cout << "num objects: " << physicalObjects.size() << endl;
     updateTimeElapsed(dt);
 
-    // TODO This causes another full iteration of all shapes. If it's going to happen, it should be done during one of the earlier iterations.
+    // TODO This causes another full iteration of all shapes. If it's going to happen,
+    //  it should be done during one of the earlier iterations.
     updateMinsAndMaxes();
     // This is the first "n" part in "n log(n)"
     refreshQuadrant();
@@ -99,8 +97,6 @@ void Simulation::update(hour_t dt) {
 void Simulation::updateTimeElapsed(hour_t dt) { timeElapsed += dt; }
 
 hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
-
-Quadrant &  Simulation::getQuadrant() const { return *quadrant; }
 
 
 //1.
@@ -151,7 +147,7 @@ void Simulation::calcForceOnObject_Octree(
 void Simulation::calcForcesAll(hour_t dt) {
     this->physicalObjects.applyToAllParticles(
             [this, dt](Particle & curShape) {
-                calcForceOnObject_Octree(curShape, this->getQuadrant(), dt, 0);
+                calcForceOnObject_Octree(curShape, *this->quadrant, dt, 0);
             });
 }
 
