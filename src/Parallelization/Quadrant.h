@@ -30,18 +30,12 @@ public:
 
     inline bool isExternal() const { return isLeaf; }
 
-    shared_ptr<Quadrant>  getQuadrantFromCell( int x, int y, int z ) const;
-
-    vector<shared_ptr<Quadrant>> children();
-
-    shared_ptr<Quadrant>  makeSubQuadrant(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
-                                      PhysicalVector particlePositionParameter) const;
     void applyToAllChildren(function<void (Quadrant &)> functor, function<bool (Quadrant &)> terminalPredicate);
     void applyToAllChildrenConstant(function<void (const Quadrant &)> functor) const;
 
-    bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
     const meter_t &getParticleRadius() const;
     const PhysicalVector &getParticlePosition() const;
+    bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
 
 
 private:
@@ -67,5 +61,15 @@ private:
     shared_ptr<Quadrant>  subQuadrantAt(OctreeCoordinates indices) const;
     void assignSubQuadrantAt(OctreeCoordinates indices, shared_ptr<Quadrant>  newSubQuadrant);
     OctreeCoordinates coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant) const;
+
+    shared_ptr<Quadrant>  getQuadrantFromCell( int x, int y, int z ) const;
+
+    shared_ptr<Quadrant>  makeSubQuadrant(
+            meter_t radius,
+            PhysicalVector weightedPositionParameter,
+            kilogram_t mass,
+            PhysicalVector particlePositionParameter)
+            const;
+
 };
 #endif

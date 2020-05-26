@@ -144,23 +144,6 @@ void Quadrant::adjustMass(kilogram_t dMass) {
 	_mass += dMass;
 }
 
-vector<shared_ptr<Quadrant>> Quadrant::children() {
-  vector<shared_ptr<Quadrant>>liveChildren ;
-  for ( int x = 0; x < 2; x++ ) {
-    for ( int y = 0; y < 2; y++ ) {
-      for ( int z = 0; z < 2; z++ ) {
-        shared_ptr<Quadrant>  targetQuadrant = this->getQuadrantFromCell( x, y, z );
-        if ( targetQuadrant != nullptr ) {
-          liveChildren.push_back(targetQuadrant);
-          auto nextChildren = targetQuadrant->children();
-          liveChildren.insert(std::end(liveChildren), std::begin(nextChildren), std::end(nextChildren));
-        }
-      }
-    }
-  }
-  return std::move(liveChildren);
-}
-
 shared_ptr<Quadrant>  Quadrant::subQuadrantAt(OctreeCoordinates indices) const {
     auto ints = indices.ints();
     return quadOctree[ints[0]][ints[1]][ints[2]];

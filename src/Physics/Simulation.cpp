@@ -116,8 +116,9 @@ void Simulation::calcForcesAll(hour_t dt) {
             [this, dt](Particle & particle) {
                 auto quadrantFunction =
                 [this, &particle, dt](Quadrant & quadrant) {
-                    PhysicalVector gravVec = this->interactions.calcForceGravNew(particle, quadrant, dt);
-                    particle.adjustMomentum(gravVec);
+                    particle.adjustMomentum(
+                            this->interactions.calcForceGravNew(particle, quadrant, dt)
+                    );
                     //c.
                     if (quadrant.isExternal() && particle.isTouching(quadrant.getParticlePosition(),
                                                                      quadrant.getParticleRadius()) ) {
