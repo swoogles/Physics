@@ -53,10 +53,7 @@ private:
 
 	void refreshQuadrant();
 
-    void calcForceOnObject(Particle &curObject, Quadrant &curQuadrant, hour_t dt,
-						   int recursionLevel) const;
-
-    void calcForcesAll(hour_t dt);
+	void calcForcesAll(hour_t dt);
 
 } ;
 

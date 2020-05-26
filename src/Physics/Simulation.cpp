@@ -111,42 +111,24 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 //3. Otherwise, run the procedure recursively on each of the current node’s children.
 
 
-// TODO Maybe if I add *pairs* of items to deleteList, I can normalize that and not worry about deleting both sides of a collision.
-void Simulation::calcForceOnObject(
-        Particle & curObject,
-        Quadrant &curQuadrant,
-        hour_t dt,
-        int recursionLevel) const {
-    double distance = curObject.distanceTo(curQuadrant);
-    //2.a
-    if ( curQuadrant.getWidth() / distance < octreeTheta  && !curQuadrant.positionIsInQuadrantBoundaries(curObject.position())) {
-        PhysicalVector gravVec = this->interactions.calcForceGravNew( curObject, curQuadrant, dt);
-        curObject.adjustMomentum(gravVec);
-        //c.
-        if ( curQuadrant.isExternal() &&  curObject.isTouching(curQuadrant.getShapePosition(), curQuadrant.getShapeRadius()) ) {
-            curObject.setTouchingAnotherParticle(true);
-        }
-    } else { //3.
-        // TODO This should *really* be captured inside the Quadrant class. WTF should Simulations know about these shitty indexes?
-        shared_ptr<Quadrant>  targetQuadrant;
-        for ( int x = 0; x < 2; x++ ) {
-            for ( int y = 0; y < 2; y++ ) {
-                for ( int z = 0; z < 2; z++ ) {
-                    targetQuadrant = curQuadrant.getQuadrantFromCell( x, y, z );
-                    if ( targetQuadrant != nullptr ) {
-                        calcForceOnObject(curObject, *targetQuadrant, dt, recursionLevel + 1) ;
-                    }
-                }
-            }
-        }
-
-    }
-}
-
 void Simulation::calcForcesAll(hour_t dt) {
     this->physicalObjects.applyToAllParticles(
             [this, dt](Particle & curShape) {
-                calcForceOnObject(curShape, *this->quadrant, dt, 0);
+                auto quadrantFunction =
+                [this, &curShape, dt](Quadrant & quadrant) {
+                    PhysicalVector gravVec = this->interactions.calcForceGravNew( curShape, quadrant, dt);
+                    curShape.adjustMomentum(gravVec);
+                    //c.
+                    if ( quadrant.isExternal() &&  curShape.isTouching(quadrant.getShapePosition(), quadrant.getShapeRadius()) ) {
+                        curShape.setTouchingAnotherParticle(true);
+                    }
+                };
+                auto terminalPredicate =
+                        [this, &curShape](Quadrant & quadrant) {
+                            double distance = curShape.distanceTo(quadrant);
+                            return quadrant.getWidth() / distance < octreeTheta  && !quadrant.positionIsInQuadrantBoundaries(curShape.position());
+                };
+                quadrant->applyToAllChildren(quadrantFunction, terminalPredicate);
             });
 }
 
