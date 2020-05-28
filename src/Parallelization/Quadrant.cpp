@@ -30,7 +30,7 @@ Quadrant::Quadrant(
         , particleRadius(radius)
         , level(level)
         , dimensions(width, width, width)
-        , quadOctree(extents[2][2][2])
+        , childQuadrants(extents[2][2][2])
         , uniqueQuadrantChildren(extents[2][2][2])
         , weightedPosition(weightedPosition)
         , particlePosition(particlePosition)
@@ -38,7 +38,7 @@ Quadrant::Quadrant(
         , particleWeight(mass){}
 
 shared_ptr<Quadrant>   Quadrant::getQuadrantFromCell( int x, int y, int z ) const {
-  return this->quadOctree[x][y][z];
+  return this->childQuadrants[x][y][z];
 }
 
 
@@ -59,14 +59,13 @@ shared_ptr<Quadrant>   Quadrant::getQuadrantFromCell( int x, int y, int z ) cons
 */
 
 void Quadrant::insert(
-        meter_t radius,
+        meter_t radiusParameter,
         PhysicalVector weightedPositionParameter,
         kilogram_t massParameter,
         const PhysicalVector particlePositionParameter) {
     if (!positionIsInQuadrantBoundaries(particlePositionParameter)) {
         std::throw_with_nested(std::runtime_error(__func__));
     }
-
 
     if ( isLeaf ) {
         isLeaf = false;
@@ -77,7 +76,7 @@ void Quadrant::insert(
                 this->particlePosition);
     }
     this->createSubQuadrantThatContains(
-            radius,
+            radiusParameter,
             weightedPositionParameter,
             massParameter,
             particlePositionParameter);
@@ -92,16 +91,23 @@ void Quadrant::createSubQuadrantThatContains(
         weightedPositionParameter,
         kilogram_t mass,
         PhysicalVector particlePositionParameter) {
-    auto targetIndices = this->coordinatesForSubQuadrantContaining(particlePositionParameter);
-    shared_ptr<Quadrant>  insertionQuadrant = this->subQuadrantAt(targetIndices);
 
-    if ( insertionQuadrant == nullptr ) {
-        this->assignSubQuadrantAt(
-                targetIndices,
-                this->makeSubQuadrant(radius, weightedPositionParameter, mass, particlePositionParameter));
-    } else {
-        insertionQuadrant->insert(radius, weightedPositionParameter, mass, particlePositionParameter);
-    };
+    function<void (Quadrant &)> functor =
+            [this, radius, weightedPositionParameter, mass, particlePositionParameter](Quadrant & insertionQuadrant) {
+                insertionQuadrant.insert(radius, weightedPositionParameter, mass, particlePositionParameter);
+            };
+    function<shared_ptr<Quadrant> ()> quadrantCreator =
+            [this, radius, weightedPositionParameter, mass, particlePositionParameter]() {
+                return std::move(this->makeSubQuadrant(radius, weightedPositionParameter, mass, particlePositionParameter));
+            };
+    // TODO We're *always* executing quadrantCreator, rather than stopping at a certain point.
+    auto targetIndices = this->coordinatesForSubQuadrantContaining(particlePositionParameter);
+    this->applyToQuadrantIfExistsOrElse(
+            targetIndices.ints()[0],
+            targetIndices.ints()[1],
+            targetIndices.ints()[2],
+            functor,
+            quadrantCreator);
 
 }
 
@@ -155,12 +161,12 @@ void Quadrant::adjustMass(kilogram_t dMass) {
 
 shared_ptr<Quadrant>  Quadrant::subQuadrantAt(OctreeCoordinates indices) const {
     auto ints = indices.ints();
-    return quadOctree[ints[0]][ints[1]][ints[2]];
+    return childQuadrants[ints[0]][ints[1]][ints[2]];
 }
 
 void Quadrant::assignSubQuadrantAt(OctreeCoordinates indices, shared_ptr<Quadrant>  newQuadrant) {
     auto ints = indices.ints();
-    this->quadOctree[ints[0]][ints[1]][ints[2]] = std::move(newQuadrant);
+    this->childQuadrants[ints[0]][ints[1]][ints[2]] = std::move(newQuadrant);
 }
 void Quadrant::applyToAllChildren(function<void (Quadrant &)> functor, function<bool (Quadrant &)> terminalPredicate) {
     if (terminalPredicate(*this)) {
@@ -207,8 +213,22 @@ void Quadrant::applyToQuadrantIfExists(
         function<void (Quadrant &)> functor,
         function<bool (Quadrant &)> terminalPredicate
 ) {
-    if (this->quadOctree[x][y][z] != nullptr) {
-        this->quadOctree[x][y][z]->applyToAllChildren(functor, terminalPredicate);
+    if (this->childQuadrants[x][y][z] != nullptr) {
+        this->childQuadrants[x][y][z]->applyToAllChildren(functor, terminalPredicate);
+    }
+}
+
+void Quadrant::applyToQuadrantIfExistsOrElse(
+        int x,
+        int y,
+        int z,
+        function<void (Quadrant &)> functor,
+        function<shared_ptr<Quadrant> ()> quadrantCreator
+) {
+    if (this->childQuadrants[x][y][z] == nullptr) {
+        this->childQuadrants[x][y][z] = std::move(quadrantCreator());
+    } else {
+        functor(*this->childQuadrants[x][y][z]);
     }
 }
 

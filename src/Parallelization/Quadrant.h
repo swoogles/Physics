@@ -23,7 +23,7 @@ public:
     Quadrant(int level, PhysicalVector &pos, float width, meter_t radius, PhysicalVector weightedPosition,
              kilogram_t mass, const PhysicalVector particlePosition);
 
-    void insert(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t massParameter,
+    void insert(meter_t radiusParameter, PhysicalVector weightedPositionParameter, kilogram_t massParameter,
                 const PhysicalVector particlePositionParameter);
 
     inline float getWidth() const { return dimensions.vec[0]; }
@@ -50,7 +50,7 @@ private:
     kilogram_t particleWeight;
     const PhysicalVector dimensions;
 
-    multi_array<shared_ptr<Quadrant>,3>  quadOctree;
+    multi_array<shared_ptr<Quadrant>,3>  childQuadrants;
 
     multi_array<unique_ptr<Quadrant>,3>  uniqueQuadrantChildren;
 
@@ -73,6 +73,13 @@ private:
             function<bool (Quadrant &)> terminalPredicate
     );
 
+    void applyToQuadrantIfExistsOrElse(
+            int x,
+            int y,
+            int z,
+            function<void (Quadrant &)> functor,
+            function<shared_ptr<Quadrant> ()> quadrantCreator
+    );
 
     shared_ptr<Quadrant>  makeSubQuadrant(
             meter_t radius,
