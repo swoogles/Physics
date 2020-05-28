@@ -51,7 +51,7 @@ private:
 
 	void refreshQuadrant(ParticleList physicalObjects);
 
-	void calcForcesAll(hour_t dt);
+	void calcForcesAll(ParticleList physicalObjects, hour_t dt);
 
 } ;
 

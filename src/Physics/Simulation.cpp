@@ -69,7 +69,7 @@ void Simulation::updateMinsAndMaxes() {
 
 void Simulation::update(hour_t dt) {
     // This is the first "log(n)" part in "n log(n)"
-    calcForcesAll(dt);
+    calcForcesAll(this->physicalObjects, dt);
     physicalObjects.update(dt);
     updateTimeElapsed(dt);
 
@@ -96,7 +96,7 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 //3. Otherwise, run the procedure recursively on each of the current node’s children.
 
 
-void Simulation::calcForcesAll(hour_t dt) {
+void Simulation::calcForcesAll(ParticleList physicalObjects, hour_t dt) {
     this->physicalObjects.applyToAllParticles(
             [this, dt](Particle & particle) {
                 auto quadrantFunction =
