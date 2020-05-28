@@ -128,7 +128,15 @@ shared_ptr<Quadrant>  Quadrant::makeSubQuadrant(
                             .withElementsMultipliedBy(targetIndices.polarities())
                     );
 
-    return std::move(make_shared<Quadrant>(this->level + 1, newPos, this->getWidth() / 2.0, radius, weightedPositionParameter, mass, particlePositionParameter ) );
+    return std::move(
+            make_shared<Quadrant>(
+                    this->level + 1,
+                    newPos,
+                    this->getWidth() / 2.0,
+                    radius,
+                    weightedPositionParameter,
+                    mass,
+                    particlePositionParameter ) );
 }
 
 bool Quadrant::positionIsInQuadrantBoundaries(PhysicalVector insertPos) const {

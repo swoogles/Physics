@@ -17,11 +17,10 @@ PairCollection::PairCollection() {
 optional<TouchingPair> aCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
     auto newPairA = newPair.getA().get();
     auto pairB = existingPair.getB().get();
-    if(newPairA == pairB) {
-        return TouchingPair(existingPair.getA(), newPair.getB());
-    } else {
-        return {};
-    }
+
+    return (newPairA == pairB)
+           ? std::optional(TouchingPair(existingPair.getA(), newPair.getB()))
+           : std::nullopt;
 }
 
 /*
@@ -33,11 +32,9 @@ If the 2nd, doomed item is the link in the chain,
 optional<TouchingPair> bCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
     auto newPairB = newPair.getB().get();
     auto pairB = existingPair.getB().get();
-    if(newPairB == pairB) {
-        return TouchingPair(existingPair.getA(), newPair.getA());
-    } else {
-        return {};
-    }
+    return (newPairB == pairB)
+        ? std::optional(TouchingPair(existingPair.getA(), newPair.getA()))
+        : std::nullopt;
 }
 
 /*
@@ -49,11 +46,10 @@ If the first, surving item is the link in the chain,
 optional<TouchingPair> cCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
     auto newPairA = newPair.getA().get();
     auto pairA = existingPair.getA().get();
-    if(newPairA == pairA) {
-        return newPair;
-    } else {
-        return {};
-    }
+
+    return (newPairA == pairA)
+           ? std::optional(newPair)
+           : std::nullopt;
 }
 
 /*
@@ -66,11 +62,10 @@ If the first item is the surviving, non-link in the chain,
 optional<TouchingPair> dCheck(const TouchingPair & newPair, const TouchingPair & existingPair) {
     auto newPairB = newPair.getB().get();
     auto pairA = existingPair.getA().get();
-    if(newPairB == pairA) {
-        return TouchingPair(newPair.getB(), newPair.getA());
-    } else {
-        return {};
-    }
+
+    return (newPairB == pairA)
+           ? std::optional(TouchingPair(newPair.getB(), newPair.getA()))
+           : std::nullopt;
 }
 
 void PairCollection::insertIfUnique(const TouchingPair & newPair) {

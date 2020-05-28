@@ -11,12 +11,8 @@ bool TouchingPair::contains(Particle &shape) const {
 }
 
 bool TouchingPair::sameItems(const TouchingPair & other)  const {
-    if (
-            (other.a == this->a && other.b == this->b)
-            || (other.b == this->a && other.a == this->b)
-            ) {
-        return true;
-    } else return false;
+    return (other.a == this->a && other.b == this->b)
+           || (other.b == this->a && other.a == this->b);
 }
 
 TouchingPair::TouchingPair(shared_ptr<Particle> aIn, shared_ptr<Particle> bIn)
