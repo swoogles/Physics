@@ -16,9 +16,7 @@ class Simulation {
 public:
     Simulation(ParticleList physicalObjects, CollisionType collisionType, float octreeTheta);
 
-    Simulation(Simulation originalSimulation, ParticleList newParticles);
-
-    void applySideEffectingFunctionsToInnards(
+	void applySideEffectingFunctionsToInnards(
 			function<void (const Quadrant &)> quadrantFunctor,
 			function<void (const Particle &)> particleFunctor
 	)const ;
