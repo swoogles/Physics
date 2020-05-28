@@ -15,7 +15,7 @@
 using boost::extents;
 using boost::multi_array;
 
-using std::make_shared;
+using std::make_unique;
 
 class Quadrant : public Box
 {
@@ -50,7 +50,7 @@ private:
     kilogram_t particleWeight;
     const PhysicalVector dimensions;
 
-    multi_array<shared_ptr<Quadrant>,3>  childQuadrants;
+    multi_array<unique_ptr<Quadrant>,3>  childQuadrants;
 
     multi_array<unique_ptr<Quadrant>,3>  uniqueQuadrantChildren;
 
@@ -82,10 +82,10 @@ private:
             int y,
             int z,
             function<void (Quadrant &)> functor,
-            function<shared_ptr<Quadrant> ()> quadrantCreator
+            function<unique_ptr<Quadrant> ()> quadrantCreator
     );
 
-    shared_ptr<Quadrant>  makeSubQuadrant(
+    unique_ptr<Quadrant>  makeSubQuadrant(
             meter_t radius,
             PhysicalVector weightedPositionParameter,
             kilogram_t mass,

@@ -92,7 +92,7 @@ void Quadrant::createSubQuadrantThatContains(
             [this, radius, weightedPositionParameter, mass, particlePositionParameter](Quadrant & insertionQuadrant) {
                 insertionQuadrant.insert(radius, weightedPositionParameter, mass, particlePositionParameter);
             };
-    function<shared_ptr<Quadrant> ()> quadrantCreator =
+    function<unique_ptr<Quadrant> ()> quadrantCreator =
             [this, radius, weightedPositionParameter, mass, particlePositionParameter]() {
                 return std::move(this->makeSubQuadrant(radius, weightedPositionParameter, mass, particlePositionParameter));
             };
@@ -118,7 +118,7 @@ OctreeCoordinates Quadrant::coordinatesForSubQuadrantContaining(PhysicalVector p
 
 // Note/warning: This makes the assumption that newShape *belongs* in the subQuadrant that matches the coordinates.
 // Could be dangerous.
-shared_ptr<Quadrant>  Quadrant::makeSubQuadrant(
+unique_ptr<Quadrant>  Quadrant::makeSubQuadrant(
         meter_t radius,
         PhysicalVector weightedPositionParameter,
         kilogram_t mass,
@@ -132,7 +132,7 @@ shared_ptr<Quadrant>  Quadrant::makeSubQuadrant(
                     );
 
     return std::move(
-            make_shared<Quadrant>(
+            make_unique<Quadrant>(
                     this->level + 1,
                     newPos,
                     this->getWidth() / 2.0,
@@ -210,7 +210,7 @@ void Quadrant::applyToQuadrantIfExistsOrElse(
         int y,
         int z,
         function<void (Quadrant &)> functor,
-        function<shared_ptr<Quadrant> ()> quadrantCreator
+        function<unique_ptr<Quadrant> ()> quadrantCreator
 ) {
     if (this->childQuadrants[x][y][z] == nullptr) {
         this->childQuadrants[x][y][z] = std::move(quadrantCreator());
