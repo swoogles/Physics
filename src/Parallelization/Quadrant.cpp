@@ -37,10 +37,6 @@ Quadrant::Quadrant(
         , particleWeightedPosition(weightedPosition)
         , particleWeight(mass){}
 
-shared_ptr<Quadrant>   Quadrant::getQuadrantFromCell( int x, int y, int z ) const {
-  return this->childQuadrants[x][y][z];
-}
-
 
 /* Description of insertion algorithm
 
@@ -179,10 +175,10 @@ void Quadrant::applyToAllChildrenConstant(function<void (const Quadrant &)> func
     for ( int x = 0; x < 2; x++ ) {
         for ( int y = 0; y < 2; y++ ) {
             for ( int z = 0; z < 2; z++ ) {
-                shared_ptr<Quadrant>  targetQuadrant = this->getQuadrantFromCell( x, y, z );
-                if ( targetQuadrant != nullptr ) {
-                    targetQuadrant->applyToAllChildrenConstant(functor);
-                }
+                applyToSingleQuadrantIfExists( x, y, z,
+                [this, functor](Quadrant & insertionQuadrant) {
+                    insertionQuadrant.applyToAllChildrenConstant(functor);
+                });
             }
         }
     }
@@ -219,6 +215,12 @@ void Quadrant::applyToQuadrantIfExistsOrElse(
     if (this->childQuadrants[x][y][z] == nullptr) {
         this->childQuadrants[x][y][z] = std::move(quadrantCreator());
     } else {
+        functor(*this->childQuadrants[x][y][z]);
+    }
+}
+
+void Quadrant::applyToSingleQuadrantIfExists(int x, int y, int z, function<void(Quadrant &)> functor) const {
+    if (this->childQuadrants[x][y][z] != nullptr) {
         functor(*this->childQuadrants[x][y][z]);
     }
 }

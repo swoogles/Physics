@@ -62,7 +62,6 @@ private:
 
     OctreeCoordinates coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant) const;
 
-    shared_ptr<Quadrant> getQuadrantFromCell( int x, int y, int z ) const;
     void  applyToQuadrantIfExists(
             int x,
             int y,
@@ -70,6 +69,13 @@ private:
             function<void (Quadrant &)> functor,
             function<bool (Quadrant &)> terminalPredicate
     );
+
+    void  applyToSingleQuadrantIfExists(
+            int x,
+            int y,
+            int z,
+            function<void (Quadrant &)> functor
+    ) const;
 
     void applyToQuadrantIfExistsOrElse(
             int x,
