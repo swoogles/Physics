@@ -49,7 +49,7 @@ private:
     void resetXYMinsAndMaxes();
     void updateXYMinsAndMaxes(PhysicalVector curPos);
 
-	void refreshQuadrant();
+	void refreshQuadrant(ParticleList physicalObjects);
 
 	void calcForcesAll(hour_t dt);
 

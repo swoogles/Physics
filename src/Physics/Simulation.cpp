@@ -14,10 +14,10 @@ Simulation::Simulation(
         ,octreeTheta(octreeTheta)
 {
     this->updateMinsAndMaxes();
-    this->refreshQuadrant();
+    this->refreshQuadrant(this->physicalObjects);
 }
 
-void Simulation::refreshQuadrant() {
+void Simulation::refreshQuadrant(ParticleList physicalObjects) {
     PhysicalVector pos(0, 0, 0, true);
 
     float side = 10e7; //Formation Value . ACK!!!! How miserably hard-coded!!
@@ -77,7 +77,7 @@ void Simulation::update(hour_t dt) {
     //  it should be done during one of the earlier iterations.
     updateMinsAndMaxes();
     // This is the first "n" part in "n log(n)"
-    refreshQuadrant();
+    refreshQuadrant(this->physicalObjects);
 }
 
 void Simulation::updateTimeElapsed(hour_t dt) { timeElapsed += dt; }
