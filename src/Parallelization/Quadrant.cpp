@@ -159,15 +159,6 @@ void Quadrant::adjustMass(kilogram_t dMass) {
 	_mass += dMass;
 }
 
-shared_ptr<Quadrant>  Quadrant::subQuadrantAt(OctreeCoordinates indices) const {
-    auto ints = indices.ints();
-    return childQuadrants[ints[0]][ints[1]][ints[2]];
-}
-
-void Quadrant::assignSubQuadrantAt(OctreeCoordinates indices, shared_ptr<Quadrant>  newQuadrant) {
-    auto ints = indices.ints();
-    this->childQuadrants[ints[0]][ints[1]][ints[2]] = std::move(newQuadrant);
-}
 void Quadrant::applyToAllChildren(function<void (Quadrant &)> functor, function<bool (Quadrant &)> terminalPredicate) {
     if (terminalPredicate(*this)) {
         functor(*this); // Location of this call determines traversal strategy.

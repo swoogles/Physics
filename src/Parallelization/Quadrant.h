@@ -60,8 +60,6 @@ private:
     //! Alters mass of object by dMass
     void adjustMass(kilogram_t dMass);
 
-    shared_ptr<Quadrant>  subQuadrantAt(OctreeCoordinates indices) const;
-    void assignSubQuadrantAt(OctreeCoordinates indices, shared_ptr<Quadrant>  newSubQuadrant);
     OctreeCoordinates coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant) const;
 
     shared_ptr<Quadrant> getQuadrantFromCell( int x, int y, int z ) const;
