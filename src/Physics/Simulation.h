@@ -49,9 +49,9 @@ private:
     void resetXYMinsAndMaxes();
     void updateXYMinsAndMaxes(PhysicalVector curPos);
 
-	void refreshQuadrant(ParticleList physicalObjects);
+	void refreshQuadrant(ParticleList &physicalObjects);
 
-	void calcForcesAll(ParticleList physicalObjects, hour_t dt);
+	void calcForcesAll(ParticleList &physicalObjects, hour_t dt);
 
 } ;
 

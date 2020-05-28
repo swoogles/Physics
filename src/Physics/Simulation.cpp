@@ -17,7 +17,7 @@ Simulation::Simulation(
     this->refreshQuadrant(this->physicalObjects);
 }
 
-void Simulation::refreshQuadrant(ParticleList physicalObjects) {
+void Simulation::refreshQuadrant(ParticleList &physicalObjects) {
     PhysicalVector pos(0, 0, 0, true);
 
     float side = 10e7; //Formation Value . ACK!!!! How miserably hard-coded!!
@@ -96,7 +96,7 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 //3. Otherwise, run the procedure recursively on each of the current node’s children.
 
 
-void Simulation::calcForcesAll(ParticleList physicalObjects, hour_t dt) {
+void Simulation::calcForcesAll(ParticleList &physicalObjects, hour_t dt) {
     this->physicalObjects.applyToAllParticles(
             [this, dt](Particle & particle) {
                 auto quadrantFunction =
