@@ -51,9 +51,6 @@ private:
     const PhysicalVector dimensions;
 
     multi_array<unique_ptr<Quadrant>,3>  childQuadrants;
-
-    multi_array<unique_ptr<Quadrant>,3>  uniqueQuadrantChildren;
-
     void createSubQuadrantThatContains(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
                                        PhysicalVector particlePositionParameter);
 

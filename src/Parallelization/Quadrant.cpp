@@ -31,7 +31,6 @@ Quadrant::Quadrant(
         , level(level)
         , dimensions(width, width, width)
         , childQuadrants(extents[2][2][2])
-        , uniqueQuadrantChildren(extents[2][2][2])
         , weightedPosition(weightedPosition)
         , particlePosition(particlePosition)
         , particleWeightedPosition(weightedPosition)
