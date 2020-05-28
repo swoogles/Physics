@@ -52,6 +52,8 @@ private:
 
     multi_array<shared_ptr<Quadrant>,3>  quadOctree;
 
+    multi_array<unique_ptr<Quadrant>,3>  uniqueQuadrantChildren;
+
     void createSubQuadrantThatContains(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
                                        PhysicalVector particlePositionParameter);
 
@@ -62,7 +64,15 @@ private:
     void assignSubQuadrantAt(OctreeCoordinates indices, shared_ptr<Quadrant>  newSubQuadrant);
     OctreeCoordinates coordinatesForSubQuadrantContaining(PhysicalVector pointInsideQuadrant) const;
 
-    shared_ptr<Quadrant>  getQuadrantFromCell( int x, int y, int z ) const;
+    shared_ptr<Quadrant> getQuadrantFromCell( int x, int y, int z ) const;
+    void  applyToQuadrantIfExists(
+            int x,
+            int y,
+            int z,
+            function<void (Quadrant &)> functor,
+            function<bool (Quadrant &)> terminalPredicate
+    );
+
 
     shared_ptr<Quadrant>  makeSubQuadrant(
             meter_t radius,
