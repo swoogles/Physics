@@ -67,6 +67,7 @@ int main(int argcp, char **argv) {
 
     globalFullApplication = make_unique<FullApplication>(
             Simulations::bodyFormation(properties.numShapes, properties),
+//            Simulations::QuadrantTesting_simplest(),
             centerStage,
             parameterArguments.isRecording(),
             start,

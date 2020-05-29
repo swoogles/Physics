@@ -14,9 +14,6 @@ void ParticleList::ensureNoNullEntries(string caller) {
 ParticleList::ParticleList() = default;
 
 
-ParticleList::ParticleList(shared_ptr<Particle> initialShape): shapes{std::move(initialShape)} {
-}
-
 ParticleList::ParticleList(std::vector<shared_ptr<Particle>> shapesIn)
     :shapes(shapesIn.begin(), shapesIn.end()
 ) {
@@ -89,6 +86,9 @@ void ParticleList::update(hour_t dt) {
     }
     deleteList.mergePairs();
     ParticleList doomedList(deleteList.doomed() );
+//    doomedList.applyToAllParticles([](Particle & particle) {
+//        cout << "Particle: " << &particle << endl;
+//    });
 
     if (doomedList.size() > 0) {
         cout << "removing this many particles: " << doomedList.size() << endl;
@@ -97,6 +97,8 @@ void ParticleList::update(hour_t dt) {
 }
 
 int ParticleList::remove(ParticleList &shapesToRemove) {
+//    cout << "shapes.size(): " << shapes.size() << endl;
+//    cout << "shapesToRemove.size(): " << shapesToRemove.size() << endl;
     size_t newSize =  shapes.size() - shapesToRemove.size();
 
     auto newIterator = std::remove_if(shapes.begin(), shapes.end(), [shapesToRemove](auto shape) {

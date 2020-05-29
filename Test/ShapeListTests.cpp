@@ -20,12 +20,6 @@ TEST_CASE( "Remove ref", "[ParticleList]" ) {
     REQUIRE(shapes.size() == 2);
 }
 
-TEST_CASE( "contains ptr", "[ParticleList]" ) {
-    auto a = TestUtils::testCircle();
-    ParticleList shapes(a);
-    REQUIRE(shapes.contains(a));
-}
-
 TEST_CASE( "Remove shared_ptr", "[ParticleList]" ) {
     auto a = TestUtils::testCircle();
     ParticleList shapes({a, TestUtils::testCircle()});
@@ -53,37 +47,7 @@ TEST_CASE( "Remove a ParticleList from ParticleList", "[ParticleList]" ) {
 }
 
 
-TEST_CASE( "Construct a list with a single item", "[ParticleList][red]" ) {
-    auto a = TestUtils::testCircle();
-    ParticleList singleItemList(a);
-    REQUIRE(singleItemList.size() == 1);
-    REQUIRE(singleItemList.contains(a));
-}
-
 TEST_CASE( "hasConflicts with an existing item", "[ParticleList][green]" ) {
     auto a = TestUtils::testCircle();
     auto b = TestUtils::testCircle();
-    ParticleList singleItemList(a);
-    REQUIRE(singleItemList.hasConflictsWith(*b));
-}
-
-TEST_CASE( "Adding a ParticleList to ParticleList", "[ShapeList][green]" ) {
-    auto a = TestUtils::testCircle();
-    auto b = TestUtils::testCircle();
-    auto c = TestUtils::testCircle();
-    auto d = TestUtils::testCircle();
-    ParticleList aList(a);
-    ParticleList bList(b);
-    ParticleList cList(c);
-    ParticleList dList(d);
-    ParticleList resultList;
-    resultList.addList(aList);
-    resultList.addList(bList);
-    resultList.addList(cList);
-    resultList.addList(dList);
-    REQUIRE(resultList.size() == 4);
-    REQUIRE(resultList.contains(a));
-    REQUIRE(resultList.contains(b));
-    REQUIRE(resultList.contains(c));
-    REQUIRE(resultList.contains(d));
 }

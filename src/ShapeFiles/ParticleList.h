@@ -21,7 +21,7 @@ public:
     void checkForAllParticles(
             function<void (const Particle &)> functor ) const;
     ParticleList();
-    ParticleList(shared_ptr<Particle> initialShape);
+
     ParticleList(std::vector<shared_ptr<Particle>> shapesIn);
     bool hasConflictsWith(Particle &insertShape);
     size_t addShapeToList(shared_ptr<Particle> insertShape);

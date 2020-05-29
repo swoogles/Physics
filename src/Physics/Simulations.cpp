@@ -34,7 +34,7 @@ Simulation Simulations::QuadrantTesting_simplest() {
     PhysicalVector newColor (1, 1, 1);
 
     shared_ptr<Particle> curShape;
-    float d= 3e5;
+    float d= 2.0e4;
 
     //#1
     PhysicalVector object1Placement(+5/8.0f * d, +7/8.0f * d, 1, true);

@@ -114,6 +114,7 @@ size_t PairCollection::size() const {
 ParticleList PairCollection::doomed() {
     particleVector doomed(pairs.size());
     std::transform (pairs.begin(), pairs.end(), doomed.begin(), [](const TouchingPair& pair) { return pair.getB();});
+    doomed.erase( unique( doomed.begin(), doomed.end() ), doomed.end() );
     return ParticleList (doomed);
 }
 
