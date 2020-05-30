@@ -23,14 +23,6 @@ public:
   private:
 
     /*! \relates MyShape
-     *  \brief Gets a random starting position vector based on the second parameter
-     *
-     *  This function currently uses pieceRadius as the determining factor for the bounding box; this should be changed to an independent bounding variable
-     *  \param pieceRadius Determines size of bounding box
-     */
-    static PhysicalVector randomSplitBodyPlacement(float pieceRadius, PhysicalVector target);
-
-    /*! \relates MyShape
      *  \brief Gets a random starting momentum vector based on second parameter
      *
      *  This function currently uses pieceMass as the determining factor for momentum range; figure out a better basis

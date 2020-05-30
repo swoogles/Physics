@@ -132,25 +132,6 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
     return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
 }
 
-PhysicalVector Simulations::randomSplitBodyPlacement(float pieceRadius, PhysicalVector target) {
-  int randMult;
-  double largestDistance = 0;
-
-  double values[] = {0, 0, 0};
-  for (double &value : values) {
-    randMult = rand()%450;
-    if (randMult % 2 == 0) {
-      randMult *= -1;
-    }
-      value = randMult * pieceRadius;
-    if (value > largestDistance ) {
-      largestDistance = value;
-    }
-  }
-
-  return PhysicalVector(values[0], values[1], values[2], false).plus(target);
-}
-
 PhysicalVector Simulations::randomSplitBodyMomentum(kilogram_t pieceMass) {
     static int randMult;
 
