@@ -20,11 +20,10 @@ TouchingPair::TouchingPair(shared_ptr<Particle> aIn, shared_ptr<Particle> bIn)
         ,b(bIn)
 { }
 
-shared_ptr<Particle> TouchingPair::merge() {
+void TouchingPair::merge() {
     // Simpler when merge returns A's pointer directly.
     a->mergeWith(*b);
     b = nullptr; // TODO Dunno if this is crazy or not...
-    return a;
 }
 
 ostream &operator<<(ostream &os, const TouchingPair &touchingPair) {

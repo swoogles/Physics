@@ -12,7 +12,7 @@ public:
     bool contains(Particle &shape) const;
     inline shared_ptr<Particle> getA() const { return a; };
     inline shared_ptr<Particle> getB() const { return b; };
-    shared_ptr<Particle> merge();
+    void merge();
 
     friend ostream &operator<<(ostream &os, const TouchingPair &touchingPair);
 
