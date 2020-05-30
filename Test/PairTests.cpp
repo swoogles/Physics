@@ -79,7 +79,6 @@ TEST_CASE("basic checks", "[green]") {
         for (auto const &curPair : originalPairs) {
             pairCollection.insertIfUnique(curPair);
         }
-        REQUIRE(pairCollection.size() == 1);
     }
 }
 
@@ -104,13 +103,6 @@ TEST_CASE("add collections", "[green]") {
 
         cout << "source Collection: " << source << endl;
 
-        destination.insertUniqueElements(source);
-        cout << "destination Collection: " << destination << endl;
-        cout << "destination doomed: " << destination.doomed() << endl;
-        REQUIRE(destination.doomed().contains(b));
-        REQUIRE(destination.doomed().contains(c));
-        // This needs to be denied in the current implementation to avoid faulty re-merges
-        REQUIRE_FALSE(destination.doomed().contains(a));
     }
 }
 

@@ -84,7 +84,6 @@ void ParticleList::update(hour_t dt) {
         }
 
     }
-    deleteList.mergePairs();
     ParticleList doomedList(deleteList.doomed() );
 //    doomedList.applyToAllParticles([](Particle & particle) {
 //        cout << "Particle: " << &particle << endl;

@@ -102,28 +102,16 @@ void PairCollection::insertIfUnique(const TouchingPair & newPair) {
     }
 }
 
-void PairCollection::insertUniqueElements(PairCollection newPairs) {
-    auto brittlePairs = newPairs.brittlePairs();
-    for_each(brittlePairs.begin(), brittlePairs.end(), [this](const auto & pair) { this->insertIfUnique(pair); });
-}
-
-size_t PairCollection::size() const {
-    return pairs.size();
-}
-
 ParticleList PairCollection::doomed() {
     particleVector doomed(pairs.size());
-    std::transform (pairs.begin(), pairs.end(), doomed.begin(), [](const TouchingPair& pair) { return pair.getB();});
+    std::transform (pairs.begin(), pairs.end(), doomed.begin(), [](TouchingPair& pair) {
+        pair.merge();
+        return pair.getB();
+    });
     // This is pretty nasty, but I think it prevents the insert errors
     sort( doomed.begin(), doomed.end() );
     doomed.erase( unique( doomed.begin(), doomed.end() ), doomed.end() );
     return ParticleList (doomed);
-}
-
-void PairCollection::mergePairs() {
-    for_each(pairs.begin(), pairs.end(), [](TouchingPair pair) {
-        pair.merge();
-    });
 }
 
 bool PairCollection::containsPair(const TouchingPair & newPair) {

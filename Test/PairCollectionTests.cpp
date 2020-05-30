@@ -44,7 +44,6 @@ TEST_CASE("normalize list of pairs", "[green]") {
             pairs.insertIfUnique(ab);
             pairs.insertIfUnique(bc);
             cout << "doomed : " << pairs.doomed() << endl;
-            REQUIRE(pairs.size() == 2);
             REQUIRE(pairs.containsPair(TouchingPair(a, c)));
 
         }
@@ -59,7 +58,6 @@ TEST_CASE("normalize list of pairs", "[green]") {
             PairCollection pairs;
             pairs.insertIfUnique(ab);
             pairs.insertIfUnique(cb);
-            REQUIRE(pairs.size() == 2);
             REQUIRE(pairs.containsPair(TouchingPair(a, c)));
 
         }
@@ -74,7 +72,6 @@ TEST_CASE("normalize list of pairs", "[green]") {
             PairCollection pairs;
             pairs.insertIfUnique(ab);
             pairs.insertIfUnique(ac);
-            REQUIRE(pairs.size() == 2);
             REQUIRE(pairs.containsPair(TouchingPair(a, c)));
 
         }
@@ -90,7 +87,6 @@ TEST_CASE("normalize list of pairs", "[green]") {
             PairCollection pairs;
             pairs.insertIfUnique(ab);
             pairs.insertIfUnique(ca);
-            REQUIRE(pairs.size() == 2);
             REQUIRE(pairs.containsPair(TouchingPair(a, c)));
 
         }
