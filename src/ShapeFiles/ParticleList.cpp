@@ -111,20 +111,6 @@ int ParticleList::remove(ParticleList &shapesToRemove) {
     return 0;
 }
 
-int ParticleList::removeShapeFromList(shared_ptr<Particle> shapeToRemove) {
-    size_t newSize =  shapes.size() - 1;
-
-    auto newIterator = std::remove_if(shapes.begin(), shapes.end(), [shapeToRemove](auto shape) {
-        return shape == shapeToRemove;
-    });
-
-    shapes.resize(newSize);
-
-    ensureNoNullEntries("removeShapeFromList");
-//    shapes.erase(std::remove(shapes.begin(), shapes.end(), shapeToRemove), shapes.end());
-    return 0;
-}
-
 bool ParticleList::contains(shared_ptr<Particle> searchShape) const {
     return std::any_of(shapes.begin(), shapes.end(), [searchShape](shared_ptr<Particle> curShape) {
         return searchShape == curShape;

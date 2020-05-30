@@ -27,7 +27,6 @@ public:
     size_t addShapeToList(shared_ptr<Particle> insertShape);
     size_t addList(ParticleList addList);
 
-    int removeShapeFromList(shared_ptr<Particle> shapeToRemove);
     int remove(ParticleList & shapesToRemove);
 
     void update(hour_t dt);
