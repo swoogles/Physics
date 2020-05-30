@@ -114,6 +114,8 @@ size_t PairCollection::size() const {
 ParticleList PairCollection::doomed() {
     particleVector doomed(pairs.size());
     std::transform (pairs.begin(), pairs.end(), doomed.begin(), [](const TouchingPair& pair) { return pair.getB();});
+    // This is pretty nasty, but I think it prevents the insert errors
+    sort( doomed.begin(), doomed.end() );
     doomed.erase( unique( doomed.begin(), doomed.end() ), doomed.end() );
     return ParticleList (doomed);
 }

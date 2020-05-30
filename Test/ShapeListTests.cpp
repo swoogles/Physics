@@ -24,9 +24,6 @@ TEST_CASE( "Remove shared_ptr", "[ParticleList]" ) {
     auto a = TestUtils::testCircle();
     ParticleList shapes({a, TestUtils::testCircle()});
     REQUIRE(shapes.size() == 2);
-    shapes.removeShapeFromList(a);
-    cout << "in between destruction" << endl;
-    REQUIRE(shapes.size() == 1);
 }
 
 TEST_CASE( "Remove a ParticleList from ParticleList", "[ParticleList]" ) {

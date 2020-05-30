@@ -74,6 +74,18 @@ Simulation Simulations::QuadrantTesting_simplest() {
             )
     );
 
+    PhysicalVector object4Placement(1/8.0f * d, -5/8.0f * d, 1, true);
+
+    physicalObjects.addShapeToList(
+            make_shared<Particle>(
+                    object3Placement,
+                    pieceMass,
+                    startMomentum,
+                    objectDensity,
+                    newColor
+            )
+    );
+
     return Simulation(physicalObjects, CollisionType::INELASTIC, 0.5);
 }
 

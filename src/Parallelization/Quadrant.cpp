@@ -59,9 +59,13 @@ void Quadrant::insert(
         kilogram_t massParameter,
         const PhysicalVector particlePositionParameter) {
     if (!positionIsInQuadrantBoundaries(particlePositionParameter)) {
-        std::throw_with_nested(std::runtime_error(__func__));
+//        std::throw_with_nested(std::runtime_error(__func__));
+// Just ignore for now, instead of throwing.
+return;
     }
 
+//    cout << "weightedPositionParameter: " << weightedPositionParameter << endl;
+//    cout << "particlePositionParameter: " << particlePositionParameter << endl;
     if ( isLeaf ) {
         isLeaf = false;
         this->createSubQuadrantThatContains(

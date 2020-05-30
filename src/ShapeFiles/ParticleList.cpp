@@ -97,6 +97,8 @@ void ParticleList::update(hour_t dt) {
 }
 
 int ParticleList::remove(ParticleList &shapesToRemove) {
+    cout << "shapes.size(): " << shapes.size() << endl;
+    cout << "shapesToRemove.size(): " << shapesToRemove.size() << endl;
     size_t newSize =  shapes.size() - shapesToRemove.size();
 
     auto newIterator = std::remove_if(shapes.begin(), shapes.end(), [shapesToRemove](auto shape) {
