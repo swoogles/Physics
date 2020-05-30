@@ -97,23 +97,16 @@ void ParticleList::update(hour_t dt) {
 }
 
 int ParticleList::remove(ParticleList &shapesToRemove) {
-//    cout << "shapes.size(): " << shapes.size() << endl;
-//    cout << "shapesToRemove.size(): " << shapesToRemove.size() << endl;
     size_t newSize =  shapes.size() - shapesToRemove.size();
 
     auto newIterator = std::remove_if(shapes.begin(), shapes.end(), [shapesToRemove](auto shape) {
-        // THIS CAN'T WORK UNTIL CONTAINS IS FIXED
         return shapesToRemove.contains(shape);
-//        std::any_of(shapesToRemove.shapes.begin(), shapesToRemove.shapes.begin())
-//        return &(curShapeRef) == &shapeToRemove;
     });
 
     shapes.resize(newSize);
 
     ensureNoNullEntries("removeShapeFromList");
-//    shapes.erase(std::remove(shapes.begin(), shapes.end(), shapeToRemove), shapes.end());
     return 0;
-
 }
 
 int ParticleList::removeShapeFromList(shared_ptr<Particle> shapeToRemove) {
