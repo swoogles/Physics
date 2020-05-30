@@ -4,12 +4,6 @@
 
 #include "TouchingPair.h"
 
-bool TouchingPair::contains(Particle &shape) const {
-    Particle & aRef = *a;
-    Particle & bRef = *b;
-    return (&aRef == &shape || &bRef == &shape);
-}
-
 bool TouchingPair::sameItems(const TouchingPair & other)  const {
     return (other.a == this->a && other.b == this->b)
            || (other.b == this->a && other.a == this->b);

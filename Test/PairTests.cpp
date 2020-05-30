@@ -21,14 +21,6 @@ TEST_CASE( "sameItems tests", "[green]" ) {
 
     TouchingPair pair1(a, b);
 
-    SECTION("contains first item") {
-        REQUIRE(pair1.contains(*a));
-    }
-
-    SECTION("contains second item") {
-        REQUIRE(pair1.contains(*b));
-    }
-
     SECTION("has same items as itself.") {
         REQUIRE(pair1.sameItems(pair1));
     }
