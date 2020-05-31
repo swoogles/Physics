@@ -89,47 +89,32 @@ Simulation Simulations::QuadrantTesting_simplest() {
     return Simulation(physicalObjects, CollisionType::INELASTIC, 0.5);
 }
 
+ParticleList Simulations::manipulatedGroup(int numPieces, PhysicsSandboxProperties properties, PhysicalVector origin, PhysicalVector momentum) {
+    const float distance = 130000;
+
+    ParticleList particleList = Simulations::bodyPlacement(numPieces, properties, origin);
+    particleList.applyToAllParticles([origin, distance](Particle & particle) {
+        particle.setPos(particle.position().plus(origin.scaledBy(distance)));
+
+    });
+    return particleList;
+}
+
 Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties properties) {
+    float distance = 130000;
     PhysicalVector target(1000, 0, 0, true);
-    ParticleList physicalObjects = Simulations::bodyPlacement(numPieces, properties, target);
+    ParticleList physicalObjects;
 
-    PhysicalVector targetB(-1000000, 0, 0, true);
-    ParticleList secondParticleList = Simulations::bodyPlacement(numPieces, properties, target);
-    secondParticleList.applyToAllParticles([targetB](Particle & particle) {
-        particle.setPos(particle.position().plus(targetB));
-
-    });
-    physicalObjects.addList(secondParticleList);
-
-    PhysicalVector offsetC(-500000, 300000, 0, true);
-    ParticleList thirdParticleList = Simulations::bodyPlacement(numPieces, properties, target);
-    thirdParticleList.applyToAllParticles([offsetC](Particle & particle) {
-        particle.setPos(particle.position().plus(offsetC));
-    });
-    physicalObjects.addList(thirdParticleList);
-
-    PhysicalVector offsetD(-500000, -300000, 0, true);
-    ParticleList fourthParticleList = Simulations::bodyPlacement(numPieces, properties, target);
-    fourthParticleList.applyToAllParticles([offsetD](Particle & particle) {
-        particle.setPos(particle.position().plus(offsetD));
-
-    });
-    physicalObjects.addList(fourthParticleList);
-
-    PhysicalVector offset6(500000, 300000, 0, true);
-    ParticleList particleList5 = Simulations::bodyPlacement(numPieces, properties, target);
-    particleList5.applyToAllParticles([offset6](Particle & particle) {
-        particle.setPos(particle.position().plus(offset6));
-    });
-    physicalObjects.addList(particleList5);
-
-    PhysicalVector offset7(500000, -300000, 0, true);
-    ParticleList particleList6 = Simulations::bodyPlacement(numPieces, properties, target);
-    particleList6.applyToAllParticles([offset7](Particle & particle) {
-        particle.setPos(particle.position().plus(offset7));
-
-    });
-    physicalObjects.addList(particleList6);
+    auto  blah =
+            [this, numPieces, properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom) {
+                physicalObjects.addList(
+                        manipulatedGroup(numPieces, properties, pos, mom) );
+    };
+    blah(PhysicalVector(-8, 4, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(-8, -4, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(-4, 0, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(0, 4, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(0, -4, 0), PhysicalVector(0,0,0));
 
     return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
 }
