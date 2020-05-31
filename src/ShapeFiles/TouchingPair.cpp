@@ -5,8 +5,10 @@
 #include "TouchingPair.h"
 
 bool TouchingPair::sameItems(const TouchingPair & other)  const {
-    return (other.a == this->a && other.b == this->b)
-           || (other.b == this->a && other.a == this->b);
+    return (other.a == this->a || other.b == this->b)
+           || (other.b == this->a || other.a == this->b);
+//    return (other.a == this->a && other.b == this->b)
+//           || (other.b == this->a && other.a == this->b);
 }
 
 TouchingPair::TouchingPair(shared_ptr<Particle> aIn, shared_ptr<Particle> bIn)
