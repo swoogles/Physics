@@ -11,17 +11,17 @@
 class Simulations {
 public:
 
-    static Simulation QuadrantTesting_simplest();
+    Simulation QuadrantTesting_simplest();
 
-    static Simulation bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
+    Simulation bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
 
-    static Simulation bodyFormation(int numPieces, PhysicsSandboxProperties properties);
+    Simulation bodyFormation(int numPieces, PhysicsSandboxProperties properties);
 
-    static Simulation createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties);
+    Simulation createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties);
 
-    static PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
+    PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
   private:
-    static ParticleList bodyPlacement(int numPieces, PhysicsSandboxProperties properties, PhysicalVector origin);
+    ParticleList bodyPlacement(int numPieces, PhysicsSandboxProperties properties, PhysicalVector origin);
 
     /*! \relates MyShape
      *  \brief Gets a random starting momentum vector based on second parameter
@@ -30,7 +30,7 @@ public:
      *
      *  \param pieceMass Determines magnitude of momentum
      */
-    static PhysicalVector randomSplitBodyMomentum(kilogram_t pieceMass);
+    PhysicalVector randomSplitBodyMomentum(kilogram_t pieceMass);
 
 };
 

@@ -105,9 +105,32 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
     ParticleList thirdParticleList = Simulations::bodyPlacement(numPieces, properties, target);
     thirdParticleList.applyToAllParticles([offsetC](Particle & particle) {
         particle.setPos(particle.position().plus(offsetC));
-
     });
     physicalObjects.addList(thirdParticleList);
+
+    PhysicalVector offsetD(-500000, -300000, 0, true);
+    ParticleList fourthParticleList = Simulations::bodyPlacement(numPieces, properties, target);
+    fourthParticleList.applyToAllParticles([offsetD](Particle & particle) {
+        particle.setPos(particle.position().plus(offsetD));
+
+    });
+    physicalObjects.addList(fourthParticleList);
+
+    PhysicalVector offset6(500000, 300000, 0, true);
+    ParticleList particleList5 = Simulations::bodyPlacement(numPieces, properties, target);
+    particleList5.applyToAllParticles([offset6](Particle & particle) {
+        particle.setPos(particle.position().plus(offset6));
+    });
+    physicalObjects.addList(particleList5);
+
+    PhysicalVector offset7(500000, -300000, 0, true);
+    ParticleList particleList6 = Simulations::bodyPlacement(numPieces, properties, target);
+    particleList6.applyToAllParticles([offset7](Particle & particle) {
+        particle.setPos(particle.position().plus(offset7));
+
+    });
+    physicalObjects.addList(particleList6);
+
     return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
 }
 
