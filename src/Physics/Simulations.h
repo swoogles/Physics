@@ -21,6 +21,7 @@ public:
 
     static PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
   private:
+    static ParticleList bodyPlacement(int numPieces, PhysicsSandboxProperties properties, PhysicalVector origin);
 
     /*! \relates MyShape
      *  \brief Gets a random starting momentum vector based on second parameter

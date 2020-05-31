@@ -90,11 +90,32 @@ Simulation Simulations::QuadrantTesting_simplest() {
 }
 
 Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties properties) {
+    PhysicalVector target(1000, 0, 0, true);
+    ParticleList physicalObjects = Simulations::bodyPlacement(numPieces, properties, target);
+
+    PhysicalVector targetB(-1000000, 0, 0, true);
+    ParticleList secondParticleList = Simulations::bodyPlacement(numPieces, properties, target);
+    secondParticleList.applyToAllParticles([targetB](Particle & particle) {
+        particle.setPos(particle.position().plus(targetB));
+
+    });
+    physicalObjects.addList(secondParticleList);
+
+    PhysicalVector offsetC(-500000, 300000, 0, true);
+    ParticleList thirdParticleList = Simulations::bodyPlacement(numPieces, properties, target);
+    thirdParticleList.applyToAllParticles([offsetC](Particle & particle) {
+        particle.setPos(particle.position().plus(offsetC));
+
+    });
+    physicalObjects.addList(thirdParticleList);
+    return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
+}
+
+ParticleList Simulations::bodyPlacement(int numPieces, PhysicsSandboxProperties properties, PhysicalVector origin) {
     ParticleList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
     const kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
     const kilogram_t pieceMass = (properties.mass*1000.0)/numPieces;
-    PhysicalVector target(1000, 0, 0, true);
 
     PhysicalVector newColor (1, 1, 1);
 
@@ -105,7 +126,7 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
     for (int i = 0; i < numPieces; i++) {
         if (i % 2 == 0) {
             startMomentumVec = randomSplitBodyMomentum(pieceMass);
-            startPos = randomPointInSphere(properties.sandboxWidth, target);
+            startPos = randomPointInSphere(properties.sandboxWidth, origin);
         }
         else {
             startMomentumVec = startMomentumVec.scaledBy(-1);
@@ -123,13 +144,13 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
         //Check if being placed on previously created object
         while ( physicalObjects.hasConflictsWith( *curShape ) ) {
             cout << "conflict. trying again" << endl;
-            PhysicalVector newPosAttempt = randomPointInSphere(properties.sandboxWidth, target);
+            PhysicalVector newPosAttempt = randomPointInSphere(properties.sandboxWidth, origin);
             curShape->setPos( newPosAttempt );
         }
         physicalObjects.addShapeToList( curShape );
     }
 
-    return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
+    return std::move(physicalObjects);
 }
 
 PhysicalVector Simulations::randomSplitBodyMomentum(kilogram_t pieceMass) {
