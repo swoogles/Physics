@@ -6,6 +6,7 @@
 #include "CollisionType.h"
 #include "AstronomicalValues.h"
 #include "PhysicsSandboxProperties.h"
+#include "ParticleGroupProperties.h"
 #include "CraftedSimulation.h"
 
 class Simulations {
@@ -22,8 +23,9 @@ public:
 
     PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
   private:
-    ParticleList bodyPlacement(int numPieces, PhysicsSandboxProperties properties, PhysicalVector origin);
-    ParticleList manipulatedGroup(int numPieces, PhysicsSandboxProperties properties, PhysicalVector origin, PhysicalVector momentum);
+    ParticleList bodyPlacement(PhysicalVector groupColor, int numPieces, ParticleGroupProperties properties,
+                               PhysicalVector origin);
+    ParticleList manipulatedGroup(PhysicalVector groupColor, int numPieces, ParticleGroupProperties properties, PhysicalVector origin, PhysicalVector momentum);
 
     /*! \relates MyShape
      *  \brief Gets a random starting momentum vector based on second parameter
