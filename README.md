@@ -52,4 +52,8 @@ Important Commands
   make && make test && ./build/Tests && ./build/PhysicsSandbox r 1
  
   
+Turning output images into a video:
+
+     ffmpeg  -i outFrame%05d.jpg -framerate 1 -c:v libx264 -crf 18 -pix_fmt yuv420p -vf scale=-2:1440:flags=neighbor -r 30 ../WorthyVideos/current.mp4 && vlc ../WorthyVideos/current.mp4
+
   

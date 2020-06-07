@@ -10,9 +10,15 @@
 #include "../Input/CameraAction.h"
 
 #include <Physics/UnitDefinitions.h>
+#include <graphics/FfmpegClient.h>
 
 using std::queue;
 using std::optional;
+
+using std::chrono::time_point;
+using std::chrono::duration;
+using std::chrono::system_clock;
+
 
 /*! \brief Main UI for making objects and controlling simulation
  *
@@ -22,7 +28,7 @@ using std::optional;
  */
 class ControlCenter {
 public:
-	ControlCenter(local_duration dt, int windowWidth);
+	ControlCenter(local_duration dt, int windowWidth, time_point<system_clock, duration<long, ratio<1, 1000000000>>> start);
 
     inline bool isShowingRunTime() { return showingRunTime ; };
   inline void setShowingRunTime( bool showingRunTime ) { this->showingRunTime = showingRunTime; };
@@ -38,6 +44,7 @@ public:
 	//! Stops all camera rotation
 	static void rotStop(puObject *);
 
+    static void createVideoCallback(puObject *);
 	/*! \brief Changes current timestep value for simulation
 	 *
 	 *  Calls Simulation.setDT(float) using Simulation.getDT() divided or multiplied by 2 depending on whether simulation is being sped up or slowed down
@@ -61,9 +68,12 @@ private:
 	static local_duration dt;
 	local_duration localDt;
 	static bool renderOctree ;
+    time_point<system_clock, duration<long, ratio<1, 1000000000>>> start;
+    static time_point<system_clock, duration<long, ratio<1, 1000000000>>> static_start;
 
-	puGroup * runtime_group;
+    puGroup * runtime_group;
 
+    puOneShot * createVideo;
 	puOneShot * inc_dt_button;
 	puOneShot * dec_dt_button;
 	puButton * pause_dt_button;

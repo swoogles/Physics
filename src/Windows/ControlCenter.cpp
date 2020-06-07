@@ -12,14 +12,22 @@ using namespace std;
 // TODO Ground these. No longer a need to make them static
 bool ControlCenter::paused = false;
 local_duration ControlCenter::dt;
+time_point<system_clock, duration<long, ratio<1, 1000000000>>> ControlCenter::static_start;
 bool ControlCenter::renderOctree = false;
 
 queue<CameraAction> ControlCenter::cameraActions;
 
 void ControlCenter::flipAutoScaling(puObject * caller) {
+    cout << "I can use this button to record instead" << endl;
   ControlCenter::cameraActions.push(CameraAction::TOGGLE_AUTOSCALING);
 }
 
+void ControlCenter::createVideoCallback(puObject * caller) {
+    cout << "should create a new video now.";
+    FfmpegClient client;
+    client.createVideo(system_clock::to_time_t(static_start));
+
+}
 void ControlCenter::alterDT(puObject * caller) {
   if (strcmp(caller->getLegend(), "Slower") == 0) {
     ControlCenter::dt /= 2;
@@ -70,7 +78,11 @@ bool ControlCenter::shouldRenderOctree() {
     return renderOctree;
 }
 
-ControlCenter::ControlCenter(local_duration dt, int windowWidth): localDt(dt) {
+ControlCenter::ControlCenter(local_duration dt, int windowWidth, time_point<system_clock, duration<long, ratio<1, 1000000000>>> startParam):
+localDt(dt),
+start(startParam)
+{
+  this->static_start = startParam;
   this->dt = dt;
   showingRunTime = false;
 
@@ -97,6 +109,12 @@ ControlCenter::ControlCenter(local_duration dt, int windowWidth): localDt(dt) {
   inc_dt_button = new puOneShot(curX, curHeight - elementHeight, curX+placementWidth, curHeight);
   inc_dt_button->setLegend("Faster");
   inc_dt_button->setCallback(alterDT);
+
+    curX += (placementWidth +gap);
+    createVideo = new puOneShot(curX, curHeight - elementHeight, curX+placementWidth*2, curHeight);
+    createVideo->setLegend("Create Video");
+    createVideo->setCallback(this->createVideoCallback);
+//createVideo(puOneShot(curX, curHeight - elementHeight, curX+placementWidth, curHeight))
 
   curHeight -= elementHeight;
 

@@ -17,6 +17,7 @@ using namespace std;
 class FfmpegClient {
 public:
     void createVideo(const std::time_t &  start);
+    void cleanupFrames();
 };
 
 

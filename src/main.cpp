@@ -60,14 +60,15 @@ int main(int argcp, char **argv) {
         idleFunction
     );
 
-    ControlCenter controlCenter(hour_t(properties.dt), windowDimensions.width);
+    ControlCenter controlCenter(hour_t(properties.dt), windowDimensions.width, start);
 
     auto outputTime = system_clock::to_time_t(start);
     CenterStage centerStage(windowDimensions.width, outputTime);
 
     Simulations simulations;
     globalFullApplication = make_unique<FullApplication>(
-            simulations.bodyFormation(properties.numShapes, properties),
+//            simulations.bodyFormation(properties.numShapes, properties),
+    simulations.bodyFormationCollision(properties.numShapes, properties),
 //            Simulations::QuadrantTesting_simplest(),
             centerStage,
             parameterArguments.isRecording(),

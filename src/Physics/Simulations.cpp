@@ -9,9 +9,9 @@
 
 Simulation Simulations::createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties) {
     if ( simulation == CraftedSimulation::BODY_FORMATION) {
-        return Simulations::bodyFormation(simulationProperties.numShapes, simulationProperties);
+//        return Simulations::bodyFormation(simulationProperties.numShapes, simulationProperties);
+        return Simulations::bodyFormationCollision(simulationProperties.numShapes, simulationProperties);
     } else if ( simulation == DISRUPT_GROUP) {
-//        return Simulations::disruption_ArbitraryList(simulationProperties);
     } else if ( simulation == QUADRANT_TESTING) {
         return Simulations::QuadrantTesting_simplest();
     } else if ( simulation == MULTIPLE_ORBITERS) {
@@ -93,8 +93,9 @@ ParticleList Simulations::manipulatedGroup(int numPieces, PhysicsSandboxProperti
     const float distance = 130000;
 
     ParticleList particleList = Simulations::bodyPlacement(numPieces, properties, origin);
-    particleList.applyToAllParticles([origin, distance](Particle & particle) {
+    particleList.applyToAllParticles([origin, distance, momentum](Particle & particle) {
         particle.setPos(particle.position().plus(origin.scaledBy(distance)));
+        particle.adjustMomentum(momentum);
 
     });
     return particleList;
@@ -110,11 +111,65 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
                 physicalObjects.addList(
                         manipulatedGroup(numPieces, properties, pos, mom) );
     };
-    blah(PhysicalVector(-8, 4, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(-8, 4, 0), PhysicalVector(0, 0, 0));
     blah(PhysicalVector(-8, -4, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(-4, 8, 0), PhysicalVector(0,0,0));
     blah(PhysicalVector(-4, 0, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(-4, -8, 0), PhysicalVector(0,0,0));
     blah(PhysicalVector(0, 4, 0), PhysicalVector(0,0,0));
     blah(PhysicalVector(0, -4, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(4, 8, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(4, 0, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(4, -8, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(8, 4, 0), PhysicalVector(0,0,0));
+    blah(PhysicalVector(8, -4, 0), PhysicalVector(0,0,0));
+
+    return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
+}
+
+Simulation Simulations::bodyFormationCollision(int numPieces, PhysicsSandboxProperties properties) {
+    cout << "uh, collision" << endl;
+    float distance = 130000;
+    PhysicalVector target(1000, 0, 0, true);
+    ParticleList physicalObjects;
+
+    auto  blah =
+            [this, numPieces, properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom) {
+                physicalObjects.addList(
+                        manipulatedGroup(numPieces, properties, pos, mom) );
+            };
+    // 4 in a diamond, 2 approaching from the sides
+    /*
+    blah(PhysicalVector(-5, 2, 0), PhysicalVector(12,-20,0));
+    blah(PhysicalVector(5, -2, 0), PhysicalVector(-12,20,0));
+    blah(PhysicalVector(-2, -5, 0), PhysicalVector(20,12,0));
+    blah(PhysicalVector(2, 5, 0), PhysicalVector(-20,-12,0));
+    blah(PhysicalVector(-13, -5, 0), PhysicalVector(50,2,0));
+    blah(PhysicalVector(20, 5, 0), PhysicalVector(-50,-2,0));
+     */
+
+    // 2 in a line, 2 meeting diagonally
+//    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-15,0));
+//    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-30,0));
+//    blah(PhysicalVector(3, -4, 0), PhysicalVector(-9,12,0));
+//    blah(PhysicalVector(-3, -4, 0), PhysicalVector(9,12,0));
+
+    // 2 in a line, 2 meeting diagonally, more slowly
+    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-8,0));
+    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-12,0));
+    blah(PhysicalVector(3, -4, 0), PhysicalVector(-5,8,0));
+    blah(PhysicalVector(-3, -4, 0), PhysicalVector(5,8,0));
+
+    //
+//    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-15,0));
+//    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-30,0));
+//    blah(PhysicalVector(3, -4, 0), PhysicalVector(-9,12,0));
+//    blah(PhysicalVector(-3, -4, 0), PhysicalVector(9,12,0));
+//    blah(PhysicalVector(-20, 0, 0), PhysicalVector(50,0,0));
+//    blah(PhysicalVector(3, -25, 0), PhysicalVector(0,50,0));
+//    blah(PhysicalVector(30, 0, 0), PhysicalVector(-50,0,0));
+//    blah(PhysicalVector(35, 35, 0), PhysicalVector(-50,-50,0));
+//    blah(PhysicalVector(0, 50, 0), PhysicalVector(2,-70,0));
 
     return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
 }
@@ -171,7 +226,7 @@ PhysicalVector Simulations::randomSplitBodyMomentum(kilogram_t pieceMass) {
         randMult = rand()%100;
         if (randMult % 2 == 0)
             randMult *= -1;
-        value = randMult * pieceMass.value() * 0.000001;
+        value = randMult * pieceMass.value() * 0.000002;
     }
     return PhysicalVector(values[0], values[1], values[2], false);
 }

@@ -65,7 +65,7 @@ void Observer::calcMinPullback(MaximumValues maximumValues) {
                 ? absMaxY / tan(this->fov * M_PI / 360)
                 : absMaxX / tan(this->fov * M_PI / 360);
 
-        setPos(0, 0, -pullBack * 2.0);
+        setPos(0, 0, -pullBack * 1.0);
     }
 
 }

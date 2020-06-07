@@ -43,6 +43,7 @@ ApplicationResult FullApplication::update() {
         if ( recording ) {
             FfmpegClient client;
             client.createVideo(system_clock::to_time_t(start));
+            client.cleanupFrames();
         }
 
         return ApplicationResult::COMPLETED;

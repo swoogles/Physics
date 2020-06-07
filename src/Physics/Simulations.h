@@ -16,6 +16,7 @@ public:
     Simulation bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
 
     Simulation bodyFormation(int numPieces, PhysicsSandboxProperties properties);
+    Simulation bodyFormationCollision(int numPieces, PhysicsSandboxProperties properties);
 
     Simulation createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties);
 
