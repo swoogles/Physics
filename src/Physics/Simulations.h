@@ -17,15 +17,14 @@ public:
     Simulation bodyFormation_ArbitraryList(int numPieces, PhysicsSandboxProperties properties);
 
     Simulation bodyFormation(int numPieces, PhysicsSandboxProperties properties);
-    Simulation bodyFormationCollision(int numPieces, PhysicsSandboxProperties properties);
+    Simulation bodyFormationCollision(PhysicsSandboxProperties properties);
 
     Simulation createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties);
 
     PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
   private:
-    ParticleList bodyPlacement(PhysicalVector groupColor, int numPieces, ParticleGroupProperties properties,
-                               PhysicalVector origin);
-    ParticleList manipulatedGroup(PhysicalVector groupColor, int numPieces, ParticleGroupProperties properties, PhysicalVector origin, PhysicalVector momentum);
+    ParticleList bodyPlacement(ParticleGroupProperties properties, PhysicalVector origin);
+    ParticleList manipulatedGroup(ParticleGroupProperties properties, PhysicalVector origin, PhysicalVector momentum);
 
     /*! \relates MyShape
      *  \brief Gets a random starting momentum vector based on second parameter

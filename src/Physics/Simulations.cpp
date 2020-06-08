@@ -10,7 +10,7 @@
 Simulation Simulations::createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties) {
     if ( simulation == CraftedSimulation::BODY_FORMATION) {
 //        return Simulations::bodyFormation(simulationProperties.numShapes, simulationProperties);
-        return Simulations::bodyFormationCollision(simulationProperties.numShapes, simulationProperties);
+        return Simulations::bodyFormationCollision(simulationProperties);
     } else if ( simulation == DISRUPT_GROUP) {
     } else if ( simulation == QUADRANT_TESTING) {
         return Simulations::QuadrantTesting_simplest();
@@ -89,10 +89,11 @@ Simulation Simulations::QuadrantTesting_simplest() {
     return Simulation(physicalObjects, CollisionType::INELASTIC, 0.5);
 }
 
-ParticleList Simulations::manipulatedGroup(PhysicalVector groupColor, int numPieces, ParticleGroupProperties properties, PhysicalVector origin, PhysicalVector momentum) {
+ParticleList
+Simulations::manipulatedGroup(ParticleGroupProperties properties, PhysicalVector origin, PhysicalVector momentum) {
     const float distance = 130000;
 
-    ParticleList particleList = Simulations::bodyPlacement(groupColor, numPieces, properties, origin);
+    ParticleList particleList = Simulations::bodyPlacement(properties, origin);
     particleList.applyToAllParticles([origin, distance, momentum](Particle & particle) {
         particle.setPos(particle.position().plus(origin.scaledBy(distance)));
         particle.adjustMomentum(momentum);
@@ -106,12 +107,13 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
     PhysicalVector target(1000, 0, 0, true);
     ParticleList physicalObjects;
     PhysicalVector white(1, 1, 1);
-    ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white);
+    float momentumMultiplier = 0.000002;
+    ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white, momentumMultiplier);
 
     auto  blah =
             [this, numPieces, properties, &physicalObjects, groupProperties](PhysicalVector groupColor, PhysicalVector pos, PhysicalVector mom) {
                 physicalObjects.addList(
-                        manipulatedGroup(groupColor, numPieces, groupProperties, pos, mom) );
+                        manipulatedGroup(groupProperties, pos, mom));
     };
     PhysicalVector groupColor (1, 1, 1);
     blah(groupColor, PhysicalVector(-8, 4, 0), PhysicalVector(0, 0, 0));
@@ -130,31 +132,35 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
     return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
 }
 
-Simulation Simulations::bodyFormationCollision(int numPieces, PhysicsSandboxProperties properties) {
+Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properties) {
     cout << "uh, collision" << endl;
     float distance = 130000;
     PhysicalVector target(1000, 0, 0, true);
     ParticleList physicalObjects;
+
+    float momentumMultiplier = 0.000002;
     PhysicalVector white(1, 1, 1);
-    ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white);
+    PhysicalVector blue(0, 1, 1);
+    ParticleGroupProperties  blueGroupProperties(properties.numShapes*10, properties.sandboxWidth, properties.mass, blue, momentumMultiplier);
+    PhysicalVector orange(1, 0.5, 0);
+    ParticleGroupProperties  orangeGroupProperties(properties.numShapes/100, properties.sandboxWidth, properties.mass, orange, momentumMultiplier);
+
+
+    ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white, momentumMultiplier);
 
     auto  blah =
-            [this, numPieces, properties, &physicalObjects, groupProperties](PhysicalVector groupColor, PhysicalVector pos, PhysicalVector mom) {
+            [this, properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom, ParticleGroupProperties  groupProperties) {
                 physicalObjects.addList(
-                        manipulatedGroup(groupColor, numPieces, groupProperties, pos, mom) );
+                        manipulatedGroup(groupProperties, pos, mom));
             };
-    PhysicalVector groupColor (1, 1, 1);
-    blah(groupColor, PhysicalVector(0, 0, 0), PhysicalVector(0,0,0));
-
     // 4 in a diamond, 2 approaching from the sides
-    /*
-    blah(PhysicalVector(-5, 2, 0), PhysicalVector(12,-20,0));
-    blah(PhysicalVector(5, -2, 0), PhysicalVector(-12,20,0));
-    blah(PhysicalVector(-2, -5, 0), PhysicalVector(20,12,0));
-    blah(PhysicalVector(2, 5, 0), PhysicalVector(-20,-12,0));
-    blah(PhysicalVector(-13, -5, 0), PhysicalVector(50,2,0));
-    blah(PhysicalVector(20, 5, 0), PhysicalVector(-50,-2,0));
-     */
+//    blah(PhysicalVector(-5, 2, 0), PhysicalVector(12,-20,0), groupProperties);
+//    blah(PhysicalVector(5, -2, 0), PhysicalVector(-12,20,0), groupProperties);
+//    blah(PhysicalVector(-2, -5, 0), PhysicalVector(20,12,0), groupProperties);
+//    blah(PhysicalVector(2, 5, 0), PhysicalVector(-20,-12,0), groupProperties);
+
+//    blah(PhysicalVector(-13, -5, 0), PhysicalVector(50,2,0), blueGroupProperties);
+//    blah(PhysicalVector(20, 5, 0), PhysicalVector(-50,-2,0), blueGroupProperties);
 
     // 2 in a line, 2 meeting diagonally
 //    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-15,0));
@@ -169,32 +175,31 @@ Simulation Simulations::bodyFormationCollision(int numPieces, PhysicsSandboxProp
 //    blah(PhysicalVector(-3, -4, 0), PhysicalVector(5,8,0));
 
     //
-//    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-15,0));
-//    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-30,0));
-//    blah(PhysicalVector(3, -4, 0), PhysicalVector(-9,12,0));
-//    blah(PhysicalVector(-3, -4, 0), PhysicalVector(9,12,0));
-//    blah(PhysicalVector(-20, 0, 0), PhysicalVector(50,0,0));
-//    blah(PhysicalVector(3, -25, 0), PhysicalVector(0,50,0));
-//    blah(PhysicalVector(30, 0, 0), PhysicalVector(-50,0,0));
-//    blah(PhysicalVector(35, 35, 0), PhysicalVector(-50,-50,0));
-//    blah(PhysicalVector(0, 50, 0), PhysicalVector(2,-70,0));
+    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-15,0), groupProperties);
+    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-30,0), groupProperties);
+    blah(PhysicalVector(3, -4, 0), PhysicalVector(-9,12,0), groupProperties);
+    blah(PhysicalVector(-3, -4, 0), PhysicalVector(9,12,0), blueGroupProperties);
+    blah(PhysicalVector(-20, 0, 0), PhysicalVector(50,0,0), blueGroupProperties);
+    blah(PhysicalVector(3, -25, 0), PhysicalVector(0,50,0), blueGroupProperties);
+    blah(PhysicalVector(30, 0, 0), PhysicalVector(-50,0,0), orangeGroupProperties);
+    blah(PhysicalVector(35, 35, 0), PhysicalVector(-50,-50,0), orangeGroupProperties);
+    blah(PhysicalVector(0, 50, 0), PhysicalVector(2,-70,0), orangeGroupProperties);
 
     return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
 }
 
-ParticleList Simulations::bodyPlacement(PhysicalVector groupColor, int numPieces, ParticleGroupProperties properties, PhysicalVector origin) {
-    PhysicalVector white(1, 1, 1);
-    ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white);
+ParticleList Simulations::bodyPlacement(ParticleGroupProperties properties, PhysicalVector origin) {
     ParticleList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
 
     const kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
-    const kilogram_t pieceMass = (properties.mass*1000.0)/numPieces;
+    const kilogram_t pieceMass = (properties.mass*1000.0)/properties.numShapes;
 
     srand (static_cast<unsigned int>(time(nullptr)));
 
+    float momentumMultiplier = 0.000002;
     PhysicalVector startMomentumVec;
     PhysicalVector startPos;
-    for (int i = 0; i < numPieces; i++) {
+    for (int i = 0; i < properties.numShapes; i++) {
         if (i % 2 == 0) {
             startMomentumVec = randomSplitBodyMomentum(pieceMass);
             startPos = randomPointInSphere(properties.sandboxWidth, origin);

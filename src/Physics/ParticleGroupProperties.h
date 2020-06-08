@@ -15,11 +15,12 @@
 using namespace units::mass;
 
 struct ParticleGroupProperties {
-    ParticleGroupProperties(const int numShapes, const float sandboxWidth, const kilogram_t &mass, const PhysicalVector color);
+    ParticleGroupProperties(const int numShapes, const float sandboxWidth, const kilogram_t &mass, const PhysicalVector color, const float momentumMultiplier);
     const int numShapes;
     const float sandboxWidth;
     const kilogram_t mass;
     const PhysicalVector color;
+    const float momentumMultiplier;
 };
 
 

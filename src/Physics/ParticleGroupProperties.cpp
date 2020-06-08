@@ -8,8 +8,10 @@ ParticleGroupProperties::ParticleGroupProperties(
         const int numShapes,
         const float sandboxWidth,
         const kilogram_t &mass,
-        const PhysicalVector color)
+        const PhysicalVector color,
+        const float momentumMultiplier)
         : numShapes(numShapes),
           sandboxWidth(sandboxWidth),
           mass(mass),
-          color(color){}
+          color(color),
+          momentumMultiplier(momentumMultiplier ){}
