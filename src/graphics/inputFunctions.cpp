@@ -1,5 +1,9 @@
 #include "inputFunctions.h"
 
+#include <iostream>
+#include <plib/pu.h>
+#include <GL/glut.h>
+
 using namespace std;
 
 queue<MouseAction> InputFunctions::mouseActions;

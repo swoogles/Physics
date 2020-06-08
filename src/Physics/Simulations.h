@@ -1,10 +1,7 @@
 #ifndef SIMULATIONS_H_
 #define SIMULATIONS_H_
 
-#include "ShapeFiles/Particle.h"
 #include "Simulation.h"
-#include "CollisionType.h"
-#include "AstronomicalValues.h"
 #include "PhysicsSandboxProperties.h"
 #include "ParticleGroupProperties.h"
 #include "CraftedSimulation.h"
@@ -21,19 +18,8 @@ public:
 
     Simulation createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties);
 
-    PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target);
-  private:
-    ParticleList bodyPlacement(ParticleGroupProperties properties, PhysicalVector origin);
+private:
     ParticleList manipulatedGroup(ParticleGroupProperties properties, PhysicalVector origin, PhysicalVector momentum);
-
-    /*! \relates MyShape
-     *  \brief Gets a random starting momentum vector based on second parameter
-     *
-     *  This function currently uses pieceMass as the determining factor for momentum range; figure out a better basis
-     *
-     *  \param pieceMass Determines magnitude of momentum
-     */
-    PhysicalVector randomSplitBodyMomentum(kilogram_t pieceMass);
 
 };
 

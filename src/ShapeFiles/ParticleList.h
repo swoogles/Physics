@@ -2,9 +2,6 @@
 #define PARTICLE_LIST_H
 
 #include "Particle.h"
-#include <list>
-#include <algorithm>
-#include <../lib/units.h>
 #include <ostream>
 #include <functional>
 

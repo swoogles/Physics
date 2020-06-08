@@ -3,7 +3,6 @@
 
 #include <plib/sg.h>
 
-#include "../Parallelization/Quadrant.h"
 #include "../ShapeFiles/PairCollection.h"
 #include <ShapeFiles/ParticleList.h>
 

@@ -4,6 +4,10 @@
 
 #include "FfmpegClient.h"
 
+#include <iomanip>
+#include <string>
+#include <lib/pstream.h>
+
 void FfmpegClient::createVideo(const std::time_t & start) {
     std::ostringstream stream;
     stream << std::put_time(std::localtime(&start), "%F %T");

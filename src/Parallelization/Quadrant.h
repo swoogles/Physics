@@ -5,9 +5,7 @@
 #include "ShapeFiles/Particle.h"
 #include "OctreeCoordinates.h"
 
-#include <boost/multi_array/multi_array_ref.hpp>
 #include <boost/multi_array.hpp>
-#include <boost/ref.hpp>
 #include <functional>
 
 #include <../lib/units.h>

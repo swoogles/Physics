@@ -1,3 +1,4 @@
+#include <graphics/FfmpegClient.h>
 #include "CenterStage.h"
 
 using namespace std;

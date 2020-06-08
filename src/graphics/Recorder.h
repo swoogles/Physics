@@ -5,13 +5,8 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <fstream>
-#include <lib/pstream.h>
-#include <chrono>
 
 #include "jpeglib.h"
-
-#include "FfmpegClient.h"
 
 using namespace std;
 

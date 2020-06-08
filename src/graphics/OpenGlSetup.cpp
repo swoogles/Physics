@@ -4,6 +4,9 @@
 
 #include "OpenGlSetup.h"
 
+#include <iostream>
+using namespace std;
+
 void myTimer(int v) {
     glutPostRedisplay();
     glutTimerFunc(FPS, myTimer, v);

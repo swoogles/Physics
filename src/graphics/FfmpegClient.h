@@ -6,10 +6,6 @@
 #define PHYSICS_FFMEPCLIENT_H
 
 #include <chrono>
-#include <iomanip>
-#include <string>
-
-#include <lib/pstream.h>
 
 using namespace std;
 

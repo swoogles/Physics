@@ -7,7 +7,6 @@
 #include "../MaximumValues.h"
 #include <Physics/Interactions.h>
 #include "lib/units.h"
-#include <graphics/Drawing.h>
 
 using namespace units::time;
 

@@ -3,7 +3,6 @@
 
 #include <plib/pu.h>
 #include <plib/puAux.h>
-#include <graphics/Recorder.h>
 
 /*! \brief UI class that handles everything in the main window
  *
