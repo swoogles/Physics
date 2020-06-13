@@ -6,21 +6,23 @@
 
 
 
-FullApplication::FullApplication(
-        Simulation simulation,
-        CenterStage mainDisplay,
-        bool shouldRecord,
-        time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
-        chrono::seconds maximumRuntime,
-        GraphicalOperations graphicalOperations
-) : simulation(std::move(simulation)),
-    controlCenter(graphicalOperations.localControlCenter),
-    centerStage(mainDisplay),
-    recorder(Recorder()),
-    recording(shouldRecord),
-    start(start),
-    maximumRuntime(maximumRuntime),
-    graphicalOperations(graphicalOperations){}
+FullApplication::FullApplication(Simulation simulation, CenterStage mainDisplay, bool shouldRecord,
+                                 time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
+                                 chrono::seconds maximumRuntime, WindowDimensions windowDimensions,
+                                 PhysicsSandboxProperties properties, OpenGlSetup openGlSetup)
+        : simulation(std::move(simulation)),
+          controlCenter(hour_t(properties.dt), windowDimensions.width, start),
+          centerStage(mainDisplay),
+          recorder(Recorder()),
+          recording(shouldRecord),
+          start(start),
+          maximumRuntime(maximumRuntime),
+          graphicalOperations(
+                  this->controlCenter,
+                  openGlSetup.mainDisplayNum,
+                  openGlSetup.controlCenterNum,
+                  windowDimensions)
+            {}
 
 ApplicationResult FullApplication::update() {
     if (! controlCenter.isPaused() ) {

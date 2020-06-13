@@ -13,7 +13,7 @@ void myTimer(int v) {
 }
 
 
-void OpenGlSetup::initialize(WindowDimensions dimensions, void (*idleFunction)(void)) {
+void OpenGlSetup::initialize(WindowDimensions dimensions, void (idleFunction)(void)) {
     glViewport(-WW,WW,-WH,WH);
 
     glMatrixMode(GL_MODELVIEW);

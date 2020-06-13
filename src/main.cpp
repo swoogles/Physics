@@ -74,11 +74,9 @@ int main(int argcp, char **argv) {
             parameterArguments.isRecording(),
             start,
             properties.maximumRunTime,
-            GraphicalOperations(
-                    controlCenter,
-                    openGlSetup.mainDisplayNum,
-                    openGlSetup.controlCenterNum,
-                    windowDimensions)
+            windowDimensions,
+            properties,
+            openGlSetup
     );
 
     glutSetWindow(1);
