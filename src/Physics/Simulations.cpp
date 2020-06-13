@@ -234,9 +234,14 @@ ParticleList manipulatedGroup(ParticleGroupProperties properties, PhysicalVector
 }
 ParticleList fourInADiamond(PhysicsSandboxProperties properties) {
     float momentumMultiplier = 0.000002;
+    float sandboxWidth = 6.0e5;
     PhysicalVector white(1, 1, 1);
+    ParticleGroupProperties  groupProperties(properties.numShapes, sandboxWidth, properties.mass, white, momentumMultiplier);
     ParticleList physicalObjects;
-    ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white, momentumMultiplier);
+    PhysicalVector blue(0, 1, 1);
+    ParticleGroupProperties  blueGroupProperties(properties.numShapes/10, sandboxWidth, properties.mass, blue, momentumMultiplier);
+    PhysicalVector orange(1, 0.5, 0);
+    ParticleGroupProperties  orangeGroupProperties(properties.numShapes/100, sandboxWidth, properties.mass, orange, momentumMultiplier);
 
     auto  blah =
             [properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom, ParticleGroupProperties  groupProperties) {
@@ -244,15 +249,24 @@ ParticleList fourInADiamond(PhysicsSandboxProperties properties) {
                         manipulatedGroup(groupProperties, pos, mom));
             };
 
-    blah(PhysicalVector(-5, 2, 0), PhysicalVector(12,-20,0), groupProperties);
-    blah(PhysicalVector(5, -2, 0), PhysicalVector(-12,20,0), groupProperties);
+    blah(PhysicalVector(-5, 5, 0), PhysicalVector(12,-20,0), groupProperties);
+    blah(PhysicalVector(-5, 2, 0), PhysicalVector(12,-20,0), blueGroupProperties);
+
+    blah(PhysicalVector(5, -2, 0), PhysicalVector(-12,20,0), orangeGroupProperties);
+    blah(PhysicalVector(5, -5, 0), PhysicalVector(-12,20,0), blueGroupProperties);
+
     blah(PhysicalVector(-2, -5, 0), PhysicalVector(20,12,0), groupProperties);
+    blah(PhysicalVector(2, -5, 0), PhysicalVector(20,12,0), orangeGroupProperties);
+
     blah(PhysicalVector(2, 5, 0), PhysicalVector(-20,-12,0), groupProperties);
+    blah(PhysicalVector(5, 5, 0), PhysicalVector(-20,-12,0), orangeGroupProperties);
+
+    blah(PhysicalVector(-5, -5, 0), PhysicalVector(20,-12,0), blueGroupProperties);
     return physicalObjects;
 }
 
 ParticleList singleCluster(PhysicsSandboxProperties properties) {
-    float momentumMultiplier = 0.0000014;
+    float momentumMultiplier = 0.0000011;
     PhysicalVector white(1, 1, 1);
     ParticleList physicalObjects;
     ParticleGroupProperties  groupProperties(60000, properties.sandboxWidth, properties.mass, white, momentumMultiplier);
@@ -265,6 +279,38 @@ ParticleList singleCluster(PhysicsSandboxProperties properties) {
 
     blah(PhysicalVector(0, 0, 0), PhysicalVector(0, 0, 0), groupProperties);
     return physicalObjects;
+}
+
+ParticleList chaoticGroups(PhysicsSandboxProperties properties) {
+    float sandboxWidth = 6.0e5;
+    float momentumMultiplier = 0.000002;
+    PhysicalVector white(1, 1, 1);
+    PhysicalVector blue(0, 1, 1);
+    ParticleGroupProperties  blueGroupProperties(properties.numShapes*10, sandboxWidth, properties.mass, blue, momentumMultiplier);
+    PhysicalVector orange(1, 0.5, 0);
+    ParticleGroupProperties  orangeGroupProperties(properties.numShapes/100, sandboxWidth, properties.mass, orange, momentumMultiplier);
+
+
+    ParticleGroupProperties  groupProperties(properties.numShapes, sandboxWidth, properties.mass, white, momentumMultiplier);
+
+    ParticleList physicalObjects;
+    auto  blah =
+            [properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom, ParticleGroupProperties  groupProperties) {
+                physicalObjects.addList(
+                        manipulatedGroup(groupProperties, pos, mom));
+            };
+    //
+    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-15,0), groupProperties);
+    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-30,0), groupProperties);
+    blah(PhysicalVector(3, -4, 0), PhysicalVector(-9,12,0), groupProperties);
+    blah(PhysicalVector(-3, -4, 0), PhysicalVector(9,12,0), blueGroupProperties);
+    blah(PhysicalVector(-20, 0, 0), PhysicalVector(50,0,0), blueGroupProperties);
+    blah(PhysicalVector(3, -25, 0), PhysicalVector(0,50,0), blueGroupProperties);
+    blah(PhysicalVector(30, 0, 0), PhysicalVector(-50,0,0), orangeGroupProperties);
+    blah(PhysicalVector(35, 35, 0), PhysicalVector(-50,-50,0), orangeGroupProperties);
+    blah(PhysicalVector(0, 50, 0), PhysicalVector(2,-70,0), orangeGroupProperties);
+    return physicalObjects;
+
 }
 
 Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properties) {
@@ -282,16 +328,12 @@ Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properti
     ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white, momentumMultiplier);
 
     ParticleList physicalObjects =
-            singleCluster(properties);
-//            fourInADiamond(properties);
-    auto  blah =
-            [this, properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom, ParticleGroupProperties  groupProperties) {
-                physicalObjects.addList(
-                        manipulatedGroup(groupProperties, pos, mom));
-            };
+//            singleCluster(properties);
+//    chaoticGroups(properties);
+            fourInADiamond(properties);
 
     // 4 in a diamond, 2 approaching from the sides
-    fourInADiamond(properties);
+//    fourInADiamond(properties);
 //    blah(PhysicalVector(-5, 2, 0), PhysicalVector(12,-20,0), groupProperties);
 //    blah(PhysicalVector(5, -2, 0), PhysicalVector(-12,20,0), groupProperties);
 //    blah(PhysicalVector(-2, -5, 0), PhysicalVector(20,12,0), groupProperties);
@@ -311,17 +353,6 @@ Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properti
 //    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-12,0));
 //    blah(PhysicalVector(3, -4, 0), PhysicalVector(-5,8,0));
 //    blah(PhysicalVector(-3, -4, 0), PhysicalVector(5,8,0));
-
-    //
-//    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-15,0), groupProperties);
-//    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-30,0), groupProperties);
-//    blah(PhysicalVector(3, -4, 0), PhysicalVector(-9,12,0), groupProperties);
-//    blah(PhysicalVector(-3, -4, 0), PhysicalVector(9,12,0), blueGroupProperties);
-//    blah(PhysicalVector(-20, 0, 0), PhysicalVector(50,0,0), blueGroupProperties);
-//    blah(PhysicalVector(3, -25, 0), PhysicalVector(0,50,0), blueGroupProperties);
-//    blah(PhysicalVector(30, 0, 0), PhysicalVector(-50,0,0), orangeGroupProperties);
-//    blah(PhysicalVector(35, 35, 0), PhysicalVector(-50,-50,0), orangeGroupProperties);
-//    blah(PhysicalVector(0, 50, 0), PhysicalVector(2,-70,0), orangeGroupProperties);
 
     return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
 }
