@@ -3,20 +3,23 @@
 //
 
 #include "FullApplication.h"
+#include "Physics/Simulations.h"
 
 
-
-FullApplication::FullApplication(Simulation simulation, CenterStage mainDisplay, bool shouldRecord,
+FullApplication::FullApplication(CenterStage mainDisplay, bool shouldRecord,
                                  time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
-                                 chrono::seconds maximumRuntime, WindowDimensions windowDimensions,
-                                 PhysicsSandboxProperties properties, OpenGlSetup openGlSetup)
-        : simulation(std::move(simulation)),
+                                 WindowDimensions windowDimensions, PhysicsSandboxProperties properties,
+                                 OpenGlSetup openGlSetup)
+        : simulation(
+        // The way this is invoked is a smell. Should probably just be a free-floating function.
+        Simulations().bodyFormationCollision(properties)
+        ),
           controlCenter(hour_t(properties.dt), windowDimensions.width, start),
           centerStage(mainDisplay),
           recorder(Recorder()),
           recording(shouldRecord),
           start(start),
-          maximumRuntime(maximumRuntime),
+          maximumRuntime(properties.maximumRunTime),
           graphicalOperations(
                   this->controlCenter,
                   openGlSetup.mainDisplayNum,

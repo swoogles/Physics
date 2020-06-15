@@ -34,10 +34,10 @@ using std::chrono::system_clock;
 
 class FullApplication {
 public:
-    FullApplication(Simulation simulation, CenterStage mainDisplay, bool shouldRecord,
+    FullApplication(CenterStage mainDisplay, bool shouldRecord,
                     time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
-                    chrono::seconds maximumRuntime, WindowDimensions windowDimensions,
-                    PhysicsSandboxProperties properties, OpenGlSetup openGlSetup);
+                    WindowDimensions windowDimensions, PhysicsSandboxProperties properties,
+                    OpenGlSetup openGlSetup);
 
     Simulation simulation;
     const ControlCenter controlCenter;
