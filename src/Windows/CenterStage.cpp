@@ -109,7 +109,7 @@ void CenterStage::exit_cb(puObject * caller) {
 	exit(1);
 }
 
-CenterStage::CenterStage(int windowWidth, time_t &start) noexcept
+CenterStage::CenterStage(int windowWidth, time_t start) noexcept
 		{
 	CenterStage::start = start;
 	main_menu = new puMenuBar();

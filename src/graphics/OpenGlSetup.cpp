@@ -48,7 +48,6 @@ void OpenGlSetup::initialize(WindowDimensions dimensions, void (idleFunction)(vo
 
     puInit();
 }
-
 void OpenGlSetup::configureControlWindow(WindowDimensions mainWindowDimensions) {
     int controlWinPosX = mainWindowDimensions.xPos;
     int controlWinPosY = mainWindowDimensions.yPos + mainWindowDimensions.height + 30;

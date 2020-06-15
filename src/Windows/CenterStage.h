@@ -3,6 +3,8 @@
 
 #include <plib/pu.h>
 #include <plib/puAux.h>
+#include <chrono>
+using std::time_t;
 
 /*! \brief UI class that handles everything in the main window
  *
@@ -17,7 +19,7 @@ class CenterStage {
 public:
 	//! Unnecessary constructor for entirely static class
 	CenterStage() noexcept;
-	CenterStage(int windowWidth, time_t &start) noexcept;
+	CenterStage(int windowWidth, time_t start) noexcept;
 
 	/*! \brief Updates the time values
      *
@@ -54,7 +56,7 @@ public:
 
 	static void createVideoAndExit(puObject *);
 private:
-    static std::time_t start;
+    static time_t start;
 	puMenuBar * main_menu;
 	puaFileSelector * open_selector;
 	puaFileSelector * save_selector;

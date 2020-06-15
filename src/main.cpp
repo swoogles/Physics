@@ -3,11 +3,9 @@
  *      Author: Bill Frasure
  */
 
-#include "graphics/GraphicalOperations.h"
 #include "graphics/OpenGlSetup.h"
 
 //GUI stuff
-#include "Windows/ControlCenter.h"
 #include "Windows/CenterStage.h"
 
 //Physics
@@ -16,11 +14,7 @@
 #include "FullApplication.h"
 #include "Input/ParameterArguments.h"
 
-#include <chrono>
 #include <iomanip>
-
-using std::chrono::time_point;
-using std::chrono::system_clock;
 
 unique_ptr<FullApplication> globalFullApplication;
 
@@ -49,8 +43,6 @@ int main(int argcp, char **argv) {
                     1280
             );
 
-    time_point start = system_clock::now();
-
     auto idleFunction = []() {
     };
     OpenGlSetup openGlSetup{};
@@ -59,17 +51,8 @@ int main(int argcp, char **argv) {
         idleFunction
     );
 
-    ControlCenter controlCenter(hour_t(properties.dt), windowDimensions.width, start);
-
-    auto outputTime = system_clock::to_time_t(start);
-    CenterStage centerStage(windowDimensions.width, outputTime);
-
     globalFullApplication = make_unique<FullApplication>(
-//            simulations.bodyFormation(properties.numShapes, properties),
-//            Simulations::QuadrantTesting_simplest(),
-            centerStage,
             parameterArguments.isRecording(),
-            start,
             windowDimensions,
             properties,
             openGlSetup

@@ -4,21 +4,23 @@
 
 #include "FullApplication.h"
 #include "Physics/Simulations.h"
+#include <chrono>
+using namespace std;
+using std::chrono::time_point;
 
 
-FullApplication::FullApplication(CenterStage mainDisplay, bool shouldRecord,
-                                 time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
+FullApplication::FullApplication(bool shouldRecord,
                                  WindowDimensions windowDimensions, PhysicsSandboxProperties properties,
                                  OpenGlSetup openGlSetup)
         : simulation(
         // The way this is invoked is a smell. Should probably just be a free-floating function.
         Simulations().bodyFormationCollision(properties)
         ),
-          controlCenter(hour_t(properties.dt), windowDimensions.width, start),
-          centerStage(mainDisplay),
+        start(system_clock::now()),
+controlCenter(hour_t(properties.dt), windowDimensions.width, start),
+          centerStage (windowDimensions.width, system_clock::to_time_t(start)),
           recorder(Recorder()),
           recording(shouldRecord),
-          start(start),
           maximumRuntime(properties.maximumRunTime),
           graphicalOperations(
                   this->controlCenter,

@@ -34,8 +34,7 @@ using std::chrono::system_clock;
 
 class FullApplication {
 public:
-    FullApplication(CenterStage mainDisplay, bool shouldRecord,
-                    time_point<system_clock, duration<long, ratio<1, 1000000000>>> start,
+    FullApplication(bool shouldRecord,
                     WindowDimensions windowDimensions, PhysicsSandboxProperties properties,
                     OpenGlSetup openGlSetup);
 
