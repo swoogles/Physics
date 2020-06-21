@@ -103,8 +103,7 @@ void GraphicalOperations::localDisplay(Simulation & simulation) const {
 GraphicalOperations::GraphicalOperations(ControlCenter controlCenter,
                                          int CenterStageWindow, int controlCenterWindow,
                                          WindowDimensions windowDimensions)
-        : localControlCenter(controlCenter)
-        , mainDisplayNum(CenterStageWindow)
+        : mainDisplayNum(CenterStageWindow)
         , control_center_num(controlCenterWindow)
         , localObserver(windowDimensions)
 {

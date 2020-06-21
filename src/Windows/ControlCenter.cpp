@@ -45,7 +45,6 @@ void ControlCenter::pause_cb(puObject * caller) {
 
 void ControlCenter::rotRight(puObject *) {
     for (int i = 0; i < 90; i ++) {
-        cout << "submitting rotate right action";
         ControlCenter::cameraActions.push(CameraAction::ROTATE_RIGHT);
     }
 }

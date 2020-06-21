@@ -29,7 +29,6 @@ public:
                         int CenterStageWindow, int controlCenterWindow,
                         WindowDimensions windowDimensions);
 
-    ControlCenter localControlCenter;
     void localDisplay(Simulation & simulation) const;
     void controlDisplay() const;
     void fullDisplay(Simulation & simulation) const;
