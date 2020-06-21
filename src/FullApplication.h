@@ -27,6 +27,10 @@
 
 #include <chrono>
 #include <iomanip>
+#include "TimedSceneAction.h"
+#include <queue>
+#include "TimedSceneAction.h"
+using std::queue;
 
 using std::chrono::time_point;
 using std::chrono::duration;
@@ -49,6 +53,8 @@ public:
     GraphicalOperations graphicalOperations;
     // TODO Instead of void, return a Result[SUCCESSFUL_STEP, COMPLETED, FAILED]
     ApplicationResult update();
+private:
+    queue<TimedSceneAction> timedSceneActions;
 };
 
 

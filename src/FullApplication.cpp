@@ -3,7 +3,6 @@
 //
 
 #include "FullApplication.h"
-#include "TimedSceneAction.h"
 #include "Physics/Simulations.h"
 #include <chrono>
 using namespace std;
@@ -27,7 +26,11 @@ FullApplication::FullApplication(bool shouldRecord,
                   openGlSetup.mainDisplayNum,
                   openGlSetup.controlCenterNum,
                   windowDimensions)
-            {}
+{
+    timedSceneActions.push(TimedSceneAction(second_t(10), CameraAction::ROTATE_LEFT));
+    timedSceneActions.push(TimedSceneAction (second_t(20), CameraAction::ROTATE_DOWN));
+    timedSceneActions.push(TimedSceneAction (second_t(30), CameraAction::END_SCENE));
+}
 
 ApplicationResult FullApplication::update() {
     if (! controlCenter.isPaused() ) {
@@ -55,11 +58,21 @@ ApplicationResult FullApplication::update() {
 
         return ApplicationResult::COMPLETED;
     }
-    TimedSceneAction timedSceneAction(second_t(4), CameraAction::ROTATE_DOWN);
-    if (simulation.getOutputViewingTime() > timedSceneAction.triggerTime) {
-        FfmpegClient client;
-        client.createVideo(system_clock::to_time_t(start));
-        client.cleanupFrames();
+
+    if (!timedSceneActions.empty()) {
+        auto currentAction = timedSceneActions.front();
+        if (simulation.getOutputViewingTime() > currentAction.triggerTime) {
+            for (int i = 0; i < 90; i ++) {
+                ControlCenter::submitCameraAction(currentAction.cameraAction);
+            }
+            timedSceneActions.pop();
+        }
+    } else {
+        if ( recording ) {
+            FfmpegClient client;
+            client.createVideo(system_clock::to_time_t(start));
+            client.cleanupFrames();
+        }
         return ApplicationResult::COMPLETED;
     }
     return ApplicationResult::SUCESSFUL_STEP;
