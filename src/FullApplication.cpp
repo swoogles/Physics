@@ -3,6 +3,7 @@
 //
 
 #include "FullApplication.h"
+#include "TimedSceneAction.h"
 #include "Physics/Simulations.h"
 #include <chrono>
 using namespace std;
@@ -54,7 +55,8 @@ ApplicationResult FullApplication::update() {
 
         return ApplicationResult::COMPLETED;
     }
-    if (simulation.getOutputViewingTime() > second_t(4)) {
+    TimedSceneAction timedSceneAction(second_t(4), CameraAction::ROTATE_DOWN);
+    if (simulation.getOutputViewingTime() > timedSceneAction.triggerTime) {
         FfmpegClient client;
         client.createVideo(system_clock::to_time_t(start));
         client.cleanupFrames();
