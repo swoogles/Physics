@@ -54,6 +54,12 @@ ApplicationResult FullApplication::update() {
 
         return ApplicationResult::COMPLETED;
     }
+    if (simulation.getOutputViewingTime() > second_t(4)) {
+        FfmpegClient client;
+        client.createVideo(system_clock::to_time_t(start));
+        client.cleanupFrames();
+        return ApplicationResult::COMPLETED;
+    }
     return ApplicationResult::SUCESSFUL_STEP;
 }
 

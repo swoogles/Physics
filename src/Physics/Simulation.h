@@ -22,6 +22,7 @@ public:
 
 
     hour_t getTimeElapsed() const;
+    second_t getOutputViewingTime() const;
 
     // TODO Take dt as a parameter here.
     void update(hour_t dt);
@@ -31,6 +32,7 @@ public:
 private:
     ParticleList physicalObjects;
     hour_t timeElapsed;
+    int stepsElapsed;
 
 	float minX, maxX, minY, maxY;
 

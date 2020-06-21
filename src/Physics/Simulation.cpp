@@ -6,6 +6,7 @@ Simulation::Simulation(
         float octreeTheta)
         :physicalObjects(std::move(physicalObjects))
         ,timeElapsed(0)
+        ,stepsElapsed(0)
         ,minX(FLT_MAX)
         ,maxX(FLT_MIN)
         ,minY(FLT_MAX)
@@ -80,7 +81,10 @@ void Simulation::update(hour_t dt) {
     refreshQuadrant(this->physicalObjects);
 }
 
-void Simulation::updateTimeElapsed(hour_t dt) { timeElapsed += dt; }
+void Simulation::updateTimeElapsed(hour_t dt) {
+    timeElapsed += dt;
+    stepsElapsed += 1;
+}
 
 hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 
@@ -125,5 +129,9 @@ void Simulation::applySideEffectingFunctionsToInnards(
         const {
     quadrant->applyToAllChildrenConstant(quadrantFunctor);
     physicalObjects.checkForAllParticles(particleFunctor);
+}
+
+second_t Simulation::getOutputViewingTime() const {
+    return units::time::second_t(stepsElapsed/24);
 }
 
