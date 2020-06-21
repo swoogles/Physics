@@ -232,6 +232,29 @@ ParticleList manipulatedGroup(ParticleGroupProperties properties, PhysicalVector
     });
     return particleList;
 }
+
+ParticleList disruption(PhysicsSandboxProperties properties) {
+    float momentumMultiplier = 0.000002;
+    float sandboxWidth = 6.0e5;
+    PhysicalVector white(1, 1, 1);
+    ParticleGroupProperties  groupProperties(1, sandboxWidth, properties.mass*2, white, momentumMultiplier);
+    ParticleList physicalObjects;
+    PhysicalVector blue(0, 1, 1);
+    ParticleGroupProperties  blueGroupProperties(properties.numShapes, sandboxWidth, properties.mass, blue, momentumMultiplier);
+
+    auto  blah =
+            [properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom, ParticleGroupProperties  groupProperties) {
+                physicalObjects.addList(
+                        manipulatedGroup(groupProperties, pos, mom));
+            };
+
+    blah(PhysicalVector(0, 0, 0), PhysicalVector(0,0,0), blueGroupProperties);
+    blah(PhysicalVector(-5, -2, 0), PhysicalVector(700050,0,0), groupProperties);
+    blah(PhysicalVector(0, 9, 0), PhysicalVector(0,-700050,0), groupProperties);
+    blah(PhysicalVector(2, -7, 0), PhysicalVector(-500050,500050,0), groupProperties);
+    return physicalObjects;
+}
+
 ParticleList fourInADiamond(PhysicsSandboxProperties properties) {
     float momentumMultiplier = 0.000002;
     float sandboxWidth = 6.0e5;
@@ -239,9 +262,9 @@ ParticleList fourInADiamond(PhysicsSandboxProperties properties) {
     ParticleGroupProperties  groupProperties(properties.numShapes, sandboxWidth, properties.mass, white, momentumMultiplier);
     ParticleList physicalObjects;
     PhysicalVector blue(0, 1, 1);
-    ParticleGroupProperties  blueGroupProperties(properties.numShapes/10, sandboxWidth, properties.mass, blue, momentumMultiplier);
+    ParticleGroupProperties  blueGroupProperties(properties.numShapes, sandboxWidth, properties.mass, blue, momentumMultiplier);
     PhysicalVector orange(1, 0.5, 0);
-    ParticleGroupProperties  orangeGroupProperties(properties.numShapes/100, sandboxWidth, properties.mass, orange, momentumMultiplier);
+    ParticleGroupProperties  orangeGroupProperties(properties.numShapes, sandboxWidth, properties.mass, orange, momentumMultiplier);
 
     auto  blah =
             [properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom, ParticleGroupProperties  groupProperties) {
@@ -330,7 +353,8 @@ Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properti
     ParticleList physicalObjects =
 //            singleCluster(properties);
 //    chaoticGroups(properties);
-            fourInADiamond(properties);
+            disruption(properties);
+//            fourInADiamond(properties);
 
     // 4 in a diamond, 2 approaching from the sides
 //    fourInADiamond(properties);
