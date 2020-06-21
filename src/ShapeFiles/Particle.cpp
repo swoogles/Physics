@@ -62,6 +62,9 @@ vector<PhysicalVector> Particle::pointsEvenlyDistributedOnSphere(int numPoints, 
 }
 
 void Particle::mergeWith(Particle &otherShape) {
+    this->_color =
+            (this->mass() < otherShape.mass() )
+            ? otherShape._color: this->_color ;
 	kilogram_t combinedMass = this->mass() + otherShape.mass();
 	kilograms_per_cubic_meter_t density = this->density();
 
