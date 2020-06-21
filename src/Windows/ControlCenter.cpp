@@ -183,3 +183,7 @@ optional<CameraAction> ControlCenter::currentCameraAction() {
   }
 }
 
+void ControlCenter::submitCameraAction(CameraAction cameraAction) {
+    cameraActions.push(cameraAction);
+}
+

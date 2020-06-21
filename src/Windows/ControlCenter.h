@@ -62,6 +62,7 @@ public:
 	local_duration getDt() const;
 	bool shouldRenderOctree();
 	static optional<CameraAction> currentCameraAction();
+    static void submitCameraAction(CameraAction cameraAction);
 private:
 	static queue<CameraAction> cameraActions;
 	static bool paused;
