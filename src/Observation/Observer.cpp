@@ -123,6 +123,14 @@ void Observer::adjustAngle(SGfloat dAngle, const PhysicalVector rotAxis) {
     sgQuatToMatrix(orientationMat, orientationQuat);
 }
 
+void Observer::adjustAngle(const PhysicalVector rotAxis) {
+    sgQuat tempRotQuat;
+    sgAngleAxisToQuat(tempRotQuat, 1,  rotAxis.vec);
+
+    sgPostMultQuat(orientationQuat, tempRotQuat);
+    sgQuatToMatrix(orientationMat, orientationQuat);
+}
+
 void Observer::setPos(float inX, float inY, float inZ) {
     pos.vec[0] = inX;
     pos.vec[1] = inY;

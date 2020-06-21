@@ -27,25 +27,34 @@ void processCameraAction(
         Observer & observer,
         CameraAction cameraAction
 ) {
+
+//    PhysicalVector rotVec;
+//    rotVec = PhysicalVector(1,  0, 0);
+//    adjustAngle(angVelocity.x(), rotVec);
+//    rotVec = PhysicalVector(0,  1, 0);
+//    adjustAngle(angVelocity.y(), rotVec);
+//    rotVec = PhysicalVector(0,  0, 1);
+//    adjustAngle(angVelocity.z(), rotVec);
+
     switch(cameraAction) {
         case CameraAction::ROTATE_LEFT: {
             PhysicalVector leftAngVelocity(0, -.5f, 0);
-            observer.adjustAngularVelocity(leftAngVelocity);
+            observer.adjustAngle(leftAngVelocity);
             break;
         }
         case CameraAction::ROTATE_RIGHT: {
             PhysicalVector rightAngVelocity(0, .5f, 0);
-            observer.adjustAngularVelocity(rightAngVelocity);
+            observer.adjustAngle(rightAngVelocity);
             break;
         }
         case CameraAction::ROTATE_UP: {
             PhysicalVector upAngVelocity(+0.5f, 0, 0);
-            observer.adjustAngularVelocity(upAngVelocity);
+            observer.adjustAngle(upAngVelocity);
             break;
         }
         case CameraAction::ROTATE_DOWN: {
             PhysicalVector downAngVelocity(-0.5f, 0, 0);
-            observer.adjustAngularVelocity(downAngVelocity);
+            observer.adjustAngle(downAngVelocity);
         }
         case TOGGLE_AUTOSCALING: {
             break;

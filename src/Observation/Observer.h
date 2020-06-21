@@ -44,6 +44,7 @@ public:
 
 	void adjustAngularVelocity(PhysicalVector dangVelocity);
 	void adjustAngle(SGfloat dAngle, PhysicalVector rotAxis);
+    void adjustAngle(PhysicalVector rotAxis);
 	void setPos(float inX, float inY, float inZ);
 private:
 	PhysicalVector pos;
