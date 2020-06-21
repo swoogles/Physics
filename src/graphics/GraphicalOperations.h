@@ -25,8 +25,7 @@
 
 class GraphicalOperations {
 public:
-    GraphicalOperations(ControlCenter controlCenter,
-                        int CenterStageWindow, int controlCenterWindow,
+    GraphicalOperations(int CenterStageWindow, int controlCenterWindow,
                         WindowDimensions windowDimensions);
 
     void localDisplay(Simulation & simulation) const;

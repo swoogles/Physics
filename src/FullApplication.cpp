@@ -17,13 +17,12 @@ FullApplication::FullApplication(bool shouldRecord,
         Simulations().bodyFormationCollision(properties)
         ),
         start(system_clock::now()),
-controlCenter(hour_t(properties.dt), windowDimensions.width, start),
+        controlCenter(hour_t(properties.dt), windowDimensions.width, start),
           centerStage (windowDimensions.width, system_clock::to_time_t(start)),
           recorder(Recorder()),
           recording(shouldRecord),
           maximumRuntime(properties.maximumRunTime),
           graphicalOperations(
-                  this->controlCenter,
                   openGlSetup.mainDisplayNum,
                   openGlSetup.controlCenterNum,
                   windowDimensions)
