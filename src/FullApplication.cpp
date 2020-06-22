@@ -27,9 +27,10 @@ FullApplication::FullApplication(bool shouldRecord,
                   openGlSetup.controlCenterNum,
                   windowDimensions)
 {
+    timedSceneActions.push(TimedSceneAction(second_t(5), CameraAction::ZOOM_IN));
     timedSceneActions.push(TimedSceneAction(second_t(10), CameraAction::ROTATE_LEFT));
-    timedSceneActions.push(TimedSceneAction (second_t(20), CameraAction::ROTATE_DOWN));
-    timedSceneActions.push(TimedSceneAction (second_t(30), CameraAction::END_SCENE));
+    timedSceneActions.push(TimedSceneAction (second_t(15), CameraAction::ROTATE_DOWN));
+    timedSceneActions.push(TimedSceneAction (second_t(20), CameraAction::END_SCENE));
 }
 
 ApplicationResult FullApplication::update() {

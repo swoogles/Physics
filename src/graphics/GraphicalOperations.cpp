@@ -64,6 +64,12 @@ void processCameraAction(
             observer.adjustAngularVelocity(stoppedAngVelocity);
             break;
         }
+        case CameraAction::ZOOM_IN: {
+            observer.zoomIn();
+        }
+        case CameraAction::ZOOM_OUT: {
+            observer.zoomOut();
+        }
     }
 }
 
