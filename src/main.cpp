@@ -37,7 +37,7 @@ int main(int argcp, char **argv) {
 
     auto windowDimensions =
             WindowDimensions(
-                    100,
+                    400,
                     50,
                     720,
                     1280
