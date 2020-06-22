@@ -66,9 +66,11 @@ void processCameraAction(
         }
         case CameraAction::ZOOM_IN: {
             observer.zoomIn();
+            break;
         }
         case CameraAction::ZOOM_OUT: {
             observer.zoomOut();
+            break;
         }
     }
 }
