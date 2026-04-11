@@ -23,7 +23,13 @@ void Simulation::refreshQuadrant(ParticleList &physicalObjects) {
 
     float side = 10e7; //Formation Value . ACK!!!! How miserably hard-coded!!
 
-    quadrant = std::make_unique<Quadrant>( 1, pos, side, meter_t(0), PhysicalVector(), kilogram_t(0), PhysicalVector() ) ;
+    // Reuse existing quadrant to avoid repeated allocations
+    if (quadrant) {
+        quadrant->resetForRebuild(meter_t(0), PhysicalVector(), kilogram_t(0), PhysicalVector());
+    } else {
+        quadrant = std::make_unique<Quadrant>( 1, pos, side, meter_t(0), PhysicalVector(), kilogram_t(0), PhysicalVector() );
+    }
+
     this->physicalObjects.checkForAllParticles(
             [this, &pos, side](const Particle & curShape) {
                 this->quadrant->insert(

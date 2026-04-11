@@ -158,6 +158,58 @@ void Quadrant::adjustMass(kilogram_t dMass) {
 	_mass += dMass;
 }
 
+void Quadrant::resetForRebuild(meter_t radius, PhysicalVector weightedPositionParam,
+                                kilogram_t mass, const PhysicalVector particlePositionParam) {
+    // Reset state to initial leaf state
+    isLeaf = true;
+    containsBody = true;
+    particleRadius = radius;
+    particleWeight = mass;
+    _mass = mass;
+    weightedPosition = weightedPositionParam;
+    particleWeightedPosition = weightedPositionParam;
+    particlePosition = particlePositionParam;
+
+    // Clear all children - they will be recreated as needed
+    for (int x = 0; x < 2; x++) {
+        for (int y = 0; y < 2; y++) {
+            for (int z = 0; z < 2; z++) {
+                childQuadrants[x][y][z].reset();
+            }
+        }
+    }
+}
+
+void Quadrant::reinitialize(int levelParam, PhysicalVector& posParam, float width,
+                             meter_t radius, PhysicalVector weightedPositionParam,
+                             kilogram_t mass, const PhysicalVector particlePositionParam) {
+    // Reinitialize all fields as if newly constructed
+    pos = posParam;
+    level = levelParam;
+    dimensions = PhysicalVector(width, width, width);
+
+    // Reset color based on level (same as constructor)
+    _color = PhysicalVector(level * .10f, 1 - level * .10f, 1 - level * .10f);
+
+    isLeaf = true;
+    containsBody = true;
+    particleRadius = radius;
+    particleWeight = mass;
+    _mass = mass;
+    weightedPosition = weightedPositionParam;
+    particleWeightedPosition = weightedPositionParam;
+    particlePosition = particlePositionParam;
+
+    // Clear children references (but don't deallocate - pool manages that)
+    for (int x = 0; x < 2; x++) {
+        for (int y = 0; y < 2; y++) {
+            for (int z = 0; z < 2; z++) {
+                childQuadrants[x][y][z] = nullptr;
+            }
+        }
+    }
+}
+
 void Quadrant::applyToAllChildren(function<void (Quadrant &)> functor, function<bool (Quadrant &)> terminalPredicate) {
     if (terminalPredicate(*this)) {
         functor(*this); // Location of this call determines traversal strategy.

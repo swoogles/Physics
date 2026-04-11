@@ -31,6 +31,15 @@ public:
     void applyToAllChildren(function<void (Quadrant &)> functor, function<bool (Quadrant &)> terminalPredicate);
     void applyToAllChildrenConstant(function<void (const Quadrant &)> functor) const;
 
+    // Resets this quadrant for reuse without reallocation
+    void resetForRebuild(meter_t radius, PhysicalVector weightedPosition,
+                         kilogram_t mass, const PhysicalVector particlePosition);
+
+    // Reinitialize a pooled quadrant with new values (used by QuadrantPool)
+    void reinitialize(int level, PhysicalVector& pos, float width,
+                      meter_t radius, PhysicalVector weightedPosition,
+                      kilogram_t mass, const PhysicalVector particlePosition);
+
     const meter_t &getParticleRadius() const;
     const PhysicalVector &getParticlePosition() const;
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
@@ -41,12 +50,12 @@ private:
     PhysicalVector particleWeightedPosition;
     bool isLeaf;
     bool containsBody;
-    const int level;
+    int level;  // Removed const for pool reuse
 
     PhysicalVector weightedPosition;
     PhysicalVector particlePosition;
     kilogram_t particleWeight;
-    const PhysicalVector dimensions;
+    PhysicalVector dimensions;  // Removed const for pool reuse
 
     multi_array<unique_ptr<Quadrant>,3>  childQuadrants;
     void createSubQuadrantThatContains(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
