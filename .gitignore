@@ -15,3 +15,4 @@ Makefile
 Test/catch.hpp
 simulation.properties
 WorthyVideos
+output
