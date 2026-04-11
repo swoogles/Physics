@@ -14,11 +14,7 @@ void myTimer(int v) {
 
 
 void OpenGlSetup::initialize(WindowDimensions dimensions, void (idleFunction)(void)) {
-    glViewport(-WW,WW,-WH,WH);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
+    // glutInit must be called before any OpenGL calls
     char fakeParam[] = "fake";
     char *fakeargv[] = { fakeParam, NULL };
     int fakeargc = 1;
@@ -32,6 +28,11 @@ void OpenGlSetup::initialize(WindowDimensions dimensions, void (idleFunction)(vo
     cout << "main window: " << main_window << endl;
     glutSetWindow(main_window);
     mainDisplayNum = main_window;
+
+    // OpenGL initialization (must happen after window creation)
+    glViewport(-WW,WW,-WH,WH);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);

@@ -6,8 +6,10 @@
  */
 
 #include "ControlCenter.h"
+#include <chrono>
 
 using namespace std;
+using std::chrono::time_point_cast;
 
 // TODO Ground these. No longer a need to make them static
 bool ControlCenter::paused = false;
@@ -25,7 +27,7 @@ void ControlCenter::flipAutoScaling(puObject * caller) {
 void ControlCenter::createVideoCallback(puObject * caller) {
     cout << "should create a new video now.";
     FfmpegClient client;
-    client.createVideo(system_clock::to_time_t(static_start));
+    client.createVideo(system_clock::to_time_t(time_point_cast<system_clock::duration>(static_start)));
 
 }
 void ControlCenter::alterDT(puObject * caller) {

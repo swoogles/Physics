@@ -5,6 +5,7 @@
 #include "FfmpegClient.h"
 
 #include <iomanip>
+#include <sstream>
 #include <string>
 #include <lib/pstream.h>
 

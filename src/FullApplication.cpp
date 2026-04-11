@@ -7,6 +7,7 @@
 #include <chrono>
 using namespace std;
 using std::chrono::time_point;
+using std::chrono::time_point_cast;
 
 
 FullApplication::FullApplication(bool shouldRecord,
@@ -18,7 +19,7 @@ FullApplication::FullApplication(bool shouldRecord,
         ),
         start(system_clock::now()),
         controlCenter(hour_t(properties.dt), windowDimensions.width, start),
-          centerStage (windowDimensions.width, system_clock::to_time_t(start)),
+          centerStage (windowDimensions.width, system_clock::to_time_t(time_point_cast<system_clock::duration>(start))),
           recorder(Recorder()),
           recording(shouldRecord),
           maximumRuntime(properties.maximumRunTime),
@@ -64,7 +65,7 @@ ApplicationResult FullApplication::update() {
     if ( elapsed_seconds > (maximumRuntime)) {
         if ( recording ) {
             FfmpegClient client;
-            client.createVideo(system_clock::to_time_t(start));
+            client.createVideo(system_clock::to_time_t(time_point_cast<system_clock::duration>(start)));
             client.cleanupFrames();
         }
 
@@ -82,7 +83,7 @@ ApplicationResult FullApplication::update() {
     } else {
         if ( recording ) {
             FfmpegClient client;
-            client.createVideo(system_clock::to_time_t(start));
+            client.createVideo(system_clock::to_time_t(time_point_cast<system_clock::duration>(start)));
             client.cleanupFrames();
         }
         return ApplicationResult::COMPLETED;
