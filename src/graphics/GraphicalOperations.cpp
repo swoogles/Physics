@@ -144,14 +144,26 @@ WindowDimensions GraphicalOperations::currentDimensions() const {
 void GraphicalOperations::updateObserver(
         MaximumValues maximumValues
         ) {
-    auto mouseAction = InputFunctions::currentMouseAction();
-    if (mouseAction.has_value()) {
+    // Drain all pending mouse inputs so zoom responds immediately.
+    while (true) {
+        auto mouseAction = InputFunctions::currentMouseAction();
+        if (!mouseAction.has_value()) {
+            break;
+        }
         processMouseAction(localObserver, mouseAction.value());
     }
 
-    auto cameraAction = ControlCenter::currentCameraAction();
-    if (cameraAction.has_value()) {
+    // Keep camera pans smooth by applying only a tiny number of
+    // queued camera actions each frame.
+    constexpr size_t maxCameraActionsPerFrame = 1;
+    size_t cameraActionsProcessed = 0;
+    while (cameraActionsProcessed < maxCameraActionsPerFrame) {
+        auto cameraAction = ControlCenter::currentCameraAction();
+        if (!cameraAction.has_value()) {
+            break;
+        }
         processCameraAction(localObserver, cameraAction.value());
+        cameraActionsProcessed++;
     }
 
     localObserver.update();
@@ -161,4 +173,3 @@ void GraphicalOperations::updateObserver(
     localObserver.calcMinPullback(maximumValues);
     localObserver.setAutoScaling(false); // TODO Where to put this? I Only need it executed one time.
 }
-

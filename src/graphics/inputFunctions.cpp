@@ -19,6 +19,7 @@ void InputFunctions::myMouse(int button, int state, int x, int y) {
 
     }
     puMouse ( button, state, x, y ) ;
+    glutPostRedisplay();
 }
 
 void InputFunctions::myKey(unsigned char key, int x, int y) {
@@ -41,11 +42,11 @@ void InputFunctions::myKey(unsigned char key, int x, int y) {
 
 void InputFunctions::myMotion(int x, int y) {
     puMouse(x, y);
+    glutPostRedisplay();  // Request UI redraw on motion
 }
 
 optional<MouseAction> InputFunctions::currentMouseAction() {
     if (!InputFunctions::mouseActions.empty()) {
-        cout << "Number of actions remaining in queue: " << InputFunctions::mouseActions.size() << endl;
         auto currentAction = InputFunctions::mouseActions.front();
         InputFunctions::mouseActions.pop();
         return currentAction;

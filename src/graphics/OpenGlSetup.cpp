@@ -9,7 +9,7 @@ using namespace std;
 
 void myTimer(int v) {
     glutPostRedisplay();
-    glutTimerFunc(FPS, myTimer, v);
+    glutTimerFunc(FRAME_DELAY_MS, myTimer, v);
 }
 
 
@@ -49,7 +49,7 @@ void OpenGlSetup::initialize(WindowDimensions dimensions, void (idleFunction)(vo
     glutPassiveMotionFunc(InputFunctions::myMotion);
 
     glutIdleFunc(idleFunction);
-    glutTimerFunc(1000, myTimer, FPS);
+    glutTimerFunc(FRAME_DELAY_MS, myTimer, 0);
 
     puInit();
 }
@@ -63,4 +63,3 @@ void OpenGlSetup::configureControlWindow(WindowDimensions mainWindowDimensions) 
     glutInitWindowPosition(controlWinPosX,controlWinPosY);
     glutInitWindowSize(controlWinWidth,controlWinHeight);
 }
-

@@ -176,7 +176,6 @@ start(startParam)
 
 optional<CameraAction> ControlCenter::currentCameraAction() {
   if (!ControlCenter::cameraActions.empty()) {
-    cout << "Number of actions remaining in CameraAction queue: " << ControlCenter::cameraActions.size() << endl;
     auto currentAction = ControlCenter::cameraActions.front();
     ControlCenter::cameraActions.pop();
     return currentAction;
@@ -188,4 +187,3 @@ optional<CameraAction> ControlCenter::currentCameraAction() {
 void ControlCenter::submitCameraAction(CameraAction cameraAction) {
     cameraActions.push(cameraAction);
 }
-
