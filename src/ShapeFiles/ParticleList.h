@@ -15,6 +15,8 @@ class ParticleList {
 public:
     void applyToAllParticles(
             function<void (Particle &)> functor );
+    void applyToAllParticlesParallel(
+            function<void (Particle &)> functor );
     void checkForAllParticles(
             function<void (const Particle &)> functor ) const;
     ParticleList();

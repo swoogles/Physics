@@ -101,7 +101,7 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 
 
 void Simulation::calcForcesAll(ParticleList &physicalObjects, hour_t dt) {
-    this->physicalObjects.applyToAllParticles(
+    this->physicalObjects.applyToAllParticlesParallel(
             [this, dt](Particle & particle) {
                 auto quadrantFunction =
                 [this, &particle, dt](Quadrant & quadrant) {

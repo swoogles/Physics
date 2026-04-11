@@ -1,5 +1,6 @@
 #include "ParticleList.h"
 #include "PairCollection.h" // TODO Ugh. No good.
+#include <omp.h>
 
 void ParticleList::ensureNoNullEntries(string caller) {
   for (const auto & curShape : this->shapes ) {
@@ -130,6 +131,15 @@ void ParticleList::applyToAllParticles(
         functor(*curShape);
     }
 
+}
+
+void ParticleList::applyToAllParticlesParallel(
+        function<void (Particle &)> functor ) {
+    const size_t n = shapes.size();
+    #pragma omp parallel for schedule(dynamic, 64)
+    for (size_t i = 0; i < n; i++) {
+        functor(*shapes[i]);
+    }
 }
 
 void ParticleList::checkForAllParticles(
