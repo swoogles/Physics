@@ -18,6 +18,7 @@ class InputFunctions {
 public:
     static void myMouse(int button, int state, int x, int y);
     static void myKey(unsigned char, int x, int y);
+    static void myMotion(int x, int y);
     //  TODO create user input fields that can be queried by FullApplication
     static optional<MouseAction> currentMouseAction();
 private:

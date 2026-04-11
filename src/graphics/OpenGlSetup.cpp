@@ -36,6 +36,8 @@ void OpenGlSetup::initialize(WindowDimensions dimensions, void (idleFunction)(vo
 
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);
+    glutMotionFunc(InputFunctions::myMotion);
+    glutPassiveMotionFunc(InputFunctions::myMotion);
 
     configureControlWindow(dimensions);
     controlCenterNum = glutCreateWindow("Control Center");
@@ -43,6 +45,8 @@ void OpenGlSetup::initialize(WindowDimensions dimensions, void (idleFunction)(vo
 
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);
+    glutMotionFunc(InputFunctions::myMotion);
+    glutPassiveMotionFunc(InputFunctions::myMotion);
 
     glutIdleFunc(idleFunction);
     glutTimerFunc(1000, myTimer, FPS);

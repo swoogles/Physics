@@ -39,6 +39,10 @@ void InputFunctions::myKey(unsigned char key, int x, int y) {
     puKeyboard(key, PU_DOWN);
 }
 
+void InputFunctions::myMotion(int x, int y) {
+    puMouse(x, y);
+}
+
 optional<MouseAction> InputFunctions::currentMouseAction() {
     if (!InputFunctions::mouseActions.empty()) {
         cout << "Number of actions remaining in queue: " << InputFunctions::mouseActions.size() << endl;
