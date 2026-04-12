@@ -13,9 +13,6 @@
 
 #include "inputFunctions.h"
 
-#define WW 5
-#define WH 5
-
 #define FRAME_DELAY_MS 16
 
 class OpenGlSetup {

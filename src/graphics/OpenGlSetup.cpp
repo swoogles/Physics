@@ -12,6 +12,10 @@ void myTimer(int v) {
     glutTimerFunc(FRAME_DELAY_MS, myTimer, v);
 }
 
+void reshapeViewport(int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
 
 void OpenGlSetup::initialize(WindowDimensions dimensions, void (idleFunction)(void)) {
     // glutInit must be called before any OpenGL calls
@@ -30,14 +34,16 @@ void OpenGlSetup::initialize(WindowDimensions dimensions, void (idleFunction)(vo
     mainDisplayNum = main_window;
 
     // OpenGL initialization (must happen after window creation)
-    glViewport(-WW,WW,-WH,WH);
+    glViewport(0, 0, dimensions.width, dimensions.height);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    glutReshapeFunc(reshapeViewport);
 
     glutMouseFunc(InputFunctions::myMouse);
     glutKeyboardFunc(InputFunctions::myKey);
     glutMotionFunc(InputFunctions::myMotion);
     glutPassiveMotionFunc(InputFunctions::myMotion);
+    glutReshapeFunc(reshapeViewport);
 
     configureControlWindow(dimensions);
     controlCenterNum = glutCreateWindow("Control Center");
