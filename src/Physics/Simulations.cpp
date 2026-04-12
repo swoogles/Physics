@@ -98,7 +98,7 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
     PhysicalVector target(1000, 0, 0, true);
     ParticleList physicalObjects;
     PhysicalVector white(1, 1, 1);
-    float momentumMultiplier = 0.000002;
+    float momentumMultiplier = 0.0000005;
     ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white, momentumMultiplier);
 
     auto  blah =

@@ -22,27 +22,14 @@ FullApplication::FullApplication(bool shouldRecord,
           centerStage (windowDimensions.width, system_clock::to_time_t(time_point_cast<system_clock::duration>(start))),
           recorder(Recorder()),
           recording(shouldRecord),
-          maximumRuntime(properties.maximumRunTime),
+          maximumRuntime(properties.maximumRunTime * 5),
           graphicalOperations(
                   openGlSetup.mainDisplayNum,
                   openGlSetup.controlCenterNum,
                   windowDimensions)
 {
-    timedSceneActions.push(TimedSceneAction(second_t(15), CameraAction::ROTATE_LEFT));
-    timedSceneActions.push(TimedSceneAction(second_t(30), CameraAction::ZOOM_IN));
-    timedSceneActions.push(TimedSceneAction (second_t(45), CameraAction::ROTATE_LEFT));
-    timedSceneActions.push(TimedSceneAction (second_t(60), CameraAction::ZOOM_IN));
-    timedSceneActions.push(TimedSceneAction (second_t(75), CameraAction::ROTATE_DOWN));
-    timedSceneActions.push(TimedSceneAction (second_t(90), CameraAction::ZOOM_OUT));
-    timedSceneActions.push(TimedSceneAction (second_t(91), CameraAction::ZOOM_OUT));
-    timedSceneActions.push(TimedSceneAction (second_t(92), CameraAction::ZOOM_OUT));
-    timedSceneActions.push(TimedSceneAction (second_t(105), CameraAction::ROTATE_DOWN));
-    timedSceneActions.push(TimedSceneAction (second_t(106), CameraAction::ROTATE_DOWN));
-    timedSceneActions.push(TimedSceneAction (second_t(135), CameraAction::ROTATE_RIGHT));
-    timedSceneActions.push(TimedSceneAction (second_t(136), CameraAction::ROTATE_RIGHT));
-    timedSceneActions.push(TimedSceneAction (second_t(150), CameraAction::ZOOM_IN));
-    timedSceneActions.push(TimedSceneAction (second_t(165), CameraAction::ZOOM_IN));
-    timedSceneActions.push(TimedSceneAction (second_t(180), CameraAction::END_SCENE));
+    // Intentionally no default scripted camera actions.
+    // Keep timedSceneActions in place so scripted camera paths can be re-enabled later.
 }
 
 ApplicationResult FullApplication::update() {
@@ -80,13 +67,6 @@ ApplicationResult FullApplication::update() {
             }
             timedSceneActions.pop();
         }
-    } else {
-        if ( recording ) {
-            FfmpegClient client;
-            client.createVideo(system_clock::to_time_t(time_point_cast<system_clock::duration>(start)));
-            client.cleanupFrames();
-        }
-        return ApplicationResult::COMPLETED;
     }
     return ApplicationResult::SUCESSFUL_STEP;
 }
@@ -94,4 +74,3 @@ ApplicationResult FullApplication::update() {
 void FullApplication::display() {
     this->graphicalOperations.fullDisplay(simulation);
 }
-
