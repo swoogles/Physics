@@ -46,6 +46,7 @@ Particle::Particle(
     this->_radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));
 	this->_density = density;
 	this->_color = color;
+    this->touchingAnotherParticle = false;
 }
 
 meter_t Particle::calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density) {
@@ -135,4 +136,3 @@ bool Particle::isTouching(PhysicalVector pos, meter_t radius) const {
     return this->position().minus(pos).length() < minSep;
 //    return false;
 }
-

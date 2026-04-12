@@ -109,6 +109,8 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 void Simulation::calcForcesAll(ParticleList &physicalObjects, hour_t dt) {
     this->physicalObjects.applyToAllParticlesParallel(
             [this, dt](Particle & particle) {
+                // Reset collision hint each step; it is re-enabled below when detected.
+                particle.setTouchingAnotherParticle(false);
                 auto quadrantFunction =
                 [this, &particle, dt](Quadrant & quadrant) {
                     particle.adjustMomentum(
@@ -140,4 +142,3 @@ void Simulation::applySideEffectingFunctionsToInnards(
 second_t Simulation::getOutputViewingTime() const {
     return units::time::second_t(stepsElapsed/24);
 }
-

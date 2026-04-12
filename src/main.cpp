@@ -15,7 +15,6 @@
 #include "Input/ParameterArguments.h"
 
 #include <iomanip>
-
 unique_ptr<FullApplication> globalFullApplication;
 
 enum class ResolutionPreset {

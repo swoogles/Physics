@@ -104,7 +104,6 @@ void GraphicalOperations::localDisplay(Simulation & simulation) const {
 
     puDisplay(mainDisplayNum);
     glutSwapBuffers();
-    glutPostRedisplay();
 
 }
 
@@ -124,7 +123,6 @@ void GraphicalOperations::controlDisplay() const {
     puDisplay(control_center_num);
 
     glutSwapBuffers();
-    glutPostRedisplay();
 }
 
 void GraphicalOperations::fullDisplay(Simulation & simulation) const {

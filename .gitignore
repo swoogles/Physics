@@ -13,6 +13,5 @@ cmake-build-debug/
 Makefile
 .idea/*
 Test/catch.hpp
-simulation.properties
 WorthyVideos
 output

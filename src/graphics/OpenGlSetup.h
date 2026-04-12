@@ -13,7 +13,7 @@
 
 #include "inputFunctions.h"
 
-#define FRAME_DELAY_MS 16
+#define FRAME_DELAY_MS 1000
 
 class OpenGlSetup {
 public:
