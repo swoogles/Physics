@@ -252,10 +252,33 @@ ParticleList disruption(PhysicsSandboxProperties properties) {
                         manipulatedGroup(groupProperties, pos, mom));
             };
 
-    blah(PhysicalVector(0, 0, 0), PhysicalVector(0,0,0), blueGroupProperties);
-    blah(PhysicalVector(-5, -2, 0), PhysicalVector(700050,0,0), groupProperties);
-    blah(PhysicalVector(0, 9, 0), PhysicalVector(0,-700050,0), groupProperties);
-    blah(PhysicalVector(2, -7, 0), PhysicalVector(-500050,500050,0), groupProperties);
+    // Define momentum values using proper units for clarity
+    // Momentum = Mass × Velocity (kg⋅m/s)
+    using namespace units::literals;
+    using namespace sandbox;
+
+    auto momentum_right = Momentum(400050.0_kg * 1.0_mps);  // Moving right (+X)
+    auto momentum_down = Momentum(400050.0_kg * 1.0_mps);   // Moving down (-Y)
+    auto momentum_diagonal = Momentum(300050.0_kg * 1.0_mps); // Diagonal component
+
+    // Center cloud with zero momentum
+    blah(PhysicalVector(0, 0, 0), PhysicalVector(0, 0, 0), blueGroupProperties);
+
+    // Large object approaching from left (moving right)
+    blah(PhysicalVector(-5, -2, 0),
+         PhysicalVector(momentum_right.value(), 0, 0),
+         groupProperties);
+
+    // Large object approaching from top (moving down)
+    blah(PhysicalVector(0, 9, 0),
+         PhysicalVector(0, -momentum_down.value(), 0),
+         groupProperties);
+
+    // Large object approaching diagonally
+    blah(PhysicalVector(2, -7, 0),
+         PhysicalVector(-momentum_diagonal.value(), momentum_diagonal.value(), 0),
+         groupProperties);
+
     return physicalObjects;
 }
 
