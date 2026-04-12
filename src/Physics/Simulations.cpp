@@ -102,7 +102,11 @@ Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties pr
     ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white, momentumMultiplier);
 
     auto  blah =
-            [this, numPieces, properties, &physicalObjects, groupProperties](PhysicalVector groupColor, PhysicalVector pos, PhysicalVector mom) {
+        [this, numPieces, properties, &physicalObjects, groupProperties](
+            PhysicalVector groupColor, 
+            PhysicalVector pos, 
+            PhysicalVector mom
+        ) {
                 physicalObjects.addList(
                         manipulatedGroup(groupProperties, pos, mom));
     };
