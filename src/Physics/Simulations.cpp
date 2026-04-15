@@ -367,7 +367,7 @@ Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properti
     PhysicalVector target(1000, 0, 0, true);
 //    ParticleList physicalObjects;
 
-    float momentumMultiplier = 0.000002;
+    float momentumMultiplier = 0.0000005; // TODO Maximum yuck around this parameter
     PhysicalVector white(1, 1, 1);
     PhysicalVector blue(0, 1, 1);
     ParticleGroupProperties  blueGroupProperties(properties.numShapes*10, properties.sandboxWidth, properties.mass, blue, momentumMultiplier);
@@ -380,8 +380,8 @@ Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properti
     ParticleList physicalObjects =
 //            singleCluster(properties);
 //    chaoticGroups(properties);
-            disruption(properties);
-//            fourInADiamond(properties);
+            // disruption(properties);
+           fourInADiamond(properties);
 
     // 4 in a diamond, 2 approaching from the sides
 //    fourInADiamond(properties);
