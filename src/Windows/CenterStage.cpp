@@ -1,7 +1,11 @@
 #include <graphics/FfmpegClient.h>
 #include "CenterStage.h"
+#include "../FullApplication.h"
 
 using namespace std;
+
+// Declared in main.cpp
+extern unique_ptr<FullApplication> globalFullApplication;
 
 time_t CenterStage::start = 0;
 
@@ -162,8 +166,13 @@ CenterStage::CenterStage(int windowWidth, time_t start) noexcept
 }
 
 void CenterStage::createVideoAndExit(puObject *) {
-	FfmpegClient client;
-	client.createVideo(CenterStage::start);
+	if (globalFullApplication && globalFullApplication->streamingRecorder) {
+		cout << "Finalizing video from captured frames..." << endl;
+		globalFullApplication->streamingRecorder->finalize();
+		cout << "Video creation complete." << endl;
+	} else {
+		cout << "No active recording to finalize." << endl;
+	}
 	exit(0);
 }
 

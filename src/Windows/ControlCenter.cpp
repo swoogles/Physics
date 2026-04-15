@@ -6,9 +6,13 @@
  */
 
 #include "ControlCenter.h"
+#include "../FullApplication.h"
 #include <chrono>
 
 using namespace std;
+
+// Declared in main.cpp
+extern unique_ptr<FullApplication> globalFullApplication;
 using std::chrono::time_point_cast;
 
 // TODO Ground these. No longer a need to make them static
@@ -25,10 +29,12 @@ void ControlCenter::flipAutoScaling(puObject * caller) {
 }
 
 void ControlCenter::createVideoCallback(puObject * caller) {
-    cout << "should create a new video now.";
-    FfmpegClient client;
-    client.createVideo(system_clock::to_time_t(time_point_cast<system_clock::duration>(static_start)));
-
+    if (globalFullApplication && globalFullApplication->streamingRecorder) {
+        cout << "Creating video from captured frames (recording continues)..." << endl;
+        globalFullApplication->streamingRecorder->createVideoSoFar();
+    } else {
+        cout << "No active recording. Start with 'r' flag to enable recording." << endl;
+    }
 }
 void ControlCenter::alterDT(puObject * caller) {
   if (strcmp(caller->getLegend(), "Slower") == 0) {

@@ -22,6 +22,9 @@ public:
     /*! \brief Captures current frame and writes to temp directory */
     bool captureFrame();
 
+    /*! \brief Encodes all captured frames to video, keeps recording active */
+    bool createVideoSoFar();
+
     /*! \brief Encodes all frames to video and cleans up temp files */
     void finalize();
 

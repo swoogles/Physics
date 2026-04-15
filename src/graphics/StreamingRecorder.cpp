@@ -101,22 +101,16 @@ bool StreamingRecorder::captureFrame() {
     }
 }
 
-void StreamingRecorder::finalize() {
-    if (!isRecording) {
-        return;
-    }
-
-    isRecording = false;
-
+bool StreamingRecorder::createVideoSoFar() {
     int totalFrames = frameCount.load();
-    cout << "\n=== FINALIZING VIDEO ===" << endl;
+    cout << "\n=== CREATING VIDEO ===" << endl;
     cout << "Frame count: " << totalFrames << endl;
     cout << "Temp directory: " << tempDir << endl;
     cout.flush();
 
     if (totalFrames == 0) {
         cout << "No frames captured - nothing to encode" << endl;
-        return;
+        return false;
     }
 
     // Verify temp directory and count files
@@ -124,7 +118,7 @@ void StreamingRecorder::finalize() {
     if (!dir) {
         cerr << "ERROR: Cannot open temp directory: " << tempDir << endl;
         cerr << "errno=" << errno << " (" << strerror(errno) << ")" << endl;
-        return;
+        return false;
     }
 
     int fileCount = 0;
@@ -144,7 +138,7 @@ void StreamingRecorder::finalize() {
 
     if (fileCount == 0) {
         cerr << "ERROR: No .raw files found in temp directory!" << endl;
-        return;
+        return false;
     }
 
     cout << "Encoding " << fileCount << " frames to video..." << endl;
@@ -176,7 +170,7 @@ void StreamingRecorder::finalize() {
              << "(expected " << (frameSize * totalFrames) << ")" << endl;
     } else {
         cerr << "ERROR: Combined file not created!" << endl;
-        return;
+        return false;
     }
     cout.flush();
 
@@ -209,10 +203,27 @@ void StreamingRecorder::finalize() {
         int result = pclose(pipe);
         if (result == 0) {
             cout << "Video created successfully: " << outputPath << endl;
+            // Remove the combined.raw file to save space, but keep individual frames
+            string rmCombined = "rm -f \"" + combinedFile + "\"";
+            system(rmCombined.c_str());
+            return true;
         } else {
             cerr << "ffmpeg returned error code: " << result << endl;
+            return false;
         }
     }
+    return false;
+}
+
+void StreamingRecorder::finalize() {
+    if (!isRecording) {
+        return;
+    }
+
+    isRecording = false;
+
+    cout << "\n=== FINALIZING VIDEO ===" << endl;
+    createVideoSoFar();
 
     // Cleanup temp files
     cout << "Cleaning up temp files..." << endl;
