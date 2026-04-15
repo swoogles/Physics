@@ -1,6 +1,9 @@
 #include "ParticleList.h"
 #include "PairCollection.h" // TODO Ugh. No good.
 #include <omp.h>
+#include <chrono>
+#include <iomanip>
+#include <ctime>
 
 void ParticleList::ensureNoNullEntries(string caller) {
   for (const auto & curShape : this->shapes ) {
@@ -97,8 +100,20 @@ void ParticleList::update(hour_t dt) {
 }
 
 int ParticleList::remove(ParticleList &shapesToRemove) {
-    cout << "shapes.size(): " << shapes.size() << endl;
-    cout << "shapesToRemove.size(): " << shapesToRemove.size() << endl;
+    static int stepCount = 0;
+    stepCount++;
+
+    auto now = chrono::system_clock::now();
+    auto time_t_now = chrono::system_clock::to_time_t(now);
+    auto ms = chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count() % 1000;
+
+    cout << "[" << std::put_time(std::localtime(&time_t_now), "%H:%M:%S")
+         << "." << setfill('0') << setw(3) << ms << "] "
+         << "step=" << stepCount
+         << " shapes=" << shapes.size()
+         << " removing=" << shapesToRemove.size() << endl;
+    cout.flush();
+
     size_t newSize =  shapes.size() - shapesToRemove.size();
 
     auto newIterator = std::remove_if(shapes.begin(), shapes.end(), [shapesToRemove](auto shape) {

@@ -8,7 +8,12 @@
 using namespace std;
 
 void myTimer(int v) {
+    // Explicitly set window 2 (control center) before posting redisplay
+    // This ensures we always redraw the right window regardless of current context
+    int currentWindow = glutGetWindow();
+    glutSetWindow(2);
     glutPostRedisplay();
+    glutSetWindow(currentWindow);
     glutTimerFunc(FRAME_DELAY_MS, myTimer, v);
 }
 

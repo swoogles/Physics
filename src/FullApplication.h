@@ -7,6 +7,7 @@
 
 #include "graphics/GraphicalOperations.h"
 #include "graphics/Recorder.h"
+#include "graphics/StreamingRecorder.h"
 
 //GUI stuff
 #include "Windows/ControlCenter.h"
@@ -46,6 +47,7 @@ public:
     const ControlCenter controlCenter;
     CenterStage centerStage;
     Recorder recorder;
+    unique_ptr<StreamingRecorder> streamingRecorder;
     const bool recording;
     const time_point<system_clock, duration<long int, std::ratio<1, 1000000000> >> start;
     const std::chrono::seconds maximumRuntime;

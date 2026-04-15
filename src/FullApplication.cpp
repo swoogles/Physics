@@ -5,6 +5,7 @@
 #include "FullApplication.h"
 #include "Physics/Simulations.h"
 #include <chrono>
+#include <iomanip>
 using namespace std;
 using std::chrono::time_point;
 using std::chrono::time_point_cast;
@@ -14,7 +15,6 @@ FullApplication::FullApplication(bool shouldRecord,
                                  WindowDimensions windowDimensions, PhysicsSandboxProperties properties,
                                  OpenGlSetup openGlSetup)
         : simulation(
-        // The way this is invoked is a smell. Should probably just be a free-floating function.
         Simulations().bodyFormationCollision(properties)
         ),
         start(system_clock::now()),
@@ -30,6 +30,9 @@ FullApplication::FullApplication(bool shouldRecord,
 {
     // Intentionally no default scripted camera actions.
     // Keep timedSceneActions in place so scripted camera paths can be re-enabled later.
+
+    // Note: StreamingRecorder will be lazily initialized on first frame capture
+    // to ensure OpenGL context is ready
 }
 
 ApplicationResult FullApplication::update() {
@@ -37,12 +40,6 @@ ApplicationResult FullApplication::update() {
         auto dt = controlCenter.getDt();
         simulation.update(dt);
         centerStage.update(dt.value());
-
-        if ( recording ) {
-            glutSetWindow(1); // TODO Find a more reliable way to get this int.
-            auto dimensions = graphicalOperations.currentDimensions();
-            recorder.captureThisFrame(dimensions.width, dimensions.height);
-        }
     }
     graphicalOperations.updateObserver(simulation.getXYMinsAndMaxes());
 
@@ -50,10 +47,9 @@ ApplicationResult FullApplication::update() {
 
     duration<double> elapsed_seconds = end-start;
     if ( elapsed_seconds > (maximumRuntime)) {
-        if ( recording ) {
-            FfmpegClient client;
-            client.createVideo(system_clock::to_time_t(time_point_cast<system_clock::duration>(start)));
-            client.cleanupFrames();
+        if ( recording && streamingRecorder ) {
+            cout << "Maximum runtime reached - finalizing video..." << endl;
+            streamingRecorder->finalize();
         }
 
         return ApplicationResult::COMPLETED;
@@ -73,4 +69,30 @@ ApplicationResult FullApplication::update() {
 
 void FullApplication::display() {
     this->graphicalOperations.fullDisplay(simulation);
+
+    // Capture frame AFTER rendering is complete (only when not paused)
+    if ( recording && !controlCenter.isPaused() ) {
+        int currentWindow = glutGetWindow();
+        glutSetWindow(1); // Capture from the main display window
+
+        // Lazy initialization - create recorder on first frame capture
+        if (!streamingRecorder) {
+            time_t startTime = system_clock::to_time_t(time_point_cast<system_clock::duration>(start));
+            ostringstream outputPath;
+            outputPath << "./WorthyVideos/" << std::put_time(std::localtime(&startTime), "%F %T") << ".mp4";
+
+            auto dimensions = graphicalOperations.currentDimensions();
+            streamingRecorder = make_unique<StreamingRecorder>(
+                dimensions.width,
+                dimensions.height,
+                outputPath.str()
+            );
+            cout << "Streaming recorder initialized for: " << outputPath.str() << endl;
+        }
+
+        streamingRecorder->captureFrame();
+
+        // Restore the original window context
+        glutSetWindow(currentWindow);
+    }
 }

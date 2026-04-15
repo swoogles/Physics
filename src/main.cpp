@@ -40,7 +40,12 @@ WindowDimensions windowDimensionsFor(ResolutionPreset preset, int xPos, int yPos
 }
 
 void displayFunc() {
+    // Empty - work is done in idleFunc
+}
+
+void idleFunc() {
     auto result = globalFullApplication->update();
+
     switch (result) {
         case SUCESSFUL_STEP:
             break;
@@ -48,6 +53,7 @@ void displayFunc() {
             cout << "Should make new Simulation now." << endl;
             exit(0);
     }
+
     globalFullApplication->display();
 }
 
@@ -83,6 +89,9 @@ int main(int argcp, char **argv) {
     glutDisplayFunc([]() {
         displayFunc();
     });
+
+    // Use idle function to continuously trigger redraws
+    glutIdleFunc(idleFunc);
 
     glutMainLoop();
 
