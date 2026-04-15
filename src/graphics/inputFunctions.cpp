@@ -9,20 +9,26 @@ using namespace std;
 queue<MouseAction> InputFunctions::mouseActions;
 
 void InputFunctions::myMouse(int button, int state, int x, int y) {
-    if (state == GLUT_UP) {
-        if (button == GLUT_WHEEL_UP) {
-            mouseActions.push(MouseAction::SCROLL_UP);
-        }
-        if (button == GLUT_WHEEL_DOWN) {
-            mouseActions.push(MouseAction::SCROLL_DOWN);
-        }
-
+    // Handle scroll wheel / trackpad pinch zoom
+    // On macOS, these events may come as GLUT_DOWN, on other platforms as GLUT_UP
+    if (button == GLUT_WHEEL_UP) {
+        mouseActions.push(MouseAction::SCROLL_UP);
+    } else if (button == GLUT_WHEEL_DOWN) {
+        mouseActions.push(MouseAction::SCROLL_DOWN);
     }
+
     puMouse ( button, state, x, y ) ;
     glutPostRedisplay();
 }
 
 void InputFunctions::myKey(unsigned char key, int x, int y) {
+    // Zoom controls: +/= to zoom in, -/_ to zoom out
+    if (key == '+' || key == '=') {
+        mouseActions.push(MouseAction::SCROLL_UP);
+    } else if (key == '-' || key == '_') {
+        mouseActions.push(MouseAction::SCROLL_DOWN);
+    }
+
     if (key == 'h') {
         cout << "Hi!" << endl;
     }
