@@ -364,6 +364,9 @@ ParticleList chaoticGroups(PhysicsSandboxProperties properties) {
 }
 
 Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properties) {
+    // Set collision radius multiplier from properties
+    Particle::setCollisionRadiusMultiplier(properties.collisionRadiusMultiplier);
+
     PhysicalVector target(1000, 0, 0, true);
 //    ParticleList physicalObjects;
 

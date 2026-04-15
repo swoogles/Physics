@@ -1,5 +1,13 @@
 #include "Particle.h"
 
+// Default to realistic collision detection
+float Particle::collisionRadiusMultiplier = 1.0f;
+
+void Particle::setCollisionRadiusMultiplier(float multiplier) {
+    collisionRadiusMultiplier = multiplier;
+    cout << "Collision radius multiplier set to: " << multiplier << endl;
+}
+
 double Particle::scale() const {
     return _radius.value();
 }
@@ -126,13 +134,12 @@ PhysicalVector Particle::calcMergedAngMomentum(Particle &otherShape) const {
 
 bool Particle::isTouching(Particle &otherShape) const {
 	PhysicalVector sepVec(this->vectorTo(otherShape));
-	double minSep = (this->radius() + otherShape.radius()).value();
+	double minSep = (this->radius() + otherShape.radius()).value() * collisionRadiusMultiplier;
 
 	return (sepVec.length() < minSep);
 }
 
 bool Particle::isTouching(PhysicalVector pos, meter_t radius) const {
-    double minSep = (this->radius() + radius).value();
+    double minSep = (this->radius() + radius).value() * collisionRadiusMultiplier;
     return this->position().minus(pos).length() < minSep;
-//    return false;
 }

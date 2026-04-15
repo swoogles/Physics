@@ -22,6 +22,7 @@ public:
     const float sandboxWidth;
     const kilogram_t mass;
     const std::chrono::seconds  maximumRunTime;
+    const float collisionRadiusMultiplier;  // Multiplier for collision detection distance (1.0 = realistic)
 
     PhysicsSandboxProperties(string fileName);
 

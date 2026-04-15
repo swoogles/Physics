@@ -10,6 +10,9 @@ using namespace units::length;
 
 class Particle: public Moveable {
 public:
+    // Multiplier for collision detection distance (1.0 = realistic, higher = more collisions)
+    static float collisionRadiusMultiplier;
+    static void setCollisionRadiusMultiplier(float multiplier);
     Particle(
             PhysicalVector pos,
             kilogram_t mass,
