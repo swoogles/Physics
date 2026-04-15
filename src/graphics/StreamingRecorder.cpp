@@ -203,6 +203,14 @@ bool StreamingRecorder::createVideoSoFar() {
         int result = pclose(pipe);
         if (result == 0) {
             cout << "Video created successfully: " << outputPath << endl;
+
+            // Copy to latest.mp4 for easy access
+            string latestPath = "./WorthyVideos/latest.mp4";
+            string copyCmd = "cp \"" + outputPath + "\" \"" + latestPath + "\"";
+            if (system(copyCmd.c_str()) == 0) {
+                cout << "Copied to: " << latestPath << endl;
+            }
+
             // Remove the combined.raw file to save space, but keep individual frames
             string rmCombined = "rm -f \"" + combinedFile + "\"";
             system(rmCombined.c_str());
