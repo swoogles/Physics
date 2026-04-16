@@ -1,4 +1,6 @@
 #include "Simulation.h"
+#include <algorithm>
+#include <cmath>
 
 Simulation::Simulation(
         ParticleList physicalObjects,
@@ -67,11 +69,99 @@ void Simulation::resetXYMinsAndMaxes() {
 }
 
 void Simulation::updateMinsAndMaxes() {
-    this->physicalObjects.applyToAllParticles(
-            [this](Particle & curShape) {
-                PhysicalVector curPos(curShape.position());
-                updateXYMinsAndMaxes(curPos);
-            });
+    // Smart autoscaling: filter by velocity, then find bounds for 95% of mass
+
+    // Step 1: Calculate center of mass and total mass
+    double totalMass = 0;
+    PhysicalVector centerOfMass(0, 0, 0);
+    PhysicalVector totalMomentum(0, 0, 0);
+
+    physicalObjects.checkForAllParticles([&](const Particle& p) {
+        double mass = p.mass().value();
+        if (mass > 0) {
+            totalMass += mass;
+            centerOfMass = centerOfMass.plus(p.position().scaledBy(mass));
+            totalMomentum = totalMomentum.plus(p.momentum());
+        }
+    });
+
+    if (totalMass <= 0) return;
+
+    centerOfMass = centerOfMass.scaledBy(1.0 / totalMass);
+    PhysicalVector systemVelocity = totalMomentum.scaledBy(1.0 / totalMass);
+
+    // Step 2: Calculate velocity dispersion (standard deviation relative to CoM)
+    double velocityVarianceSum = 0;
+    int particleCount = 0;
+
+    physicalObjects.checkForAllParticles([&](const Particle& p) {
+        double mass = p.mass().value();
+        if (mass > 0) {
+            PhysicalVector relVel = p.velocity().minus(systemVelocity);
+            double speed = relVel.length();
+            velocityVarianceSum += speed * speed;
+            particleCount++;
+        }
+    });
+
+    double velocityStdDev = (particleCount > 0)
+        ? sqrt(velocityVarianceSum / particleCount)
+        : 0;
+
+    // Step 3: Collect particles that aren't escaping (velocity < 2.5x stddev)
+    const double velocityThreshold = 2.5 * velocityStdDev;
+
+    struct ParticleInfo {
+        double mass;
+        double distanceFromCoM;
+        float x, y;
+    };
+    std::vector<ParticleInfo> boundParticles;
+    double boundMass = 0;
+
+    physicalObjects.checkForAllParticles([&](const Particle& p) {
+        double mass = p.mass().value();
+        if (mass > 0) {
+            PhysicalVector relVel = p.velocity().minus(systemVelocity);
+            double speed = relVel.length();
+
+            // Include if velocity is below threshold (not escaping)
+            if (speed <= velocityThreshold || velocityStdDev == 0) {
+                PhysicalVector pos = p.position();
+                double dist = pos.minus(centerOfMass).length();
+                boundParticles.push_back({mass, dist, (float)pos.x(), (float)pos.y()});
+                boundMass += mass;
+            }
+        }
+    });
+
+    if (boundParticles.empty()) return;
+
+    // Step 4: Sort by distance from center of mass
+    std::sort(boundParticles.begin(), boundParticles.end(),
+        [](const ParticleInfo& a, const ParticleInfo& b) {
+            return a.distanceFromCoM < b.distanceFromCoM;
+        });
+
+    // Step 5: Find bounds that contain 95% of bound mass
+    const double targetMassFraction = 0.95;
+    double targetMass = boundMass * targetMassFraction;
+    double accumulatedMass = 0;
+
+    resetXYMinsAndMaxes();
+
+    for (const auto& info : boundParticles) {
+        accumulatedMass += info.mass;
+
+        maxX = std::max(maxX, info.x);
+        minX = std::min(minX, info.x);
+        maxY = std::max(maxY, info.y);
+        minY = std::min(minY, info.y);
+
+        if (accumulatedMass >= targetMass) {
+            break;  // We've captured enough mass
+        }
+    }
 }
 
 void Simulation::update(hour_t dt) {

@@ -1,4 +1,7 @@
 #include "Observer.h"
+#include <iostream>
+using std::cout;
+using std::endl;
 
 Observer::Observer(WindowDimensions windowDimensions)
           : pos(PhysicalVector(0,0,0))
@@ -35,6 +38,11 @@ void Observer::zoomOut() {
 
 void Observer::setAutoScaling(bool shouldScale) {
 	autoScale = shouldScale;
+}
+
+void Observer::toggleAutoScaling() {
+	autoScale = !autoScale;
+	cout << "Autoscaling: " << (autoScale ? "ON" : "OFF") << endl;
 }
 
 void Observer::update() {

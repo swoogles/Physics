@@ -36,6 +36,7 @@ public:
 
 	//! Set to true to autoscale with simulation
 	void setAutoScaling(bool shouldScale);
+	void toggleAutoScaling();
 
 	void calcMinPullback(MaximumValues maximumValues);
 

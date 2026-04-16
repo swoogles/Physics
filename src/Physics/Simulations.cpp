@@ -299,19 +299,21 @@ ParticleList fourInADiamond(PhysicsSandboxProperties properties) {
                         manipulatedGroup(groupProperties, pos, mom));
             };
 
-    blah(PhysicalVector(-5, 5, 0), PhysicalVector(12,-20,0), groupProperties);
-    blah(PhysicalVector(-5, 2, 0), PhysicalVector(12,-20,0), blueGroupProperties);
+    int magnitude1 = 6;
+    int magnitude2 = 10;
+    blah(PhysicalVector(-5, 5, 0), PhysicalVector(magnitude1,-magnitude2,0), groupProperties);
+    blah(PhysicalVector(-5, 2, 0), PhysicalVector(magnitude1,-magnitude2,0), blueGroupProperties);
 
-    blah(PhysicalVector(5, -2, 0), PhysicalVector(-12,20,0), orangeGroupProperties);
-    blah(PhysicalVector(5, -5, 0), PhysicalVector(-12,20,0), blueGroupProperties);
+    blah(PhysicalVector(5, -2, 0), PhysicalVector(-magnitude1,magnitude2,0), orangeGroupProperties);
+    blah(PhysicalVector(5, -5, 0), PhysicalVector(-magnitude1,magnitude2,0), blueGroupProperties);
 
-    blah(PhysicalVector(-2, -5, 0), PhysicalVector(20,12,0), groupProperties);
-    blah(PhysicalVector(2, -5, 0), PhysicalVector(20,12,0), orangeGroupProperties);
+    blah(PhysicalVector(-2, -5, 0), PhysicalVector(magnitude2,magnitude1,0), groupProperties);
+    blah(PhysicalVector(2, -5, 0), PhysicalVector(magnitude2,magnitude1,0), orangeGroupProperties);
 
-    blah(PhysicalVector(2, 5, 0), PhysicalVector(-20,-12,0), groupProperties);
-    blah(PhysicalVector(5, 5, 0), PhysicalVector(-20,-12,0), orangeGroupProperties);
+    blah(PhysicalVector(2, 5, 0), PhysicalVector(-magnitude2,-magnitude1,0), groupProperties);
+    blah(PhysicalVector(5, 5, 0), PhysicalVector(-magnitude2,-magnitude1,0), orangeGroupProperties);
 
-    blah(PhysicalVector(-5, -5, 0), PhysicalVector(20,-12,0), blueGroupProperties);
+    blah(PhysicalVector(-5, -5, 0), PhysicalVector(magnitude2,-magnitude1,0), blueGroupProperties);
     return physicalObjects;
 }
 
@@ -370,7 +372,9 @@ Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properti
     PhysicalVector target(1000, 0, 0, true);
 //    ParticleList physicalObjects;
 
-    float momentumMultiplier = 0.0000002; // TODO Maximum yuck around this parameter
+    float momentumMultiplier = 
+        0;
+        // 0.00000004; // TODO Maximum yuck around this parameter
     PhysicalVector white(1, 1, 1);
     PhysicalVector blue(0, 1, 1);
     ParticleGroupProperties  blueGroupProperties(properties.numShapes*10, properties.sandboxWidth, properties.mass, blue, momentumMultiplier);

@@ -57,6 +57,7 @@ void processCameraAction(
             observer.adjustAngle(downAngVelocity);
         }
         case TOGGLE_AUTOSCALING: {
+            observer.toggleAutoScaling();
             break;
         }
         case STOP_ROTATION: {
@@ -166,8 +167,5 @@ void GraphicalOperations::updateObserver(
 
     localObserver.update();
 
-    // TODO This would be more valuable if it only tried to include the largest N items.
-    // It shouldn't pan out to catch every last tiny particle that gets thrown towards infinity.
     localObserver.calcMinPullback(maximumValues);
-    localObserver.setAutoScaling(false); // TODO Where to put this? I Only need it executed one time.
 }
