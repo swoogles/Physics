@@ -16,7 +16,8 @@ Quadrant::Quadrant(
         meter_t radius,
         PhysicalVector weightedPosition,
         kilogram_t mass,
-        const PhysicalVector particlePosition)
+        const PhysicalVector particlePosition,
+        shared_ptr<Particle> particlePtrParam)
         : Box(
                 pos,
                 width,
@@ -34,7 +35,8 @@ Quadrant::Quadrant(
         , weightedPosition(weightedPosition)
         , particlePosition(particlePosition)
         , particleWeightedPosition(weightedPosition)
-        , particleWeight(mass){}
+        , particleWeight(mass)
+        , particlePtr(particlePtrParam){}
 
 
 /* Description of insertion algorithm
@@ -57,7 +59,8 @@ void Quadrant::insert(
         meter_t radiusParameter,
         PhysicalVector weightedPositionParameter,
         kilogram_t massParameter,
-        const PhysicalVector particlePositionParameter) {
+        const PhysicalVector particlePositionParameter,
+        shared_ptr<Particle> particlePtrParam) {
     if (!positionIsInQuadrantBoundaries(particlePositionParameter)) {
 //        std::throw_with_nested(std::runtime_error(__func__));
 // Just ignore for now, instead of throwing.
@@ -72,13 +75,17 @@ return;
                 this->particleRadius,
                 this->particleWeightedPosition,
                 this->particleWeight,
-                this->particlePosition);
+                this->particlePosition,
+                this->particlePtr);
+        // Clear this node's particle pointer since it's now internal
+        this->particlePtr = nullptr;
     }
     this->createSubQuadrantThatContains(
             radiusParameter,
             weightedPositionParameter,
             massParameter,
-            particlePositionParameter);
+            particlePositionParameter,
+            particlePtrParam);
 
     this->adjustMass(massParameter);
     this->weightedPosition = this->weightedPosition.plus(weightedPositionParameter);
@@ -89,15 +96,16 @@ void Quadrant::createSubQuadrantThatContains(
         PhysicalVector
         weightedPositionParameter,
         kilogram_t mass,
-        PhysicalVector particlePositionParameter) {
+        PhysicalVector particlePositionParameter,
+        shared_ptr<Particle> particlePtrParam) {
 
     function<void (Quadrant &)> functor =
-            [this, radius, weightedPositionParameter, mass, particlePositionParameter](Quadrant & insertionQuadrant) {
-                insertionQuadrant.insert(radius, weightedPositionParameter, mass, particlePositionParameter);
+            [this, radius, weightedPositionParameter, mass, particlePositionParameter, particlePtrParam](Quadrant & insertionQuadrant) {
+                insertionQuadrant.insert(radius, weightedPositionParameter, mass, particlePositionParameter, particlePtrParam);
             };
     function<unique_ptr<Quadrant> ()> quadrantCreator =
-            [this, radius, weightedPositionParameter, mass, particlePositionParameter]() {
-                return std::move(this->makeSubQuadrant(radius, weightedPositionParameter, mass, particlePositionParameter));
+            [this, radius, weightedPositionParameter, mass, particlePositionParameter, particlePtrParam]() {
+                return std::move(this->makeSubQuadrant(radius, weightedPositionParameter, mass, particlePositionParameter, particlePtrParam));
             };
     // TODO We're *always* executing quadrantCreator, rather than stopping at a certain point.
     auto targetIndices = this->coordinatesForSubQuadrantContaining(particlePositionParameter);
@@ -125,7 +133,8 @@ unique_ptr<Quadrant>  Quadrant::makeSubQuadrant(
         meter_t radius,
         PhysicalVector weightedPositionParameter,
         kilogram_t mass,
-        PhysicalVector particlePositionParameter) const {
+        PhysicalVector particlePositionParameter,
+        shared_ptr<Particle> particlePtrParam) const {
     auto targetIndices = this->coordinatesForSubQuadrantContaining(particlePositionParameter);
     PhysicalVector newPos =
             pos.plus(
@@ -142,7 +151,8 @@ unique_ptr<Quadrant>  Quadrant::makeSubQuadrant(
                     radius,
                     weightedPositionParameter,
                     mass,
-                    particlePositionParameter ) );
+                    particlePositionParameter,
+                    particlePtrParam ) );
 }
 
 bool Quadrant::positionIsInQuadrantBoundaries(PhysicalVector insertPos) const {
@@ -159,7 +169,8 @@ void Quadrant::adjustMass(kilogram_t dMass) {
 }
 
 void Quadrant::resetForRebuild(meter_t radius, PhysicalVector weightedPositionParam,
-                                kilogram_t mass, const PhysicalVector particlePositionParam) {
+                                kilogram_t mass, const PhysicalVector particlePositionParam,
+                                shared_ptr<Particle> particlePtrParam) {
     // Reset state to initial leaf state
     isLeaf = true;
     containsBody = true;
@@ -169,6 +180,7 @@ void Quadrant::resetForRebuild(meter_t radius, PhysicalVector weightedPositionPa
     weightedPosition = weightedPositionParam;
     particleWeightedPosition = weightedPositionParam;
     particlePosition = particlePositionParam;
+    particlePtr = particlePtrParam;
 
     // Clear all children - they will be recreated as needed
     for (int x = 0; x < 2; x++) {
@@ -182,7 +194,8 @@ void Quadrant::resetForRebuild(meter_t radius, PhysicalVector weightedPositionPa
 
 void Quadrant::reinitialize(int levelParam, PhysicalVector& posParam, float width,
                              meter_t radius, PhysicalVector weightedPositionParam,
-                             kilogram_t mass, const PhysicalVector particlePositionParam) {
+                             kilogram_t mass, const PhysicalVector particlePositionParam,
+                             shared_ptr<Particle> particlePtrParam) {
     // Reinitialize all fields as if newly constructed
     pos = posParam;
     level = levelParam;
@@ -199,6 +212,7 @@ void Quadrant::reinitialize(int levelParam, PhysicalVector& posParam, float widt
     weightedPosition = weightedPositionParam;
     particleWeightedPosition = weightedPositionParam;
     particlePosition = particlePositionParam;
+    particlePtr = particlePtrParam;
 
     // Clear children references (but don't deallocate - pool manages that)
     for (int x = 0; x < 2; x++) {
@@ -246,6 +260,10 @@ const meter_t &Quadrant::getParticleRadius() const {
 
 const PhysicalVector &Quadrant::getParticlePosition() const {
     return particlePosition;
+}
+
+shared_ptr<Particle> Quadrant::getParticlePtr() const {
+    return particlePtr;
 }
 
 void Quadrant::applyToQuadrantIfExists(

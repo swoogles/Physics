@@ -38,7 +38,6 @@ Particle::Particle(
 //	ρ=(3m)/(4πr^2)
 	this->_density = kilograms_per_cubic_meter_t((3*mass) / (4 * M_PI * (radius * radius)));
 	this->_color = color;
-	this->touchingAnotherParticle = false;
 }
 
 Particle::Particle(
@@ -54,7 +53,6 @@ Particle::Particle(
     this->_radius =   meter_t(sqrt(((3*mass.value()) / 4 * M_PI ) / density.value()));
 	this->_density = density;
 	this->_color = color;
-    this->touchingAnotherParticle = false;
 }
 
 meter_t Particle::calcRadius(kilogram_t mass, kilograms_per_cubic_meter_t density) {
@@ -96,14 +94,6 @@ void Particle::mergeWith(Particle &otherShape) {
 	this->setAngularMomentum(totalAngMom);
 	this->calcColor();
 	this->setPos(COM);
-}
-
-bool Particle::isTouchingAnotherParticle() const {
-    return touchingAnotherParticle;
-}
-
-void Particle::setTouchingAnotherParticle(bool touchingAnotherParticle) {
-    Particle::touchingAnotherParticle = touchingAnotherParticle;
 }
 
 PhysicalVector Particle::calcMergedAngMomentum(Particle &otherShape) const {

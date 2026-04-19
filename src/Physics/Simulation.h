@@ -4,6 +4,7 @@
 #include "../Parallelization/Quadrant.h"
 #include "CollisionType.h"
 #include <ShapeFiles/ParticleList.h>
+#include <ShapeFiles/PairCollection.h>
 #include "../MaximumValues.h"
 #include <Physics/Interactions.h>
 #include "lib/units.h"
@@ -52,7 +53,7 @@ private:
 
 	void refreshQuadrant(ParticleList &physicalObjects);
 
-	void calcForcesAll(ParticleList &physicalObjects, hour_t dt);
+	PairCollection calcForcesAll(ParticleList &physicalObjects, hour_t dt);
 
 } ;
 

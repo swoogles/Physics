@@ -7,6 +7,7 @@
 
 #include <boost/multi_array.hpp>
 #include <functional>
+#include <memory>
 
 #include <../lib/units.h>
 
@@ -14,15 +15,18 @@ using boost::extents;
 using boost::multi_array;
 
 using std::make_unique;
+using std::shared_ptr;
 
 class Quadrant : public Box
 {
 public:
     Quadrant(int level, PhysicalVector &pos, float width, meter_t radius, PhysicalVector weightedPosition,
-             kilogram_t mass, const PhysicalVector particlePosition);
+             kilogram_t mass, const PhysicalVector particlePosition,
+             shared_ptr<Particle> particlePtr = nullptr);
 
     void insert(meter_t radiusParameter, PhysicalVector weightedPositionParameter, kilogram_t massParameter,
-                const PhysicalVector particlePositionParameter);
+                const PhysicalVector particlePositionParameter,
+                shared_ptr<Particle> particlePtr = nullptr);
 
     inline float getWidth() const { return dimensions.vec[0]; }
 
@@ -33,15 +37,18 @@ public:
 
     // Resets this quadrant for reuse without reallocation
     void resetForRebuild(meter_t radius, PhysicalVector weightedPosition,
-                         kilogram_t mass, const PhysicalVector particlePosition);
+                         kilogram_t mass, const PhysicalVector particlePosition,
+                         shared_ptr<Particle> particlePtr = nullptr);
 
     // Reinitialize a pooled quadrant with new values (used by QuadrantPool)
     void reinitialize(int level, PhysicalVector& pos, float width,
                       meter_t radius, PhysicalVector weightedPosition,
-                      kilogram_t mass, const PhysicalVector particlePosition);
+                      kilogram_t mass, const PhysicalVector particlePosition,
+                      shared_ptr<Particle> particlePtr = nullptr);
 
     const meter_t &getParticleRadius() const;
     const PhysicalVector &getParticlePosition() const;
+    shared_ptr<Particle> getParticlePtr() const;
     bool positionIsInQuadrantBoundaries(PhysicalVector insertPos) const;
 
 
@@ -56,10 +63,12 @@ private:
     PhysicalVector particlePosition;
     kilogram_t particleWeight;
     PhysicalVector dimensions;  // Removed const for pool reuse
+    shared_ptr<Particle> particlePtr;  // Particle pointer for external nodes (collision detection)
 
     multi_array<unique_ptr<Quadrant>,3>  childQuadrants;
     void createSubQuadrantThatContains(meter_t radius, PhysicalVector weightedPositionParameter, kilogram_t mass,
-                                       PhysicalVector particlePositionParameter);
+                                       PhysicalVector particlePositionParameter,
+                                       shared_ptr<Particle> particlePtrParam);
 
     //! Alters mass of object by dMass
     void adjustMass(kilogram_t dMass);
@@ -93,7 +102,8 @@ private:
             meter_t radius,
             PhysicalVector weightedPositionParameter,
             kilogram_t mass,
-            PhysicalVector particlePositionParameter)
+            PhysicalVector particlePositionParameter,
+            shared_ptr<Particle> particlePtrParam)
             const;
 
 };

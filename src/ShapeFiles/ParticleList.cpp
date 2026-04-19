@@ -64,34 +64,29 @@ size_t ParticleList::addList(ParticleList addList)
 }
 
 void ParticleList::update(hour_t dt) {
-    ParticleList touchingParticles;
+    // Simple position/velocity update - no collision detection here
     for (const auto & curShape : shapes ) {
         if (curShape == nullptr) {
             fprintf(stderr, "Error: Null Shape in ParticleList::update\n");
             exit(1);
         }
-        if (curShape->isTouchingAnotherParticle()) {
-            touchingParticles.addShapeToList(curShape);
+        curShape->update( dt );
+    }
+}
+
+void ParticleList::updateWithCollisions(hour_t dt, PairCollection& collisionPairs) {
+    // Update all particle positions
+    for (const auto & curShape : shapes ) {
+        if (curShape == nullptr) {
+            fprintf(stderr, "Error: Null Shape in ParticleList::updateWithCollisions\n");
+            exit(1);
         }
         curShape->update( dt );
     }
 
-    PairCollection deleteList;
-    for (const auto & touchingShape : touchingParticles.shapes) {
-        for (const auto & innerShape : shapes) {
-            if (touchingShape != innerShape) {
-                if (touchingShape->isTouching(*innerShape)) {
-                    TouchingPair touchingPair(touchingShape, innerShape);
-                    deleteList.insertIfUnique(touchingPair);
-                }
-            }
-        }
-
-    }
-    ParticleList doomedList(deleteList.doomed() );
-//    doomedList.applyToAllParticles([](Particle & particle) {
-//        cout << "Particle: " << &particle << endl;
-//    });
+    // Process pre-collected collision pairs (collected during octree traversal)
+    // No O(n²) search needed - pairs were found during O(n log n) force calculation
+    ParticleList doomedList(collisionPairs.doomed());
 
     if (doomedList.size() > 0) {
         cout << "removing this many particles: " << doomedList.size() << endl;
@@ -154,6 +149,22 @@ void ParticleList::applyToAllParticlesParallel(
     #pragma omp parallel for schedule(dynamic, 64)
     for (size_t i = 0; i < n; i++) {
         functor(*shapes[i]);
+    }
+}
+
+void ParticleList::applyToAllParticlesParallelWithPtr(
+        function<void (shared_ptr<Particle>)> functor ) {
+    const size_t n = shapes.size();
+    #pragma omp parallel for schedule(dynamic, 64)
+    for (size_t i = 0; i < n; i++) {
+        functor(shapes[i]);
+    }
+}
+
+void ParticleList::forEachWithPtr(
+        function<void (shared_ptr<Particle>)> functor ) const {
+    for (const auto & shape : shapes) {
+        functor(shape);
     }
 }
 

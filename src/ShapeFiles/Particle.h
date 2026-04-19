@@ -56,12 +56,6 @@ public:
 
     bool isTouching(Particle &otherShape) const;
     bool isTouching(PhysicalVector pos, meter_t radius) const;
-  private:
-    bool touchingAnotherParticle;
-public:
-    bool isTouchingAnotherParticle() const;
-
-    void setTouchingAnotherParticle(bool touchingAnotherParticle);
 
 private:
     meter_t _radius;

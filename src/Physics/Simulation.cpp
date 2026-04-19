@@ -1,6 +1,8 @@
 #include "Simulation.h"
+#include "ShapeFiles/PairCollection.h"
 #include <algorithm>
 #include <cmath>
+#include <mutex>
 
 Simulation::Simulation(
         ParticleList physicalObjects,
@@ -27,18 +29,19 @@ void Simulation::refreshQuadrant(ParticleList &physicalObjects) {
 
     // Reuse existing quadrant to avoid repeated allocations
     if (quadrant) {
-        quadrant->resetForRebuild(meter_t(0), PhysicalVector(), kilogram_t(0), PhysicalVector());
+        quadrant->resetForRebuild(meter_t(0), PhysicalVector(), kilogram_t(0), PhysicalVector(), nullptr);
     } else {
-        quadrant = std::make_unique<Quadrant>( 1, pos, side, meter_t(0), PhysicalVector(), kilogram_t(0), PhysicalVector() );
+        quadrant = std::make_unique<Quadrant>( 1, pos, side, meter_t(0), PhysicalVector(), kilogram_t(0), PhysicalVector(), nullptr );
     }
 
-    this->physicalObjects.checkForAllParticles(
-            [this, &pos, side](const Particle & curShape) {
+    this->physicalObjects.forEachWithPtr(
+            [this](shared_ptr<Particle> curShape) {
                 this->quadrant->insert(
-                        curShape.radius(),
-                        curShape.weightedPosition(),
-                        curShape.mass(),
-                        curShape.position());
+                        curShape->radius(),
+                        curShape->weightedPosition(),
+                        curShape->mass(),
+                        curShape->position(),
+                        curShape);
             });
 }
 
@@ -166,8 +169,9 @@ void Simulation::updateMinsAndMaxes() {
 
 void Simulation::update(hour_t dt) {
     // This is the first "log(n)" part in "n log(n)"
-    calcForcesAll(this->physicalObjects, dt);
-    physicalObjects.update(dt);
+    // Collects touching pairs during octree traversal (O(n log n) instead of O(n²))
+    PairCollection collisionPairs = calcForcesAll(this->physicalObjects, dt);
+    physicalObjects.updateWithCollisions(dt, collisionPairs);
     updateTimeElapsed(dt);
 
     // TODO This causes another full iteration of all shapes. If it's going to happen,
@@ -196,20 +200,27 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 //3. Otherwise, run the procedure recursively on each of the current node’s children.
 
 
-void Simulation::calcForcesAll(ParticleList &physicalObjects, hour_t dt) {
-    this->physicalObjects.applyToAllParticlesParallel(
-            [this, dt](Particle & particle) {
-                // Reset collision hint each step; it is re-enabled below when detected.
-                particle.setTouchingAnotherParticle(false);
+PairCollection Simulation::calcForcesAll(ParticleList &physicalObjects, hour_t dt) {
+    PairCollection collectedPairs;
+    std::mutex pairsMutex;
+
+    this->physicalObjects.applyToAllParticlesParallelWithPtr(
+            [this, dt, &collectedPairs, &pairsMutex](shared_ptr<Particle> particlePtr) {
+                Particle& particle = *particlePtr;
                 auto quadrantFunction =
-                [this, &particle, dt](Quadrant & quadrant) {
+                [this, &particle, &particlePtr, &collectedPairs, &pairsMutex, dt](Quadrant & quadrant) {
                     particle.adjustMomentum(
                             this->interactions.calcForceGravNew(particle, quadrant, dt)
                     );
-                    //c.
-                    if (quadrant.isExternal() && particle.isTouching(quadrant.getParticlePosition(),
-                                                                     quadrant.getParticleRadius()) ) {
-                        particle.setTouchingAnotherParticle(true);
+                    // Detect collision and record the pair directly
+                    if (quadrant.isExternal() && quadrant.getParticlePtr() != particlePtr &&
+                        particle.isTouching(quadrant.getParticlePosition(), quadrant.getParticleRadius())) {
+                        auto otherParticle = quadrant.getParticlePtr();
+                        if (otherParticle) {
+                            TouchingPair pair(particlePtr, otherParticle);
+                            std::lock_guard<std::mutex> lock(pairsMutex);
+                            collectedPairs.insertIfUnique(pair);
+                        }
                     }
                 };
                 auto terminalPredicate =
@@ -219,6 +230,8 @@ void Simulation::calcForcesAll(ParticleList &physicalObjects, hour_t dt) {
                 };
                 quadrant->applyToAllChildren(quadrantFunction, terminalPredicate);
             });
+
+    return collectedPairs;
 }
 
 void Simulation::applySideEffectingFunctionsToInnards(

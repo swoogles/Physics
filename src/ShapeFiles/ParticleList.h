@@ -11,14 +11,21 @@ using std::size_t;
 
 typedef typename std::vector<shared_ptr<Particle>> particleVector;
 
+// Forward declaration
+class PairCollection;
+
 class ParticleList {
 public:
     void applyToAllParticles(
             function<void (Particle &)> functor );
     void applyToAllParticlesParallel(
             function<void (Particle &)> functor );
+    void applyToAllParticlesParallelWithPtr(
+            function<void (shared_ptr<Particle>)> functor );
     void checkForAllParticles(
             function<void (const Particle &)> functor ) const;
+    void forEachWithPtr(
+            function<void (shared_ptr<Particle>)> functor ) const;
     ParticleList();
 
     ParticleList(std::vector<shared_ptr<Particle>> shapesIn);
@@ -29,6 +36,7 @@ public:
     int remove(ParticleList & shapesToRemove);
 
     void update(hour_t dt);
+    void updateWithCollisions(hour_t dt, PairCollection& collisionPairs);
     inline size_t size() const { return shapes.size(); } ;
 
     bool contains(shared_ptr<Particle> searchShape) const;
