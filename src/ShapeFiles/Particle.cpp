@@ -1,11 +1,83 @@
 #include "Particle.h"
+#include <algorithm>
 
 // Default to realistic collision detection
 float Particle::collisionRadiusMultiplier = 1.0f;
+float Particle::collisionRadiusStartMultiplier = 1.0f;
+float Particle::mergeTargetFraction = 0.9f;
+int Particle::mergeTargetSteps = 4320;
+int Particle::initialParticleCount = 0;
+int Particle::lastMergeStep = 0;
+int Particle::previousParticleCount = 0;
 
-void Particle::setCollisionRadiusMultiplier(float multiplier) {
-    collisionRadiusMultiplier = multiplier;
-    cout << "Collision radius multiplier set to: " << multiplier << endl;
+void Particle::setCollisionRadiusMultiplier(float startMultiplier, float targetFraction, int targetSteps, int initialCount) {
+    collisionRadiusStartMultiplier = startMultiplier;
+    mergeTargetFraction = targetFraction;
+    mergeTargetSteps = targetSteps;
+    initialParticleCount = initialCount;
+    previousParticleCount = initialCount;
+    lastMergeStep = 0;
+    collisionRadiusMultiplier = startMultiplier;
+    cout << "Collision radius multiplier initialized: start=" << startMultiplier
+         << ", mergeTarget=" << (targetFraction * 100) << "%"
+         << ", targetSteps=" << targetSteps
+         << ", initialParticles=" << initialCount << endl;
+}
+
+void Particle::updateCollisionRadiusMultiplier(int currentParticleCount, int currentStep) {
+    if (initialParticleCount <= 0 || mergeTargetSteps <= 0) return;
+
+    // Detect if a merge happened
+    if (currentParticleCount < previousParticleCount) {
+        lastMergeStep = currentStep;
+    }
+    previousParticleCount = currentParticleCount;
+
+    // Progress: fraction of particles that have merged (0.0 to 1.0)
+    float progress = 1.0f - (float)currentParticleCount / (float)initialParticleCount;
+
+    // Stop growing once we hit the target
+    if (progress >= mergeTargetFraction) return;
+
+    // Time progress (0.0 to 1.0)
+    float timeProgress = (float)currentStep / (float)mergeTargetSteps;
+
+    // How far behind are we? (positive = behind schedule)
+    // Expected progress at this time = timeProgress * mergeTargetFraction
+    float expectedProgress = timeProgress * mergeTargetFraction;
+    float behindBy = std::max(0.0f, expectedProgress - progress);
+
+    // Stall detection: frames since last merge - exponential response
+    int framesSinceLastMerge = currentStep - lastMergeStep;
+    // Exponential growth: doubles every 10 frames of stall
+    float stallFactor = std::pow(2.0f, (float)framesSinceLastMerge / 10.0f);
+
+    // Urgency: increases as we approach deadline with work remaining
+    float remainingProgress = mergeTargetFraction - progress;
+    float remainingTime = std::max(0.01f, 1.0f - timeProgress);
+    float urgency = remainingProgress / remainingTime;  // How much progress per remaining time unit
+
+    // Base increment
+    float baseIncrement = 0.05f;
+
+    // Scale by factors:
+    // - stallFactor: grows when no merges happening
+    // - urgency: grows as deadline approaches
+    // - behindBy: extra boost when behind schedule
+    float increment = baseIncrement * stallFactor * (1.0f + urgency) * (1.0f + behindBy * 5.0f);
+
+    float previousMultiplier = collisionRadiusMultiplier;
+    collisionRadiusMultiplier += increment;
+
+    // Log periodically (every ~20 units or significant stall)
+    bool significantChange = (int)(collisionRadiusMultiplier / 20) > (int)(previousMultiplier / 20);
+    bool stallWarning = (framesSinceLastMerge > 0 && framesSinceLastMerge % 500 == 0);
+    if (significantChange || stallWarning) {
+        cout << "Collision multiplier: " << collisionRadiusMultiplier
+             << " | " << (progress * 100) << "% merged"
+             << " | step " << currentStep << "/" << mergeTargetSteps
+             << " | stall: " << framesSinceLastMerge << " frames" << endl;
+    }
 }
 
 double Particle::scale() const {

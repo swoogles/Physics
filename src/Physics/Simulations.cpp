@@ -366,8 +366,7 @@ ParticleList chaoticGroups(PhysicsSandboxProperties properties) {
 }
 
 Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properties) {
-    // Set collision radius multiplier from properties
-    Particle::setCollisionRadiusMultiplier(properties.collisionRadiusMultiplier);
+    // Collision radius multiplier will be initialized after we know particle count
 
     PhysicalVector target(1000, 0, 0, true);
 //    ParticleList physicalObjects;
@@ -389,6 +388,14 @@ Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properti
 //    chaoticGroups(properties);
             // disruption(properties);
            fourInADiamond(properties);
+
+    // Initialize collision radius multiplier with particle count
+    Particle::setCollisionRadiusMultiplier(
+        properties.collisionRadiusMultiplier,
+        properties.mergeTargetFraction,
+        properties.mergeTargetSteps,
+        physicalObjects.size()
+    );
 
     // 4 in a diamond, 2 approaching from the sides
 //    fourInADiamond(properties);

@@ -23,6 +23,8 @@ public:
     const kilogram_t mass;
     const std::chrono::seconds  maximumRunTime;
     const float collisionRadiusMultiplier;  // Multiplier for collision detection distance (1.0 = realistic)
+    const float mergeTargetFraction;  // Stop growing multiplier at this merge fraction (0.0 to 1.0)
+    const int mergeTargetSteps;  // Target steps to reach merge fraction (at 24 fps)
 
     PhysicsSandboxProperties(string fileName);
 

@@ -1,5 +1,6 @@
 #include "Simulation.h"
 #include "ShapeFiles/PairCollection.h"
+#include "ShapeFiles/Particle.h"
 #include <algorithm>
 #include <cmath>
 #include <mutex>
@@ -168,6 +169,9 @@ void Simulation::updateMinsAndMaxes() {
 }
 
 void Simulation::update(hour_t dt) {
+    // Grow collision multiplier every step until merge target is reached
+    Particle::updateCollisionRadiusMultiplier(physicalObjects.size(), stepsElapsed);
+
     // This is the first "log(n)" part in "n log(n)"
     // Collects touching pairs during octree traversal (O(n log n) instead of O(n²))
     PairCollection collisionPairs = calcForcesAll(this->physicalObjects, dt);

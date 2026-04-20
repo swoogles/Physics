@@ -1,5 +1,6 @@
 #include "ParticleList.h"
 #include "PairCollection.h" // TODO Ugh. No good.
+#include "Particle.h"
 #include <omp.h>
 #include <chrono>
 #include <iomanip>

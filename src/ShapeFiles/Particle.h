@@ -12,7 +12,18 @@ class Particle: public Moveable {
 public:
     // Multiplier for collision detection distance (1.0 = realistic, higher = more collisions)
     static float collisionRadiusMultiplier;
-    static void setCollisionRadiusMultiplier(float multiplier);
+    static void setCollisionRadiusMultiplier(float startMultiplier, float mergeTargetFraction, int mergeTargetSteps, int initialParticleCount);
+    static void updateCollisionRadiusMultiplier(int currentParticleCount, int currentStep);
+
+private:
+    static float collisionRadiusStartMultiplier;
+    static float mergeTargetFraction;
+    static int mergeTargetSteps;
+    static int initialParticleCount;
+    static int lastMergeStep;
+    static int previousParticleCount;
+
+public:
     Particle(
             PhysicalVector pos,
             kilogram_t mass,
