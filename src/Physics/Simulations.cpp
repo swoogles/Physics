@@ -397,6 +397,34 @@ Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properti
         physicalObjects.size()
     );
 
+    // Calculate center of mass and boundary radius from initial distribution
+    PhysicalVector centerOfMass(0, 0, 0, true);
+    double totalMass = 0;
+    physicalObjects.checkForAllParticles([&centerOfMass, &totalMass](const Particle& p) {
+        centerOfMass = centerOfMass.plus(p.position().scaledBy(p.mass().value()));
+        totalMass += p.mass().value();
+    });
+    if (totalMass > 0) {
+        centerOfMass = centerOfMass.scaledBy(1.0 / totalMass);
+    }
+
+    // Find max distance from center to set boundary radius
+    double maxDist = 0;
+    physicalObjects.checkForAllParticles([&centerOfMass, &maxDist](const Particle& p) {
+        double dist = p.position().minus(centerOfMass).length();
+        if (dist > maxDist) maxDist = dist;
+    });
+
+    // Use 1.5x the initial max distance as boundary (some room to expand)
+    float boundaryRadius = maxDist * 1.5f;
+
+    Particle::setDampingAndBoundary(
+        properties.velocityDamping,
+        properties.boundaryStrength,
+        boundaryRadius,
+        centerOfMass
+    );
+
     // 4 in a diamond, 2 approaching from the sides
 //    fourInADiamond(properties);
 //    blah(PhysicalVector(-5, 2, 0), PhysicalVector(12,-20,0), groupProperties);

@@ -23,7 +23,9 @@ mass(kilogram_t(Serializer::parseStringAsFloat(properties.at("mass")))),
 maximumRunTime(Serializer::parseStringAsLong(properties.at("maximum_runtime"))*60),
 collisionRadiusMultiplier(parseOptionalFloat(properties, "collision_radius_multiplier", 1.0f)),
 mergeTargetFraction(parseOptionalFloat(properties, "merge_target_fraction", 0.9f)),
-mergeTargetSteps(static_cast<int>(parseOptionalFloat(properties, "merge_target_seconds", 180.0f) * 24.0f))
+mergeTargetSteps(static_cast<int>(parseOptionalFloat(properties, "merge_target_seconds", 180.0f) * 24.0f)),
+velocityDamping(parseOptionalFloat(properties, "velocity_damping", 1.0f)),
+boundaryStrength(parseOptionalFloat(properties, "boundary_strength", 0.0f))
 {
 
 }

@@ -97,9 +97,7 @@ void PairCollection::insertIfUnique(const TouchingPair & newPair) {
                 });
         pairs.push_back(result.value_or(newPair));
 
-    } else {
-        cout << "Not inserting pair because it's already in this colleciton." << endl;
-    }
+    } 
 }
 
 ParticleList PairCollection::doomed() {

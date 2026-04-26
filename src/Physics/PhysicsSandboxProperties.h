@@ -25,6 +25,8 @@ public:
     const float collisionRadiusMultiplier;  // Multiplier for collision detection distance (1.0 = realistic)
     const float mergeTargetFraction;  // Stop growing multiplier at this merge fraction (0.0 to 1.0)
     const int mergeTargetSteps;  // Target steps to reach merge fraction (at 24 fps)
+    const float velocityDamping;  // Damping factor per frame (1.0 = none, 0.999 = slight)
+    const float boundaryStrength;  // Soft boundary force strength
 
     PhysicsSandboxProperties(string fileName);
 

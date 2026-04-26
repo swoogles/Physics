@@ -15,6 +15,15 @@ public:
     static void setCollisionRadiusMultiplier(float startMultiplier, float mergeTargetFraction, int mergeTargetSteps, int initialParticleCount);
     static void updateCollisionRadiusMultiplier(int currentParticleCount, int currentStep);
 
+    // Velocity damping and boundary settings
+    static float velocityDamping;
+    static float boundaryStrength;
+    static float boundaryRadius;
+    static float systemCenterX;
+    static float systemCenterY;
+    static float systemCenterZ;
+    static void setDampingAndBoundary(float damping, float strength, float radius, PhysicalVector center);
+
 private:
     static float collisionRadiusStartMultiplier;
     static float mergeTargetFraction;

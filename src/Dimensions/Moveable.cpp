@@ -1,4 +1,6 @@
 #include "Moveable.h"
+#include "ShapeFiles/Particle.h"
+#include <algorithm>
 
 Moveable::Moveable(PhysicalVector momentum)
            :pos{0.0,0.0,0.0,true}
@@ -59,6 +61,31 @@ PhysicalVector Moveable::velocity() const {
 double Moveable::momentOfInertia() const { return 1;}
 
 void Moveable::update(hour_t dt) {
+	// Apply velocity damping
+	_momentum = _momentum.scaledBy(Particle::velocityDamping);
+
+	// Apply soft boundary force - push toward center if beyond boundary
+	if (Particle::boundaryStrength > 0 && Particle::boundaryRadius > 0) {
+		PhysicalVector systemCenter(Particle::systemCenterX, Particle::systemCenterY, Particle::systemCenterZ, true);
+		PhysicalVector toCenter = systemCenter.minus(this->pos);
+		double distFromCenter = toCenter.length();
+
+		if (distFromCenter > Particle::boundaryRadius && distFromCenter > 0.001) {
+			// Calculate overshoot as a fraction of boundary radius (0 to 1+)
+			double overshootFraction = (distFromCenter - Particle::boundaryRadius) / Particle::boundaryRadius;
+
+			// Force proportional to current momentum magnitude, scaled by overshoot and strength
+			double momentumMag = _momentum.length();
+			double maxForce = std::max(momentumMag * 0.1, 1.0);  // At most 10% momentum change per frame, min 1.0
+
+			double forceMagnitude = overshootFraction * Particle::boundaryStrength * maxForce;
+
+			// Apply force toward center (normalize toCenter by dividing by distFromCenter)
+			PhysicalVector boundaryForce = toCenter.scaledBy(forceMagnitude / distFromCenter);
+			_momentum = _momentum.plus(boundaryForce);
+		}
+	}
+
 	PhysicalVector prevVelocity(prevMomentum.scaledBy(1/_mass.value()));
 	auto dPos =
             this->velocity()

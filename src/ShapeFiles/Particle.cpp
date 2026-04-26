@@ -10,6 +10,27 @@ int Particle::initialParticleCount = 0;
 int Particle::lastMergeStep = 0;
 int Particle::previousParticleCount = 0;
 
+// Damping and boundary settings
+float Particle::velocityDamping = 1.0f;
+float Particle::boundaryStrength = 0.0f;
+float Particle::boundaryRadius = 0.0f;
+float Particle::systemCenterX = 0.0f;
+float Particle::systemCenterY = 0.0f;
+float Particle::systemCenterZ = 0.0f;
+
+void Particle::setDampingAndBoundary(float damping, float strength, float radius, PhysicalVector center) {
+    velocityDamping = damping;
+    boundaryStrength = strength;
+    boundaryRadius = radius;
+    systemCenterX = center.x();
+    systemCenterY = center.y();
+    systemCenterZ = center.z();
+    cout << "Damping and boundary initialized: damping=" << damping
+         << ", boundaryStrength=" << strength
+         << ", boundaryRadius=" << radius
+         << ", center=(" << systemCenterX << ", " << systemCenterY << ", " << systemCenterZ << ")" << endl;
+}
+
 void Particle::setCollisionRadiusMultiplier(float startMultiplier, float targetFraction, int targetSteps, int initialCount) {
     collisionRadiusStartMultiplier = startMultiplier;
     mergeTargetFraction = targetFraction;
