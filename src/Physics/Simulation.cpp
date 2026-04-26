@@ -1,9 +1,11 @@
 #include "Simulation.h"
 #include "ShapeFiles/PairCollection.h"
 #include "ShapeFiles/Particle.h"
+#include "ShapeFiles/ClosestPairTracker.h"
 #include <algorithm>
 #include <cmath>
 #include <mutex>
+#include <omp.h>
 
 Simulation::Simulation(
         ParticleList physicalObjects,
@@ -172,9 +174,31 @@ void Simulation::update(hour_t dt) {
     // Grow collision multiplier every step until merge target is reached
     Particle::updateCollisionRadiusMultiplier(physicalObjects.size(), stepsElapsed);
 
-    // This is the first "log(n)" part in "n log(n)"
-    // Collects touching pairs during octree traversal (O(n log n) instead of O(n²))
-    PairCollection collisionPairs = calcForcesAll(this->physicalObjects, dt);
+    // Determine if we need to track closest pairs for forced merging
+    int closestToTrack = 0;
+    if (Particle::minimumMergesPerFrame > 0 && Particle::getInitialParticleCount() > 0) {
+        float progress = 1.0f - (float)physicalObjects.size() / (float)Particle::getInitialParticleCount();
+        if (progress < Particle::getMergeTargetFraction()) {
+            closestToTrack = Particle::minimumMergesPerFrame;
+        }
+    }
+
+    // Create tracker if needed (will be populated during octree traversal)
+    ClosestPairTracker closestTracker(closestToTrack);
+
+    // This is O(n log n) - collects both collision pairs AND closest pairs during octree traversal
+    PairCollection collisionPairs = calcForcesAll(this->physicalObjects, dt,
+        closestToTrack > 0 ? &closestTracker : nullptr);
+
+    // Add forced merges from closest pairs (found during O(n log n) traversal, not O(n²))
+    if (closestToTrack > 0) {
+        auto closestPairs = closestTracker.getPairs();
+        for (const auto& pair : closestPairs) {
+            TouchingPair forcedPair(pair.first, pair.second);
+            collisionPairs.insertIfUnique(forcedPair);
+        }
+    }
+
     physicalObjects.updateWithCollisions(dt, collisionPairs);
     updateTimeElapsed(dt);
 
@@ -204,26 +228,69 @@ hour_t Simulation::getTimeElapsed() const { return timeElapsed; }
 //3. Otherwise, run the procedure recursively on each of the current node’s children.
 
 
-PairCollection Simulation::calcForcesAll(ParticleList &physicalObjects, hour_t dt) {
+PairCollection Simulation::calcForcesAll(ParticleList &physicalObjects, hour_t dt, ClosestPairTracker* closestTracker) {
     PairCollection collectedPairs;
     std::mutex pairsMutex;
 
+    // Per-thread trackers to avoid lock contention when tracking closest pairs
+    std::vector<ClosestPairTracker> threadTrackers;
+    int numThreads = 1;
+    #ifdef _OPENMP
+    #pragma omp parallel
+    {
+        #pragma omp single
+        numThreads = omp_get_num_threads();
+    }
+    #endif
+    if (closestTracker && closestTracker->isTracking()) {
+        // Each thread gets its own tracker
+        for (int i = 0; i < numThreads; i++) {
+            threadTrackers.emplace_back(closestTracker->isTracking() ? 10 : 0); // Track more per thread, merge later
+        }
+    }
+
     this->physicalObjects.applyToAllParticlesParallelWithPtr(
-            [this, dt, &collectedPairs, &pairsMutex](shared_ptr<Particle> particlePtr) {
+            [this, dt, &collectedPairs, &pairsMutex, closestTracker, &threadTrackers](shared_ptr<Particle> particlePtr) {
                 Particle& particle = *particlePtr;
+
+                // Get thread-local tracker if we're tracking closest pairs
+                ClosestPairTracker* localTracker = nullptr;
+                if (closestTracker && closestTracker->isTracking() && !threadTrackers.empty()) {
+                    int threadId = 0;
+                    #ifdef _OPENMP
+                    threadId = omp_get_thread_num();
+                    #endif
+                    if (threadId < static_cast<int>(threadTrackers.size())) {
+                        localTracker = &threadTrackers[threadId];
+                    }
+                }
+
                 auto quadrantFunction =
-                [this, &particle, &particlePtr, &collectedPairs, &pairsMutex, dt](Quadrant & quadrant) {
+                [this, &particle, &particlePtr, &collectedPairs, &pairsMutex, localTracker, dt](Quadrant & quadrant) {
                     particle.adjustMomentum(
                             this->interactions.calcForceGravNew(particle, quadrant, dt)
                     );
-                    // Detect collision and record the pair directly
-                    if (quadrant.isExternal() && quadrant.getParticlePtr() != particlePtr &&
-                        particle.isTouching(quadrant.getParticlePosition(), quadrant.getParticleRadius())) {
+                    // For external nodes (leaf nodes with particles), check collisions and track closest pairs
+                    if (quadrant.isExternal() && quadrant.getParticlePtr() != particlePtr) {
                         auto otherParticle = quadrant.getParticlePtr();
                         if (otherParticle) {
-                            TouchingPair pair(particlePtr, otherParticle);
-                            std::lock_guard<std::mutex> lock(pairsMutex);
-                            collectedPairs.insertIfUnique(pair);
+                            // Calculate distance between particles
+                            double distance = particle.position().minus(quadrant.getParticlePosition()).length();
+
+                            // Track closest pairs if enabled (O(n log n) during traversal)
+                            if (localTracker && localTracker->isTracking()) {
+                                // Only track if particlePtr < otherParticle to avoid duplicates
+                                if (particlePtr.get() < otherParticle.get()) {
+                                    localTracker->consider(particlePtr, otherParticle, distance);
+                                }
+                            }
+
+                            // Check for collision
+                            if (particle.isTouching(quadrant.getParticlePosition(), quadrant.getParticleRadius())) {
+                                TouchingPair pair(particlePtr, otherParticle);
+                                std::lock_guard<std::mutex> lock(pairsMutex);
+                                collectedPairs.insertIfUnique(pair);
+                            }
                         }
                     }
                 };
@@ -234,6 +301,14 @@ PairCollection Simulation::calcForcesAll(ParticleList &physicalObjects, hour_t d
                 };
                 quadrant->applyToAllChildren(quadrantFunction, terminalPredicate);
             });
+
+    // Merge thread-local trackers into the main tracker
+    if (closestTracker && closestTracker->isTracking()) {
+        std::lock_guard<std::mutex> lock(pairsMutex);
+        for (const auto& tracker : threadTrackers) {
+            closestTracker->merge(tracker);
+        }
+    }
 
     return collectedPairs;
 }

@@ -5,6 +5,7 @@
 #include "CollisionType.h"
 #include <ShapeFiles/ParticleList.h>
 #include <ShapeFiles/PairCollection.h>
+#include <ShapeFiles/ClosestPairTracker.h>
 #include "../MaximumValues.h"
 #include <Physics/Interactions.h>
 #include "lib/units.h"
@@ -53,7 +54,7 @@ private:
 
 	void refreshQuadrant(ParticleList &physicalObjects);
 
-	PairCollection calcForcesAll(ParticleList &physicalObjects, hour_t dt);
+	PairCollection calcForcesAll(ParticleList &physicalObjects, hour_t dt, ClosestPairTracker* closestTracker = nullptr);
 
 } ;
 

@@ -31,6 +31,14 @@ void Particle::setDampingAndBoundary(float damping, float strength, float radius
          << ", center=(" << systemCenterX << ", " << systemCenterY << ", " << systemCenterZ << ")" << endl;
 }
 
+// Minimum merges per frame
+int Particle::minimumMergesPerFrame = 0;
+
+void Particle::setMinimumMergesPerFrame(int minMerges) {
+    minimumMergesPerFrame = minMerges;
+    cout << "Minimum merges per frame: " << minMerges << endl;
+}
+
 void Particle::setCollisionRadiusMultiplier(float startMultiplier, float targetFraction, int targetSteps, int initialCount) {
     collisionRadiusStartMultiplier = startMultiplier;
     mergeTargetFraction = targetFraction;

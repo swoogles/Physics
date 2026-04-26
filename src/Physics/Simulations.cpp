@@ -425,6 +425,8 @@ Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properti
         centerOfMass
     );
 
+    Particle::setMinimumMergesPerFrame(properties.minimumMergesPerFrame);
+
     // 4 in a diamond, 2 approaching from the sides
 //    fourInADiamond(properties);
 //    blah(PhysicalVector(-5, 2, 0), PhysicalVector(12,-20,0), groupProperties);

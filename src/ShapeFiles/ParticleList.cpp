@@ -5,6 +5,7 @@
 #include <chrono>
 #include <iomanip>
 #include <ctime>
+#include <algorithm>
 
 void ParticleList::ensureNoNullEntries(string caller) {
   for (const auto & curShape : this->shapes ) {
@@ -175,3 +176,4 @@ void ParticleList::checkForAllParticles(
         functor(*curShape);
     }
 }
+

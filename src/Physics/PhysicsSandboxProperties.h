@@ -27,6 +27,7 @@ public:
     const int mergeTargetSteps;  // Target steps to reach merge fraction (at 24 fps)
     const float velocityDamping;  // Damping factor per frame (1.0 = none, 0.999 = slight)
     const float boundaryStrength;  // Soft boundary force strength
+    const int minimumMergesPerFrame;  // Guaranteed merges per frame
 
     PhysicsSandboxProperties(string fileName);
 

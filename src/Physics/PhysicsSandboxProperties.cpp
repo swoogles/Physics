@@ -25,7 +25,8 @@ collisionRadiusMultiplier(parseOptionalFloat(properties, "collision_radius_multi
 mergeTargetFraction(parseOptionalFloat(properties, "merge_target_fraction", 0.9f)),
 mergeTargetSteps(static_cast<int>(parseOptionalFloat(properties, "merge_target_seconds", 180.0f) * 24.0f)),
 velocityDamping(parseOptionalFloat(properties, "velocity_damping", 1.0f)),
-boundaryStrength(parseOptionalFloat(properties, "boundary_strength", 0.0f))
+boundaryStrength(parseOptionalFloat(properties, "boundary_strength", 0.0f)),
+minimumMergesPerFrame(static_cast<int>(parseOptionalFloat(properties, "minimum_merges_per_frame", 0.0f)))
 {
 
 }

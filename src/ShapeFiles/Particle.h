@@ -24,6 +24,14 @@ public:
     static float systemCenterZ;
     static void setDampingAndBoundary(float damping, float strength, float radius, PhysicalVector center);
 
+    // Minimum merges per frame
+    static int minimumMergesPerFrame;
+    static void setMinimumMergesPerFrame(int minMerges);
+
+    // Getters for merge progress checking
+    static int getInitialParticleCount() { return initialParticleCount; }
+    static float getMergeTargetFraction() { return mergeTargetFraction; }
+
 private:
     static float collisionRadiusStartMultiplier;
     static float mergeTargetFraction;
