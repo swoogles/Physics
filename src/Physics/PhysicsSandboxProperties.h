@@ -39,6 +39,7 @@ public:
     const float boundaryStrength;  // Soft boundary force strength
     const int minimumMergesPerFrame;  // Guaranteed merges per frame
     const float boundaryRadiusFactor;  // Boundary radius as a multiple of the starting system radius
+    const float maxPointSize;  // Pixel cap on how large a merged body is drawn
 
     PhysicsSandboxProperties(string fileName);
 

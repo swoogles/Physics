@@ -28,6 +28,21 @@ public:
     static int minimumMergesPerFrame;
     static void setMinimumMergesPerFrame(int minMerges);
 
+    /*! \brief How big a particle should be drawn, in pixels.
+     *
+     *  Physical radius is useless on screen: a body holding 20% of the
+     *  system's mass is still only 17x the radius of a single particle, which
+     *  works out to a few hundredths of a pixel. Without this, every particle
+     *  renders as the same one-pixel dot and the biggest body is
+     *  indistinguishable from a stray - it looks like it vanished.
+     *
+     *  Size follows the cube root of mass, so it tracks real radius ratios.
+     */
+    static double renderReferenceMass;
+    static double maxPointSize;
+    static void setRenderScale(double referenceMass, double maxPointSize);
+    static float pointSizeFor(double mass);
+
     // Getters for merge progress checking
     static int getInitialParticleCount() { return initialParticleCount; }
     static float getMergeTargetFraction() { return mergeTargetFraction; }

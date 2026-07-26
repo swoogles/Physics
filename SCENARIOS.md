@@ -239,6 +239,27 @@ N^(1/3). Pass `--no-scale-merges` to leave them alone. The collision multiplier
 is also under a feedback controller that chases `merge_target_fraction` on a
 step deadline, so it self-corrects to a degree either way.
 
+## Why big bodies need help to be visible
+
+Radius goes as the cube root of mass, so a body holding a fifth of the entire
+system is only ~17x the radius of a single particle — about **0.03 pixels** on
+a 1280-wide frame. The `glutSolidSphere` drawn at true physical scale is
+invisible for every particle in every run; what you actually see is the
+`GL_POINTS` dot next to it.
+
+That dot used to be one pixel for every particle regardless of mass, which
+made a heavily merged core look like it had emptied out and the biggest body
+look like it had disappeared. Point size now follows the cube root of mass
+relative to a single unmerged particle, so 1000 merged particles draw 10x
+wider. `max_point_size` (default 14) caps it; set it to 1 for the old uniform
+look. The points are drawn smoothed, so bodies read as round dots rather than
+the aliased squares GL_POINTS gives by default.
+
+Mass itself was never the problem — it is conserved exactly through merging,
+which the run report lets you confirm: compare `setup.total_mass_kg` against
+`final.total_mass_kg`, and watch `largest_mass_fraction` in the history, which
+only ever climbs.
+
 ## Merging
 
 Real collisions almost never happen at these sizes — particles are tens of

@@ -28,7 +28,8 @@ mergeTargetSteps(static_cast<int>(parseOptionalFloat(properties, "merge_target_s
 velocityDamping(parseOptionalFloat(properties, "velocity_damping", 1.0f)),
 boundaryStrength(parseOptionalFloat(properties, "boundary_strength", 0.0f)),
 minimumMergesPerFrame(static_cast<int>(parseOptionalFloat(properties, "minimum_merges_per_frame", 0.0f))),
-boundaryRadiusFactor(parseOptionalFloat(properties, "boundary_radius_factor", 1.5f))
+boundaryRadiusFactor(parseOptionalFloat(properties, "boundary_radius_factor", 1.5f)),
+maxPointSize(parseOptionalFloat(properties, "max_point_size", 14.0f))
 {
 
 }

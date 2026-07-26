@@ -39,6 +39,27 @@ void Particle::setMinimumMergesPerFrame(int minMerges) {
     cout << "Minimum merges per frame: " << minMerges << endl;
 }
 
+double Particle::renderReferenceMass = 0;
+double Particle::maxPointSize = 14.0;
+
+void Particle::setRenderScale(double referenceMass, double maxPointSize) {
+    Particle::renderReferenceMass = referenceMass;
+    Particle::maxPointSize = std::max(1.0, maxPointSize);
+    cout << "Render scale: one particle = " << referenceMass
+         << " kg at 1px, capped at " << Particle::maxPointSize << "px" << endl;
+}
+
+/*! Cube root of the mass ratio, so a dot grows the way a real radius would:
+ *  1000 merged particles draw 10x wider, not 1000x.
+ */
+float Particle::pointSizeFor(double mass) {
+    if (renderReferenceMass <= 0 || mass <= renderReferenceMass) {
+        return 1.0f;
+    }
+    const double size = cbrt(mass / renderReferenceMass);
+    return (float) std::min(size, maxPointSize);
+}
+
 void Particle::setCollisionRadiusMultiplier(float startMultiplier, float targetFraction, int targetSteps, int initialCount) {
     collisionRadiusStartMultiplier = startMultiplier;
     mergeTargetFraction = targetFraction;

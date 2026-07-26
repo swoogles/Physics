@@ -1,5 +1,7 @@
 #include "Drawing.h"
 
+#include "ShapeFiles/Particle.h"
+
 #include <GL/gl.h>
 #include <GL/glut.h>
 
@@ -40,9 +42,19 @@ void Drawing::draw(const Moveable &myShape) const {
 
     if (myShape.getType() == circle) {
         glPushMatrix();
+
+        /* The sphere above is drawn at true physical scale, which at these
+         * distances is a small fraction of a pixel even for the largest body.
+         * This point is what you actually see, so its size has to carry the
+         * mass - otherwise every particle is the same dot and a body holding
+         * a fifth of the system reads as having disappeared. */
+        glPointSize(Particle::pointSizeFor(myShape.mass().value()));
+
         glBegin(GL_POINTS);                      // Select points as the primitive
         glVertex3f(pos.x(), pos.y(), pos.z());    // Specify a point
         glEnd();
+
+        glPointSize(1.0f);
         glPopMatrix();
     }
 

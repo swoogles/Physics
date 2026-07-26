@@ -90,6 +90,14 @@ void GraphicalOperations::localDisplay(Simulation & simulation) const {
 
     Drawing drawing;
 
+    /* Particles are drawn as GL_POINTS, which default to aliased squares - very
+     * obvious once a merged body is ten pixels wide. Smoothing renders them as
+     * round dots, and needs blending on for the antialiased edge. */
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+
     //    if (controlCenter.shouldRenderOctree()) {
     simulation.applySideEffectingFunctionsToInnards(
             [this, drawing](const Quadrant & quadrant) {
@@ -99,6 +107,10 @@ void GraphicalOperations::localDisplay(Simulation & simulation) const {
                 if (particle.mass() != kilogram_t(0)) drawing.draw(particle);
             }
     );
+
+    // Back to plain state so the plib UI below draws as it always has.
+    glDisable(GL_POINT_SMOOTH);
+    glDisable(GL_BLEND);
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();

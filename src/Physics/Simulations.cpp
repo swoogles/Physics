@@ -56,6 +56,19 @@ Simulation Simulations::fromScenario(
 
     Particle::setMinimumMergesPerFrame(properties.minimumMergesPerFrame);
 
+    // One unmerged particle is the 1px baseline; everything is drawn relative
+    // to the lightest one so merged bodies stand out as they grow.
+    double lightestParticle = 0;
+    for (const auto &group : scenario.groups) {
+        if (group.count > 0 && group.mass > 0) {
+            const double particleMass = group.mass / group.count;
+            if (lightestParticle == 0 || particleMass < lightestParticle) {
+                lightestParticle = particleMass;
+            }
+        }
+    }
+    Particle::setRenderScale(lightestParticle, properties.maxPointSize);
+
     return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
 }
 
