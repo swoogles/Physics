@@ -5,7 +5,7 @@
 using namespace std;
 
 // Declared in main.cpp
-extern unique_ptr<FullApplication> globalFullApplication;
+#include "GlobalApplication.h"
 
 time_t CenterStage::start = 0;
 
@@ -166,14 +166,10 @@ CenterStage::CenterStage(int windowWidth, time_t start) noexcept
 }
 
 void CenterStage::createVideoAndExit(puObject *) {
-	if (globalFullApplication && globalFullApplication->streamingRecorder) {
-		cout << "Finalizing video from captured frames..." << endl;
-		globalFullApplication->streamingRecorder->finalize();
-		cout << "Video creation complete." << endl;
-	} else {
-		cout << "No active recording to finalize." << endl;
-	}
-	exit(0);
+	// Ask for a graceful stop rather than finalizing here, so the run also
+	// writes its report on the way out.
+	cout << "Wrapping up at the end of this frame..." << endl;
+	FullApplication::requestStop();
 }
 
 // void CenterStage::mk_dialog(char * dialogText) {

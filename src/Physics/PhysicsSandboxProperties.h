@@ -17,7 +17,17 @@ private:
 public:
     // TODO privatize these
     const int numShapes;
-    const float dt;
+
+    /*! Seconds of simulated time per frame.
+     *
+     *  `dt=auto` in the config leaves this at 0 until the scenario is built,
+     *  at which point it is set to crossingTime / framesPerCrossing so every
+     *  scenario plays back at a watchable speed regardless of its scale.
+     */
+    float dt;
+
+    //! Frames one crossing time should take on screen. 0 keeps dt as written.
+    const float framesPerCrossing;
     const float octreeTheta;
     const float sandboxWidth;
     const kilogram_t mass;
@@ -28,8 +38,12 @@ public:
     const float velocityDamping;  // Damping factor per frame (1.0 = none, 0.999 = slight)
     const float boundaryStrength;  // Soft boundary force strength
     const int minimumMergesPerFrame;  // Guaranteed merges per frame
+    const float boundaryRadiusFactor;  // Boundary radius as a multiple of the starting system radius
 
     PhysicsSandboxProperties(string fileName);
+
+    //! The underlying key/value pairs, for scenario parsing and run reports.
+    const BillProperties & raw() const { return properties; }
 
 };
 

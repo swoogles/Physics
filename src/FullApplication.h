@@ -22,7 +22,9 @@
 #include "Physics/Simulations.h"
 #include "Physics/PhysicsSandboxProperties.h"
 
+#include "Input/RunOptions.h"
 #include "Sandbox/ApplicationResult.h"
+#include "Sandbox/RunReport.h"
 
 #include <lib/pstream.h>
 
@@ -39,9 +41,12 @@ using std::chrono::system_clock;
 
 class FullApplication {
 public:
-    FullApplication(bool shouldRecord,
-                    WindowDimensions windowDimensions, PhysicsSandboxProperties properties,
-                    OpenGlSetup openGlSetup);
+    FullApplication(const RunOptions &options,
+                    WindowDimensions windowDimensions,
+                    PhysicsSandboxProperties properties,
+                    OpenGlSetup openGlSetup,
+                    Simulation simulation,
+                    RunReport *report);
 
     Simulation simulation;
     const ControlCenter controlCenter;
@@ -55,8 +60,23 @@ public:
     GraphicalOperations graphicalOperations;
     // TODO Instead of void, return a Result[SUCCESSFUL_STEP, COMPLETED, FAILED]
     ApplicationResult update();
+
+    /*! \brief Asks the run to stop at the end of the current frame.
+     *
+     *  The interrupt handler calls this so Ctrl-C still finalizes the video and
+     *  writes the sidecar instead of throwing the whole run away.
+     */
+    static void requestStop();
+
 private:
+    const RunOptions options;
+    RunReport *report;
+    int framesRendered;
+    bool finished;
+
     queue<TimedSceneAction> timedSceneActions;
+
+    void finishRun();
 };
 
 

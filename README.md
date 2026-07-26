@@ -49,7 +49,19 @@ sudo pacman -S grc
 
 Important Commands
   // This is the command I should be executing as I develop
-  make && make test && ./build/Tests && ./build/PhysicsSandbox r 1
+  make && make test && ./build/Tests && ./build/PhysicsSandbox --record
+
+  // What will this config do, without running it?
+  ./build/PhysicsSandbox --config configs/cold-collapse.properties --print-setup
+
+  // Sample a batch of variations, rank them, render the winners
+  tools/run_batch.py sample --archetype chaotic --runs 12
+  tools/run_batch.py report batches/<batch> --contact-sheet --reel
+  tools/run_batch.py render batches/<batch> --exclude chaotic-02 --top 3 --res 1440p
+
+Starting arrangements are data now, not code: see SCENARIOS.md for the scenario
+types, the knobs worth turning, and how batching and scoring work. Recorded runs
+write a .json report next to the video that is enough to reproduce them exactly.
  
   
 Turning output images into a video:

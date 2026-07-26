@@ -3,6 +3,11 @@
  *
  *  Created on: Jul 22, 2011
  *      Author: brasure
+ *
+ *  Starting arrangements used to be written here, one hard-coded function per
+ *  idea, selected by commenting lines in and out. They now live in properties
+ *  files and are assembled by ScenarioParser / ScenarioBuilder, so this file
+ *  only wires a scenario up to the simulation's global settings.
  */
 
 #include "Simulations.h"
@@ -11,444 +16,71 @@
 #include "CollisionType.h"
 #include "ShapeFiles/Particle.h"
 
-Simulation Simulations::createSimulation(CraftedSimulation simulation, PhysicsSandboxProperties simulationProperties) {
-    if ( simulation == CraftedSimulation::BODY_FORMATION) {
-//        return Simulations::bodyFormation(simulationProperties.numShapes, simulationProperties);
-        return Simulations::bodyFormationCollision(simulationProperties);
-    } else if ( simulation == DISRUPT_GROUP) {
-    } else if ( simulation == QUADRANT_TESTING) {
-        return Simulations::QuadrantTesting_simplest();
-    } else if ( simulation == MULTIPLE_ORBITERS) {
-//        return multipleOrbiters(simulationProperties);
-    } else {
-        exit(1);
+Simulation Simulations::fromScenario(
+        const ScenarioSpec &scenario,
+        PhysicsSandboxProperties &properties,
+        SetupDiagnostics &diagnostics,
+        std::mt19937 &rng) {
+
+    ParticleList physicalObjects = ScenarioBuilder::build(scenario, properties.dt, diagnostics, rng);
+
+    /* Pace the playback off the scenario's own crossing time. Without this,
+     * doubling the size of a scenario silently makes the video 3x slower. */
+    const bool dtIsAuto = properties.dt <= 0;
+    if ((dtIsAuto || properties.framesPerCrossing > 0) && diagnostics.crossingTimeSeconds > 0) {
+        const float framesPerCrossing = properties.framesPerCrossing > 0
+                ? properties.framesPerCrossing
+                : 400.0f;
+        properties.dt = (float) (diagnostics.crossingTimeSeconds / framesPerCrossing);
+        diagnostics.applyDt(properties.dt);
+
+        cout << "Resolved dt=" << properties.dt << "s from "
+             << framesPerCrossing << " frames per crossing time" << endl;
     }
 
-}
-
-
-Simulation Simulations::QuadrantTesting_simplest() {
-    ParticleList physicalObjects;
-
-    int numPieces=3;
-    kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
-    kilogram_t pieceMass = AstronomicalValues::MASS_SUN/numPieces;
-    PhysicalVector startMomentum(0, 0, 0);
-
-    PhysicalVector white(1, 1, 1);
-
-    shared_ptr<Particle> curShape;
-    float d= 2.0e4;
-
-    //#1
-    PhysicalVector object1Placement(+5/8.0f * d, +7/8.0f * d, 1, true);
-
-    physicalObjects.addShapeToList(
-            make_shared<Particle>(
-                    object1Placement,
-                    pieceMass,
-                    startMomentum,
-                    objectDensity,
-                    white
-            )
-            );
-
-    //#2
-    PhysicalVector object2Placement(-7/8.0f * d, +7/8.0f * d, 1, true);
-
-    physicalObjects.addShapeToList(
-            make_shared<Particle>(
-                    object2Placement,
-                    pieceMass,
-                    startMomentum,
-                    objectDensity,
-                    white
-            )
-    );
-
-    PhysicalVector object3Placement(-1/8.0f * d, -5/8.0f * d, 1, true);
-
-    physicalObjects.addShapeToList(
-            make_shared<Particle>(
-                    object3Placement,
-                    pieceMass,
-                    startMomentum,
-                    objectDensity,
-                    white
-            )
-    );
-
-    PhysicalVector object4Placement(1/8.0f * d, -5/8.0f * d, 1, true);
-
-    physicalObjects.addShapeToList(
-            make_shared<Particle>(
-                    object3Placement,
-                    pieceMass,
-                    startMomentum,
-                    objectDensity,
-                    white
-            )
-    );
-
-    return Simulation(physicalObjects, CollisionType::INELASTIC, 0.5);
-}
-
-Simulation Simulations::bodyFormation(int numPieces, PhysicsSandboxProperties properties) {
-    float distance = 130000;
-    PhysicalVector target(1000, 0, 0, true);
-    ParticleList physicalObjects;
-    PhysicalVector white(1, 1, 1);
-    float momentumMultiplier = 0.0000005;
-    ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white, momentumMultiplier);
-
-    auto  blah =
-        [this, numPieces, properties, &physicalObjects, groupProperties](
-            PhysicalVector groupColor, 
-            PhysicalVector pos, 
-            PhysicalVector mom
-        ) {
-                physicalObjects.addList(
-                        manipulatedGroup(groupProperties, pos, mom));
-    };
-    PhysicalVector groupColor (1, 1, 1);
-    blah(groupColor, PhysicalVector(-8, 4, 0), PhysicalVector(0, 0, 0));
-    blah(groupColor, PhysicalVector(-8, -4, 0), PhysicalVector(0,0,0));
-    blah(groupColor, PhysicalVector(-4, 8, 0), PhysicalVector(0,0,0));
-    blah(groupColor, PhysicalVector(-4, 0, 0), PhysicalVector(0,0,0));
-    blah(groupColor, PhysicalVector(-4, -8, 0), PhysicalVector(0,0,0));
-    blah(groupColor, PhysicalVector(0, 4, 0), PhysicalVector(0,0,0));
-    blah(groupColor, PhysicalVector(0, -4, 0), PhysicalVector(0,0,0));
-    blah(groupColor, PhysicalVector(4, 8, 0), PhysicalVector(0,0,0));
-    blah(groupColor, PhysicalVector(4, 0, 0), PhysicalVector(0,0,0));
-    blah(groupColor, PhysicalVector(4, -8, 0), PhysicalVector(0,0,0));
-    blah(groupColor, PhysicalVector(8, 4, 0), PhysicalVector(0,0,0));
-    blah(groupColor, PhysicalVector(8, -4, 0), PhysicalVector(0,0,0));
-
-    return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
-}
-
-PhysicalVector randomSplitBodyMomentum(kilogram_t pieceMass) {
-    static int randMult;
-
-    double values[] = {0, 0, 0};
-
-    for (auto &value : values) {
-        // Set the range of momenta, and have them be half positive/half negative
-        randMult = rand()%100;
-        if (randMult % 2 == 0)
-            randMult *= -1;
-        value = randMult * pieceMass.value() *
-                0.000002;
-//                0.000001;
-    }
-    return PhysicalVector(values[0], values[1], values[2], false);
-}
-
-float randomFloat() {
-    return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-}
-
-
-/*
- * Algorithm explained and designed here:
- * https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
- */
-PhysicalVector randomPointInSphere(double maxDistance, PhysicalVector target) {
-    auto u = randomFloat();
-    float v = randomFloat();
-    auto theta = u * 2.0f * float(M_PI);
-    auto phi = acos(2.0f * v - 1.0f);
-    auto r = std::cbrt(randomFloat());
-    auto sinTheta = sin(theta);
-    auto cosTheta = cos(theta);
-    auto sinPhi = sin(phi);
-    auto cosPhi = cos(phi);
-    auto x = r * sinPhi * cosTheta;
-    auto y = r * sinPhi * sinTheta;
-    auto z = r * cosPhi;
-    return PhysicalVector(x, y, z, true).scaledBy(maxDistance).plus(target);
-}
-
-
-ParticleList bodyPlacement(ParticleGroupProperties properties, PhysicalVector origin) {
-    ParticleList physicalObjects;  // I call functions on this below without ever initializing it first.... Scary.
-
-    const kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
-    const kilogram_t pieceMass = (properties.mass*1000.0)/properties.numShapes;
-
-    srand (static_cast<unsigned int>(time(nullptr)));
-
-    PhysicalVector startMomentumVec;
-    PhysicalVector startPos;
-    for (int i = 0; i < properties.numShapes; i++) {
-        if (i % 2 == 0) {
-            startMomentumVec = randomSplitBodyMomentum(pieceMass);
-            startPos = randomPointInSphere(properties.sandboxWidth, origin);
-        }
-        else {
-            startMomentumVec = startMomentumVec.scaledBy(-1);
-            startPos = startPos.scaledBy(-1);
-        }
-
-        const shared_ptr<Particle> curShape = make_shared<Particle>(
-                startPos,
-                pieceMass,
-                startMomentumVec,
-                objectDensity,
-                properties.color
-        );
-
-        //Check if being placed on previously created object
-        while ( physicalObjects.hasConflictsWith( *curShape ) ) {
-            cout << "conflict. trying again" << endl;
-            PhysicalVector newPosAttempt = randomPointInSphere(properties.sandboxWidth, origin);
-            curShape->setPos( newPosAttempt );
-        }
-        physicalObjects.addShapeToList( curShape );
-    }
-
-    return std::move(physicalObjects);
-}
-
-ParticleList Simulations::manipulatedGroup(ParticleGroupProperties properties, PhysicalVector origin, PhysicalVector momentum) {
-    const float distance = 130000;
-
-    ParticleList particleList = bodyPlacement(properties, origin);
-    particleList.applyToAllParticles([origin, distance, momentum](Particle & particle) {
-        particle.setPos(particle.position().plus(origin.scaledBy(distance)));
-        particle.adjustMomentum(momentum);
-
-    });
-    return particleList;
-}
-
-
-
-ParticleList manipulatedGroup(ParticleGroupProperties properties, PhysicalVector origin, PhysicalVector momentum) {
-    const float distance = 130000;
-
-    Simulations simulations;
-    ParticleList particleList = bodyPlacement(properties, origin);
-    particleList.applyToAllParticles([origin, distance, momentum](Particle & particle) {
-        particle.setPos(particle.position().plus(origin.scaledBy(distance)));
-        particle.adjustMomentum(momentum);
-
-    });
-    return particleList;
-}
-
-ParticleList disruption(PhysicsSandboxProperties properties) {
-    float momentumMultiplier = 0.000002;
-    float sandboxWidth = 6.0e5;
-    PhysicalVector white(1, 1, 1);
-    ParticleGroupProperties  groupProperties(1, sandboxWidth, properties.mass*2, white, momentumMultiplier);
-    ParticleList physicalObjects;
-    PhysicalVector blue(0, 1, 1);
-    ParticleGroupProperties  blueGroupProperties(properties.numShapes, sandboxWidth, properties.mass, blue, momentumMultiplier);
-
-    auto  blah =
-            [properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom, ParticleGroupProperties  groupProperties) {
-                physicalObjects.addList(
-                        manipulatedGroup(groupProperties, pos, mom));
-            };
-
-    // Define momentum values using proper units for clarity
-    // Momentum = Mass × Velocity (kg⋅m/s)
-    using namespace units::literals;
-    using namespace sandbox;
-
-    auto momentum_right = Momentum(400050.0_kg * 1.0_mps);  // Moving right (+X)
-    auto momentum_down = Momentum(400050.0_kg * 1.0_mps);   // Moving down (-Y)
-    auto momentum_diagonal = Momentum(300050.0_kg * 1.0_mps); // Diagonal component
-
-    // Center cloud with zero momentum
-    blah(PhysicalVector(0, 0, 0), PhysicalVector(0, 0, 0), blueGroupProperties);
-
-    // Large object approaching from left (moving right)
-    blah(PhysicalVector(-5, -2, 0),
-         PhysicalVector(momentum_right.value(), 0, 0),
-         groupProperties);
-
-    // Large object approaching from top (moving down)
-    blah(PhysicalVector(0, 9, 0),
-         PhysicalVector(0, -momentum_down.value(), 0),
-         groupProperties);
-
-    // Large object approaching diagonally
-    blah(PhysicalVector(2, -7, 0),
-         PhysicalVector(-momentum_diagonal.value(), momentum_diagonal.value(), 0),
-         groupProperties);
-
-    return physicalObjects;
-}
-
-ParticleList fourInADiamond(PhysicsSandboxProperties properties) {
-    float momentumMultiplier = 0.000002;
-    float sandboxWidth = 6.0e5;
-    PhysicalVector white(1, 1, 1);
-    ParticleGroupProperties  groupProperties(properties.numShapes, sandboxWidth, properties.mass, white, momentumMultiplier);
-    ParticleList physicalObjects;
-    PhysicalVector blue(0, 1, 1);
-    ParticleGroupProperties  blueGroupProperties(properties.numShapes, sandboxWidth, properties.mass, blue, momentumMultiplier);
-    PhysicalVector orange(1, 0.5, 0);
-    ParticleGroupProperties  orangeGroupProperties(properties.numShapes, sandboxWidth, properties.mass, orange, momentumMultiplier);
-
-    auto  blah =
-            [properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom, ParticleGroupProperties  groupProperties) {
-                physicalObjects.addList(
-                        manipulatedGroup(groupProperties, pos, mom));
-            };
-
-    int magnitude1 = 6;
-    int magnitude2 = 10;
-    blah(PhysicalVector(-5, 5, 0), PhysicalVector(magnitude1,-magnitude2,0), groupProperties);
-    blah(PhysicalVector(-5, 2, 0), PhysicalVector(magnitude1,-magnitude2,0), blueGroupProperties);
-
-    blah(PhysicalVector(5, -2, 0), PhysicalVector(-magnitude1,magnitude2,0), orangeGroupProperties);
-    blah(PhysicalVector(5, -5, 0), PhysicalVector(-magnitude1,magnitude2,0), blueGroupProperties);
-
-    blah(PhysicalVector(-2, -5, 0), PhysicalVector(magnitude2,magnitude1,0), groupProperties);
-    blah(PhysicalVector(2, -5, 0), PhysicalVector(magnitude2,magnitude1,0), orangeGroupProperties);
-
-    blah(PhysicalVector(2, 5, 0), PhysicalVector(-magnitude2,-magnitude1,0), groupProperties);
-    blah(PhysicalVector(5, 5, 0), PhysicalVector(-magnitude2,-magnitude1,0), orangeGroupProperties);
-
-    blah(PhysicalVector(-5, -5, 0), PhysicalVector(magnitude2,-magnitude1,0), blueGroupProperties);
-    return physicalObjects;
-}
-
-ParticleList singleCluster(PhysicsSandboxProperties properties) {
-    float momentumMultiplier = 0.0000011;
-    PhysicalVector white(1, 1, 1);
-    ParticleList physicalObjects;
-    ParticleGroupProperties  groupProperties(60000, properties.sandboxWidth, properties.mass, white, momentumMultiplier);
-
-    auto  blah =
-            [properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom, ParticleGroupProperties  groupProperties) {
-                physicalObjects.addList(
-                        manipulatedGroup(groupProperties, pos, mom));
-            };
-
-    blah(PhysicalVector(0, 0, 0), PhysicalVector(0, 0, 0), groupProperties);
-    return physicalObjects;
-}
-
-ParticleList chaoticGroups(PhysicsSandboxProperties properties) {
-    float sandboxWidth = 6.0e5;
-    float momentumMultiplier = 0.000002;
-    PhysicalVector white(1, 1, 1);
-    PhysicalVector blue(0, 1, 1);
-    ParticleGroupProperties  blueGroupProperties(properties.numShapes*10, sandboxWidth, properties.mass, blue, momentumMultiplier);
-    PhysicalVector orange(1, 0.5, 0);
-    ParticleGroupProperties  orangeGroupProperties(properties.numShapes/100, sandboxWidth, properties.mass, orange, momentumMultiplier);
-
-
-    ParticleGroupProperties  groupProperties(properties.numShapes, sandboxWidth, properties.mass, white, momentumMultiplier);
-
-    ParticleList physicalObjects;
-    auto  blah =
-            [properties, &physicalObjects](PhysicalVector pos, PhysicalVector mom, ParticleGroupProperties  groupProperties) {
-                physicalObjects.addList(
-                        manipulatedGroup(groupProperties, pos, mom));
-            };
-    //
-    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-15,0), groupProperties);
-    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-30,0), groupProperties);
-    blah(PhysicalVector(3, -4, 0), PhysicalVector(-9,12,0), groupProperties);
-    blah(PhysicalVector(-3, -4, 0), PhysicalVector(9,12,0), blueGroupProperties);
-    blah(PhysicalVector(-20, 0, 0), PhysicalVector(50,0,0), blueGroupProperties);
-    blah(PhysicalVector(3, -25, 0), PhysicalVector(0,50,0), blueGroupProperties);
-    blah(PhysicalVector(30, 0, 0), PhysicalVector(-50,0,0), orangeGroupProperties);
-    blah(PhysicalVector(35, 35, 0), PhysicalVector(-50,-50,0), orangeGroupProperties);
-    blah(PhysicalVector(0, 50, 0), PhysicalVector(2,-70,0), orangeGroupProperties);
-    return physicalObjects;
-
-}
-
-Simulation Simulations::bodyFormationCollision(PhysicsSandboxProperties properties) {
-    // Collision radius multiplier will be initialized after we know particle count
-
-    PhysicalVector target(1000, 0, 0, true);
-//    ParticleList physicalObjects;
-
-    float momentumMultiplier = 
-        0;
-        // 0.00000004; // TODO Maximum yuck around this parameter
-    PhysicalVector white(1, 1, 1);
-    PhysicalVector blue(0, 1, 1);
-    ParticleGroupProperties  blueGroupProperties(properties.numShapes*10, properties.sandboxWidth, properties.mass, blue, momentumMultiplier);
-    PhysicalVector orange(1, 0.5, 0);
-    ParticleGroupProperties  orangeGroupProperties(properties.numShapes/100, properties.sandboxWidth, properties.mass, orange, momentumMultiplier);
-
-
-    ParticleGroupProperties  groupProperties(properties.numShapes, properties.sandboxWidth, properties.mass, white, momentumMultiplier);
-
-    ParticleList physicalObjects =
-//            singleCluster(properties);
-//    chaoticGroups(properties);
-            // disruption(properties);
-           fourInADiamond(properties);
-
-    // Initialize collision radius multiplier with particle count
     Particle::setCollisionRadiusMultiplier(
-        properties.collisionRadiusMultiplier,
-        properties.mergeTargetFraction,
-        properties.mergeTargetSteps,
-        physicalObjects.size()
+            properties.collisionRadiusMultiplier,
+            properties.mergeTargetFraction,
+            properties.mergeTargetSteps,
+            physicalObjects.size()
     );
 
-    // Calculate center of mass and boundary radius from initial distribution
-    PhysicalVector centerOfMass(0, 0, 0, true);
-    double totalMass = 0;
-    physicalObjects.checkForAllParticles([&centerOfMass, &totalMass](const Particle& p) {
-        centerOfMass = centerOfMass.plus(p.position().scaledBy(p.mass().value()));
-        totalMass += p.mass().value();
-    });
-    if (totalMass > 0) {
-        centerOfMass = centerOfMass.scaledBy(1.0 / totalMass);
-    }
-
-    // Find max distance from center to set boundary radius
-    double maxDist = 0;
-    physicalObjects.checkForAllParticles([&centerOfMass, &maxDist](const Particle& p) {
-        double dist = p.position().minus(centerOfMass).length();
-        if (dist > maxDist) maxDist = dist;
-    });
-
-    // Use 1.5x the initial max distance as boundary (some room to expand)
-    float boundaryRadius = maxDist * 1.5f;
-
+    // Keep the run in frame: the soft boundary sits just outside where the
+    // particles started, measured from the same centre of mass.
     Particle::setDampingAndBoundary(
-        properties.velocityDamping,
-        properties.boundaryStrength,
-        boundaryRadius,
-        centerOfMass
+            properties.velocityDamping,
+            properties.boundaryStrength,
+            diagnostics.systemRadius * properties.boundaryRadiusFactor,
+            diagnostics.centerOfMass
     );
 
     Particle::setMinimumMergesPerFrame(properties.minimumMergesPerFrame);
 
-    // 4 in a diamond, 2 approaching from the sides
-//    fourInADiamond(properties);
-//    blah(PhysicalVector(-5, 2, 0), PhysicalVector(12,-20,0), groupProperties);
-//    blah(PhysicalVector(5, -2, 0), PhysicalVector(-12,20,0), groupProperties);
-//    blah(PhysicalVector(-2, -5, 0), PhysicalVector(20,12,0), groupProperties);
-//    blah(PhysicalVector(2, 5, 0), PhysicalVector(-20,-12,0), groupProperties);
-
-//    blah(PhysicalVector(-13, -5, 0), PhysicalVector(50,2,0), blueGroupProperties);
-//    blah(PhysicalVector(20, 5, 0), PhysicalVector(-50,-2,0), blueGroupProperties);
-
-    // 2 in a line, 2 meeting diagonally
-//    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-15,0));
-//    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-30,0));
-//    blah(PhysicalVector(3, -4, 0), PhysicalVector(-9,12,0));
-//    blah(PhysicalVector(-3, -4, 0), PhysicalVector(9,12,0));
-
-    // 2 in a line, 2 meeting diagonally, more slowly
-//    blah(PhysicalVector(0, 5, 0), PhysicalVector(0,-8,0));
-//    blah(PhysicalVector(0, 10, 0), PhysicalVector(0,-12,0));
-//    blah(PhysicalVector(3, -4, 0), PhysicalVector(-5,8,0));
-//    blah(PhysicalVector(-3, -4, 0), PhysicalVector(5,8,0));
-
     return Simulation(physicalObjects, CollisionType::INELASTIC, properties.octreeTheta);
 }
 
+Simulation Simulations::QuadrantTesting_simplest() {
+    ParticleList physicalObjects;
+
+    const int numPieces = 3;
+    const kilograms_per_cubic_meter_t objectDensity = AstronomicalValues::DENSITY_SUN;
+    const kilogram_t pieceMass = AstronomicalValues::MASS_SUN / numPieces;
+    const PhysicalVector startMomentum(0, 0, 0);
+    const PhysicalVector white(1, 1, 1);
+
+    const float d = 2.0e4;
+
+    const PhysicalVector placements[] = {
+            PhysicalVector(+5 / 8.0f * d, +7 / 8.0f * d, 1, true),
+            PhysicalVector(-7 / 8.0f * d, +7 / 8.0f * d, 1, true),
+            PhysicalVector(-1 / 8.0f * d, -5 / 8.0f * d, 1, true),
+            PhysicalVector(+1 / 8.0f * d, -5 / 8.0f * d, 1, true),
+    };
+
+    for (const auto &placement : placements) {
+        physicalObjects.addShapeToList(
+                make_shared<Particle>(placement, pieceMass, startMomentum, objectDensity, white));
+    }
+
+    return Simulation(physicalObjects, CollisionType::INELASTIC, 0.5);
+}

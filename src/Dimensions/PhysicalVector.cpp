@@ -29,9 +29,12 @@ PhysicalVector::PhysicalVector(float x, float y, float z, bool anchored)
 
 
 PhysicalVector PhysicalVector::scaledBy(double scalingFactor) const {
-    // TODO Make sure Vec3 behavior is appropriate here.
+    // sgScaleVec3 only writes the first three components, so the anchor weight
+    // has to be carried across explicitly. Leaving it uninitialized used to
+    // leak stack garbage into every scaled vector.
     sgVec4 newVec;
     sgScaleVec3 ( newVec, this->vec, scalingFactor );
+    newVec[3] = this->vec[3] * scalingFactor;
     PhysicalVector newVecStruct(newVec);
     return newVecStruct;
 }
@@ -59,9 +62,12 @@ PhysicalVector PhysicalVector::withElementsMultipliedBy(const PhysicalVector &ot
     return retVec;
 }
 
+/*! Direction only: the anchor weight is dropped so normalising a position
+ *  (w = 1) gives the direction to it rather than a shortened, tilted vector.
+ */
 PhysicalVector PhysicalVector::unit() const {
-    sgVec4 newVec;
-    sgNormaliseVec4(newVec, vec);
+    sgVec4 newVec = {0, 0, 0, 0};
+    sgNormaliseVec3(newVec, vec);
     return PhysicalVector(newVec);
 }
 
@@ -79,8 +85,12 @@ PhysicalVector PhysicalVector::vectorProduct3(const PhysicalVector &other) const
     return retVec;
 }
 
+/*! Spatial length. The anchor weight is deliberately excluded: an anchored
+ *  vector (w = 1) is a point in space, and its length is how far from the
+ *  origin it sits, not sqrt(x^2 + y^2 + z^2 + 1).
+ */
 float PhysicalVector::length() const {
-    SGfloat distanceSquared = sgLengthSquaredVec4(this->vec);
+    SGfloat distanceSquared = sgLengthSquaredVec3(this->vec);
     return sqrt(distanceSquared);
 }
 

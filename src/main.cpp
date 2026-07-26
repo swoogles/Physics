@@ -10,34 +10,21 @@
 
 //Physics
 #include "Physics/PhysicsSandboxProperties.h"
+#include "Physics/ScenarioBuilder.h"
+#include "Physics/ScenarioSpec.h"
+#include "Physics/Simulations.h"
 
 #include "FullApplication.h"
-#include "Input/ParameterArguments.h"
+#include "GlobalApplication.h"
+#include "Input/RunOptions.h"
+#include "Sandbox/RunReport.h"
 
+#include <csignal>
+#include <ctime>
 #include <iomanip>
-unique_ptr<FullApplication> globalFullApplication;
-
-enum class ResolutionPreset {
-    HD_720P,
-    FHD_1080P,
-    QHD_1440P,
-    UHD_4K
-};
-
-WindowDimensions windowDimensionsFor(ResolutionPreset preset, int xPos, int yPos) {
-    switch (preset) {
-        case ResolutionPreset::HD_720P:
-            return WindowDimensions(xPos, yPos, 720, 1280);
-        case ResolutionPreset::FHD_1080P:
-            return WindowDimensions(xPos, yPos, 1080, 1920);
-        case ResolutionPreset::QHD_1440P:
-            return WindowDimensions(xPos, yPos, 1440, 2560);
-        case ResolutionPreset::UHD_4K:
-            return WindowDimensions(xPos, yPos, 2160, 3840);
-    }
-
-    return WindowDimensions(xPos, yPos, 1080, 1920);
-}
+#include <random>
+#include <sstream>
+#include <sys/stat.h>
 
 void displayFunc() {
     // Empty - work is done in idleFunc
@@ -50,21 +37,60 @@ void idleFunc() {
         case SUCESSFUL_STEP:
             break;
         case COMPLETED:
-            cout << "Should make new Simulation now." << endl;
             exit(0);
     }
 
     globalFullApplication->display();
 }
 
+//! Ctrl-C should still produce a playable video and a run report.
+void handleInterrupt(int) {
+    FullApplication::requestStop();
+}
+
+string defaultOutputPath() {
+    mkdir("./WorthyVideos", 0755);
+
+    const time_t now = time(nullptr);
+    ostringstream path;
+    path << "./WorthyVideos/" << put_time(localtime(&now), "%F %T") << ".mp4";
+    return path.str();
+}
+
 int main(int argcp, char **argv) {
-    PhysicsSandboxProperties properties("simulation.properties");
+    RunOptions options(argcp, argv);
 
-    ParameterArguments parameterArguments(argv);
+    PhysicsSandboxProperties properties(options.configPath);
 
-    // Change this single preset to switch rendering resolution.
-    constexpr auto resolutionPreset = ResolutionPreset::FHD_1080P;
-    auto windowDimensions = windowDimensionsFor(resolutionPreset, 400, 50);
+    // A run is reproducible from its seed, so record whichever one we used.
+    if (options.seed == 0) {
+        std::random_device entropy;
+        options.seed = entropy();
+    }
+    std::mt19937 rng(options.seed);
+
+    ScenarioSpec scenario = ScenarioParser::parse(properties.raw(), properties, options.seed);
+
+    SetupDiagnostics diagnostics;
+    Simulation simulation = Simulations::fromScenario(scenario, properties, diagnostics, rng);
+
+    cout << "scenario=" << scenario.name
+         << " type=" << scenario.type
+         << " seed=" << options.seed
+         << " groups=" << scenario.groups.size() << endl;
+    cout << "setup " << diagnostics.toJson() << endl;
+
+    if (options.printSetupOnly) {
+        return 0;
+    }
+
+    if (options.outputPath.empty()) {
+        options.outputPath = defaultOutputPath();
+    }
+
+    RunReport report(options, properties.raw(), scenario, diagnostics);
+
+    auto windowDimensions = WindowDimensions(400, 50, options.height, options.width);
 
     auto idleFunction = []() {
     };
@@ -75,11 +101,16 @@ int main(int argcp, char **argv) {
     );
 
     globalFullApplication = make_unique<FullApplication>(
-            parameterArguments.isRecording(),
+            options,
             windowDimensions,
             properties,
-            openGlSetup
+            openGlSetup,
+            std::move(simulation),
+            &report
     );
+
+    signal(SIGINT, handleInterrupt);
+    signal(SIGTERM, handleInterrupt);
 
     glutSetWindow(1);
     glutDisplayFunc([]() {

@@ -6,7 +6,6 @@
 
 #include "../src/BillProperties.h"
 #include <iostream>
-#include <zconf.h>
 
 
 #include <stdio.h>  /* defines FILENAME_MAX */

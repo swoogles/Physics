@@ -22,10 +22,11 @@ public:
 
     ParticleList doomed();
 
+    bool containsPair(const TouchingPair & newPair);
+
     friend ostream &operator<<(ostream &os, const PairCollection &collection);
 
 private:
-    bool containsPair(const TouchingPair & newPair);
     inline vector<TouchingPair> brittlePairs() { return pairs; }
     vector<TouchingPair> pairs;
 

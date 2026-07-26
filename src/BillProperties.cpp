@@ -10,11 +10,40 @@ string BillProperties::at( const char target[]  ) const
   return properties.at( target );
 }
 
+bool BillProperties::has( const string & target ) const
+{
+  return properties.find( target ) != properties.end();
+}
+
+string BillProperties::get( const string & target, const string & defaultValue ) const
+{
+  const auto found = properties.find( target );
+  return found == properties.end() ? defaultValue : found->second;
+}
+
+const map<string, string> & BillProperties::all() const
+{
+  return properties;
+}
+
+string BillProperties::trim( const string & value )
+{
+  const auto first = value.find_first_not_of(" \t\r\n");
+  if ( first == string::npos ) {
+    return "";
+  }
+  const auto last = value.find_last_not_of(" \t\r\n");
+  return value.substr(first, last - first + 1);
+}
+
 bool BillProperties::isValidProperty( string line )
 {
-  if ( line[0] == '#' ) {
+  const string trimmed = trim( line );
+  if ( trimmed.empty() ) {
     return false;
-  } else if ( line.find('=') == string::npos ) {
+  } else if ( trimmed[0] == '#' ) {
+    return false;
+  } else if ( trimmed.find('=') == string::npos ) {
     return false;
   } else {
     return true;
@@ -24,7 +53,6 @@ bool BillProperties::isValidProperty( string line )
 void BillProperties::readProperties()
 {
   ifstream propertiesFile;
-  // TODO Create separate instances, rather than this static hard-coded value.
   propertiesFile.open(fileName, ios::in);
 
   string line;
@@ -33,8 +61,8 @@ void BillProperties::readProperties()
     if ( BillProperties::isValidProperty( line ) )
     {
       unsigned long equalsPosition = line.find('=');
-      string propName = line.substr(0,equalsPosition);
-      string propValue = line.substr(equalsPosition+1);
+      string propName = trim( line.substr(0,equalsPosition) );
+      string propValue = trim( line.substr(equalsPosition+1) );
       properties.insert( make_pair( propName, propValue ) );
     } else {
 

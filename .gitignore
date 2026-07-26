@@ -15,3 +15,5 @@ Makefile
 Test/catch.hpp
 WorthyVideos
 output
+batches
+scenario_test_generated.properties

@@ -13,9 +13,26 @@
 using namespace units::time;
 
 
+/*! \brief A cheap snapshot of what the simulation looks like right now.
+ *
+ *  Sampled during a run and written into the sidecar so runs can be ranked
+ *  without a human watching every video.
+ */
+struct SimulationStats {
+    int stepsElapsed = 0;
+    int particleCount = 0;
+    int totalMerges = 0;
+    int mergesLastStep = 0;
+    double totalMass = 0;
+    double largestMassFraction = 0;  //!< Mass of the biggest body over total mass.
+    double rmsRadius = 0;            //!< Mass-weighted spread about the centre of mass.
+};
+
 class Simulation {
 public:
     Simulation(ParticleList physicalObjects, CollisionType collisionType, float octreeTheta);
+
+    SimulationStats getStats() const;
 
 	void applySideEffectingFunctionsToInnards(
 			function<void (const Quadrant &)> quadrantFunctor,
@@ -35,6 +52,9 @@ private:
     ParticleList physicalObjects;
     hour_t timeElapsed;
     int stepsElapsed;
+
+    int totalMerges;
+    int mergesLastStep;
 
 	float minX, maxX, minY, maxY;
 

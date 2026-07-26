@@ -4,29 +4,49 @@
 
 #include "FullApplication.h"
 #include "Physics/Simulations.h"
+#include <atomic>
 #include <chrono>
 #include <iomanip>
 using namespace std;
 using std::chrono::time_point;
 using std::chrono::time_point_cast;
 
+namespace {
+    //! Set by the interrupt handler; checked once per frame.
+    atomic<bool> stopRequested(false);
 
-FullApplication::FullApplication(bool shouldRecord,
-                                 WindowDimensions windowDimensions, PhysicsSandboxProperties properties,
-                                 OpenGlSetup openGlSetup)
-        : simulation(
-        Simulations().bodyFormationCollision(properties)
-        ),
+    //! One video second, at the recorder's 24 fps input rate.
+    const int SAMPLE_INTERVAL_FRAMES = 24;
+}
+
+void FullApplication::requestStop() {
+    stopRequested = true;
+}
+
+FullApplication::FullApplication(const RunOptions &options,
+                                 WindowDimensions windowDimensions,
+                                 PhysicsSandboxProperties properties,
+                                 OpenGlSetup openGlSetup,
+                                 Simulation simulation,
+                                 RunReport *report)
+        : simulation(std::move(simulation)),
         start(system_clock::now()),
         controlCenter(hour_t(properties.dt), windowDimensions.width, start),
           centerStage (windowDimensions.width, system_clock::to_time_t(time_point_cast<system_clock::duration>(start))),
           recorder(Recorder()),
-          recording(shouldRecord),
-          maximumRuntime(properties.maximumRunTime * 5),
+          recording(options.recording),
+          maximumRuntime(
+                  options.maxSeconds > 0
+                  ? std::chrono::seconds(options.maxSeconds)
+                  : properties.maximumRunTime),
           graphicalOperations(
                   openGlSetup.mainDisplayNum,
                   openGlSetup.controlCenterNum,
-                  windowDimensions)
+                  windowDimensions),
+          options(options),
+          report(report),
+          framesRendered(0),
+          finished(false)
 {
     // Intentionally no default scripted camera actions.
     // Keep timedSceneActions in place so scripted camera paths can be re-enabled later.
@@ -35,23 +55,61 @@ FullApplication::FullApplication(bool shouldRecord,
     // to ensure OpenGL context is ready
 }
 
+void FullApplication::finishRun() {
+    if (finished) {
+        return;
+    }
+    finished = true;
+
+    if (recording && streamingRecorder) {
+        cout << "Finalizing video after " << framesRendered << " frames..." << endl;
+        streamingRecorder->finalize();
+    }
+
+    if (report) {
+        const duration<double> elapsed = system_clock::now() - start;
+        report->finish(framesRendered, elapsed.count(), simulation.getStats());
+
+        const string sidecar = options.sidecarPath();
+        if (options.writeSidecar && !sidecar.empty()) {
+            if (report->writeTo(sidecar)) {
+                cout << "Wrote run report: " << sidecar << endl;
+            } else {
+                cerr << "Failed to write run report: " << sidecar << endl;
+            }
+        }
+    }
+}
+
 ApplicationResult FullApplication::update() {
+    // Checked before stepping: the previous frame has been drawn and captured
+    // by now, so the video comes out exactly maxFrames long.
+    if (options.maxFrames > 0 && framesRendered >= options.maxFrames) {
+        cout << "Frame limit reached (" << options.maxFrames << ")." << endl;
+        finishRun();
+        return ApplicationResult::COMPLETED;
+    }
+
     if (! controlCenter.isPaused() ) {
         auto dt = controlCenter.getDt();
         simulation.update(dt);
         centerStage.update(dt.value());
+        framesRendered++;
+
+        if (report && framesRendered % SAMPLE_INTERVAL_FRAMES == 0) {
+            report->sample(framesRendered, simulation.getStats());
+        }
     }
     graphicalOperations.updateObserver(simulation.getXYMinsAndMaxes());
 
     time_point end = system_clock::now();
 
     duration<double> elapsed_seconds = end-start;
-    if ( elapsed_seconds > (maximumRuntime)) {
-        if ( recording && streamingRecorder ) {
-            cout << "Maximum runtime reached - finalizing video..." << endl;
-            streamingRecorder->finalize();
-        }
 
+    if ( elapsed_seconds > maximumRuntime || stopRequested ) {
+        cout << (stopRequested ? "Stop requested - wrapping up." : "Maximum runtime reached.") << endl;
+
+        finishRun();
         return ApplicationResult::COMPLETED;
     }
 
@@ -77,17 +135,13 @@ void FullApplication::display() {
 
         // Lazy initialization - create recorder on first frame capture
         if (!streamingRecorder) {
-            time_t startTime = system_clock::to_time_t(time_point_cast<system_clock::duration>(start));
-            ostringstream outputPath;
-            outputPath << "./WorthyVideos/" << std::put_time(std::localtime(&startTime), "%F %T") << ".mp4";
-
             auto dimensions = graphicalOperations.currentDimensions();
             streamingRecorder = make_unique<StreamingRecorder>(
                 dimensions.width,
                 dimensions.height,
-                outputPath.str()
+                options.outputPath
             );
-            cout << "Streaming recorder initialized for: " << outputPath.str() << endl;
+            cout << "Streaming recorder initialized for: " << options.outputPath << endl;
         }
 
         streamingRecorder->captureFrame();

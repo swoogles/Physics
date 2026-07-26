@@ -12,7 +12,7 @@
 using namespace std;
 
 // Declared in main.cpp
-extern unique_ptr<FullApplication> globalFullApplication;
+#include "GlobalApplication.h"
 using std::chrono::time_point_cast;
 
 // TODO Ground these. No longer a need to make them static

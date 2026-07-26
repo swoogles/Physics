@@ -14,6 +14,8 @@ Simulation::Simulation(
         :physicalObjects(std::move(physicalObjects))
         ,timeElapsed(0)
         ,stepsElapsed(0)
+        ,totalMerges(0)
+        ,mergesLastStep(0)
         ,minX(FLT_MAX)
         ,maxX(FLT_MIN)
         ,minY(FLT_MAX)
@@ -199,7 +201,11 @@ void Simulation::update(hour_t dt) {
         }
     }
 
+    const size_t countBeforeCollisions = physicalObjects.size();
     physicalObjects.updateWithCollisions(dt, collisionPairs);
+    mergesLastStep = (int) (countBeforeCollisions - physicalObjects.size());
+    totalMerges += mergesLastStep;
+
     updateTimeElapsed(dt);
 
     // TODO This causes another full iteration of all shapes. If it's going to happen,
@@ -319,6 +325,38 @@ void Simulation::applySideEffectingFunctionsToInnards(
         const {
     quadrant->applyToAllChildrenConstant(quadrantFunctor);
     physicalObjects.checkForAllParticles(particleFunctor);
+}
+
+SimulationStats Simulation::getStats() const {
+    SimulationStats stats;
+    stats.stepsElapsed = stepsElapsed;
+    stats.particleCount = (int) physicalObjects.size();
+    stats.totalMerges = totalMerges;
+    stats.mergesLastStep = mergesLastStep;
+
+    PhysicalVector centerOfMass(0, 0, 0, true);
+    physicalObjects.checkForAllParticles([&](const Particle &particle) {
+        const double mass = particle.mass().value();
+        stats.totalMass += mass;
+        stats.largestMassFraction = std::max(stats.largestMassFraction, mass);
+        centerOfMass = centerOfMass.plus(particle.position().scaledBy(mass));
+    });
+
+    if (stats.totalMass <= 0) {
+        return stats;
+    }
+
+    centerOfMass = centerOfMass.scaledBy(1.0 / stats.totalMass);
+    stats.largestMassFraction /= stats.totalMass;
+
+    double weightedSquares = 0;
+    physicalObjects.checkForAllParticles([&](const Particle &particle) {
+        const double distance = particle.position().minus(centerOfMass).length();
+        weightedSquares += particle.mass().value() * distance * distance;
+    });
+    stats.rmsRadius = sqrt(weightedSquares / stats.totalMass);
+
+    return stats;
 }
 
 second_t Simulation::getOutputViewingTime() const {
