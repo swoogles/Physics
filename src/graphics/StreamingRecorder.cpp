@@ -9,10 +9,20 @@
 #include <errno.h>
 #include <dirent.h>
 
-StreamingRecorder::StreamingRecorder(unsigned int width, unsigned int height, const string& outputPath)
-    : width(width)
-    , height(height)
-    , frameSize(width * height * 3)
+/*! h264 with yuv420p subsamples chroma 2x2, so it cannot encode an odd width or
+ *  height - ffmpeg exits without writing a single packet and leaves a 0-byte
+ *  file behind. Window sizes are whatever the window manager hands back, so an
+ *  odd one is a coin flip. Losing a row or column of pixels is invisible;
+ *  losing the whole run to a failed encode is not.
+ */
+static unsigned int roundDownToEven(unsigned int value) {
+    return value - (value % 2);
+}
+
+StreamingRecorder::StreamingRecorder(unsigned int requestedWidth, unsigned int requestedHeight, const string& outputPath)
+    : width(roundDownToEven(requestedWidth))
+    , height(roundDownToEven(requestedHeight))
+    , frameSize(roundDownToEven(requestedWidth) * roundDownToEven(requestedHeight) * 3)
     , outputPath(outputPath)
     , captureBuffer(nullptr)
     , isRecording(false)
@@ -43,6 +53,11 @@ StreamingRecorder::StreamingRecorder(unsigned int width, unsigned int height, co
     mkdir("./WorthyVideos", 0755);
 
     isRecording = true;
+    if (width != requestedWidth || height != requestedHeight) {
+        cout << "Capture size trimmed to even dimensions: "
+             << requestedWidth << "x" << requestedHeight
+             << " -> " << width << "x" << height << " (h264 requires even)" << endl;
+    }
     cout << "Recording initialized. Frame size: " << width << "x" << height
          << " (" << frameSize << " bytes per frame)" << endl;
     cout << "Final output will be: " << outputPath << endl;

@@ -137,6 +137,18 @@ void FullApplication::display() {
         // Lazy initialization - create recorder on first frame capture
         if (!streamingRecorder) {
             auto dimensions = graphicalOperations.currentDimensions();
+
+            /* A window can't be larger than the display, so asking for 1440p on
+             * a smaller screen silently records at whatever the window manager
+             * allowed. Say so rather than letting the run finish and surprise
+             * someone with the wrong resolution. */
+            if (dimensions.width < options.width || dimensions.height < options.height) {
+                cout << "WARNING: asked for " << options.width << "x" << options.height
+                     << " but the window is only " << dimensions.width << "x" << dimensions.height
+                     << ". Recording at the smaller size - a window cannot exceed the display."
+                     << endl;
+            }
+
             streamingRecorder = make_unique<StreamingRecorder>(
                 dimensions.width,
                 dimensions.height,

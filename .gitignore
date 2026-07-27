@@ -17,3 +17,4 @@ WorthyVideos
 output
 batches
 scenario_test_generated.properties
+__pycache__/

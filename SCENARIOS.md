@@ -260,6 +260,25 @@ which the run report lets you confirm: compare `setup.total_mass_kg` against
 `final.total_mass_kg`, and watch `largest_mass_fraction` in the history, which
 only ever climbs.
 
+## Recording pitfalls
+
+**A window cannot be larger than your display.** Asking for `--res 1440p` on a
+smaller screen gets you whatever the window manager allowed - one run here
+recorded at 1728x1053 and another at 2336x1428 from the same `1440p` request.
+The run now prints a warning when it is clamped. Genuinely rendering above
+screen resolution needs offscreen rendering, which doesn't exist yet.
+
+**h264 cannot encode odd dimensions.** With `-pix_fmt yuv420p`, chroma is
+subsampled 2x2, so an odd width or height makes ffmpeg exit without writing a
+packet and leave a 0-byte file. Window sizes are whatever the window manager
+hands back, so an odd one is a coin flip - a 1728x1053 window silently threw
+away a 15-minute render. Capture dimensions are now rounded down to even.
+
+The batch runner verifies every video before starting the next run and stops
+the batch if one is empty, unreadable, or zero-length, printing the tail of
+that run's log. Each run writes `<video>.log` next to its output; the runner
+used to discard that output entirely, which is what hid the failure.
+
 ## Camera smoothing
 
 The bounds the camera follows are recomputed from scratch every frame as the

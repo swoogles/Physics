@@ -157,6 +157,8 @@ def write_config(path, params, particles, frames_per_crossing, min_merges, name)
 
 
 def run_one(config, output, seed, res, max_frames, quiet=True):
+    """Runs one simulation. Output goes to <video>.log so a failed encode can be
+    read back - discarding it once hid an ffmpeg error for a whole batch."""
     command = [
         str(BINARY),
         "--config", str(config),
@@ -167,13 +169,54 @@ def run_one(config, output, seed, res, max_frames, quiet=True):
         "--max-frames", str(max_frames),
     ]
 
-    result = subprocess.run(
-        command,
-        cwd=str(REPO),
-        stdout=subprocess.DEVNULL if quiet else None,
-        stderr=subprocess.STDOUT if quiet else None,
-    )
+    log_path = Path(output).with_suffix(".log")
+    with open(log_path, "wb") as log:
+        result = subprocess.run(
+            command,
+            cwd=str(REPO),
+            stdout=log if quiet else None,
+            stderr=subprocess.STDOUT if quiet else None,
+        )
     return result.returncode
+
+
+def verify_video(path):
+    """(ok, description). A run that simulated for an hour and wrote nothing is
+    the expensive failure, so check the file is real before moving on."""
+    video = Path(path)
+    if not video.exists():
+        return False, "no file was written"
+
+    size = video.stat().st_size
+    if size == 0:
+        return False, "file is empty (0 bytes) - the encode failed"
+    if size < 20_000:
+        return False, "file is only %d bytes" % size
+
+    try:
+        probe = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "csv=p=0", str(video)],
+            capture_output=True, text=True)
+        duration = float(probe.stdout.strip())
+    except (ValueError, OSError):
+        return False, "ffprobe could not read it"
+
+    if duration <= 0:
+        return False, "zero duration"
+
+    return True, "%.0fs, %.0f MB" % (duration, size / 1e6)
+
+
+def report_failure(name, video, note):
+    print("\n  !! %s produced no usable video: %s" % (name, note))
+    log_path = Path(video).with_suffix(".log")
+    if log_path.exists():
+        tail = log_path.read_text(errors="replace").splitlines()[-12:]
+        print("  --- last lines of %s ---" % log_path.name)
+        for line in tail:
+            print("  | %s" % line)
+    print("")
 
 
 # --------------------------------------------------------------------------
@@ -302,6 +345,15 @@ def command_sample(args):
         code = run_one(config, video, seed, args.res, args.frames, quiet=not args.verbose)
         if code != 0:
             print("      ! exited with %s" % code)
+
+        ok, note = verify_video(video)
+        if ok:
+            print("      wrote %s (%s)" % (video.name, note))
+        else:
+            report_failure(name, video, note)
+            if not args.keep_going:
+                sys.exit("Stopping: the rest of the batch would fail the same way. "
+                         "Re-run with --keep-going to push on anyway.")
 
     write_index(batch_dir)
     print_ranking(batch_dir)
@@ -446,6 +498,15 @@ def command_render(args):
         print("Rendering %s -> %s (seed %s)" % (entry["name"], output.name, entry["seed"]))
         run_one(config, output, entry["seed"], args.res, args.frames, quiet=not args.verbose)
 
+        ok, note = verify_video(output)
+        if ok:
+            print("  ok: %s" % note)
+        else:
+            report_failure(entry["name"], output, note)
+            if not args.keep_going:
+                sys.exit("Stopping before another long render is wasted. "
+                         "Re-run with --keep-going to push on anyway.")
+
 
 FONT = "/System/Library/Fonts/Supplemental/Arial.ttf"
 
@@ -575,6 +636,8 @@ def main():
     sample.add_argument("--res", default="720p")
     sample.add_argument("--out", default=None)
     sample.add_argument("--verbose", action="store_true")
+    sample.add_argument("--keep-going", action="store_true",
+                             help="carry on after a run produces no usable video")
     sample.set_defaults(func=command_sample)
 
     report = subparsers.add_parser("report", help="re-score an existing batch")
@@ -606,6 +669,8 @@ def main():
                         help="with --particles, leave the merge settings alone instead of "
                              "rescaling them to keep coalescing on the same schedule")
     render.add_argument("--verbose", action="store_true")
+    render.add_argument("--keep-going", action="store_true",
+                             help="carry on after a run produces no usable video")
     render.set_defaults(func=command_render)
 
     args = parser.parse_args()
