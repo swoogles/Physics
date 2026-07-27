@@ -260,6 +260,36 @@ which the run report lets you confirm: compare `setup.total_mass_kg` against
 `final.total_mass_kg`, and watch `largest_mass_fraction` in the history, which
 only ever climbs.
 
+## Camera smoothing
+
+The bounds the camera follows are recomputed from scratch every frame as the
+extrema of a set whose membership keeps changing - particles cross the 2.5-sigma
+velocity cut, and the 95%-of-mass cutoff moves as merging redistributes mass.
+The camera used to be set straight from that, so it stuttered.
+
+It now holds still until the framing is off by more than `camera_deadband`,
+then eases the whole way in (`camera_zoom_in_rate`) or out
+(`camera_zoom_out_rate`) until within `camera_settle`. Zoom-in is deliberately
+about 5x slower than zoom-out: being a little too far back is much cheaper than
+losing the action off the edge of frame, and it stops the camera chasing a
+collapse inward.
+
+Measured over 600 frames:
+
+| | zoom range | frames moving | reversals | worst single frame |
+|---|---|---|---|---|
+| chaotic, before | 6.03x | 100% | 29 | 6.86% |
+| chaotic, after | 3.79x | 52% | 6 | 1.12% |
+| collapse, before | 1.30x | 79% | 40 | 0.75% |
+| collapse, after | 1.10x | 7% | 0 | 0.22% |
+
+`PHYSICS_LOG_ZOOM=1` dumps the camera distance per frame on stderr, which is
+how those numbers were taken.
+
+Still outstanding: the camera always centres on the origin rather than the
+system's centre of mass, so a scenario whose mass ends up off-centre - `chaotic`
+often does - is framed wider than it needs to be.
+
 ## Merge jumps
 
 A merged body is placed at the centre of mass of the two originals, so the

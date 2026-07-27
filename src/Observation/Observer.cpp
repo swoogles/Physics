@@ -1,11 +1,16 @@
 #include "Observer.h"
 #include <iostream>
+#include <cstdlib>
+#include <cstdio>
 using std::cout;
 using std::endl;
 
-Observer::Observer(WindowDimensions windowDimensions)
+Observer::Observer(WindowDimensions windowDimensions, AutoScaleTuning tuning)
           : pos(PhysicalVector(0,0,0))
           , autoScale( true )
+          , tuning( tuning )
+          , currentPullback( 0 )
+          , adjustingPullback( false )
           , fov(45.0f) {
 	sgMakeIdentQuat(orientationQuat);
 	sgQuatToMatrix(orientationMat, orientationQuat);
@@ -73,7 +78,42 @@ void Observer::calcMinPullback(MaximumValues maximumValues) {
                 ? absMaxY / tan(this->fov * M_PI / 360)
                 : absMaxX / tan(this->fov * M_PI / 360);
 
-        setPos(0, 0, -pullBack * 1.4);
+        const float target = (float) (pullBack * 1.4);
+        if (target <= 0) {
+            return;
+        }
+
+        if (currentPullback <= 0) {
+            currentPullback = target;   // first frame: just frame it
+        } else {
+            /* Hold still until the framing is properly wrong, then close the
+             * whole way. Reacting to every small difference is what makes the
+             * camera stutter; a plain threshold would instead leave it forever
+             * making tiny corrections at the edge of the band. */
+            const float error = fabs(target / currentPullback - 1.0f);
+            if (adjustingPullback) {
+                if (error < tuning.settle) {
+                    adjustingPullback = false;
+                }
+            } else if (error > tuning.deadband) {
+                adjustingPullback = true;
+            }
+
+            if (adjustingPullback) {
+                const float rate = (target > currentPullback)
+                        ? tuning.zoomOutRate
+                        : tuning.zoomInRate;
+                currentPullback += (target - currentPullback) * rate;
+            }
+        }
+
+        setPos(0, 0, -currentPullback);
+        // Set PHYSICS_LOG_ZOOM=1 to dump the camera distance per frame, which
+        // is how you tell smooth framing from stutter without eyeballing video.
+        static const bool logZoom = getenv("PHYSICS_LOG_ZOOM") != nullptr;
+        if (logZoom) {
+            fprintf(stderr, "ZOOM %.6e\n", currentPullback);
+        }
     }
 
 }

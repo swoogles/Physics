@@ -15,11 +15,34 @@
  *  demonstrate different aspects of relativity.
  *
  */
+/*! \brief How eagerly the auto-scaling camera chases the simulation's bounds.
+ *
+ *  The bounds are recomputed from scratch every frame from the extrema of a
+ *  set whose membership keeps changing, so following them directly makes the
+ *  camera stutter. These four numbers turn that raw target into occasional,
+ *  smooth moves.
+ */
+struct AutoScaleTuning {
+	//! Fraction of the remaining distance covered per frame when pulling back.
+	float zoomOutRate = 0.06f;
+
+	//! The same when moving in. Deliberately slower: losing the action off the
+	//! edges of frame is far worse than being a little too far away, and a
+	//! collapse shouldn't drag the camera in behind it.
+	float zoomInRate = 0.012f;
+
+	//! Start adjusting only once the target differs by more than this.
+	float deadband = 0.18f;
+
+	//! Once adjusting, keep going until within this of the target.
+	float settle = 0.04f;
+};
+
 class Observer {
 public:
 
 	//! Creates an Observer at the origin looking in the -Z direction
-	Observer(WindowDimensions windowDimensions);
+	Observer(WindowDimensions windowDimensions, AutoScaleTuning tuning = AutoScaleTuning());
 	/*! \brief Does matrix operations needed to get the observers point of view
 	 *
 	 * Steps:
@@ -53,6 +76,14 @@ private:
 	float * perspectiveMat;
 
 	bool autoScale;
+
+	const AutoScaleTuning tuning;
+
+	//! Where the camera actually is, as opposed to where the bounds want it.
+	float currentPullback;
+
+	//! True while closing on a new target; see AutoScaleTuning.
+	bool adjustingPullback;
 
 	const float fov;
 

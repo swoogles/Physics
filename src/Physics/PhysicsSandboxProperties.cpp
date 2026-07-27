@@ -35,3 +35,12 @@ maxMergeJumpFraction(parseOptionalFloat(properties, "max_merge_jump_fraction", 0
 {
 
 }
+
+AutoScaleTuning PhysicsSandboxProperties::autoScaleTuning() const {
+    AutoScaleTuning tuning;
+    tuning.zoomOutRate = parseOptionalFloat(properties, "camera_zoom_out_rate", tuning.zoomOutRate);
+    tuning.zoomInRate = parseOptionalFloat(properties, "camera_zoom_in_rate", tuning.zoomInRate);
+    tuning.deadband = parseOptionalFloat(properties, "camera_deadband", tuning.deadband);
+    tuning.settle = parseOptionalFloat(properties, "camera_settle", tuning.settle);
+    return tuning;
+}

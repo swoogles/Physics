@@ -6,6 +6,7 @@
 #include "../Conversions/Serializer.h"
 #include <../lib/units.h>
 #include <chrono>
+#include <Observation/Observer.h>
 
 using namespace units::mass;
 
@@ -47,6 +48,9 @@ public:
 
     //! The underlying key/value pairs, for scenario parsing and run reports.
     const BillProperties & raw() const { return properties; }
+
+    //! How smoothly the auto-scaling camera should follow the simulation.
+    AutoScaleTuning autoScaleTuning() const;
 
 };
 

@@ -26,7 +26,8 @@
 class GraphicalOperations {
 public:
     GraphicalOperations(int CenterStageWindow, int controlCenterWindow,
-                        WindowDimensions windowDimensions);
+                        WindowDimensions windowDimensions,
+                        AutoScaleTuning autoScaleTuning = AutoScaleTuning());
 
     void localDisplay(Simulation & simulation) const;
     void controlDisplay() const;

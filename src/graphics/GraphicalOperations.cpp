@@ -121,10 +121,11 @@ void GraphicalOperations::localDisplay(Simulation & simulation) const {
 }
 
 GraphicalOperations::GraphicalOperations(int CenterStageWindow, int controlCenterWindow,
-                                         WindowDimensions windowDimensions)
+                                         WindowDimensions windowDimensions,
+                                         AutoScaleTuning autoScaleTuning)
         : mainDisplayNum(CenterStageWindow)
         , control_center_num(controlCenterWindow)
-        , localObserver(windowDimensions)
+        , localObserver(windowDimensions, autoScaleTuning)
 {
 }
 
