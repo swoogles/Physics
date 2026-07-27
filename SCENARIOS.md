@@ -260,6 +260,29 @@ which the run report lets you confirm: compare `setup.total_mass_kg` against
 `final.total_mass_kg`, and watch `largest_mass_fraction` in the history, which
 only ever climbs.
 
+## Merge jumps
+
+A merged body is placed at the centre of mass of the two originals, so the
+heavier one shifts by `distance * lighterMass / totalMass`. Two things let that
+distance grow: `calcRadius` scales radius as sqrt(mass) rather than the cube
+root (so radii are 18-73x too large and get worse as bodies grow), and the
+collision multiplier ramps without limit while merging runs behind schedule -
+it was observed passing 100 in a 25k-particle run.
+
+`max_collision_radius_multiplier` (default 120) bounds the ramp.
+`max_merge_jump_fraction` (default 0.02 of the starting system radius) bounds
+the resulting shift. The allowance scales inversely with how large the body is
+drawn, because a speck hopping goes unnoticed while a fat dot doing it is
+jarring - a flat cap on separation instead throttles early coalescing badly
+(merges fell from 5424 to 455 in one test).
+
+Run reports carry `largest_merge_jump_m` and `largest_visible_merge_jump_m`
+(bodies drawn 4px or larger), so you can tell whether a run actually suffered
+from this.
+
+The underlying `calcRadius` bug is untouched - fixing it shrinks every radius
+by 18-73x and would need every config's collision multiplier retuned.
+
 ## Merging
 
 Real collisions almost never happen at these sizes — particles are tens of

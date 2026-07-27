@@ -26,6 +26,8 @@ struct SimulationStats {
     double totalMass = 0;
     double largestMassFraction = 0;  //!< Mass of the biggest body over total mass.
     double rmsRadius = 0;            //!< Mass-weighted spread about the centre of mass.
+    double largestMergeJump = 0;     //!< Furthest a merge has moved a body, in meters.
+    double largestVisibleMergeJump = 0;  //!< The same, for bodies drawn 4px or larger.
 };
 
 class Simulation {

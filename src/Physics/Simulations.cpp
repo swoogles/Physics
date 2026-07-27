@@ -56,6 +56,13 @@ Simulation Simulations::fromScenario(
 
     Particle::setMinimumMergesPerFrame(properties.minimumMergesPerFrame);
 
+    // Bound how far apart two bodies can be when they merge. The merged body
+    // lands at their centre of mass, so an unbounded range shows up on screen
+    // as a body teleporting partway to whatever it just absorbed.
+    Particle::setMergeLimits(
+            properties.maxCollisionRadiusMultiplier,
+            properties.maxMergeJumpFraction * diagnostics.systemRadius);
+
     // One unmerged particle is the 1px baseline; everything is drawn relative
     // to the lightest one so merged bodies stand out as they grow.
     double lightestParticle = 0;

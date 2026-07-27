@@ -40,6 +40,8 @@ public:
     const int minimumMergesPerFrame;  // Guaranteed merges per frame
     const float boundaryRadiusFactor;  // Boundary radius as a multiple of the starting system radius
     const float maxPointSize;  // Pixel cap on how large a merged body is drawn
+    const float maxCollisionRadiusMultiplier;  // Ceiling on the collision multiplier ramp
+    const float maxMergeJumpFraction;  // Cap on merge-induced displacement, as a fraction of system radius
 
     PhysicsSandboxProperties(string fileName);
 

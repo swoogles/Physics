@@ -128,6 +128,8 @@ string RunReport::toJson() const {
          << ", \"total_merges\": " << finalStats.totalMerges
          << ", \"largest_mass_fraction\": " << finalStats.largestMassFraction
          << ", \"rms_radius_m\": " << finalStats.rmsRadius
+         << ", \"largest_merge_jump_m\": " << finalStats.largestMergeJump
+         << ", \"largest_visible_merge_jump_m\": " << finalStats.largestVisibleMergeJump
          << ", \"total_mass_kg\": " << finalStats.totalMass
          << "},\n";
 

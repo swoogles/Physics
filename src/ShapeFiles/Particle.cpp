@@ -39,6 +39,55 @@ void Particle::setMinimumMergesPerFrame(int minMerges) {
     cout << "Minimum merges per frame: " << minMerges << endl;
 }
 
+float Particle::maxCollisionRadiusMultiplier = 0;
+double Particle::maxMergeJump = 0;
+double Particle::largestMergeJump = 0;
+double Particle::largestVisibleMergeJump = 0;
+
+void Particle::setMergeLimits(float maxMultiplier, double maxJump) {
+    maxCollisionRadiusMultiplier = maxMultiplier;
+    maxMergeJump = maxJump;
+    largestMergeJump = 0;
+    largestVisibleMergeJump = 0;
+    cout << "Merge limits: multiplier capped at " << maxMultiplier
+         << ", merge jump capped at " << maxJump << " m" << endl;
+}
+
+double Particle::mergeJumpFor(const Particle &a, const Particle &b) {
+    const double massA = a._mass.value();
+    const double massB = b._mass.value();
+    const double total = massA + massB;
+    if (total <= 0) {
+        return 0;
+    }
+
+    const double separation = a.pos.minus(b.pos).length();
+    return separation * std::min(massA, massB) / total;
+}
+
+/*! How far this body may be moved by a merge before it reads as a teleport.
+ *
+ *  How much a jump bothers the eye scales with how big the thing that jumped
+ *  is: a speck hopping across the frame goes unnoticed, a fat dot doing it is
+ *  jarring. So the allowance is inversely proportional to drawn size, pinned
+ *  so that max_merge_jump_fraction is the budget for a mid-sized body. Holding
+ *  specks to the same limit would throttle early coalescing for no visual gain.
+ */
+double Particle::allowedJumpFor(double mass) {
+    const double referenceSize = 4.0;
+    const double size = std::max(1.0, (double) pointSizeFor(mass));
+    return maxMergeJump * referenceSize / size;
+}
+
+bool Particle::mergeAllowed(const Particle &a, const Particle &b) {
+    if (maxMergeJump <= 0) {
+        return true;
+    }
+
+    const double heavier = std::max(a._mass.value(), b._mass.value());
+    return mergeJumpFor(a, b) <= allowedJumpFor(heavier);
+}
+
 double Particle::renderReferenceMass = 0;
 double Particle::maxPointSize = 14.0;
 
@@ -118,6 +167,10 @@ void Particle::updateCollisionRadiusMultiplier(int currentParticleCount, int cur
 
     float previousMultiplier = collisionRadiusMultiplier;
     collisionRadiusMultiplier += increment;
+
+    if (maxCollisionRadiusMultiplier > 0 && collisionRadiusMultiplier > maxCollisionRadiusMultiplier) {
+        collisionRadiusMultiplier = maxCollisionRadiusMultiplier;
+    }
 
     // Log periodically (every ~20 units or significant stall)
     bool significantChange = (int)(collisionRadiusMultiplier / 20) > (int)(previousMultiplier / 20);
@@ -215,6 +268,15 @@ void Particle::mergeWith(Particle &otherShape) {
 	this->adjustMomentum(otherShape.momentum());
 	this->setAngularMomentum(totalAngMom);
 	this->calcColor();
+
+	const double jump = COM.minus(this->position()).length();
+	if (jump > largestMergeJump) {
+		largestMergeJump = jump;
+	}
+	if (pointSizeFor(combinedMass.value()) >= 4.0f && jump > largestVisibleMergeJump) {
+		largestVisibleMergeJump = jump;
+	}
+
 	this->setPos(COM);
 }
 

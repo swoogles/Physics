@@ -29,7 +29,9 @@ velocityDamping(parseOptionalFloat(properties, "velocity_damping", 1.0f)),
 boundaryStrength(parseOptionalFloat(properties, "boundary_strength", 0.0f)),
 minimumMergesPerFrame(static_cast<int>(parseOptionalFloat(properties, "minimum_merges_per_frame", 0.0f))),
 boundaryRadiusFactor(parseOptionalFloat(properties, "boundary_radius_factor", 1.5f)),
-maxPointSize(parseOptionalFloat(properties, "max_point_size", 14.0f))
+maxPointSize(parseOptionalFloat(properties, "max_point_size", 14.0f)),
+maxCollisionRadiusMultiplier(parseOptionalFloat(properties, "max_collision_radius_multiplier", 120.0f)),
+maxMergeJumpFraction(parseOptionalFloat(properties, "max_merge_jump_fraction", 0.02f))
 {
 
 }

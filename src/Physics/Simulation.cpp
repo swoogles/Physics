@@ -196,6 +196,12 @@ void Simulation::update(hour_t dt) {
     if (closestToTrack > 0) {
         auto closestPairs = closestTracker.getPairs();
         for (const auto& pair : closestPairs) {
+            // Forced merges bypass the collision test, so they need the same
+            // guard or a late run with few particles left drags distant bodies
+            // together.
+            if (!Particle::mergeAllowed(*pair.first, *pair.second)) {
+                continue;
+            }
             TouchingPair forcedPair(pair.first, pair.second);
             collisionPairs.insertIfUnique(forcedPair);
         }
@@ -291,8 +297,10 @@ PairCollection Simulation::calcForcesAll(ParticleList &physicalObjects, hour_t d
                                 }
                             }
 
-                            // Check for collision
-                            if (particle.isTouching(quadrant.getParticlePosition(), quadrant.getParticleRadius())) {
+                            // Check for collision, skipping any that would jerk
+                            // the heavier body across the frame.
+                            if (particle.isTouching(quadrant.getParticlePosition(), quadrant.getParticleRadius())
+                                && Particle::mergeAllowed(particle, *otherParticle)) {
                                 TouchingPair pair(particlePtr, otherParticle);
                                 std::lock_guard<std::mutex> lock(pairsMutex);
                                 collectedPairs.insertIfUnique(pair);
@@ -333,6 +341,8 @@ SimulationStats Simulation::getStats() const {
     stats.particleCount = (int) physicalObjects.size();
     stats.totalMerges = totalMerges;
     stats.mergesLastStep = mergesLastStep;
+    stats.largestMergeJump = Particle::largestMergeJump;
+    stats.largestVisibleMergeJump = Particle::largestVisibleMergeJump;
 
     PhysicalVector centerOfMass(0, 0, 0, true);
     physicalObjects.checkForAllParticles([&](const Particle &particle) {

@@ -28,6 +28,37 @@ public:
     static int minimumMergesPerFrame;
     static void setMinimumMergesPerFrame(int minMerges);
 
+    /*! \brief Limits that keep merging from looking like teleportation.
+     *
+     *  A merged body lands at the centre of mass of the two originals, so the
+     *  heavier one shifts by distance * lighterMass / totalMass. Radius grows
+     *  with mass and the collision multiplier ramps over time, so without a
+     *  ceiling that shift grows into a large fraction of the frame.
+     *
+     *  Capping the separation outright would also block the harmless case - a
+     *  big body swallowing a speck barely moves at all - and merging would
+     *  stall. So the limit is on the resulting shift, not on the distance.
+     *  Either value at 0 means no limit.
+     */
+    static float maxCollisionRadiusMultiplier;
+    static double maxMergeJump;
+    static void setMergeLimits(float maxMultiplier, double maxJump);
+
+    //! How far the heavier of the two would move if these merged, in meters.
+    static double mergeJumpFor(const Particle &a, const Particle &b);
+
+    //! False when merging these two would visibly teleport the heavier one.
+    static bool mergeAllowed(const Particle &a, const Particle &b);
+
+    //! Jump budget for a body of this mass, scaled by how large it draws.
+    static double allowedJumpFor(double mass);
+
+    //! Largest distance any body has been moved by a merge, for the run report.
+    static double largestMergeJump;
+
+    //! The same, restricted to bodies big enough on screen to notice (>= 4px).
+    static double largestVisibleMergeJump;
+
     /*! \brief How big a particle should be drawn, in pixels.
      *
      *  Physical radius is useless on screen: a body holding 20% of the
