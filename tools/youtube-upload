@@ -1,0 +1,737 @@
+#!/usr/bin/env python3
+"""Cut a clip out of a recorded run and upload it to YouTube.
+
+The title and description come from the .json report the simulator writes next
+to every recorded video, so a clip carries its own setup, outcome and seed
+without anyone having to retype them.
+
+    tools/youtube-upload WorthyVideos/2026-07-27_1157_chaotic-chaotic-01-full.mp4 60s
+    tools/youtube-upload WorthyVideos/latest.mp4 90s --start 0:30 --unlisted
+    tools/youtube-upload WorthyVideos/latest.mp4 --dry-run    # just print the metadata
+
+One-time setup lives in tools/YOUTUBE.md. Uploads land as private by default;
+YouTube keeps them private anyway until the API project passes its audit.
+"""
+
+import argparse
+import json
+import os
+import re
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parent.parent
+VENV = Path(__file__).resolve().parent / ".venv-youtube"
+PACKAGES = ["google-api-python-client", "google-auth-oauthlib"]
+
+CONFIG_DIR = Path(os.environ.get("PHYSICS_YT_CONFIG",
+                                 Path.home() / ".config" / "physics-youtube"))
+TOKEN_PATH = CONFIG_DIR / "token.json"
+
+# youtube.upload is the only scope an upload needs; the broader youtube scope is
+# requested up front so --playlist works later without a second consent screen.
+SCOPES = [
+    "https://www.googleapis.com/auth/youtube.upload",
+    "https://www.googleapis.com/auth/youtube",
+]
+
+CHANNEL_BLURB = (
+    "Rendered with my own C++ N-body sandbox - octree gravity, no collision "
+    "shortcuts, every merge is two bodies actually finding each other."
+)
+
+
+# --------------------------------------------------------------------------
+# Bootstrap
+#
+# The Google client libraries are the only dependency and Homebrew python
+# refuses to install into itself, so the script keeps its own venv and re-execs
+# into it. --dry-run never touches this.
+# --------------------------------------------------------------------------
+
+
+def ensure_venv():
+    # sys.prefix, not sys.executable: the venv's python3 is a symlink back to the
+    # interpreter that built it, so resolving the path says "already there".
+    if Path(sys.prefix) == VENV:
+        return
+
+    python = VENV / "bin" / "python3"
+    if not python.exists():
+        print("Setting up %s (one time)..." % VENV)
+        subprocess.run([sys.executable, "-m", "venv", str(VENV)], check=True)
+        subprocess.run([str(python), "-m", "pip", "install", "--quiet",
+                        "--upgrade", "pip"] + PACKAGES, check=True)
+
+    os.execv(str(python), [str(python), str(Path(__file__).resolve())] + sys.argv[1:])
+
+
+def import_google():
+    """Imported late so a broken venv can be repaired without blocking --dry-run."""
+    try:
+        from google.auth.transport.requests import Request
+        from google.oauth2.credentials import Credentials
+        from google_auth_oauthlib.flow import InstalledAppFlow
+        from googleapiclient.discovery import build
+        from googleapiclient.errors import HttpError
+        from googleapiclient.http import MediaFileUpload
+    except ImportError:
+        try:
+            subprocess.run([sys.executable, "-m", "pip", "install", "--quiet"]
+                           + PACKAGES, check=True)
+        except subprocess.CalledProcessError:
+            raise SystemExit("Could not install the Google client libraries.\n"
+                             "Delete %s and try again." % VENV)
+        from google.auth.transport.requests import Request
+        from google.oauth2.credentials import Credentials
+        from google_auth_oauthlib.flow import InstalledAppFlow
+        from googleapiclient.discovery import build
+        from googleapiclient.errors import HttpError
+        from googleapiclient.http import MediaFileUpload
+
+    return dict(Request=Request, Credentials=Credentials,
+                InstalledAppFlow=InstalledAppFlow, build=build,
+                HttpError=HttpError, MediaFileUpload=MediaFileUpload)
+
+
+# --------------------------------------------------------------------------
+# Finding the run report
+# --------------------------------------------------------------------------
+
+
+def find_report(video):
+    """<video>.json if it exists, otherwise the report of whatever run produced
+    an identical file - which is how latest.mp4 finds its own metadata."""
+    sidecar = video.with_suffix(".json")
+    if sidecar.exists():
+        return sidecar
+
+    size = video.stat().st_size
+    for candidate in sorted(video.parent.glob("*.json")):
+        try:
+            report = json.loads(candidate.read_text())
+        except (json.JSONDecodeError, OSError):
+            continue
+        original = report.get("video_path")
+        if not original:
+            continue
+        original = Path(original)
+        if original.exists() and original.stat().st_size == size:
+            return candidate
+
+    return None
+
+
+# --------------------------------------------------------------------------
+# Clip selection
+# --------------------------------------------------------------------------
+
+
+def parse_time(text):
+    """Accepts 90, 90s, 1m30s, 1:30 and 0:01:30. Returns seconds."""
+    text = text.strip().lower()
+
+    if ":" in text:
+        parts = text.split(":")
+        if len(parts) > 3 or not all(re.fullmatch(r"\d*\.?\d*", p) for p in parts):
+            raise ValueError("bad timestamp %r" % text)
+        seconds = 0.0
+        for part in parts:
+            seconds = seconds * 60 + float(part or 0)
+        return seconds
+
+    match = re.fullmatch(r"(?:(\d+(?:\.\d+)?)h)?(?:(\d+(?:\.\d+)?)m)?"
+                         r"(?:(\d+(?:\.\d+)?)s?)?", text)
+    if not match or not any(match.groups()):
+        raise ValueError("bad duration %r" % text)
+
+    hours, minutes, seconds = (float(g or 0) for g in match.groups())
+    return hours * 3600 + minutes * 60 + seconds
+
+
+def probe(video):
+    """(duration, width, height) of the encoded file. The report records what the
+    simulator was asked for, which is not always what the encoder wrote."""
+    result = subprocess.run(
+        ["ffprobe", "-v", "error", "-select_streams", "v:0",
+         "-show_entries", "stream=width,height", "-show_entries",
+         "format=duration", "-of", "default=noprint_wrappers=1:nokey=0",
+         str(video)],
+        capture_output=True, text=True)
+
+    fields = dict(line.split("=", 1) for line in result.stdout.splitlines()
+                  if "=" in line)
+    try:
+        return (float(fields["duration"]), int(fields["width"]),
+                int(fields["height"]))
+    except (KeyError, ValueError):
+        raise SystemExit("ffprobe could not read %s" % video)
+
+
+def make_clip(video, start, duration, workdir, reencode):
+    """Copies the streams by default: no re-encode means no generation loss, at
+    the cost of the cut snapping to the nearest keyframe before `start`."""
+    out = Path(workdir) / ("%s_clip.mp4" % video.stem)
+
+    command = ["ffmpeg", "-y", "-loglevel", "error"]
+    if start:
+        command += ["-ss", "%.3f" % start]
+    command += ["-i", str(video)]
+    if duration:
+        command += ["-t", "%.3f" % duration]
+
+    if reencode:
+        command += ["-c:v", "libx264", "-crf", "17", "-preset", "slow",
+                    "-pix_fmt", "yuv420p"]
+    else:
+        command += ["-c", "copy"]
+    command += ["-movflags", "+faststart", str(out)]
+
+    subprocess.run(command, check=True)
+    if not out.exists() or out.stat().st_size == 0:
+        raise SystemExit("ffmpeg wrote no clip")
+    return out
+
+
+# --------------------------------------------------------------------------
+# Metadata
+# --------------------------------------------------------------------------
+
+
+def human_count(value):
+    return "{:,}".format(int(value))
+
+
+def scientific(value, unit=""):
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        return "?"
+    if value == 0:
+        return "0" + (" " + unit if unit else "")
+    text = "%.3g" % value
+    if "e" in text:
+        mantissa, exponent = text.split("e")
+        text = "%s x 10^%d" % (mantissa, int(exponent))
+    return text + (" " + unit if unit else "")
+
+
+def human_seconds(value):
+    value = int(float(value))
+    hours, remainder = divmod(value, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    if hours:
+        return "%dh %dm" % (hours, minutes)
+    if minutes:
+        return "%dm %ds" % (minutes, seconds)
+    return "%ds" % seconds
+
+
+def derive_title(report):
+    scenario = report.get("scenario", {})
+    setup = report.get("setup", {})
+    final = report.get("final", {})
+
+    started = setup.get("particle_count")
+    ended = final.get("particle_count")
+    kind = scenario.get("type", "gravity")
+    name = scenario.get("name")
+
+    if started and ended and ended < started:
+        title = "%s bodies collapse into %s - %s N-body simulation" % (
+            human_count(started), human_count(ended), kind)
+    elif started:
+        title = "%s bodies under gravity - %s N-body simulation" % (
+            human_count(started), kind)
+    else:
+        title = "N-body gravity simulation"
+        if name:
+            title += " - %s" % name
+
+    return title[:100]
+
+
+def table(rows):
+    width = max((len(label) for label, _ in rows), default=0)
+    return "\n".join("  %-*s  %s" % (width, label, value) for label, value in rows)
+
+
+def derive_description(report, video_path, clip, size):
+    scenario = report.get("scenario", {})
+    setup = report.get("setup", {})
+    final = report.get("final", {})
+    config = report.get("config", {})
+
+    started = setup.get("particle_count")
+    ended = final.get("particle_count")
+    merges = final.get("total_merges")
+
+    opening = []
+    if started and ended:
+        opening.append(
+            "%s particles start cold and gravity does the rest: after %s "
+            "mergers there are %s bodies left." % (
+                human_count(started), human_count(merges or 0), human_count(ended)))
+    if setup.get("video_seconds_per_crossing"):
+        opening.append(
+            "One crossing time - how long a particle takes to fall through the "
+            "whole system - is %s seconds of video."
+            % scientific(setup["video_seconds_per_crossing"]))
+
+    sections = ["\n".join(opening), CHANNEL_BLURB]
+
+    start_rows = []
+    if started:
+        start_rows.append(("Particles", human_count(started)))
+    if setup.get("total_mass_kg"):
+        start_rows.append(("Total mass", scientific(setup["total_mass_kg"], "kg")))
+    if scenario.get("groups"):
+        start_rows.append(("Clumps", str(len(scenario["groups"]))))
+    if setup.get("virial_ratio_after") is not None:
+        start_rows.append(("Virial ratio", "%.3g" % float(setup["virial_ratio_after"])))
+    if setup.get("system_radius_m"):
+        start_rows.append(("System radius", scientific(setup["system_radius_m"], "m")))
+    if setup.get("crossing_time_s"):
+        start_rows.append(("Crossing time", scientific(setup["crossing_time_s"], "s")))
+    if start_rows:
+        sections.append("Starting conditions\n" + table(start_rows))
+
+    end_rows = []
+    if ended:
+        end_rows.append(("Bodies left", human_count(ended)))
+    if merges:
+        end_rows.append(("Mergers", human_count(merges)))
+    if final.get("largest_mass_fraction") is not None:
+        end_rows.append(("Largest body", "%.1f%% of total mass"
+                         % (float(final["largest_mass_fraction"]) * 100)))
+    if final.get("rms_radius_m"):
+        end_rows.append(("RMS radius", scientific(final["rms_radius_m"], "m")))
+    if end_rows:
+        sections.append("How it ended\n" + table(end_rows))
+
+    run_rows = []
+    if scenario.get("name"):
+        run_rows.append(("Scenario", "%s (%s)" % (scenario["name"],
+                                                  scenario.get("type", "?"))))
+    if report.get("seed") is not None:
+        run_rows.append(("Seed", str(report["seed"])))
+    if config.get("forceCalculationMethod"):
+        method = config["forceCalculationMethod"]
+        if config.get("octree_theta"):
+            method += " (theta %s)" % config["octree_theta"]
+        run_rows.append(("Force calculation", method))
+    if report.get("frames_rendered"):
+        run_rows.append(("Rendered", "%s frames at %dx%d" % (
+            human_count(report["frames_rendered"]), size[0], size[1])))
+    if report.get("wall_clock_seconds"):
+        run_rows.append(("Compute time", human_seconds(report["wall_clock_seconds"])))
+    if report.get("git_revision"):
+        run_rows.append(("Build", str(report["git_revision"])))
+    if clip:
+        run_rows.append(("Clip", "%s-%s of the full run"
+                         % (timestamp(clip[0]), timestamp(clip[0] + clip[1]))))
+    if run_rows:
+        sections.append("The run\n" + table(run_rows))
+
+    knobs = scenario.get("knobs") or {}
+    tuned = {k: v for k, v in knobs.items() if not k.startswith("scenario.")}
+    if tuned:
+        rows = [(k.split(".", 1)[-1].replace("_", " "), "%g" % float(v))
+                for k, v in sorted(tuned.items())]
+        sections.append("Parameters\n" + table(rows))
+
+    sections.append("Source video: %s" % video_path.name)
+
+    return "\n\n".join(s for s in sections if s.strip())[:4900]
+
+
+def timestamp(seconds):
+    minutes, seconds = divmod(int(round(seconds)), 60)
+    return "%d:%02d" % (minutes, seconds)
+
+
+def derive_tags(report):
+    scenario = report.get("scenario", {})
+    tags = ["n-body", "nbody simulation", "physics simulation", "gravity",
+            "gravitational collapse", "simulation", "astrophysics",
+            "computational physics"]
+    for value in (scenario.get("type"), scenario.get("name")):
+        if value and value not in tags:
+            tags.append(str(value))
+    return tags
+
+
+# --------------------------------------------------------------------------
+# Upload
+# --------------------------------------------------------------------------
+
+
+def client_secret_path():
+    override = os.environ.get("YOUTUBE_CLIENT_SECRET")
+    if override:
+        return Path(override)
+
+    named = CONFIG_DIR / "client_secret.json"
+    if named.exists():
+        return named
+
+    downloaded = sorted(CONFIG_DIR.glob("client_secret*.json"))
+    if downloaded:
+        return downloaded[0]
+
+    raise SystemExit(
+        "No OAuth client secret found.\n"
+        "Put the JSON you downloaded from Google Cloud at %s\n"
+        "See tools/YOUTUBE.md for the five-minute version of that setup."
+        % (CONFIG_DIR / "client_secret.json"))
+
+
+def authenticate(google):
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    credentials = None
+
+    if TOKEN_PATH.exists():
+        credentials = google["Credentials"].from_authorized_user_file(
+            str(TOKEN_PATH), SCOPES)
+
+    if credentials and credentials.expired and credentials.refresh_token:
+        try:
+            credentials.refresh(google["Request"]())
+        except Exception:
+            credentials = None  # expired refresh token: consent again
+
+    if not credentials or not credentials.valid:
+        flow = google["InstalledAppFlow"].from_client_secrets_file(
+            str(client_secret_path()), SCOPES)
+        print("Opening a browser to authorise the upload...")
+        credentials = flow.run_local_server(port=0, prompt="consent")
+
+    TOKEN_PATH.write_text(credentials.to_json())
+    TOKEN_PATH.chmod(0o600)
+
+    return google["build"]("youtube", "v3", credentials=credentials,
+                           cache_discovery=False)
+
+
+def upload(youtube, google, path, title, description, tags, privacy,
+           category, publish_at):
+    body = {
+        "snippet": {
+            "title": title,
+            "description": description,
+            "tags": tags,
+            "categoryId": category,
+        },
+        "status": {
+            "privacyStatus": privacy,
+            "selfDeclaredMadeForKids": False,
+        },
+    }
+    if publish_at:
+        body["status"]["publishAt"] = publish_at
+        body["status"]["privacyStatus"] = "private"
+
+    media = google["MediaFileUpload"](str(path), chunksize=8 * 1024 * 1024,
+                                      resumable=True, mimetype="video/mp4")
+    request = youtube.videos().insert(part="snippet,status", body=body,
+                                      media_body=media)
+
+    response = None
+    attempts = 0
+    while response is None:
+        try:
+            status, response = request.next_chunk()
+            if status:
+                sys.stdout.write("\r  uploading  %3d%%" % int(status.progress() * 100))
+                sys.stdout.flush()
+            attempts = 0
+        except google["HttpError"] as error:
+            if error.resp.status not in (500, 502, 503, 504):
+                raise
+            attempts += 1
+            if attempts > 5:
+                raise
+            time.sleep(2 ** attempts)
+        except (OSError, ConnectionError):
+            attempts += 1
+            if attempts > 5:
+                raise
+            time.sleep(2 ** attempts)
+
+    sys.stdout.write("\r  uploading  100%\n")
+    return response
+
+
+def add_to_playlist(youtube, video_id, wanted):
+    """`wanted` is a playlist id or a title; the title match is case-insensitive."""
+    response = youtube.playlists().list(part="snippet", mine=True,
+                                        maxResults=50).execute()
+    playlist_id = None
+    for item in response.get("items", []):
+        if item["id"] == wanted or \
+                item["snippet"]["title"].lower() == wanted.lower():
+            playlist_id = item["id"]
+            break
+
+    if not playlist_id:
+        print("  ! no playlist called %r - skipping" % wanted)
+        return
+
+    youtube.playlistItems().insert(
+        part="snippet",
+        body={"snippet": {"playlistId": playlist_id,
+                          "resourceId": {"kind": "youtube#video",
+                                         "videoId": video_id}}}).execute()
+    print("  added to playlist %s" % wanted)
+
+
+# --------------------------------------------------------------------------
+# Processing
+#
+# The upload call returns as soon as YouTube has the bytes, which is well before
+# anyone can watch it. Transcoding is a separate job, and it publishes the low
+# resolutions first - a 2.5K clip is usually playable at 360p minutes before the
+# HD rendition exists.
+# --------------------------------------------------------------------------
+
+
+def video_id_from(text):
+    """Accepts a bare id, a youtu.be link or a watch/studio URL."""
+    text = text.strip()
+    match = re.search(r"(?:youtu\.be/|[?&]v=|/video/|/embed/)([A-Za-z0-9_-]{11})",
+                      text)
+    if match:
+        return match.group(1)
+    if re.fullmatch(r"[A-Za-z0-9_-]{11}", text):
+        return text
+    raise SystemExit("%r is not a video id or YouTube link" % text)
+
+
+def processing_state(youtube, video_id):
+    response = youtube.videos().list(part="status,processingDetails",
+                                     id=video_id).execute()
+    items = response.get("items")
+    if not items:
+        raise SystemExit("no video %s on this account" % video_id)
+
+    status = items[0].get("status", {})
+    details = items[0].get("processingDetails", {})
+    progress = details.get("processingProgress", {})
+
+    note = None
+    parts_total = progress.get("partsTotal")
+    parts_done = progress.get("partsProcessed")
+    if parts_total and int(parts_total) > 0:
+        note = "%d%%" % (100 * int(parts_done or 0) / int(parts_total))
+    if progress.get("timeLeftMs"):
+        remaining = human_seconds(int(progress["timeLeftMs"]) / 1000)
+        note = "%s, about %s left" % (note, remaining) if note else \
+               "about %s left" % remaining
+
+    return {
+        "processing": details.get("processingStatus"),   # processing/succeeded/failed
+        "upload": status.get("uploadStatus"),            # uploaded/processed/rejected
+        "privacy": status.get("privacyStatus"),
+        "failure": status.get("failureReason"),
+        "rejection": status.get("rejectionReason"),
+        "note": note,
+    }
+
+
+def wait_for_processing(youtube, video_id, timeout=1800):
+    """Polls until YouTube stops processing. videos.list is 1 quota unit, so this
+    is free next to the 1600 the upload itself costs."""
+    deadline = time.time() + timeout
+    delay = 10
+
+    while True:
+        state = processing_state(youtube, video_id)
+
+        if state["processing"] != "processing":
+            sys.stdout.write("\r%-60s\n" % "")
+            break
+
+        label = "  processing"
+        if state["note"]:
+            label += "  %s" % state["note"]
+        sys.stdout.write("\r%-60s" % label)
+        sys.stdout.flush()
+
+        if time.time() > deadline:
+            print("\n  still processing after %s - it will finish on its own"
+                  % human_seconds(timeout))
+            return state
+        time.sleep(min(delay, max(1, deadline - time.time())))
+        delay = min(delay * 1.5, 30)
+
+    if state["rejection"]:
+        print("  REJECTED by YouTube: %s" % state["rejection"])
+    elif state["failure"] or state["processing"] == "failed":
+        print("  processing FAILED: %s" % (state["failure"] or "no reason given"))
+    else:
+        print("  processed - watchable now, though the highest resolution can")
+        print("  keep transcoding for a while after this")
+        if state["privacy"] == "private":
+            print("  (still private: only you can see it while signed in)")
+
+    return state
+
+
+# --------------------------------------------------------------------------
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Upload a clip of a recorded run to YouTube.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Duration accepts 60s, 90, 1m30s or 1:30. Omit it for the whole video.")
+    parser.add_argument("video", type=Path, nargs="?")
+    parser.add_argument("duration", nargs="?",
+                        help="length of the clip, from --start (default: whole video)")
+    parser.add_argument("--start", default="0", help="where the clip begins")
+    parser.add_argument("--title")
+    parser.add_argument("--description")
+    parser.add_argument("--tags", help="comma separated, replaces the derived tags")
+    parser.add_argument("--playlist", help="playlist title or id to add the video to")
+    parser.add_argument("--public", dest="privacy", action="store_const",
+                        const="public", help="see the audit note in tools/YOUTUBE.md")
+    parser.add_argument("--unlisted", dest="privacy", action="store_const",
+                        const="unlisted")
+    parser.add_argument("--publish-at", help="RFC3339 time to make it public, e.g. "
+                                             "2026-08-01T17:00:00Z")
+    parser.add_argument("--category", default="28",
+                        help="YouTube category id (28 = Science & Technology)")
+    parser.add_argument("--reencode", action="store_true",
+                        help="re-encode for a frame-accurate cut instead of a "
+                             "keyframe-aligned stream copy")
+    parser.add_argument("--keep-clip", action="store_true",
+                        help="leave the trimmed file next to the source")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="print the metadata and exit without cutting or uploading")
+    parser.add_argument("--no-wait", dest="wait", action="store_false",
+                        help="print the link and exit instead of waiting for "
+                             "YouTube to finish processing")
+    parser.add_argument("--status", metavar="ID_OR_URL",
+                        help="check an earlier upload instead of making a new one")
+    parser.set_defaults(privacy="private", wait=True)
+    args = parser.parse_args()
+
+    if args.status:
+        video_id = video_id_from(args.status)
+        ensure_venv()
+        youtube = authenticate(import_google())
+        state = processing_state(youtube, video_id)
+        print("https://youtu.be/%s" % video_id)
+        print("  processing  %s%s" % (state["processing"] or "?",
+                                      "  (%s)" % state["note"] if state["note"] else ""))
+        print("  upload      %s" % (state["upload"] or "?"))
+        print("  privacy     %s" % (state["privacy"] or "?"))
+        for label, value in (("failure", state["failure"]),
+                             ("rejected", state["rejection"])):
+            if value:
+                print("  %-10s  %s" % (label, value))
+        if args.wait and state["processing"] == "processing":
+            wait_for_processing(youtube, video_id)
+        return 0
+
+    if not args.video:
+        parser.error("a video is required (or --status to check an earlier upload)")
+
+    video = args.video.expanduser()
+    if not video.is_absolute():
+        video = (Path.cwd() / video).resolve()
+    if not video.exists():
+        raise SystemExit("no such video: %s" % args.video)
+
+    report_path = find_report(video)
+    if not report_path and not (args.title and args.description):
+        raise SystemExit(
+            "no run report next to %s - pass --title and --description, or point "
+            "at a video that has its .json" % video.name)
+    report = json.loads(report_path.read_text()) if report_path else {}
+
+    source_length, width, height = probe(video)
+    try:
+        start = parse_time(args.start)
+        length = parse_time(args.duration) if args.duration else None
+    except ValueError as error:
+        raise SystemExit("%s - try 60s, 1m30s or 1:30" % error)
+    if start >= source_length:
+        raise SystemExit("--start %s is past the end of a %s video"
+                         % (args.start, timestamp(source_length)))
+    if length is not None and start + length > source_length:
+        length = source_length - start
+    clip_window = (start, length if length is not None else source_length - start)
+    whole_video = start == 0 and (length is None or length >= source_length)
+
+    title = args.title or derive_title(report)
+    description = args.description or derive_description(
+        report, video, None if whole_video else clip_window, (width, height))
+    tags = ([t.strip() for t in args.tags.split(",")] if args.tags
+            else derive_tags(report))
+
+    print("%s  (%s of %s)" % (video.name, timestamp(clip_window[1]),
+                              timestamp(source_length)))
+    if report_path:
+        print("metadata from %s" % report_path.name)
+    print("\n  TITLE   %s\n" % title)
+    print(description)
+    print("\n  TAGS    %s" % ", ".join(tags))
+    print("  PRIVACY %s" % (args.privacy if not args.publish_at
+                            else "private until %s" % args.publish_at))
+
+    if args.dry_run:
+        return 0
+
+    ensure_venv()
+    google = import_google()
+
+    workdir = tempfile.mkdtemp(prefix="youtube-clip-")
+    try:
+        if whole_video:
+            upload_path = video
+        else:
+            print("\nCutting %s from %s..." % (timestamp(clip_window[1]),
+                                               timestamp(start)))
+            upload_path = make_clip(video, start, clip_window[1], workdir,
+                                    args.reencode)
+            if args.keep_clip:
+                kept = video.with_name("%s_%s-%s.mp4" % (
+                    video.stem, timestamp(start).replace(":", ""),
+                    timestamp(start + clip_window[1]).replace(":", "")))
+                upload_path = Path(upload_path).replace(kept)
+                print("  kept %s" % kept)
+
+        size_mb = Path(upload_path).stat().st_size / 1e6
+        print("\nUploading %.0f MB..." % size_mb)
+
+        youtube = authenticate(google)
+        response = upload(youtube, google, upload_path, title, description,
+                          tags, args.privacy, args.category, args.publish_at)
+
+        video_id = response["id"]
+        print("\n  https://youtu.be/%s" % video_id)
+        print("  https://studio.youtube.com/video/%s/edit" % video_id)
+
+        if args.playlist:
+            add_to_playlist(youtube, video_id, args.playlist)
+
+        if args.wait:
+            print()
+            wait_for_processing(youtube, video_id)
+        else:
+            print("\n  YouTube is still transcoding it - check with:")
+            print("  tools/youtube-upload --status %s" % video_id)
+    finally:
+        for leftover in Path(workdir).glob("*"):
+            leftover.unlink()
+        Path(workdir).rmdir()
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -59,9 +59,15 @@ Important Commands
   tools/run_batch.py report batches/<batch> --contact-sheet --reel
   tools/run_batch.py render batches/<batch> --exclude chaotic-02 --top 3 --res 1440p
 
+  // Put the first 60s of a run on YouTube, described from its own run report
+  tools/youtube-upload WorthyVideos/latest.mp4 60s --dry-run   # see the metadata first
+  tools/youtube-upload WorthyVideos/latest.mp4 60s
+  tools/youtube-upload --status 81HrUpoqQLY                    # done processing yet?
+
 Starting arrangements are data now, not code: see SCENARIOS.md for the scenario
 types, the knobs worth turning, and how batching and scoring work. Recorded runs
-write a .json report next to the video that is enough to reproduce them exactly.
+write a .json report next to the video that is enough to reproduce them exactly,
+and tools/YOUTUBE.md covers the one-time Google setup that uploading needs.
  
   
 Turning output images into a video:

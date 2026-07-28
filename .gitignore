@@ -18,3 +18,4 @@ output
 batches
 scenario_test_generated.properties
 __pycache__/
+tools/.venv-youtube/
