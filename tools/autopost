@@ -1,0 +1,353 @@
+#!/usr/bin/env python3
+"""Sample, score, render the winner, upload it, print the link. One command.
+
+    tools/autopost --archetype chaotic --runs 8
+
+Everything this does is a rule applied to the numbers the simulator already
+writes into its run reports - there is no judgement call left in the loop, so
+the same batch always produces the same clip. The three rules that matter:
+
+  which run wins     the score run_batch.py already computes, highest first
+  how big to render  a total particle budget, not particles-per-group
+  how long to cut    the point where 95% of the merging is done
+
+The particle budget is the one worth explaining. run_batch.py --particles sets
+numShapes, which is per group, so the same number means 3 groups renders at 56k
+particles and 8 groups renders at 171k - and cost climbs superlinearly with
+density, so the second one does not take three times longer, it takes about
+thirty. Asking for a total instead makes the render cost roughly the same
+whatever the sampler picked. The preview measured the ratio, so we can solve
+for it exactly.
+
+    tools/autopost --resume batches/2026-08-02_1026_chaotic   # skip sampling
+    tools/autopost --dry-run                                  # stop before rendering
+"""
+
+import argparse
+import json
+import math
+import os
+import re
+import signal
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parent.parent
+RUN_BATCH = REPO / "tools" / "run_batch.py"
+UPLOAD = REPO / "tools" / "youtube-upload"
+
+
+def fail(message):
+    raise SystemExit("autopost: %s" % message)
+
+
+def run(command):
+    """Runs a step with its output going straight to the terminal."""
+    return subprocess.run([str(part) for part in command], cwd=str(REPO)).returncode
+
+
+# --------------------------------------------------------------------------
+# Picking the winner
+# --------------------------------------------------------------------------
+
+
+def newest_batch(archetype):
+    batches = sorted((REPO / "batches").glob("*_%s" % archetype))
+    return batches[-1] if batches else None
+
+
+def pick_winner(batch_dir, minimum):
+    index = Path(batch_dir) / "index.json"
+    if not index.exists():
+        fail("no index.json in %s - did the sampling step finish?" % batch_dir)
+
+    entries = json.loads(index.read_text())
+    if not entries:
+        fail("no runs in %s" % batch_dir)
+
+    winner = max(entries, key=lambda entry: entry["score"])
+    if winner["score"] < minimum:
+        # Better to stop than to spend half an hour rendering a cloud that
+        # never came together and then put it on YouTube.
+        fail("best run only scored %.3f, below --min-score %.2f. Sample again "
+             "with a different --seed, or lower the floor if you want it anyway."
+             % (winner["score"], minimum))
+    return winner
+
+
+# --------------------------------------------------------------------------
+# Sizing the render
+# --------------------------------------------------------------------------
+
+
+def particles_for_budget(sidecar, budget):
+    """Solves numShapes from a total particle budget.
+
+    numShapes is per group and the sampler decides how many groups there are
+    and how the mass splits between them, so the realised total is some
+    scenario-specific multiple of it. The preview already ran, so that multiple
+    is a measurement rather than a guess: 1500 -> 14307 and 7000 -> 66781 are
+    the same 9.54x, because it depends only on the group structure.
+    """
+    report = json.loads(Path(sidecar).read_text())
+    realised = report.get("setup", {}).get("particle_count")
+    asked = report.get("config", {}).get("numShapes")
+    if not realised or not asked:
+        fail("%s has no particle_count/numShapes to scale from" % Path(sidecar).name)
+
+    ratio = realised / float(asked)
+    numshapes = max(1, int(round(budget / ratio)))
+    return numshapes, ratio, int(round(numshapes * ratio))
+
+
+def seconds_per_frame(report):
+    """Simulation frames -> seconds of video, from the report's own numbers."""
+    setup = report.get("setup", {})
+    steps = setup.get("steps_per_crossing")
+    seconds = setup.get("video_seconds_per_crossing")
+    if not steps or not seconds:
+        return 1.0 / 24.0  # what the recorder does by default
+    return seconds / float(steps)
+
+
+def clip_seconds(report, settled_fraction, low, high):
+    """How much of the run is worth watching.
+
+    These runs all end the same way: the merging finishes and what is left
+    drifts, so the tail is a handful of static points. Cut where the collapse
+    is essentially over - by default once 95% of the particles that will ever
+    merge have merged.
+    """
+    history = report.get("history") or []
+    if not history:
+        return high
+
+    start = report.get("setup", {}).get("particle_count") or history[0]["particles"]
+    end = report.get("final", {}).get("particle_count") or history[-1]["particles"]
+    if start <= end:
+        return high
+
+    threshold = start - settled_fraction * (start - end)
+    settled = next((sample["frame"] for sample in history
+                    if sample["particles"] <= threshold), history[-1]["frame"])
+
+    length = math.ceil(settled * seconds_per_frame(report))
+    return max(low, min(high, length))
+
+
+# --------------------------------------------------------------------------
+# Rendering, with the two guards today's failures earned
+# --------------------------------------------------------------------------
+
+
+def last_frame(log_path):
+    if not log_path.exists():
+        return 0
+    steps = re.findall(rb"step=(\d+)", log_path.read_bytes()[-8192:])
+    return int(steps[-1]) if steps else 0
+
+
+def render_with_watchdog(batch_dir, winner, numshapes, res, frames,
+                         deadline_s, stall_s, verbose):
+    """Renders the winner, and kills it if it is never going to finish.
+
+    A render that is going to be slow does not announce itself: the run that
+    failed here started at 3.5s a frame and was still accelerating downward
+    fifty frames later, ending up at fifteen minutes a frame. Two blunt checks
+    catch that without ever second-guessing a healthy render - one on total
+    wall clock, one on the per-frame rate. Deliberately no ETA projection: a
+    good run speeds up by 10x as particles merge away, so early extrapolation
+    condemns exactly the runs worth keeping.
+    """
+    output = (REPO / "WorthyVideos" /
+              ("%s-%s-full.mp4" % (Path(batch_dir).name, winner["name"])))
+    log_path = output.with_suffix(".log")
+    if log_path.exists():
+        log_path.unlink()
+
+    command = [sys.executable, str(RUN_BATCH), "render", str(batch_dir),
+               "--only", winner["name"], "--res", res, "--frames", str(frames),
+               "--particles", str(numshapes)]
+    if verbose:
+        command.append("--verbose")
+
+    started = time.time()
+    # Own process group: run_batch.py is a wrapper, and the simulator it spawns
+    # is what actually burns nine cores. Killing only the wrapper orphans the
+    # simulator, which then runs forever - the exact thing being guarded against.
+    process = subprocess.Popen(command, cwd=str(REPO), start_new_session=True)
+    seen, seen_at, reported = 0, started, 0
+
+    def abort(message):
+        try:
+            os.killpg(os.getpgid(process.pid), signal.SIGKILL)
+        except OSError:
+            process.kill()
+        process.wait()
+        fail(message)
+
+    while process.poll() is None:
+        time.sleep(5)
+        now = time.time()
+        frame = last_frame(log_path)
+
+        if frame > seen:
+            seen, seen_at = frame, now
+            if frame - reported >= 200:
+                rate = frame / (now - started)
+                print("  ... frame %d/%d  (%.1f frames/s)" % (frame, frames, rate))
+                reported = frame
+
+        # Stalled: no progress for long enough that finishing is hopeless.
+        if frame and now - seen_at > stall_s:
+            abort("stalled at frame %d/%d - no progress for %ds. This is the "
+                  "density cliff; re-run with a smaller --budget (currently "
+                  "aiming at %s particles)."
+                  % (frame, frames, int(now - seen_at), "{:,}".format(numshapes)))
+
+        if now - started > deadline_s:
+            abort("still at frame %d/%d after %.0f minutes (--deadline). Lower "
+                  "--budget or --frames." % (frame, frames, (now - started) / 60.0))
+
+    if process.returncode != 0:
+        fail("render failed - see %s" % log_path)
+    if not output.exists():
+        fail("render produced no video - see %s" % log_path)
+
+    return output
+
+
+# --------------------------------------------------------------------------
+# Uploading
+# --------------------------------------------------------------------------
+
+
+def upload(video, length, privacy, extra):
+    command = [str(UPLOAD), str(video), "%ds" % length, "--%s" % privacy] + extra
+    process = subprocess.run(command, cwd=str(REPO), text=True,
+                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    print(process.stdout, end="")
+    if process.returncode != 0:
+        fail("upload failed")
+
+    links = re.findall(r"https://youtu\.be/[\w-]+", process.stdout)
+    if not links:
+        fail("upload finished but printed no link - check the output above")
+    return links[0]
+
+
+# --------------------------------------------------------------------------
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Sample runs, render the best one, upload it, print the link.",
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--archetype", default="chaotic",
+                        help="scenario family to sample (default: chaotic)")
+    parser.add_argument("--runs", type=int, default=8,
+                        help="how many previews to sample (default: 8)")
+    parser.add_argument("--seed", type=int,
+                        help="seed for the sampler, so a batch is repeatable")
+    parser.add_argument("--resume", metavar="BATCH_DIR",
+                        help="use an existing batch instead of sampling a new one")
+
+    parser.add_argument("--budget", type=int, default=70000,
+                        help="total particles for the final render (default: 70000). "
+                             "Roughly the most this code renders at a sane speed.")
+    parser.add_argument("--res", default="1440p")
+    parser.add_argument("--frames", type=int, default=1800)
+    parser.add_argument("--preview-frames", type=int, default=900)
+    parser.add_argument("--preview-res", default="720p")
+    parser.add_argument("--preview-particles", type=int, default=1500)
+
+    parser.add_argument("--min-score", type=float, default=0.35,
+                        help="refuse to upload if the best run scores below this")
+    parser.add_argument("--settled", type=float, default=0.95,
+                        help="cut the clip once this fraction of the merging is "
+                             "done (default: 0.95)")
+    parser.add_argument("--min-clip", type=int, default=20)
+    parser.add_argument("--max-clip", type=int, default=60)
+
+    parser.add_argument("--deadline", type=int, default=45,
+                        help="give up on a render after this many minutes")
+    parser.add_argument("--stall", type=int, default=180,
+                        help="give up after this many seconds with no new frame")
+
+    parser.add_argument("--private", dest="privacy", action="store_const",
+                        const="private", help="upload private instead of unlisted")
+    parser.add_argument("--playlist")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="pick the winner and print the plan, render nothing")
+    parser.add_argument("--verbose", action="store_true")
+    parser.set_defaults(privacy="unlisted")
+    args = parser.parse_args()
+
+    if not (REPO / "build" / "PhysicsSandbox").exists():
+        fail("no build/PhysicsSandbox - run: make -j8")
+
+    # 1. Previews.
+    if args.resume:
+        batch_dir = Path(args.resume)
+        if not batch_dir.is_absolute():
+            batch_dir = REPO / batch_dir
+        if not batch_dir.exists():
+            fail("no such batch: %s" % args.resume)
+        print("Using existing batch %s" % batch_dir.name)
+    else:
+        print("=== Sampling %d %s previews ===" % (args.runs, args.archetype))
+        command = [sys.executable, str(RUN_BATCH), "sample",
+                   "--archetype", args.archetype, "--runs", str(args.runs),
+                   "--particles", str(args.preview_particles),
+                   "--frames", str(args.preview_frames), "--res", args.preview_res]
+        if args.seed is not None:
+            command += ["--seed", str(args.seed)]
+        if run(command) != 0:
+            fail("sampling failed")
+        batch_dir = newest_batch(args.archetype)
+        if not batch_dir:
+            fail("sampling wrote no batch directory")
+
+    # 2. Winner.
+    winner = pick_winner(batch_dir, args.min_score)
+    numshapes, ratio, expected = particles_for_budget(winner["sidecar"], args.budget)
+
+    print("\n=== Winner: %s  score %.3f  seed %s ===" % (
+        winner["name"], winner["score"], winner["seed"]))
+    print("  budget %s particles -> numShapes=%d (this scenario realises %.2fx "
+          "per group, so about %s)" % ("{:,}".format(args.budget), numshapes,
+                                       ratio, "{:,}".format(expected)))
+
+    if args.dry_run:
+        print("\n--dry-run: would render %d frames at %s, then upload %s.\n"
+              "Clip length is decided from the render's own merge history."
+              % (args.frames, args.res, args.privacy))
+        return 0
+
+    # 3. Render.
+    print("\n=== Rendering %d frames at %s ===" % (args.frames, args.res))
+    video = render_with_watchdog(batch_dir, winner, numshapes, args.res,
+                                 args.frames, args.deadline * 60, args.stall,
+                                 args.verbose)
+
+    # 4. Clip length, from what the render actually did.
+    report = json.loads(video.with_suffix(".json").read_text())
+    length = clip_seconds(report, args.settled, args.min_clip, args.max_clip)
+    print("\n=== Uploading first %ds (%.0f%% of the merging is done by there) ==="
+          % (length, args.settled * 100))
+
+    # 5. Upload.
+    extra = ["--playlist", args.playlist] if args.playlist else []
+    link = upload(video, length, args.privacy, extra)
+
+    print("\n" + "=" * 60)
+    print("  %s" % link)
+    print("  %s  (%s)" % (video.name, args.privacy))
+    print("=" * 60)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

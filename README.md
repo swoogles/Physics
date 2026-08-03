@@ -54,6 +54,10 @@ Important Commands
   // What will this config do, without running it?
   ./build/PhysicsSandbox --config configs/cold-collapse.properties --print-setup
 
+  // Sample, render the best one, upload it, print the link - one command
+  tools/autopost --archetype chaotic --runs 8
+  tools/autopost --resume batches/<batch> --dry-run   // just pick and plan
+
   // Sample a batch of variations, rank them, render the winners
   tools/run_batch.py sample --archetype chaotic --runs 12
   tools/run_batch.py report batches/<batch> --contact-sheet --reel
@@ -68,6 +72,17 @@ Starting arrangements are data now, not code: see SCENARIOS.md for the scenario
 types, the knobs worth turning, and how batching and scoring work. Recorded runs
 write a .json report next to the video that is enough to reproduce them exactly,
 and tools/YOUTUBE.md covers the one-time Google setup that uploading needs.
+
+tools/autopost chains all of that together without asking anything: it samples
+previews, takes the highest scoring one, renders it, cuts the clip where the
+merging finishes, uploads it and prints the link. Every decision is a rule
+applied to the numbers in the run reports, so it repeats. Two things it knows
+that are easy to get wrong by hand - --particles is per group, so the same
+number means 56k particles in a 3-group scenario and 171k in an 8-group one,
+and render cost climbs superlinearly with density, so autopost asks for a total
+particle --budget and solves for the flag; and a render that is going to fail
+does not look slow at the start, so it watches the frame rate and kills the
+whole process group rather than leaving the simulator running on nine cores.
  
   
 Turning output images into a video:
