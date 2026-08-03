@@ -202,6 +202,15 @@ void Simulation::update(hour_t dt) {
             if (!Particle::mergeAllowed(*pair.first, *pair.second)) {
                 continue;
             }
+
+            /* A group that has just arrived is the densest thing on the field,
+             * so it would otherwise absorb the whole per-frame merge quota and
+             * be gone before it had fallen anywhere. Real collisions still
+             * apply to it - only the forced merges wait. */
+            if (Particle::withinArrivalGrace(*pair.first, stepsElapsed) ||
+                Particle::withinArrivalGrace(*pair.second, stepsElapsed)) {
+                continue;
+            }
             TouchingPair forcedPair(pair.first, pair.second);
             collisionPairs.insertIfUnique(forcedPair);
         }
@@ -335,14 +344,24 @@ void Simulation::applySideEffectingFunctionsToInnards(
     physicalObjects.checkForAllParticles(particleFunctor);
 }
 
-void Simulation::addGroup(const ParticleList &newGroup) {
-    // Add particles from the new group to the existing particle list
-    physicalObjects.addAll(newGroup);
-    
-    // Update the quadrant with new particles
+void Simulation::addGroup(ParticleList newGroup) {
+    const int arrivingCount = (int) newGroup.size();
+
+    // Stamped before they join the run, so the forced-merge floor can tell
+    // them apart from material that has been here since the start.
+    newGroup.applyToAllParticles([this](Particle &particle) {
+        particle.markArrivedAt(stepsElapsed);
+    });
+
+    physicalObjects.addList(std::move(newGroup));
+    Particle::noteGroupArrived(arrivingCount, stepsElapsed);
+
+    /* update() rebuilds the octree at the end of a step, so a group added
+     * after that would be invisible to gravity for a frame - it would feel
+     * forces from the stale tree but exert none - without rebuilding here. */
     refreshQuadrant(physicalObjects);
-    
-    // Update mins and maxes for the new particle positions
+
+    // The camera frames what it can see, and it can now see further.
     updateMinsAndMaxes();
 }
 

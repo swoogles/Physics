@@ -50,12 +50,12 @@ public:
 
     MaximumValues getXYMinsAndMaxes() const;
     
-    /*! \brief Adds a new group of particles to the simulation.
-     * 
-     *  This method allows adding new particles (group) to the simulation
-     *  at any point during the simulation run.
+    /*! \brief Drops a new group of particles into a run already in progress.
+     *
+     *  Stamps the arrivals so the forced-merge floor leaves them alone for a
+     *  moment, and re-paces the merge schedule around the new material.
      */
-    void addGroup(const ParticleList &newGroup);
+    void addGroup(ParticleList newGroup);
 
 private:
     ParticleList physicalObjects;

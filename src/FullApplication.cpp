@@ -19,10 +19,6 @@ namespace {
 
     //! One video second, at the recorder's 24 fps input rate.
     const int SAMPLE_INTERVAL_FRAMES = 24;
-    
-    //! Tracks time when next group should be introduced (in seconds)
-    static double nextGroupIntroduceTime = 20.0;  // Start introducing groups after 20 seconds
-    static int groupsIntroduced = 0;
 }
 
 void FullApplication::requestStop() {
@@ -107,37 +103,36 @@ ApplicationResult FullApplication::update() {
             report->sample(framesRendered, simulation.getStats());
         }
         
-// Introduce new groups at time intervals (20 seconds apart, up to 5 groups)
-        double currentTime = simulation.getOutputViewingTime().value();
-        static double nextGroupIntroduceTime = 20.0;
-        static int groupsIntroduced = 0;
-        
-        if (currentTime >= nextGroupIntroduceTime && groupsIntroduced < 5) {
+        const double currentTime = simulation.getOutputViewingTime().value();
+
+        if (arrivals.due(currentTime)) {
             cout << "Introducing new group at " << currentTime << " seconds" << endl;
-            nextGroupIntroduceTime += 20.0;
-            groupsIntroduced++;
-            
-            // Create a new group specification and add to simulation
+
+            /* EXPERIMENT (phase 4 will derive these from the scenario rather
+             * than hard-coding them for one config): matched to what the
+             * chaotic archetype builds for its own groups. The previous values
+             * packed 500 particles into 5e5 m, ~1580x the density of the
+             * scenario's own groups, which the collision radius annihilated in
+             * four frames. */
             GroupSpec newGroupSpec;
-            newGroupSpec.position = PhysicalVector(0, 0, 0, true);
-            // Position the new group far from existing particles to make it clearly visible
-            newGroupSpec.position = PhysicalVector(5e6, 0, 0, true);
-            newGroupSpec.velocity = PhysicalVector(0, 0, 0, false);
+            // Outside the system's 3.09e7 m radius, falling inward.
+            newGroupSpec.position = PhysicalVector(4.0e7, 0, 0, true);
+            newGroupSpec.velocity = PhysicalVector(-6.3e-5, 0, 0, false);
             newGroupSpec.spin = PhysicalVector(0, 0, 0, false);
-            newGroupSpec.count = 500;  // Number of particles in new group
-            newGroupSpec.mass = 2e9;   // Total mass for new group (larger than existing)
-            newGroupSpec.radius = 5e5; // Radius of the group
-            newGroupSpec.color = PhysicalVector(1, 1, 0); // Yellow color to make it distinct
-            newGroupSpec.dispersion = 0.5; // Higher dispersion for better visual effect
-            newGroupSpec.virialRatio = 0.1; // More collapse for dramatic effect
-            newGroupSpec.label = "added_group_" + std::to_string(groupsIntroduced);
+            newGroupSpec.count = 400;
+            newGroupSpec.mass = 5.9891e8;
+            newGroupSpec.radius = 5.4e6;
+            newGroupSpec.color = PhysicalVector(1, 1, 0); // Yellow, to stand out
+            newGroupSpec.dispersion = 0.15; // Matches chaotic.dispersion
+            newGroupSpec.virialRatio = -1.0;
+            newGroupSpec.label = "added_group_" + std::to_string(arrivals.arrivalsSoFar());
             
             // Create a basic scenario spec with only this new group
             ScenarioSpec newScenario;
             newScenario.groups.push_back(newGroupSpec);
             
             // Generate particles for the new group
-            std::mt19937 rng(12345 + groupsIntroduced);  // Use different seed for variation
+            std::mt19937 rng(12345 + arrivals.arrivalsSoFar());  // Use different seed for variation
             SetupDiagnostics diagnostics;
             ParticleList newGroup = ScenarioBuilder::build(newScenario, 1.0, diagnostics, rng);
             

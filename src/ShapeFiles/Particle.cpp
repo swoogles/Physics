@@ -6,6 +6,9 @@ float Particle::collisionRadiusMultiplier = 1.0f;
 float Particle::collisionRadiusStartMultiplier = 1.0f;
 float Particle::mergeTargetFraction = 0.9f;
 int Particle::mergeTargetSteps = 4320;
+int Particle::baseMergeTargetSteps = 4320;
+//! Five seconds of video at 24 fps.
+int Particle::mergeGraceSteps = 120;
 int Particle::initialParticleCount = 0;
 int Particle::lastMergeStep = 0;
 int Particle::previousParticleCount = 0;
@@ -113,6 +116,7 @@ void Particle::setCollisionRadiusMultiplier(float startMultiplier, float targetF
     collisionRadiusStartMultiplier = startMultiplier;
     mergeTargetFraction = targetFraction;
     mergeTargetSteps = targetSteps;
+    baseMergeTargetSteps = targetSteps;
     initialParticleCount = initialCount;
     previousParticleCount = initialCount;
     lastMergeStep = 0;
@@ -121,6 +125,42 @@ void Particle::setCollisionRadiusMultiplier(float startMultiplier, float targetF
          << ", mergeTarget=" << (targetFraction * 100) << "%"
          << ", targetSteps=" << targetSteps
          << ", initialParticles=" << initialCount << endl;
+}
+
+void Particle::markArrivedAt(int step) {
+    _arrivedAtStep = step;
+}
+
+bool Particle::withinArrivalGrace(const Particle &particle, int currentStep) {
+    if (particle._arrivedAtStep <= 0 || mergeGraceSteps <= 0) {
+        return false;
+    }
+    return (currentStep - particle._arrivedAtStep) < mergeGraceSteps;
+}
+
+void Particle::noteGroupArrived(int particleCount, int currentStep) {
+    if (particleCount <= 0) {
+        return;
+    }
+
+    // There is genuinely more material to merge now, so say so.
+    initialParticleCount += particleCount;
+    previousParticleCount += particleCount;
+
+    /* Push the deadline out by however long this group was held back. A group
+     * arriving at 20s otherwise inherits a schedule the original material has
+     * already spent 20 seconds against, and the run tries to make up the
+     * difference by merging the newcomer as fast as it can. */
+    mergeTargetSteps = currentStep + baseMergeTargetSteps;
+
+    // Let the new material ramp up from the same place the originals did.
+    collisionRadiusMultiplier = collisionRadiusStartMultiplier;
+    lastMergeStep = currentStep;
+
+    cout << "Group arrived: " << particleCount << " particles"
+         << " | merge deadline now step " << mergeTargetSteps
+         << " | multiplier back to " << collisionRadiusMultiplier
+         << " | grace " << mergeGraceSteps << " frames" << endl;
 }
 
 void Particle::updateCollisionRadiusMultiplier(int currentParticleCount, int currentStep) {

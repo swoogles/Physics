@@ -77,11 +77,41 @@ public:
     // Getters for merge progress checking
     static int getInitialParticleCount() { return initialParticleCount; }
     static float getMergeTargetFraction() { return mergeTargetFraction; }
+    static int getMergeTargetSteps() { return mergeTargetSteps; }
+
+    /*! \brief How long a newly arrived group is spared from *forced* merges.
+     *
+     *  Forced merges pick the closest pairs in the whole run. A group that has
+     *  just arrived is the densest thing on a field of otherwise well-separated
+     *  merged bodies, so without this the floor targets the newcomer almost
+     *  exclusively and consumes it in under two seconds - measured, not feared.
+     *
+     *  Real collisions are untouched. This only holds off the merges the run
+     *  forces to stay on schedule.
+     */
+    static int mergeGraceSteps;
+
+    /*! \brief Re-pace the merge schedule around a group that just arrived.
+     *
+     *  The newcomers have had none of the run to merge in, so the deadline is
+     *  pushed out by exactly how long they were held back, and the collision
+     *  multiplier drops back to its starting value to ramp up again. Without
+     *  this, a group arriving at 20s is judged against a deadline the original
+     *  material has already had 20 seconds of runway toward.
+     */
+    static void noteGroupArrived(int particleCount, int currentStep);
+
+    //! True while this particle is still inside its arrival grace period.
+    static bool withinArrivalGrace(const Particle &particle, int currentStep);
+
+    //! Stamps a particle as having arrived mid-run rather than at t=0.
+    void markArrivedAt(int step);
 
 private:
     static float collisionRadiusStartMultiplier;
     static float mergeTargetFraction;
     static int mergeTargetSteps;
+    static int baseMergeTargetSteps;
     static int initialParticleCount;
     static int lastMergeStep;
     static int previousParticleCount;
@@ -133,6 +163,9 @@ public:
 
 private:
     meter_t _radius;
+
+    //! 0 for everything placed at t=0; the step it turned up for arrivals.
+    int _arrivedAtStep = 0;
 
     /*! \relates MyShape
      *  \brief Determines the final angular momentum after 2 objects collide in a completely inelastic collision

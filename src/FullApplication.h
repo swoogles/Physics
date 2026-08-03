@@ -21,6 +21,7 @@
 //Physics
 #include "Physics/Simulations.h"
 #include "Physics/PhysicsSandboxProperties.h"
+#include "Physics/ArrivalSchedule.h"
 
 #include "Input/RunOptions.h"
 #include "Sandbox/ApplicationResult.h"
@@ -75,6 +76,11 @@ private:
     bool finished;
 
     queue<TimedSceneAction> timedSceneActions;
+
+    /*! When extra groups arrive. Cadence and limit are defined once, in
+     *  ArrivalSchedule.h - not here, and nowhere else.
+     */
+    ArrivalSchedule arrivals;
 
     void finishRun();
 };
