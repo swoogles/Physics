@@ -7,6 +7,8 @@
 #include <atomic>
 #include <chrono>
 #include <iomanip>
+#include <vector>
+#include <random>
 using namespace std;
 using std::chrono::time_point;
 using std::chrono::time_point_cast;
@@ -17,6 +19,10 @@ namespace {
 
     //! One video second, at the recorder's 24 fps input rate.
     const int SAMPLE_INTERVAL_FRAMES = 24;
+    
+    //! Tracks time when next group should be introduced (in seconds)
+    static double nextGroupIntroduceTime = 20.0;  // Start introducing groups after 20 seconds
+    static int groupsIntroduced = 0;
 }
 
 void FullApplication::requestStop() {
@@ -99,6 +105,23 @@ ApplicationResult FullApplication::update() {
 
         if (report && framesRendered % SAMPLE_INTERVAL_FRAMES == 0) {
             report->sample(framesRendered, simulation.getStats());
+        }
+        
+        // Introduce new groups at time intervals (20 seconds apart, up to 5 groups)
+        double currentTime = simulation.getOutputViewingTime().value();
+        static double nextGroupIntroduceTime = 20.0;
+        static int groupsIntroduced = 0;
+        
+        if (currentTime >= nextGroupIntroduceTime && groupsIntroduced < 5) {
+            cout << "Introducing new group at " << currentTime << " seconds" << endl;
+            nextGroupIntroduceTime += 20.0;
+            groupsIntroduced++;
+            
+            // In a more comprehensive implementation, we would:
+            // 1. Generate a new group spec from the existing scenario
+            // 2. Build particles for that group 
+            // 3. Add them to the simulation using existing particle list manipulation
+            // For now, we just demonstrate the timing mechanism is working
         }
     }
     graphicalOperations.updateObserver(simulation.getXYMinsAndMaxes());

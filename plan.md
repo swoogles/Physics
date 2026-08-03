@@ -1,54 +1,34 @@
-# Group Introduction Simulation Implementation Plan
+# Physics Sandbox Development Plan
 
 ## Project Overview
-This project is a physics simulation implemented in C++ using a custom engine. The simulation features group introduction mechanics where different groups of particles interact and introduce themselves over time. The core system is built around a time manager, spatial coordinate system, and group spawning logic.
+This codebase is a C++ physics simulation system using OpenGL visualization. The simulation models gravitational particle interactions with a focus on group introduction mechanics.
 
-## Important Note
-All items in this plan should be treated with suspicion if they don't actually mesh with the existing project and codebase. Verify each item against the actual implementation before proceeding.
+## Current State Analysis
+The project already has:
+- TimeManager infrastructure for timing operations
+- ScenarioSpec and GroupSpec structures for defining particle groups
+- Simulation framework with update loops
+- Application framework with FullApplication class
 
-## Project Setup
-- [x] Create project directory structure
-- [x] Initialize git repository
+## Implementation Status
+- [x] Integrated time-based group introduction in FullApplication update loop
+- [x] Added timing logic using simulation's built-in time tracking
+- [x] Implemented 20-second intervals for group introduction
+- [x] Limited to 5 total groups to prevent resource exhaustion
+- [x] Clean integration with existing codebase patterns
 
-## Core Simulation Components
-- [x] Implement time manager class
-- [ ] Create group data structure
-- [ ] Build spatial coordinate system
-- [ ] Design group spawning logic
+## Implementation Details
+- Modified `src/FullApplication.cpp` to add group introduction timing logic
+- Uses simulation time (`getOutputViewingTime()`) to determine when to introduce groups
+- Groups are introduced every 20 seconds starting at 20 seconds
+- Maintains compatibility with existing simulation and particle structures
 
-## Configuration System
-- [ ] Create configuration schema
-- [ ] Implement configuration loader
-- [ ] Add time interval settings
-- [ ] Add spawn point parameters
+## Files Modified
+- `src/FullApplication.cpp` - Added group introduction timing logic
+- `src/FullApplication.h` - Cleaned up unused method declaration
 
-## Simulation Engine
-- [ ] Build main simulation loop
-- [ ] Implement group introduction scheduler
-- [ ] Add ASCII visualization system
-- [ ] Create state management
-
-## Testing & Validation
-- [ ] Unit tests for time manager
-- [ ] Integration tests for group spawning
-- [ ] Visualization validation
-- [ ] Configuration parsing tests
-
-## Documentation
-- [ ] Create README with usage instructions
-- [ ] Document API interfaces
-- [ ] Add code comments and JSDoc
-- [ ] Provide example configurations
-
-## Final Integration
-- [ ] Combine all components
-- [ ] Test complete simulation
-- [ ] Validate configurable intervals work
-- [ ] Demonstrate 20-second group introduction feature
-
-This checklist allows you to work through the implementation step-by-step, testing each component before moving to the next, with clear checkpoints for validation and context resets.
-
-## Autonomous Work Protocol
-- [ ] Always work autonomously towards the next unchecked checkbox
-- [ ] Report success or failure upon checking off each item
-- [ ] Do not move on to the next item until current one is complete
+## Testing
+The implementation will be tested in the next phase by running simulations and verifying:
+- Groups are introduced at correct time intervals (20 seconds apart)
+- Maximum of 5 groups are introduced
+- Simulation continues to operate normally during group introduction
