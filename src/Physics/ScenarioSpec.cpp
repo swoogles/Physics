@@ -241,6 +241,15 @@ vector<GroupSpec> ScenarioParser::chaotic(
     const double dispersion = knob(properties, spec, "chaotic.dispersion", 0.15);
     const double thickness = knob(properties, spec, "chaotic.thickness", 0.25);
 
+    /* Per-group internal temperature. Give these a range and every group draws
+     * its own, so a run holds both kinds of thing at once: cold clumps that
+     * collapse on their own, and clouds near equilibrium that hold together
+     * until a neighbour swings through them. Left at 0 the groups all share
+     * chaotic.dispersion, which is the older, quieter behaviour.
+     */
+    const double virialLow = knob(properties, spec, "chaotic.group_virial_min", 0.0);
+    const double virialHigh = knob(properties, spec, "chaotic.group_virial_max", 0.0);
+
     std::uniform_real_distribution<double> unit(0.0, 1.0);
     std::uniform_real_distribution<double> signed_(-1.0, 1.0);
 
@@ -288,6 +297,14 @@ vector<GroupSpec> ScenarioParser::chaotic(
 
         group.spin = PhysicalVector(0, 0, (float) (signed_(rng) * spinMax), false);
         group.dispersion = dispersion;
+        if (virialLow > 0 && virialHigh > 0) {
+            // Log-uniform: the interesting divide is between 0.02 and 0.5, and
+            // sampling those linearly would put almost every group above the
+            // threshold where it holds itself up.
+            const double logLow = log(std::min(virialLow, virialHigh));
+            const double logHigh = log(std::max(virialLow, virialHigh));
+            group.virialRatio = exp(logLow + unit(rng) * (logHigh - logLow));
+        }
         group.color = paletteColor(i);
 
         groups.push_back(group);

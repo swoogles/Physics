@@ -36,6 +36,26 @@ namespace {
         return candidate.length() > 0 ? candidate.unit() : PhysicalVector(1, 0, 0, false);
     }
 
+    /*! Random internal speed for one group, in m/s.
+     *
+     *  Either straight from `dispersion`, or solved from `virialRatio` when the
+     *  group asked for a temperature instead of a velocity fraction. For a
+     *  uniform sphere with isotropic speed d*sqrt(G*M/R), the internal kinetic
+     *  energy is 0.5*d^2*G*M^2/R against a binding energy of 0.6*G*M^2/R, so
+     *  the ratio comes out at 0.833*d^2 and inverting gives d = sqrt(1.2*q).
+     */
+    double internalSpeed(const GroupSpec &group) {
+        if (group.radius <= 0 || group.mass <= 0) {
+            return 0.0;
+        }
+
+        const double fraction = group.virialRatio > 0
+                ? sqrt(1.2 * group.virialRatio)
+                : group.dispersion;
+
+        return fraction > 0 ? fraction * sqrt(G * group.mass / group.radius) : 0.0;
+    }
+
     //! Angular velocity vector for a group, from its spin fraction.
     PhysicalVector angularVelocity(const GroupSpec &group) {
         const double fraction = group.spin.length();
@@ -91,31 +111,37 @@ ParticleList ScenarioBuilder::build(
         PhysicalVector velocity;
         PhysicalVector color;
         double mass;
+        size_t group;
     };
 
     std::vector<PlacedParticle> placed;
     placed.reserve(spec.totalParticles());
 
-    for (const auto &group : spec.groups) {
+    for (size_t index = 0; index < spec.groups.size(); index++) {
+        const GroupSpec &group = spec.groups[index];
         if (group.count <= 0 || group.mass <= 0) {
             continue;
         }
 
         const double particleMass = group.mass / group.count;
         const PhysicalVector omega = angularVelocity(group);
-        const double dispersionSpeed = group.radius > 0
-                ? group.dispersion * sqrt(G * group.mass / group.radius)
-                : 0.0;
+
+        // A group given only `dispersion` is placed hot, as it always was, and
+        // takes part in the virial rescale below. A group that asked for a
+        // `virialRatio` is placed cold and warmed up afterwards - see the note
+        // on that loop.
+        const double placedSpeed = group.virialRatio > 0 ? 0.0 : internalSpeed(group);
 
         for (int i = 0; i < group.count; i++) {
             const PhysicalVector offset = ScenarioBuilder::randomPointInSphere(group.radius, rng);
 
             PhysicalVector velocity = group.velocity.plus(omega.vectorProduct3(offset));
-            if (dispersionSpeed > 0) {
-                velocity = velocity.plus(randomUnitVector(rng).scaledBy(dispersionSpeed));
+            if (placedSpeed > 0) {
+                velocity = velocity.plus(randomUnitVector(rng).scaledBy(placedSpeed));
             }
 
-            placed.push_back({group.position.plus(offset), velocity, group.color, particleMass});
+            placed.push_back({group.position.plus(offset), velocity, group.color,
+                              particleMass, index});
         }
     }
 
@@ -157,6 +183,34 @@ ParticleList ScenarioBuilder::build(
         for (auto &particle : placed) {
             particle.velocity = systemVelocity.plus(
                     particle.velocity.minus(systemVelocity).scaledBy(scale));
+        }
+    }
+
+    /* Per-group temperatures go on after that rescale, deliberately.
+     *
+     * A group's virialRatio is a statement about that group against its own
+     * gravity, so letting the system-wide rescale multiply it would quietly
+     * break its meaning: ask for a stable cloud beside a cold clump, watch
+     * both get multiplied by the same 0.4, and end up with two cold clumps -
+     * which is exactly the effect this exists to produce. Setting it last
+     * means a group is the temperature it asked for whatever the system around
+     * it is doing, and virial_ratio_after reports the resulting total honestly
+     * rather than the target.
+     *
+     * Groups using the older `dispersion` knob are already hot by this point
+     * and are left alone, so every scenario written before this still builds
+     * exactly the same way.
+     */
+    for (auto &particle : placed) {
+        const GroupSpec &group = spec.groups[particle.group];
+        if (group.virialRatio <= 0) {
+            continue;
+        }
+
+        const double speed = internalSpeed(group);
+        if (speed > 0) {
+            particle.velocity = particle.velocity.plus(
+                    randomUnitVector(rng).scaledBy(speed));
         }
     }
 

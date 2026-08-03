@@ -49,6 +49,21 @@ struct GroupSpec {
      */
     double dispersion = 0.0;
 
+    /*! This group's own kinetic energy as a fraction of its own binding
+     *  energy - how it behaves before anything else reaches it.
+     *
+     *  0.5  - self-supporting cloud, holds its shape and only reacts to
+     *         whatever falls into it
+     *  0.1  - sags inward slowly
+     *  0.02 - collapses promptly on its own
+     *
+     *  Set per group, this is what makes a run interesting: cold clumps that
+     *  collapse immediately, next to clouds that just sit there until a
+     *  neighbour swings past and tears them up. A value <= 0 leaves
+     *  `dispersion` in charge instead.
+     */
+    double virialRatio = -1.0;
+
     std::string label;
 };
 
@@ -67,6 +82,11 @@ struct ScenarioSpec {
      *  >1.0 - unbound, everything flies apart
      *
      *  A value <= 0 leaves the velocities exactly as specified.
+     *
+     *  This governs how the groups move *as groups*. Each group's internal
+     *  temperature is GroupSpec::virialRatio and is deliberately not rescaled
+     *  with it, so the reported virial_ratio_after sits above this target by
+     *  whatever the internal motion adds.
      */
     double virialRatio = -1.0;
 

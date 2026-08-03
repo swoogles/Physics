@@ -84,6 +84,31 @@ on the seed.
 | `chaotic.spin_max` | per-group spin ceiling |
 | `chaotic.mass_spread` | how unequal the groups are |
 | `chaotic.thickness` | how far out of the XY plane they're scattered |
+| `chaotic.group_virial_min`, `chaotic.group_virial_max` | the band each group's own temperature is drawn from |
+
+Those last two are what stop every group behaving the same way. Each group draws
+its own kinetic-to-binding energy ratio log-uniformly from the band, and that
+decides what it does before anything reaches it: around 0.5 it holds itself up
+as a cloud and only moves when a neighbour arrives, by 0.02 it collapses on its
+own. Measured on one isolated group over 240 frames, same seed, the difference
+is a 29% contraction at 0.02 against 4% at 0.6. Leave both at 0 and every group
+falls back to sharing `chaotic.dispersion`, which is how this behaved before.
+
+Two things worth knowing when reading the results back:
+
+`scenario.virial_ratio` is the *bulk* target - it scales how the groups move as
+groups, and per-group temperatures are applied afterwards and deliberately not
+rescaled with it, since a group's ratio is a statement about that group against
+its own gravity. So `virial_ratio_after` in the report sits above the target by
+whatever the internal motion adds, and that is the honest total rather than a
+miss. Groups using the older `dispersion` knob are still placed hot and still
+take part in the rescale, so every scenario written before this builds exactly
+as it did.
+
+Merge counts will not show you the difference. `minimum_merges_per_frame` forces
+merges on a schedule whatever the physics is doing, so a stable cloud sheds
+particles at about the same rate as a collapsing one - in that same experiment,
+306 merges against 299. RMS radius is the measure that actually separates them.
 
 ### `diamond` — a ring swinging past the centre
 

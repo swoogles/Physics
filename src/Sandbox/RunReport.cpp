@@ -34,6 +34,7 @@ namespace {
              << ", \"mass_kg\": " << group.mass
              << ", \"radius_m\": " << group.radius
              << ", \"dispersion\": " << group.dispersion
+             << ", \"virial_ratio\": " << group.virialRatio
              << ", \"position\": " << vectorJson(group.position)
              << ", \"velocity\": " << vectorJson(group.velocity)
              << ", \"spin\": " << vectorJson(group.spin)

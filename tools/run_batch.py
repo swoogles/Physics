@@ -79,6 +79,14 @@ def sample_pair(rng):
 
 
 def sample_chaotic(rng):
+    # The band each group's own temperature is drawn from. The bottom stays
+    # cold enough that something always collapses promptly; the top is sampled
+    # wide because that is the knob that decides whether a run is eight clumps
+    # all doing the same thing, or clumps arriving into clouds that were
+    # holding themselves up until then.
+    coldest = log_uniform(rng, 0.01, 0.10)
+    warmest = min(0.9, coldest * log_uniform(rng, 2.0, 30.0))
+
     return {
         "scenario.type": "chaotic",
         "scenario.virial_ratio": round(log_uniform(rng, 0.08, 0.5), 3),
@@ -91,6 +99,8 @@ def sample_chaotic(rng):
         "chaotic.mass_spread": round(rng.uniform(1.0, 4.0), 2),
         "chaotic.thickness": round(rng.uniform(0.05, 0.5), 2),
         "chaotic.dispersion": round(rng.uniform(0.05, 0.25), 2),
+        "chaotic.group_virial_min": round(coldest, 3),
+        "chaotic.group_virial_max": round(warmest, 3),
     }
 
 
