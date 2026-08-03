@@ -3,14 +3,34 @@
 ## Project Overview
 This codebase is a C++ physics simulation system using OpenGL visualization. The simulation models gravitational particle interactions with a focus on group introduction mechanics.
 
-## Current State Analysis
-The project already has:
-- TimeManager infrastructure for timing operations
-- ScenarioSpec and GroupSpec structures for defining particle groups
-- Simulation framework with update loops
-- Application framework with FullApplication class
+## Implementation Checklist
 
-## Implementation Status
+ONLY DO 1 of these things 1 time before waiting for me to reset your context
+- confirm next item is already implemented and check it off
+- confirm next item *needs* to be implemented and work till you can check it off, or break it into smaller components, to be easy enough to check off
+
+### Core Implementation
+- [ ] Integrate time-based group introduction in FullApplication update loop
+- [ ] Add timing logic using simulation's built-in time tracking
+- [ ] Implement 20-second intervals for group introduction
+- [ ] Limit to 5 total groups to prevent resource exhaustion
+- [ ] Maintain compatibility with existing codebase patterns
+
+### Code Changes
+- [ ] Modify `src/FullApplication.cpp` to add group introduction timing logic
+- [ ] Clean up unused method declaration in `src/FullApplication.h`
+
+### Testing
+- [ ] Run simulations to verify groups are introduced at correct time intervals (20 seconds apart)
+- [ ] Verify maximum of 5 groups are introduced
+- [ ] Ensure simulation continues to operate normally during group introduction
+
+### Documentation
+- [ ] Update README with new group introduction functionality
+- [ ] Document timing logic and group limits
+- [ ] Add comments to modified source files
+
+## Current Status
 - [x] Integrated time-based group introduction in FullApplication update loop
 - [x] Added timing logic using simulation's built-in time tracking
 - [x] Implemented 20-second intervals for group introduction
