@@ -84,8 +84,8 @@ def sample_chaotic(rng):
     # wide because that is the knob that decides whether a run is eight clumps
     # all doing the same thing, or clumps arriving into clouds that were
     # holding themselves up until then.
-    coldest = log_uniform(rng, 0.01, 0.10)
-    warmest = min(0.9, coldest * log_uniform(rng, 2.0, 30.0))
+    coldest = log_uniform(rng, 0.005, 0.15)
+    warmest = min(0.9, coldest * log_uniform(rng, 3.0, 50.0))
 
     return {
         "scenario.type": "chaotic",
