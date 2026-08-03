@@ -49,6 +49,13 @@ public:
     void update(hour_t dt);
 
     MaximumValues getXYMinsAndMaxes() const;
+    
+    /*! \brief Adds a new group of particles to the simulation.
+     * 
+     *  This method allows adding new particles (group) to the simulation
+     *  at any point during the simulation run.
+     */
+    void addGroup(const ParticleList &newGroup);
 
 private:
     ParticleList physicalObjects;

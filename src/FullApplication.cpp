@@ -107,7 +107,7 @@ ApplicationResult FullApplication::update() {
             report->sample(framesRendered, simulation.getStats());
         }
         
-        // Introduce new groups at time intervals (20 seconds apart, up to 5 groups)
+// Introduce new groups at time intervals (20 seconds apart, up to 5 groups)
         double currentTime = simulation.getOutputViewingTime().value();
         static double nextGroupIntroduceTime = 20.0;
         static int groupsIntroduced = 0;
@@ -117,11 +117,32 @@ ApplicationResult FullApplication::update() {
             nextGroupIntroduceTime += 20.0;
             groupsIntroduced++;
             
-            // In a more comprehensive implementation, we would:
-            // 1. Generate a new group spec from the existing scenario
-            // 2. Build particles for that group 
-            // 3. Add them to the simulation using existing particle list manipulation
-            // For now, we just demonstrate the timing mechanism is working
+            // Create a new group specification and add to simulation
+            GroupSpec newGroupSpec;
+            newGroupSpec.position = PhysicalVector(0, 0, 0, true);
+            // Position the new group far from existing particles to make it clearly visible
+            newGroupSpec.position = PhysicalVector(5e6, 0, 0, true);
+            newGroupSpec.velocity = PhysicalVector(0, 0, 0, false);
+            newGroupSpec.spin = PhysicalVector(0, 0, 0, false);
+            newGroupSpec.count = 500;  // Number of particles in new group
+            newGroupSpec.mass = 2e9;   // Total mass for new group (larger than existing)
+            newGroupSpec.radius = 5e5; // Radius of the group
+            newGroupSpec.color = PhysicalVector(1, 1, 0); // Yellow color to make it distinct
+            newGroupSpec.dispersion = 0.5; // Higher dispersion for better visual effect
+            newGroupSpec.virialRatio = 0.1; // More collapse for dramatic effect
+            newGroupSpec.label = "added_group_" + std::to_string(groupsIntroduced);
+            
+            // Create a basic scenario spec with only this new group
+            ScenarioSpec newScenario;
+            newScenario.groups.push_back(newGroupSpec);
+            
+            // Generate particles for the new group
+            std::mt19937 rng(12345 + groupsIntroduced);  // Use different seed for variation
+            SetupDiagnostics diagnostics;
+            ParticleList newGroup = ScenarioBuilder::build(newScenario, 1.0, diagnostics, rng);
+            
+            // Add the new group to the simulation
+            simulation.addGroup(newGroup);
         }
     }
     graphicalOperations.updateObserver(simulation.getXYMinsAndMaxes());

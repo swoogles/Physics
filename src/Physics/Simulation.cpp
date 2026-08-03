@@ -335,6 +335,17 @@ void Simulation::applySideEffectingFunctionsToInnards(
     physicalObjects.checkForAllParticles(particleFunctor);
 }
 
+void Simulation::addGroup(const ParticleList &newGroup) {
+    // Add particles from the new group to the existing particle list
+    physicalObjects.addAll(newGroup);
+    
+    // Update the quadrant with new particles
+    refreshQuadrant(physicalObjects);
+    
+    // Update mins and maxes for the new particle positions
+    updateMinsAndMaxes();
+}
+
 SimulationStats Simulation::getStats() const {
     SimulationStats stats;
     stats.stepsElapsed = stepsElapsed;
