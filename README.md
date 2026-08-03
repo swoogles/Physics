@@ -74,15 +74,28 @@ write a .json report next to the video that is enough to reproduce them exactly,
 and tools/YOUTUBE.md covers the one-time Google setup that uploading needs.
 
 tools/autopost chains all of that together without asking anything: it samples
-previews, takes the highest scoring one, renders it, cuts the clip where the
-merging finishes, uploads it and prints the link. Every decision is a rule
-applied to the numbers in the run reports, so it repeats. Two things it knows
-that are easy to get wrong by hand - --particles is per group, so the same
-number means 56k particles in a 3-group scenario and 171k in an 8-group one,
-and render cost climbs superlinearly with density, so autopost asks for a total
-particle --budget and solves for the flag; and a render that is going to fail
-does not look slow at the start, so it watches the frame rate and kills the
-whole process group rather than leaving the simulator running on nine cores.
+previews, picks a winner, renders it, cuts the clip where the merging finishes,
+uploads it and prints the link. Every decision is a rule applied to the numbers
+in the run reports, so it repeats. Three things it knows that are easy to get
+wrong by hand:
+
+--particles is per group, so the same number means 56k particles in a 3-group
+scenario and 171k in an 8-group one, and render cost climbs superlinearly with
+density. autopost asks for a total particle --budget and solves for the flag
+from the ratio the preview measured.
+
+Score is not enough to pick a winner. It rewards collapsing hard and building a
+dominant body and ignores how long that takes, so it will happily choose a run
+that is over in fifteen seconds. autopost measures each preview's arc - how far
+in 95% of the merging is done - and takes the best score among the runs that
+last at least --min-arc seconds. Watch for the compression note: scaling
+particles up a long way from the preview scales the merge settings with them,
+so the rendered arc comes out shorter than the preview's.
+
+A render that is going to fail does not look slow at the start - it starts at
+3.5s a frame and decays to fifteen minutes a frame. autopost watches the frame
+rate against --stall and --deadline, and kills the whole process group, because
+killing the wrapper alone leaves the simulator running on nine cores forever.
  
   
 Turning output images into a video:

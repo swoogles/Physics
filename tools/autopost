@@ -58,7 +58,16 @@ def newest_batch(archetype):
     return batches[-1] if batches else None
 
 
-def pick_winner(batch_dir, minimum):
+def pick_winner(batch_dir, minimum, min_arc, settled_fraction):
+    """Highest score among the runs that last long enough to be worth posting.
+
+    Score alone picks badly here. It rewards collapsing hard and building a
+    dominant body, and says nothing about how long that takes, so a run that
+    slams three clumps together in the first fifteen seconds outscores one that
+    stays interesting for forty - and then there is nothing to upload but the
+    first twenty seconds. The preview already measured how long each run's arc
+    is, so the fix is to require a usable arc first and rank by score second.
+    """
     index = Path(batch_dir) / "index.json"
     if not index.exists():
         fail("no index.json in %s - did the sampling step finish?" % batch_dir)
@@ -67,14 +76,39 @@ def pick_winner(batch_dir, minimum):
     if not entries:
         fail("no runs in %s" % batch_dir)
 
-    winner = max(entries, key=lambda entry: entry["score"])
-    if winner["score"] < minimum:
+    for entry in entries:
+        report = json.loads(Path(entry["sidecar"]).read_text())
+        entry["arc"] = arc_seconds(report, settled_fraction)
+
+    ranked = sorted(entries, key=lambda entry: entry["score"], reverse=True)
+    print("\n  run           score    arc")
+    for entry in ranked:
+        note = ""
+        if entry["score"] < minimum:
+            note = "  (below --min-score)"
+        elif entry["arc"] < min_arc:
+            note = "  (arc below --min-arc)"
+        print("  %-12s  %.3f  %5.1fs%s" % (entry["name"], entry["score"],
+                                           entry["arc"], note))
+
+    good = [entry for entry in ranked
+            if entry["score"] >= minimum and entry["arc"] >= min_arc]
+    if good:
+        return good[0]
+
+    scored = [entry for entry in ranked if entry["score"] >= minimum]
+    if not scored:
         # Better to stop than to spend half an hour rendering a cloud that
         # never came together and then put it on YouTube.
         fail("best run only scored %.3f, below --min-score %.2f. Sample again "
              "with a different --seed, or lower the floor if you want it anyway."
-             % (winner["score"], minimum))
-    return winner
+             % (ranked[0]["score"], minimum))
+
+    longest = max(scored, key=lambda entry: entry["arc"])
+    fail("nothing lasts long enough: the best arc among runs that scored well "
+         "is %s at %.0fs, under --min-arc %ds. Sample more runs, or lower "
+         "--min-arc if a short clip is fine."
+         % (longest["name"], longest["arc"], min_arc))
 
 
 # --------------------------------------------------------------------------
@@ -112,28 +146,31 @@ def seconds_per_frame(report):
     return seconds / float(steps)
 
 
-def clip_seconds(report, settled_fraction, low, high):
-    """How much of the run is worth watching.
+def arc_seconds(report, settled_fraction):
+    """How many seconds of this run are worth watching.
 
     These runs all end the same way: the merging finishes and what is left
-    drifts, so the tail is a handful of static points. Cut where the collapse
-    is essentially over - by default once 95% of the particles that will ever
-    merge have merged.
+    drifts, so the tail is a handful of static points on black. The arc is the
+    part before that - by default up to the point where 95% of the particles
+    that will ever merge have merged.
     """
     history = report.get("history") or []
     if not history:
-        return high
+        return 0.0
 
     start = report.get("setup", {}).get("particle_count") or history[0]["particles"]
     end = report.get("final", {}).get("particle_count") or history[-1]["particles"]
     if start <= end:
-        return high
+        return len(history) and history[-1]["frame"] * seconds_per_frame(report)
 
     threshold = start - settled_fraction * (start - end)
     settled = next((sample["frame"] for sample in history
                     if sample["particles"] <= threshold), history[-1]["frame"])
+    return settled * seconds_per_frame(report)
 
-    length = math.ceil(settled * seconds_per_frame(report))
+
+def clip_seconds(report, settled_fraction, low, high):
+    length = math.ceil(arc_seconds(report, settled_fraction))
     return max(low, min(high, length))
 
 
@@ -265,6 +302,9 @@ def main():
 
     parser.add_argument("--min-score", type=float, default=0.35,
                         help="refuse to upload if the best run scores below this")
+    parser.add_argument("--min-arc", type=int, default=30,
+                        help="ignore runs whose watchable phase is shorter than "
+                             "this many seconds (default: 30)")
     parser.add_argument("--settled", type=float, default=0.95,
                         help="cut the clip once this fraction of the merging is "
                              "done (default: 0.95)")
@@ -311,14 +351,22 @@ def main():
             fail("sampling wrote no batch directory")
 
     # 2. Winner.
-    winner = pick_winner(batch_dir, args.min_score)
+    winner = pick_winner(batch_dir, args.min_score, args.min_arc, args.settled)
     numshapes, ratio, expected = particles_for_budget(winner["sidecar"], args.budget)
+    scale = numshapes / float(args.preview_particles)
 
-    print("\n=== Winner: %s  score %.3f  seed %s ===" % (
-        winner["name"], winner["score"], winner["seed"]))
+    print("\n=== Winner: %s  score %.3f  seed %s  arc %.0fs ===" % (
+        winner["name"], winner["score"], winner["seed"], winner["arc"]))
     print("  budget %s particles -> numShapes=%d (this scenario realises %.2fx "
           "per group, so about %s)" % ("{:,}".format(args.budget), numshapes,
                                        ratio, "{:,}".format(expected)))
+    if scale > 8:
+        # run_batch --scale-merges scales the merge settings with the particle
+        # count, so a big jump from the preview makes the full render coalesce
+        # faster than the preview did, and the arc comes out shorter than the
+        # number above. Measured: 4.9x grew 36s -> 41s, 14.7x shrank 28s -> 21s.
+        print("  note: %.1fx the preview, so merging is scaled up hard and the "
+              "arc will come out shorter than %.0fs" % (scale, winner["arc"]))
 
     if args.dry_run:
         print("\n--dry-run: would render %d frames at %s, then upload %s.\n"
