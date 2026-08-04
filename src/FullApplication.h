@@ -91,6 +91,18 @@ private:
     std::mt19937 arrivalRng;
 
     void finishRun();
+
+    /*! \brief Prints one line each time the run passes another 10%.
+     *
+     *  A long render is otherwise completely silent about how far along it is.
+     *  A run ends at whichever of its two limits it reaches first - the frame
+     *  count or the wall-clock cap - so progress is measured against the nearer
+     *  of them, and the estimate follows whichever that turns out to be.
+     */
+    void reportProgress();
+
+    //! Last 10% mark announced, so each one is reported exactly once.
+    int lastProgressDecile;
 };
 
 

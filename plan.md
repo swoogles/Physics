@@ -105,9 +105,18 @@ Broken / rough:
 
 ## Phase 3 — data-driven, from the properties file
 
-- [ ] `struct ArrivalSpec` in `ScenarioSpec.h`: `everySeconds`, `firstAt`,
-      `limit`, plus a `GroupSpec templateGroup` for what arrives. Add one
-      `ArrivalSpec arrivals;` field to `ScenarioSpec`.
+- [ ] `struct ArrivalSpec` in `ScenarioSpec.h`, mirroring what
+      `ArrivalSchedule` and `ScenarioBuilder::arrivalGroup` now take:
+      `enabled`, `minimumDeficitFraction`, `limit`, and the approach constants.
+      Add one `ArrivalSpec arrivals;` field to `ScenarioSpec`. No template
+      group is needed - arrivals are drawn from `spec.groups` themselves.
+
+- [ ] **A stopping rule for mass.** `arrivals.limit` counts groups; nothing
+      counts kilograms, so a long run tops itself up indefinitely and total mass
+      climbs without bound (measured: 2.4x in 25 seconds). Add
+      `arrivals.mass_budget` - once that much material has been introduced,
+      arrivals stop - so the physics drift is bounded the way the population
+      rule already bounds the particle count.
 - [ ] Parse `arrivals.*` in `ScenarioParser::parse` using the existing
       `knob()` / `knobString()` helpers (`ScenarioSpec.cpp:78-89`) so every key
       lands in `spec.knobs` and therefore in the sidecar for free.

@@ -20,6 +20,7 @@ import json
 import math
 import os
 import random
+import re
 import shutil
 import subprocess
 import sys
@@ -166,9 +167,18 @@ def write_config(path, params, particles, frames_per_crossing, min_merges, name)
 # --------------------------------------------------------------------------
 
 
+#! The simulator's own 10% progress lines, e.g. "[ 30%] frame 540/1800 | ...".
+PROGRESS_LINE = re.compile(rb"^\[\s*\d{1,3}%\]")
+
+
 def run_one(config, output, seed, res, max_frames, quiet=True):
     """Runs one simulation. Output goes to <video>.log so a failed encode can be
-    read back - discarding it once hid an ffmpeg error for a whole batch."""
+    read back - discarding it once hid an ffmpeg error for a whole batch.
+
+    A quiet run still echoes the simulator's progress lines to the terminal. A
+    full render can take hours, and sending every last line to the log meant
+    watching a completely silent process and having no idea whether it was
+    halfway done or wedged."""
     command = [
         str(BINARY),
         "--config", str(config),
@@ -179,15 +189,28 @@ def run_one(config, output, seed, res, max_frames, quiet=True):
         "--max-frames", str(max_frames),
     ]
 
+    if not quiet:
+        return subprocess.run(command, cwd=str(REPO)).returncode
+
     log_path = Path(output).with_suffix(".log")
     with open(log_path, "wb") as log:
-        result = subprocess.run(
+        process = subprocess.Popen(
             command,
             cwd=str(REPO),
-            stdout=log if quiet else None,
-            stderr=subprocess.STDOUT if quiet else None,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
         )
-    return result.returncode
+
+        # readline rather than iterating the pipe: iteration reads ahead, which
+        # would hold progress lines back until the buffer filled.
+        for line in iter(process.stdout.readline, b""):
+            log.write(line)
+            if PROGRESS_LINE.match(line):
+                sys.stdout.write("      " + line.decode("utf-8", "replace"))
+                sys.stdout.flush()
+
+        process.stdout.close()
+        return process.wait()
 
 
 def verify_video(path):

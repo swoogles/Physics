@@ -6,7 +6,9 @@
 #include "Physics/Simulations.h"
 #include <atomic>
 #include <chrono>
+#include <cmath>
 #include <iomanip>
+#include <sstream>
 #include <vector>
 #include <random>
 using namespace std;
@@ -19,6 +21,26 @@ namespace {
 
     //! One video second, at the recorder's 24 fps input rate.
     const int SAMPLE_INTERVAL_FRAMES = 24;
+
+    //! "45s", "3m20s", "1h04m" - short enough to sit inside a one-line report.
+    string formatDuration(double seconds) {
+        if (!std::isfinite(seconds) || seconds < 0) {
+            return "?";
+        }
+
+        const long total = (long) (seconds + 0.5);
+        ostringstream out;
+        out << setfill('0');
+
+        if (total >= 3600) {
+            out << (total / 3600) << "h" << setw(2) << ((total % 3600) / 60) << "m";
+        } else if (total >= 60) {
+            out << (total / 60) << "m" << setw(2) << (total % 60) << "s";
+        } else {
+            out << total << "s";
+        }
+        return out.str();
+    }
 }
 
 void FullApplication::requestStop() {
@@ -53,7 +75,8 @@ FullApplication::FullApplication(const RunOptions &options,
           finished(false),
           scenario(std::move(scenario)),
           // Offset so arrivals don't replay the sequence the setup already drew.
-          arrivalRng(this->scenario.seed + 0x9E3779B9u)
+          arrivalRng(this->scenario.seed + 0x9E3779B9u),
+          lastProgressDecile(-1)
 {
     /* Whatever the run started with is what arrivals top it back up to, so the
      * particle count - the thing that costs time - has a ceiling. */
@@ -64,6 +87,55 @@ FullApplication::FullApplication(const RunOptions &options,
 
     // Note: StreamingRecorder will be lazily initialized on first frame capture
     // to ensure OpenGL context is ready
+}
+
+void FullApplication::reportProgress() {
+    const duration<double> sinceStart = system_clock::now() - start;
+    const double elapsed = sinceStart.count();
+
+    /* Whichever limit the run reaches first is the one that ends it, so the
+     * honest answer is the nearer of the two. */
+    double fraction = 0;
+    if (options.maxFrames > 0) {
+        fraction = (double) framesRendered / (double) options.maxFrames;
+    }
+    if (maximumRuntime.count() > 0) {
+        fraction = std::max(fraction, elapsed / (double) maximumRuntime.count());
+    }
+
+    if (fraction <= 0) {
+        return;  // Nothing bounded to measure against - an open-ended run.
+    }
+
+    const int decile = std::min(10, (int) (fraction * 10));
+    if (decile <= lastProgressDecile) {
+        return;
+    }
+    lastProgressDecile = decile;
+
+    /* Built on its own stream: `fixed` and `setprecision` are sticky, and
+     * cout is shared with everything else that reports during a run. */
+    ostringstream line;
+    line << "[" << setw(3) << (decile * 10) << "%] frame " << framesRendered;
+    if (options.maxFrames > 0) {
+        line << "/" << options.maxFrames;
+    }
+
+    line << " | " << fixed << setprecision(1)
+         << (elapsed > 0 ? framesRendered / elapsed : 0) << " fps"
+         << " | elapsed " << formatDuration(elapsed)
+         << " | eta ";
+
+    // One frame in, the rate is not yet worth extrapolating from.
+    if (decile > 0) {
+        line << formatDuration(elapsed * (1.0 - fraction) / fraction);
+    } else {
+        line << "estimating";
+    }
+
+    line << " | " << simulation.particleCount() << " particles";
+
+    cout << line.str() << endl;
 }
 
 void FullApplication::finishRun() {
@@ -106,6 +178,7 @@ ApplicationResult FullApplication::update() {
         simulation.update(dt);
         centerStage.update(dt.value());
         framesRendered++;
+        reportProgress();
 
         if (report && framesRendered % SAMPLE_INTERVAL_FRAMES == 0) {
             report->sample(framesRendered, simulation.getStats());
