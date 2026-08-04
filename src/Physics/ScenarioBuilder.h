@@ -52,6 +52,28 @@ public:
     //! Uniform point inside a sphere of the given radius, centred on the origin.
     static PhysicalVector randomPointInSphere(double radius, std::mt19937 &rng);
 
+    /*! \brief One more group, in the spirit of the ones the scenario started with.
+     *
+     *  Size, mass, particle count and internal temperature are taken from a
+     *  randomly chosen group of the original scenario, so an arrival is the
+     *  same kind of object the run is already made of rather than something
+     *  hard-coded that happens to suit one config.
+     *
+     *  Placement is a random direction on a shell around `aimAt`, flattened to
+     *  the same degree the scenario's own groups are, arriving from outside
+     *  with an inward and a tangential component. Every arrival therefore comes
+     *  from somewhere new.
+     *
+     *  \param aimAt      where the action currently is - the live centre of mass
+     *  \param systemMass live total mass, for the escape speed the fall is scaled to
+     */
+    static GroupSpec arrivalGroup(
+            const ScenarioSpec &spec,
+            int arrivalIndex,
+            PhysicalVector aimAt,
+            double systemMass,
+            std::mt19937 &rng);
+
 private:
     static double estimatePotentialEnergy(const ScenarioSpec &spec);
 };

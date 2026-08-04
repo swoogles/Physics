@@ -387,6 +387,7 @@ SimulationStats Simulation::getStats() const {
     }
 
     centerOfMass = centerOfMass.scaledBy(1.0 / stats.totalMass);
+    stats.centerOfMass = centerOfMass;
     stats.largestMassFraction /= stats.totalMass;
 
     double weightedSquares = 0;

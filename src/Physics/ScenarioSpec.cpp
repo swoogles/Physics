@@ -58,21 +58,20 @@ PhysicalVector ScenarioParser::parseVector(const string &value, PhysicalVector f
     return fallback;
 }
 
-namespace {
+PhysicalVector paletteColor(int index) {
+    static const PhysicalVector palette[] = {
+            PhysicalVector(1.0, 1.0, 1.0),
+            PhysicalVector(0.0, 1.0, 1.0),
+            PhysicalVector(1.0, 0.5, 0.0),
+            PhysicalVector(0.6, 0.7, 1.0),
+            PhysicalVector(1.0, 0.4, 0.7),
+            PhysicalVector(0.5, 1.0, 0.5),
+    };
+    const int paletteSize = sizeof(palette) / sizeof(palette[0]);
+    return palette[index % paletteSize];
+}
 
-    //! Palette used when a group doesn't name its own colour.
-    PhysicalVector paletteColor(int index) {
-        static const PhysicalVector palette[] = {
-                PhysicalVector(1.0, 1.0, 1.0),
-                PhysicalVector(0.0, 1.0, 1.0),
-                PhysicalVector(1.0, 0.5, 0.0),
-                PhysicalVector(0.6, 0.7, 1.0),
-                PhysicalVector(1.0, 0.4, 0.7),
-                PhysicalVector(0.5, 1.0, 0.5),
-        };
-        const int paletteSize = sizeof(palette) / sizeof(palette[0]);
-        return palette[index % paletteSize];
-    }
+namespace {
 
     //! Reads a key, remembering that it was consulted so the report can echo it.
     double knob(const BillProperties &properties, ScenarioSpec &spec, const string &key, double fallback) {

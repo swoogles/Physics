@@ -30,6 +30,7 @@ FullApplication::FullApplication(const RunOptions &options,
                                  PhysicsSandboxProperties properties,
                                  OpenGlSetup openGlSetup,
                                  Simulation simulation,
+                                 ScenarioSpec scenario,
                                  RunReport *report)
         : simulation(std::move(simulation)),
         start(system_clock::now()),
@@ -49,7 +50,10 @@ FullApplication::FullApplication(const RunOptions &options,
           options(options),
           report(report),
           framesRendered(0),
-          finished(false)
+          finished(false),
+          scenario(std::move(scenario)),
+          // Offset so arrivals don't replay the sequence the setup already drew.
+          arrivalRng(this->scenario.seed + 0x9E3779B9u)
 {
     // Intentionally no default scripted camera actions.
     // Keep timedSceneActions in place so scripted camera paths can be re-enabled later.
@@ -106,38 +110,33 @@ ApplicationResult FullApplication::update() {
         const double currentTime = simulation.getOutputViewingTime().value();
 
         if (arrivals.due(currentTime)) {
-            cout << "Introducing new group at " << currentTime << " seconds" << endl;
+            // Aimed at where the action currently is, not where it started.
+            const SimulationStats stats = simulation.getStats();
 
-            /* EXPERIMENT (phase 4 will derive these from the scenario rather
-             * than hard-coding them for one config): matched to what the
-             * chaotic archetype builds for its own groups. The previous values
-             * packed 500 particles into 5e5 m, ~1580x the density of the
-             * scenario's own groups, which the collision radius annihilated in
-             * four frames. */
-            GroupSpec newGroupSpec;
-            // Outside the system's 3.09e7 m radius, falling inward.
-            newGroupSpec.position = PhysicalVector(4.0e7, 0, 0, true);
-            newGroupSpec.velocity = PhysicalVector(-6.3e-5, 0, 0, false);
-            newGroupSpec.spin = PhysicalVector(0, 0, 0, false);
-            newGroupSpec.count = 400;
-            newGroupSpec.mass = 5.9891e8;
-            newGroupSpec.radius = 5.4e6;
-            newGroupSpec.color = PhysicalVector(1, 1, 0); // Yellow, to stand out
-            newGroupSpec.dispersion = 0.15; // Matches chaotic.dispersion
-            newGroupSpec.virialRatio = -1.0;
-            newGroupSpec.label = "added_group_" + std::to_string(arrivals.arrivalsSoFar());
-            
-            // Create a basic scenario spec with only this new group
-            ScenarioSpec newScenario;
-            newScenario.groups.push_back(newGroupSpec);
-            
-            // Generate particles for the new group
-            std::mt19937 rng(12345 + arrivals.arrivalsSoFar());  // Use different seed for variation
+            const GroupSpec arriving = ScenarioBuilder::arrivalGroup(
+                    scenario,
+                    arrivals.arrivalsSoFar(),
+                    stats.centerOfMass,
+                    stats.totalMass,
+                    arrivalRng);
+
+            /* Built on its own, with no system-wide virial rescale: the group
+             * keeps the approach velocity it was just given. */
+            ScenarioSpec arrivingScenario;
+            arrivingScenario.virialRatio = -1.0;
+            arrivingScenario.groups.push_back(arriving);
+
             SetupDiagnostics diagnostics;
-            ParticleList newGroup = ScenarioBuilder::build(newScenario, 1.0, diagnostics, rng);
-            
-            // Add the new group to the simulation
-            simulation.addGroup(newGroup);
+            ParticleList newGroup = ScenarioBuilder::build(
+                    arrivingScenario, 1.0, diagnostics, arrivalRng);
+
+            cout << "Introducing " << arriving.label << " at " << currentTime << "s"
+                 << " | " << arriving.count << " particles"
+                 << " | from (" << arriving.position.x()
+                 << ", " << arriving.position.y()
+                 << ", " << arriving.position.z() << ")" << endl;
+
+            simulation.addGroup(std::move(newGroup));
         }
     }
     graphicalOperations.updateObserver(simulation.getXYMinsAndMaxes());

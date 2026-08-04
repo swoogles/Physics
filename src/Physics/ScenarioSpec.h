@@ -16,6 +16,9 @@ namespace physics_constants {
     constexpr double G = 6.67384e-11;
 }
 
+//! Palette used when a group doesn't name its own colour.
+PhysicalVector paletteColor(int index);
+
 /*! \brief One blob of particles, described in SI units.
  *
  *  Everything here is data, so a scenario can be written by a script instead

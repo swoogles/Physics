@@ -31,6 +31,7 @@
 
 #include <chrono>
 #include <iomanip>
+#include <random>
 #include "TimedSceneAction.h"
 #include <queue>
 #include "TimedSceneAction.h"
@@ -47,6 +48,7 @@ public:
                     PhysicsSandboxProperties properties,
                     OpenGlSetup openGlSetup,
                     Simulation simulation,
+                    ScenarioSpec scenario,
                     RunReport *report);
 
     Simulation simulation;
@@ -81,6 +83,12 @@ private:
      *  ArrivalSchedule.h - not here, and nowhere else.
      */
     ArrivalSchedule arrivals;
+
+    //! What the run started as; arriving groups are drawn in its likeness.
+    const ScenarioSpec scenario;
+
+    //! Seeded from the scenario, so a seed reproduces the arrivals too.
+    std::mt19937 arrivalRng;
 
     void finishRun();
 };

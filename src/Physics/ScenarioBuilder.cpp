@@ -70,6 +70,87 @@ namespace {
 
 }
 
+/* How an arrival approaches. Hard-coded to the values the archetypes use for
+ * their own groups; phase 3 turns these into arrivals.* knobs. */
+namespace {
+    const double ARRIVAL_INFALL = 0.5;        //!< Inward speed, as a fraction of escape speed.
+    const double ARRIVAL_TANGENTIAL = 0.35;   //!< Sideways kick, so it doesn't drop straight through.
+    const double ARRIVAL_SPIN_MAX = 0.25;     //!< Solid-body spin, as a fraction of break-up.
+    const double ARRIVAL_SHELL_MIN = 1.1;     //!< Nearest it may appear, as a multiple of the
+    const double ARRIVAL_SHELL_MAX = 1.4;     //!<   scenario's own spread. Both > 1 = outside.
+}
+
+GroupSpec ScenarioBuilder::arrivalGroup(
+        const ScenarioSpec &spec,
+        int arrivalIndex,
+        PhysicalVector aimAt,
+        double systemMass,
+        std::mt19937 &rng) {
+
+    if (spec.groups.empty()) {
+        return GroupSpec();
+    }
+
+    std::uniform_real_distribution<double> unit(0.0, 1.0);
+    std::uniform_real_distribution<double> signed_(-1.0, 1.0);
+
+    /* The scenario's own scale: how far its groups were spread, and how far
+     * off the plane they were allowed to sit. Measuring it rather than reading
+     * a knob means this works for every archetype, including `explicit`. */
+    double spread = 0;
+    double maxHeight = 0;
+    for (const auto &group : spec.groups) {
+        const PhysicalVector &position = group.position;
+        spread = std::max(spread, (double) sqrt(position.x() * position.x()
+                                                + position.y() * position.y()));
+        maxHeight = std::max(maxHeight, (double) std::abs(position.z()));
+        spread = std::max(spread, group.radius);
+    }
+    const double thickness = spread > 0 ? maxHeight / spread : 0.0;
+
+    // Draw the shape of the new group from one the run already has.
+    std::uniform_int_distribution<size_t> pick(0, spec.groups.size() - 1);
+    GroupSpec group = spec.groups[pick(rng)];
+
+    group.label = "arrival." + std::to_string(arrivalIndex);
+    group.color = paletteColor((int) spec.groups.size() + arrivalIndex);
+
+    // A random direction, flattened the way the scenario's own groups are.
+    const double theta = unit(rng) * 2.0 * M_PI;
+    const PhysicalVector direction = PhysicalVector(
+            (float) cos(theta),
+            (float) sin(theta),
+            (float) (signed_(rng) * thickness),
+            false).unit();
+
+    const double distance = spread * (ARRIVAL_SHELL_MIN
+            + unit(rng) * (ARRIVAL_SHELL_MAX - ARRIVAL_SHELL_MIN));
+    group.position = aimAt.plus(direction.scaledBy(distance));
+
+    const double escapeSpeed = (systemMass > 0 && distance > 0)
+            ? sqrt(2.0 * physics_constants::G * systemMass / distance)
+            : 0.0;
+
+    // Inward, plus a sideways kick so it swings through rather than dropping
+    // straight down the middle. Mostly one way round, as the archetypes do.
+    const PhysicalVector inward = direction.scaledBy(-ARRIVAL_INFALL * escapeSpeed);
+
+    const double inPlane = sqrt(direction.x() * direction.x() + direction.y() * direction.y());
+    PhysicalVector tangent(0, 0, 0, false);
+    if (inPlane > 0) {
+        const double way = unit(rng) > 0.15 ? 1.0 : -1.0;
+        tangent = PhysicalVector(
+                (float) (-direction.y() / inPlane),
+                (float) (direction.x() / inPlane),
+                0, false).scaledBy(ARRIVAL_TANGENTIAL * escapeSpeed * way);
+    }
+
+    group.velocity = inward.plus(tangent);
+    group.spin = PhysicalVector(0, 0, (float) (signed_(rng) * ARRIVAL_SPIN_MAX), false);
+
+    return group;
+}
+
 /*! Analytic estimate rather than an O(n^2) sum, so start-up stays instant even
  *  at 60k particles. Each group contributes its own uniform-sphere binding
  *  energy, plus a point-mass term against every other group.

@@ -106,6 +106,7 @@ int main(int argcp, char **argv) {
             properties,
             openGlSetup,
             std::move(simulation),
+            scenario,
             &report
     );
 

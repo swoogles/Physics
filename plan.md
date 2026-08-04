@@ -118,27 +118,39 @@ Broken / rough:
 
 ## Phase 4 — place the arrival relative to the live run
 
-Hard-coded `5e6` m only makes sense for one scenario size.
+All of this now lives in `ScenarioBuilder::arrivalGroup`.
 
-- [ ] Cache the centre of mass that `Simulation::updateMinsAndMaxes` already
-      computes (`Simulation.cpp:88-96`) into a member, and add a getter. It is
-      needed to aim an arrival at where the action currently is.
-- [ ] Distance from the current centre of mass as `arrivals.distance_factor` ×
-      the run's starting `diagnostics.systemRadius`, not absolute meters.
-- [ ] Direction: random unit vector in the XY plane, from an RNG owned by the
-      schedule and seeded off `scenario.seed`, so a seed still reproduces the
-      whole run including its arrivals.
-- [ ] Aim it inward: bulk velocity `arrivals.infall` × escape speed
-      (`sqrt(2GM/r)` with the live total mass) toward the centre of mass.
-      `infall=0` drops it in cold.
-- [ ] Colour: rotate through the archetype palette (`paletteColor`,
-      `ScenarioSpec.cpp:74`) instead of always yellow, so successive arrivals
-      are distinguishable. It is in an anonymous namespace — expose it or move
-      it somewhere shared.
-- [ ] Build the arriving `ParticleList` by reusing `ScenarioBuilder::build` on a
-      one-group `ScenarioSpec` with `virialRatio = -1` (no system-wide rescale;
-      the group keeps the velocity it was given).
-      Check: a 3-arrival small run, groups visibly enter frame and fall inward.
+- [x] Expose the centre of mass. `getStats()` already computed it and threw it
+      away (`Simulation.cpp:349-380`); it is now a field on `SimulationStats`,
+      so an arrival can be aimed at where the action currently is.
+- [x] Distance as a random 1.1-1.4x the scenario's *own* spread, measured from
+      `spec.groups` rather than read from a knob - so it works for every
+      archetype including `explicit`. Always outside the original spread, and
+      measured from the live centre of mass rather than the origin.
+- [x] Direction: random angle, flattened by the same ratio the scenario's own
+      groups are, from an RNG seeded off `scenario.seed`.
+- [x] Inward at 0.5x escape speed against the *live* total mass, plus a 0.35x
+      tangential kick with the same 85%-prograde bias the archetypes use, so an
+      arrival swings through instead of dropping down the middle.
+- [x] Colour continues the archetype palette from where the original groups
+      left off. `paletteColor` moved out of the anonymous namespace in
+      `ScenarioSpec.cpp` and is declared in `ScenarioSpec.h`.
+- [x] Built via `ScenarioBuilder::build` on a one-group spec with
+      `virialRatio = -1`, so the group keeps the approach velocity it was given.
+- [x] **Size, mass, count and temperature are drawn from a randomly chosen
+      group of the original scenario**, so an arrival is the same kind of object
+      the run is already made of. This is what makes them as varied as the
+      originals rather than five copies of one hard-coded blob.
+
+      Verified across seeds and archetypes. Seed 7 chaotic: arrivals of 891,
+      187, 258, 242 and 925 particles from five different directions. Seed 42:
+      a completely different sequence. `pair` behaves the same way.
+
+      Note for `cluster` scenarios (one group, e.g. `cold-collapse`): an arrival
+      is necessarily a clone of that single group, so `cluster.count=25000`
+      means each arrival adds 25000 particles. Correct by the rule above, but
+      expensive - the `arrivals.count` / `arrivals.mass` knobs in phase 3 are
+      what let a run scale that down.
 
 ## Why arrivals get annihilated — measured 2026-08-03
 
@@ -173,6 +185,21 @@ a schedule the original material has already been spending.
 Still open: `ArrivalSchedule`'s defaults mean **every config currently gets
 arrivals**, since nothing reads the properties file yet. Phase 3 makes them
 opt-in, and that is what makes the change safe for existing scenarios.
+
+## A run is not reproducible from its seed — and was not before this work
+
+`main.cpp:63` says a run is reproducible from its seed. It is not. Two runs at
+seed 7, with no arrivals yet in play, agree at step 20 and step 50 and have
+diverged by step 99 (1862 vs 1855 particles). Almost certainly ordering in the
+OpenMP force and merge accumulation.
+
+Arrivals inherit exactly that and no more: which group arrives, how big it is,
+and which direction it comes from are all seed-stable (891, 187, 258 particles
+in both runs), because they are drawn from an RNG seeded off `scenario.seed`.
+Only the aim point drifts, since it is measured from the live centre of mass.
+
+Worth fixing on its own merits - the batch workflow's whole premise is that a
+good run can be reproduced from its sidecar - but it is not arrivals work.
 
 ## Phase 5 — bookkeeping the rest of the engine assumes is fixed at t=0
 
