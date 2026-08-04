@@ -1,111 +1,123 @@
 //
-// The cadence that decides when extra groups drop into a run already in
-// progress. Pure timing: no simulation, no window, no GL.
+// What decides that a run has room for another group. A group arrives when
+// merging has thinned the run out enough that adding one brings it back to
+// roughly the population it started with - so the run refills at the rate it
+// actually merges, and the particle count never climbs above where it began.
 //
 
 #include "catch.hpp"
 
 #include "../src/Physics/ArrivalSchedule.h"
 
-TEST_CASE("Nothing arrives before the first slot", "[arrivals]") {
+TEST_CASE("A full run has no room", "[arrivals]") {
     ArrivalSchedule schedule;
-    schedule.firstAt = 20.0;
-    schedule.everySeconds = 20.0;
-    schedule.limit = 5;
+    schedule.setTargetPopulation(1000);
 
-    REQUIRE_FALSE(schedule.due(0.0));
-    REQUIRE_FALSE(schedule.due(19.0));
-    REQUIRE(schedule.arrivalsSoFar() == 0);
+    REQUIRE(schedule.roomFor(1000) == 0);
+
+    // Nor does one that has somehow grown past its target.
+    REQUIRE(schedule.roomFor(1200) == 0);
 }
 
-TEST_CASE("The first group arrives on its slot, once", "[arrivals]") {
+TEST_CASE("Small gaps are not worth filling", "[arrivals]") {
     ArrivalSchedule schedule;
-    schedule.firstAt = 20.0;
-    schedule.everySeconds = 20.0;
+    schedule.minimumDeficitFraction = 0.15;
+    schedule.setTargetPopulation(1000);
 
-    REQUIRE(schedule.due(20.0));
-    REQUIRE(schedule.arrivalsSoFar() == 1);
-
-    // The clock is polled every frame; the same second must not re-fire.
-    REQUIRE_FALSE(schedule.due(20.0));
-    REQUIRE_FALSE(schedule.due(21.0));
-    REQUIRE(schedule.arrivalsSoFar() == 1);
+    REQUIRE(schedule.roomFor(990) == 0);   // 1% merged away
+    REQUIRE(schedule.roomFor(900) == 0);   // 10%, still not worth it
+    REQUIRE(schedule.roomFor(860) == 0);   // 14%, just under the threshold
+    REQUIRE(schedule.roomFor(850) == 150); // 15% - now it is worth it
 }
 
-TEST_CASE("Arrivals are spaced by the interval", "[arrivals]") {
+TEST_CASE("Once the gap is worth filling, it is filled exactly", "[arrivals]") {
     ArrivalSchedule schedule;
-    schedule.firstAt = 5.0;
-    schedule.everySeconds = 5.0;
-    schedule.limit = 4;
+    schedule.minimumDeficitFraction = 0.15;
+    schedule.setTargetPopulation(1000);
 
-    REQUIRE(schedule.due(5.0));
-    REQUIRE_FALSE(schedule.due(9.0));
-    REQUIRE(schedule.due(10.0));
-    REQUIRE_FALSE(schedule.due(14.0));
-    REQUIRE(schedule.due(15.0));
-    REQUIRE(schedule.arrivalsSoFar() == 3);
+    // The room offered is the shortfall, so an arrival lands back on target
+    // rather than overshooting it.
+    REQUIRE(schedule.roomFor(850) == 150);
+    REQUIRE(schedule.roomFor(400) == 600);
+    REQUIRE(schedule.roomFor(1) == 999);
 }
 
-TEST_CASE("The limit is a hard stop", "[arrivals]") {
-    ArrivalSchedule schedule;
-    schedule.firstAt = 1.0;
-    schedule.everySeconds = 1.0;
-    schedule.limit = 3;
+TEST_CASE("A run that merges faster gets groups sooner", "[arrivals]") {
+    // The point of the whole design: the rate is not set anywhere, it falls
+    // out of how fast the run is actually merging.
+    ArrivalSchedule eager;
+    eager.minimumDeficitFraction = 0.05;
+    eager.setTargetPopulation(1000);
 
-    for (double now = 1.0; now < 100.0; now += 1.0) {
-        schedule.due(now);
-    }
+    ArrivalSchedule patient;
+    patient.minimumDeficitFraction = 0.50;
+    patient.setTargetPopulation(1000);
 
-    REQUIRE(schedule.arrivalsSoFar() == 3);
-    REQUIRE_FALSE(schedule.due(1000.0));
+    REQUIRE(eager.roomFor(940) > 0);
+    REQUIRE(patient.roomFor(940) == 0);
+    REQUIRE(patient.roomFor(490) > 0);
 }
 
-TEST_CASE("A jump in the clock delivers one group, not the backlog", "[arrivals]") {
-    ArrivalSchedule schedule;
-    schedule.firstAt = 10.0;
-    schedule.everySeconds = 10.0;
-    schedule.limit = 5;
-
-    // A long pause, or a very slow frame: five slots have gone by.
-    REQUIRE(schedule.due(60.0));
-    REQUIRE(schedule.arrivalsSoFar() == 1);
-
-    // ...and the schedule resumes from there rather than firing every frame
-    // until it has caught up.
-    REQUIRE_FALSE(schedule.due(61.0));
-    REQUIRE_FALSE(schedule.due(69.0));
-    REQUIRE(schedule.due(70.0));
-    REQUIRE(schedule.arrivalsSoFar() == 2);
-}
-
-TEST_CASE("Arrivals can be switched off entirely", "[arrivals]") {
-    SECTION("by interval") {
+TEST_CASE("The limit is a safety net, off by default", "[arrivals]") {
+    SECTION("off by default") {
         ArrivalSchedule schedule;
-        schedule.everySeconds = 0.0;
-        REQUIRE_FALSE(schedule.due(1000.0));
-    }
+        schedule.setTargetPopulation(1000);
 
-    SECTION("by limit") {
-        ArrivalSchedule schedule;
-        schedule.everySeconds = 5.0;
-        schedule.limit = 0;
-        REQUIRE_FALSE(schedule.due(1000.0));
-    }
-}
-
-TEST_CASE("Every five seconds, up to a limit", "[arrivals]") {
-    // The case this whole mechanism exists for.
-    ArrivalSchedule schedule;
-    schedule.firstAt = 5.0;
-    schedule.everySeconds = 5.0;
-    schedule.limit = 6;
-
-    int arrived = 0;
-    for (int frame = 0; frame <= 24 * 60; frame++) {
-        if (schedule.due(frame / 24.0)) {
-            arrived++;
+        for (int i = 0; i < 500; i++) {
+            REQUIRE(schedule.roomFor(500) > 0);
+            schedule.noteArrival();
         }
     }
 
-    REQUIRE(arrived == 6);
+    SECTION("enforced when set") {
+        ArrivalSchedule schedule;
+        schedule.limit = 3;
+        schedule.setTargetPopulation(1000);
+
+        for (int i = 0; i < 3; i++) {
+            REQUIRE(schedule.roomFor(500) > 0);
+            schedule.noteArrival();
+        }
+
+        REQUIRE(schedule.roomFor(500) == 0);
+        REQUIRE(schedule.arrivalsSoFar() == 3);
+    }
+}
+
+TEST_CASE("Nothing arrives before a target is known", "[arrivals]") {
+    ArrivalSchedule schedule;
+    REQUIRE(schedule.roomFor(0) == 0);
+    REQUIRE(schedule.roomFor(500) == 0);
+}
+
+TEST_CASE("Refilling holds the population under its starting count", "[arrivals]") {
+    // A run merging steadily, topped up whenever there is room. The ceiling is
+    // what keeps a long run from bogging down.
+    ArrivalSchedule schedule;
+    schedule.minimumDeficitFraction = 0.15;
+    schedule.setTargetPopulation(3000);
+
+    int population = 3000;
+    int arrivals = 0;
+    int highWaterMark = population;
+
+    for (int frame = 0; frame < 5000; frame++) {
+        population -= 3;  // merging away steadily
+        if (population < 1) {
+            population = 1;
+        }
+
+        const int room = schedule.roomFor(population);
+        if (room > 0) {
+            population += room;
+            schedule.noteArrival();
+            arrivals++;
+        }
+
+        highWaterMark = std::max(highWaterMark, population);
+    }
+
+    REQUIRE(highWaterMark == 3000);      // never above where it started
+    REQUIRE(arrivals > 10);              // and it kept being refilled
+    REQUIRE(population > 3000 * 0.8);    // without being allowed to drain away
 }

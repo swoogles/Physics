@@ -143,8 +143,12 @@ void Particle::noteGroupArrived(int particleCount, int currentStep) {
         return;
     }
 
-    // There is genuinely more material to merge now, so say so.
-    initialParticleCount += particleCount;
+    /* initialParticleCount is deliberately left alone. Arrivals top the run
+     * back up to the population it started with, so that count stays the
+     * target being merged down from, and `progress` keeps meaning "how far
+     * below target are we". Growing it with each arrival would walk progress
+     * toward 1, switch the ramp and the forced merges off, and leave the run
+     * sitting still - which is the opposite of why groups are arriving. */
     previousParticleCount += particleCount;
 
     /* Push the deadline out by however long this group was held back. A group

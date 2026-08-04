@@ -1,27 +1,26 @@
 #include "ArrivalSchedule.h"
 
-bool ArrivalSchedule::due(double nowSeconds) {
-    if (everySeconds <= 0 || limit <= 0 || arrivals >= limit) {
-        return false;
+int ArrivalSchedule::roomFor(int currentParticleCount) const {
+    if (target <= 0) {
+        return 0;
     }
 
-    if (nextArrivalTime < 0) {
-        nextArrivalTime = firstAt;
+    if (limit > 0 && arrivals >= limit) {
+        return 0;
     }
 
-    if (nowSeconds < nextArrivalTime) {
-        return false;
+    const int deficit = target - currentParticleCount;
+    if (deficit <= 0) {
+        return 0;
     }
 
-    arrivals++;
-
-    /* Move to the next slot, but never leave it in the past: a schedule that
-     * has fallen behind should resume from here, not fire every frame until it
-     * has caught up. */
-    nextArrivalTime += everySeconds;
-    if (nextArrivalTime <= nowSeconds) {
-        nextArrivalTime = nowSeconds + everySeconds;
+    /* Hold off until the gap is worth filling. Without this the run would
+     * dribble in a handful of particles every few frames, and every one of
+     * those would reset the merge ramp and start another grace period. */
+    const int worthFilling = (int) (target * minimumDeficitFraction);
+    if (deficit < worthFilling) {
+        return 0;
     }
 
-    return true;
+    return deficit;
 }

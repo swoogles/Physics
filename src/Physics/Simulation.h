@@ -46,6 +46,9 @@ public:
     hour_t getTimeElapsed() const;
     second_t getOutputViewingTime() const;
 
+    //! Cheap enough to ask every frame, unlike getStats().
+    int particleCount() const { return (int) physicalObjects.size(); }
+
     // TODO Take dt as a parameter here.
     void update(hour_t dt);
 

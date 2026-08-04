@@ -64,14 +64,21 @@ public:
      *  with an inward and a tangential component. Every arrival therefore comes
      *  from somewhere new.
      *
+     *  Sized to fit: if the template group is bigger than there is room for,
+     *  it is scaled down keeping both its per-particle mass and its density,
+     *  so a smaller arrival is the same kind of blob rather than a sparser or
+     *  heavier one.
+     *
      *  \param aimAt      where the action currently is - the live centre of mass
      *  \param systemMass live total mass, for the escape speed the fall is scaled to
+     *  \param maxParticles the most it may bring; 0 for "whatever the template is"
      */
     static GroupSpec arrivalGroup(
             const ScenarioSpec &spec,
             int arrivalIndex,
             PhysicalVector aimAt,
             double systemMass,
+            int maxParticles,
             std::mt19937 &rng);
 
 private:

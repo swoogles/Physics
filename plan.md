@@ -1,14 +1,20 @@
-# Timed group arrivals
+# Group arrivals
 
 ## Goal
 
-New groups fall into a run that is already in progress. Configurable, e.g.
-"a new group every 5 seconds of rendered video, up to 6 of them", driven from a
-properties file like every other part of a scenario.
+New groups fall into a run that is already in progress, driven from a properties
+file like every other part of a scenario.
 
-Clock: `Simulation::getOutputViewingTime()` (`src/Physics/Simulation.cpp:383`)
-is `stepsElapsed / 24` — whole seconds of *video*, not wall clock. That is the
-right clock for "after N seconds have been rendered".
+**A group arrives when merging has made room for it**, not on a timer. When the
+population has fallen far enough below what the run started with, a group is
+built to fit the gap exactly. The rate is therefore never configured: a run that
+merges quickly refills quickly, one that merges slowly refills slowly, and the
+particle count - the thing that costs time - can never climb above where it
+began. Nothing to tune, and no way to bog the run down by adding too much.
+
+An earlier version of this plan fired arrivals on a fixed interval. That worked,
+but it made the cadence a number someone had to guess, and guessing high meant a
+run that ground to a halt. The population rule replaced it.
 
 ## How to work this plan
 
@@ -70,21 +76,25 @@ Broken / rough:
 
 ## Phase 2 — extract the schedule, with tests
 
-- [x] New `src/Physics/ArrivalSchedule.h/.cpp`: holds `firstAt`, `everySeconds`,
-      `limit`, `arrivalsSoFar`; one method `bool due(second_t now)` that
-      consumes a slot when it fires. No Simulation, graphics, or GL includes.
-      **This is the single place the cadence is defined.** Changing "every 20
-      seconds" to "every 5" is one edit in `ArrivalSchedule.h` and nowhere else.
-- [x] Decide and encode the catch-up rule inside `due()`: if the clock jumps
-      past several intervals, fire at most one arrival per call (paused frames
-      and long steps shouldn't dump three groups in at once). Document it in the
-      header. Slots do not bank - the schedule resumes from now.
-- [x] `FullApplication` uses `ArrivalSchedule` instead of its own counters.
-      Still 20s / 5 for now. Check: `make -j8`; a small run is unchanged.
+- [x] New `src/Physics/ArrivalSchedule.h/.cpp`, holding the population rule.
+      No Simulation, graphics, or GL includes. **This is the single place
+      arrivals are governed**, and it now has only two knobs:
+      `minimumDeficitFraction` (how far the population must fall before a group
+      is worth adding, default 0.15) and `limit` (a safety net, 0 = off).
+      `roomFor(currentCount)` returns the exact shortfall, or 0 when the gap
+      isn't yet worth filling - and that shortfall is also the size the arriving
+      group gets built to, so an arrival can never overshoot the target.
+- [x] `Simulation::particleCount()` - `O(1)`, unlike `getStats()`, because the
+      trigger is checked every frame while `getStats()` walks every particle
+      twice. `getStats()` is now only called when a group is actually arriving.
+- [x] `FullApplication` sets the target population from the count the run
+      started with, and asks `roomFor()` each frame.
 - [x] `Test/ArrivalTests.cpp` (catch, same style as `Test/ScenarioTests.cpp`):
-      first fire lands on `firstAt`; spacing equals `everySeconds`; never
-      exceeds `limit`; a time jump fires once, not N times; `limit=0` and
-      `everySeconds<=0` never fire. 7 cases, 25 assertions, all green.
+      a full run has no room; small gaps are ignored; the gap is filled exactly;
+      a faster-merging run gets groups sooner; the limit is off by default and
+      enforced when set; nothing arrives before a target is set; and a 5000-frame
+      simulated run stays under its starting population throughout.
+      7 cases, 522 assertions, all green.
 
       `make test` cannot link, and could not before this work: `TimeManagerTest.cpp`
       (committed in 05e12b9) defines its own `int main()`, which collides with
@@ -101,20 +111,46 @@ Broken / rough:
 - [ ] Parse `arrivals.*` in `ScenarioParser::parse` using the existing
       `knob()` / `knobString()` helpers (`ScenarioSpec.cpp:78-89`) so every key
       lands in `spec.knobs` and therefore in the sidecar for free.
-      Keys: `arrivals.every_seconds`, `arrivals.first_at`, `arrivals.limit`,
-      `arrivals.count`, `arrivals.mass`, `arrivals.radius`,
-      `arrivals.dispersion`, `arrivals.virial_ratio`.
-- [ ] Default is off: `arrivals.limit=0` (or `every_seconds<=0`) means nothing
-      arrives, so every existing config in `configs/` behaves exactly as before.
+      Keys: `arrivals.enabled`, `arrivals.minimum_deficit_fraction`,
+      `arrivals.limit`, `arrivals.infall`, `arrivals.tangential`,
+      `arrivals.shell_min`, `arrivals.shell_max`, `arrivals.grace_seconds`.
+      The last five are currently constants at the top of
+      `ScenarioBuilder.cpp` and in `Particle.cpp`.
+- [ ] Default is off: `arrivals.enabled=false` means nothing arrives, so every
+      existing config in `configs/` behaves exactly as before.
       Check: `--print-setup` on `configs/chaotic.properties` is byte-identical
       to before the change.
 - [ ] Tests in `ScenarioTests.cpp`: defaults are off; values parse; the keys
       show up in `spec.knobs`.
-- [ ] Thread the spec to the frame loop: `main.cpp:71` already has `scenario`;
-      pass `scenario.arrivals` into the `FullApplication` constructor and build
-      the `ArrivalSchedule` from it. Delete the hard-coded 20.0 / 5.
-      Check: a config with `arrivals.every_seconds=5`, `arrivals.limit=3` adds
-      groups at video seconds 5, 10, 15 and then stops.
+- [x] Thread the spec to the frame loop: `main.cpp` passes the whole
+      `ScenarioSpec` into `FullApplication`, which keeps it to build arrivals in
+      its likeness. What remains is reading `spec.arrivals` from the properties
+      file rather than using the defaults in `ArrivalSchedule.h`.
+
+## The population rule, measured
+
+7x400 chaotic, seed 7, 1200 frames, `minimumDeficitFraction=0.15`:
+
+- Particle count stayed between **2737 and 3218** for the whole run, against a
+  starting 3218. It never once exceeded where it began - the ceiling holds.
+- 22 arrivals, sized 187 to 488 particles, each built to fit the gap.
+- The rate self-regulated exactly as intended: arrivals at 2s, 3s, 4s, 4s, 5s
+  while the run was merging hard, thinning to every 2-4 seconds by 45s as
+  merging slowed. Nothing sets that rate; it falls out of the merging.
+
+**The one thing that is not bounded is mass.** Population is capped, but every
+arrival adds material: 4.83e9 kg at t=0 became 1.17e10 by 25 seconds, 2.4x, and
+it keeps climbing. Consequences, in rough order of how much they matter:
+
+- Gravity strengthens as the run goes on, so it collapses faster and faster.
+  Possibly good footage; it is not the physics the scenario was tuned for.
+- The soft boundary is still the one computed at t=0 (open box in phase 5), and
+  it is now holding in several times the mass it was sized for.
+- Per-particle mass is deliberately preserved when an arrival is trimmed to fit,
+  so the render scale set at t=0 stays correct. That one is fine.
+
+If a run should conserve its mass budget, the rule to add is a cap on total mass
+introduced, which would stop arrivals once spent - a knob for phase 3.
 
 ## Phase 4 — place the arrival relative to the live run
 
@@ -253,8 +289,8 @@ Keep these small — a few thousand particles. Full size is for footage only.
 
 - [ ] `--print-setup` on every config in `configs/` still prints what it did
       before (arrivals off by default).
-- [ ] Bounded run with `arrivals.every_seconds=5`, `arrivals.limit=3`,
-      `--max-frames 480`: particle count steps up at frames 120, 240, 360.
+- [ ] Bounded run: particle count stays between the deficit threshold and the
+      starting count for the whole run, and arrivals thin out as merging slows.
 - [ ] `./build/Tests` all green.
 - [ ] One full-size recorded run, last, once everything above is ticked.
 

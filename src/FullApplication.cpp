@@ -55,6 +55,10 @@ FullApplication::FullApplication(const RunOptions &options,
           // Offset so arrivals don't replay the sequence the setup already drew.
           arrivalRng(this->scenario.seed + 0x9E3779B9u)
 {
+    /* Whatever the run started with is what arrivals top it back up to, so the
+     * particle count - the thing that costs time - has a ceiling. */
+    arrivals.setTargetPopulation(this->simulation.particleCount());
+
     // Intentionally no default scripted camera actions.
     // Keep timedSceneActions in place so scripted camera paths can be re-enabled later.
 
@@ -107,9 +111,11 @@ ApplicationResult FullApplication::update() {
             report->sample(framesRendered, simulation.getStats());
         }
         
-        const double currentTime = simulation.getOutputViewingTime().value();
+        /* Merging has to have made room first, so the run refills at the rate
+         * it is actually thinning out rather than on a guessed interval. */
+        const int room = arrivals.roomFor(simulation.particleCount());
 
-        if (arrivals.due(currentTime)) {
+        if (room > 0) {
             // Aimed at where the action currently is, not where it started.
             const SimulationStats stats = simulation.getStats();
 
@@ -118,6 +124,7 @@ ApplicationResult FullApplication::update() {
                     arrivals.arrivalsSoFar(),
                     stats.centerOfMass,
                     stats.totalMass,
+                    room,
                     arrivalRng);
 
             /* Built on its own, with no system-wide virial rescale: the group
@@ -130,13 +137,15 @@ ApplicationResult FullApplication::update() {
             ParticleList newGroup = ScenarioBuilder::build(
                     arrivingScenario, 1.0, diagnostics, arrivalRng);
 
-            cout << "Introducing " << arriving.label << " at " << currentTime << "s"
+            cout << "Introducing " << arriving.label
+                 << " at " << simulation.getOutputViewingTime().value() << "s"
                  << " | " << arriving.count << " particles"
-                 << " | from (" << arriving.position.x()
-                 << ", " << arriving.position.y()
-                 << ", " << arriving.position.z() << ")" << endl;
+                 << " | " << simulation.particleCount() << " -> "
+                 << (simulation.particleCount() + arriving.count)
+                 << " of " << arrivals.targetPopulation() << endl;
 
             simulation.addGroup(std::move(newGroup));
+            arrivals.noteArrival();
         }
     }
     graphicalOperations.updateObserver(simulation.getXYMinsAndMaxes());

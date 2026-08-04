@@ -1,45 +1,55 @@
 #ifndef PHYSICS_ARRIVALSCHEDULE_H
 #define PHYSICS_ARRIVALSCHEDULE_H
 
-/*! \brief When new groups should drop into a run that is already going.
+/*! \brief Decides when a run has room for another group.
  *
- *  The single place the arrival cadence is defined. Nothing else should carry
- *  its own copy of the interval or the limit - the whole point of this type is
- *  that "every 5 seconds instead of 20" is one edit, in one file.
+ *  Not a clock. A group arrives when merging has thinned the run out enough
+ *  that adding one brings the population back to roughly what it started with,
+ *  which means the run refills itself at whatever rate it is actually merging
+ *  rather than at a rate someone had to guess in advance. A run that merges
+ *  fast gets groups often; one that merges slowly gets them rarely; and the
+ *  particle count - which is what costs time - never climbs above where it
+ *  started.
  *
- *  Times are in seconds of rendered video, matching
- *  Simulation::getOutputViewingTime(), not wall clock.
+ *  The size of each arrival follows from the same rule: it is built to fit the
+ *  space available, so arrivals cannot overshoot.
  */
 struct ArrivalSchedule {
     // ---------------------------------------------------------------------
-    //  THE THREE KNOBS. This is the place to change the cadence.
+    //  THE KNOBS. This is the place to change how arrivals are governed.
     // ---------------------------------------------------------------------
 
-    //! When the first extra group shows up.
-    double firstAt = 5.0;
-
-    //! Gap between arrivals. Zero or less disables arrivals entirely.
-    double everySeconds = 5.0;
-
-    //! How many groups may arrive over the whole run.
-    int limit = 5;
-
-    // ---------------------------------------------------------------------
-
-    /*! \brief True when a group is due, consuming that slot.
-     *
-     *  At most one arrival per call, and slots do not bank: if the clock jumps
-     *  several intervals - a long pause, a slow frame - the run gets one group
-     *  and the schedule picks up from now, rather than dumping the backlog in
-     *  at once.
+    /*! How far the population must fall before a group is worth adding, as a
+     *  fraction of the starting count. Small values top the run up constantly
+     *  with little groups; large ones wait and drop in something substantial.
      */
-    bool due(double nowSeconds);
+    double minimumDeficitFraction = 0.15;
+
+    //! Safety net on the total number of arrivals. 0 means no limit.
+    int limit = 0;
+
+    // ---------------------------------------------------------------------
+
+    //! The population to refill toward - the count the run started with.
+    void setTargetPopulation(int count) { target = count; }
+
+    /*! \brief How many particles the run has room for right now.
+     *
+     *  0 when the gap is not yet worth filling, when the limit is used up, or
+     *  before a target has been set. Otherwise the exact shortfall, which is
+     *  also the size the arriving group should be built to.
+     */
+    int roomFor(int currentParticleCount) const;
+
+    //! Records that a group has arrived, for the limit.
+    void noteArrival() { arrivals++; }
 
     int arrivalsSoFar() const { return arrivals; }
+    int targetPopulation() const { return target; }
 
 private:
+    int target = 0;
     int arrivals = 0;
-    double nextArrivalTime = -1.0;   //!< Negative until the first due() call.
 };
 
 #endif //PHYSICS_ARRIVALSCHEDULE_H

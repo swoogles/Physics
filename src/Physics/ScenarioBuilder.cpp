@@ -85,6 +85,7 @@ GroupSpec ScenarioBuilder::arrivalGroup(
         int arrivalIndex,
         PhysicalVector aimAt,
         double systemMass,
+        int maxParticles,
         std::mt19937 &rng) {
 
     if (spec.groups.empty()) {
@@ -114,6 +115,16 @@ GroupSpec ScenarioBuilder::arrivalGroup(
 
     group.label = "arrival." + std::to_string(arrivalIndex);
     group.color = paletteColor((int) spec.groups.size() + arrivalIndex);
+
+    /* Trim it to the room available, keeping per-particle mass (scale the
+     * total with the count) and density (radius with the cube root) - so what
+     * arrives is a smaller example of the same thing, not a sparse one. */
+    if (maxParticles > 0 && group.count > maxParticles) {
+        const double fraction = (double) maxParticles / (double) group.count;
+        group.count = maxParticles;
+        group.mass *= fraction;
+        group.radius *= cbrt(fraction);
+    }
 
     // A random direction, flattened the way the scenario's own groups are.
     const double theta = unit(rng) * 2.0 * M_PI;
